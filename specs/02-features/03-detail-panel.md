@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST, SCN |
 
 ## 1. Propósito
@@ -34,7 +34,7 @@ Feature: `src/features/detail-panel/`. `index.ts` exporta el componente de clien
 | ID | Requisito |
 | --- | --- |
 | PNL-R01 | `DetailPanel` vive dentro de `SceneLayer`, en el layout, y por eso no se desmonta al cambiar de sección. Recibe `sections: readonly SectionNavItem[]` (SCN-R05), las cadenas de interfaz y, como `children`, el contenido. |
-| PNL-R02 | El panel es un elemento `<dialog>` nativo abierto con `showModal()`. Tiene `aria-labelledby` apuntando a su título. Su aspecto es el de VIS §4.5.2 y su capa, `z-panel`. |
+| PNL-R02 | El panel es un elemento `<dialog>` nativo abierto con `showModal()`. Tiene `aria-labelledby` apuntando a su título. Su aspecto es el de VIS §4.5.2 y su capa, `z-panel`. El `<dialog>` ocupa todo el viewport y es transparente; el velo y el marco son hijos suyos, de modo que ambos se animan como cualquier elemento y un clic en el velo se distingue de un clic en el marco. |
 | PNL-R03 | La página de sección (`[section]/page.tsx`) renderiza únicamente el componente de la sección con `idScope="panel-"` (TSC-R33). La página de inicio no renderiza nada. |
 | PNL-R04 | **Cabecera:** el título de la sección actual como `<h2>` con `tabindex="-1"`; un chip con el nombre de la pieza de hardware; y el botón de cerrar, con el icono `close` y el nombre accesible `panel.closeAriaLabel`. |
 | PNL-R05 | **Pie:** un enlace a la sección anterior, un indicador de posición y un enlace a la sección siguiente (§4.3). |
@@ -48,8 +48,8 @@ Feature: `src/features/detail-panel/`. `index.ts` exporta el componente de clien
 | PNL-R08 | **Abrir.** Cuando aparece una sección actual, el panel llama a `showModal()`, ejecuta la animación M-06 y lleva el foco al título. En una entrada directa no hay animación de apertura. |
 | PNL-R09 | **Cerrar.** El panel se cierra con el botón de cerrar, con Esc o con un clic en el velo, fuera del marco. Las tres acciones hacen lo mismo: se ejecuta la animación de cierre de M-06 y, al terminar, se navega según PNL-R10. |
 | PNL-R10 | **Historial.** Abrir una sección desde la escena añade una entrada al historial. Pasar a la sección anterior o siguiente la **reemplaza**. Cerrar equivale a "Atrás" del navegador si el panel se abrió navegando dentro del sitio; en una entrada directa, cerrar navega al inicio del idioma (`homePath`) reemplazando la entrada. Así, desde cualquier panel, un solo "Atrás" devuelve a la escena y el historial no acumula una entrada por cada sección recorrida. |
-| PNL-R11 | El botón "Atrás" del navegador con el panel abierto lo cierra con la misma animación (SYS-AC09). |
-| PNL-R12 | Esc cierra el panel aunque el foco esté dentro del contenido. El comportamiento por defecto del `<dialog>` ante Esc se intercepta para que la animación y la navegación de PNL-R09 se ejecuten. |
+| PNL-R11 | El botón "Atrás" del navegador con el panel abierto lo cierra con la misma animación (SYS-AC09). En ese caso la URL ya ha cambiado cuando empieza la animación: mientras dura, el `<dialog>` deja de ser modal y queda inerte, para que la página responda y el foco pueda volver a la escena (SCN-R38). |
+| PNL-R12 | Esc cierra el panel aunque el foco esté dentro del contenido. El comportamiento por defecto del `<dialog>` ante Esc se intercepta para que la animación y la navegación de PNL-R09 se ejecuten. Si aun así el navegador cierra el `<dialog>` por su cuenta, el panel navega de inmediato, sin animación. |
 | PNL-R13 | Si el modo de render pasa a `simple` con el panel abierto, el panel se cierra sin animación y sin navegar: la URL se conserva y la vista simple muestra esa sección (SYS-R18). Si vuelve a `scene`, el panel se abre sin animación. |
 | PNL-R14 | Con el panel abierto, el resto de la página es inerte: no recibe foco ni eventos (lo garantiza `showModal()`), y la página no hace scroll. |
 
@@ -67,7 +67,7 @@ Feature: `src/features/detail-panel/`. `index.ts` exporta el componente de clien
 
 | ID | Requisito |
 | --- | --- |
-| PNL-R20 | Si la URL tiene un fragmento (SYS-R11), tras abrirse el panel la zona de contenido se desplaza hasta el elemento cuyo `id` es `panel-` seguido del fragmento, y ese elemento recibe el foco si es enfocable. Si no existe tal elemento, el fragmento se ignora. |
+| PNL-R20 | Si la URL tiene un fragmento (SYS-R11), tras abrirse el panel o cambiar de sección la zona de contenido se desplaza hasta el elemento cuyo `id` es `panel-` seguido del fragmento, y ese elemento recibe el foco si es enfocable. Solo se desplaza la zona de contenido. Si no existe tal elemento, el fragmento se ignora. |
 | PNL-R21 | Los enlaces del contenido que apuntan a otra sección del sitio (por ejemplo, de Experiencia a un proyecto) navegan dentro del panel, reemplazando la entrada del historial como anterior y siguiente. |
 
 ### 4.5 Visitas, anuncios y sonido
@@ -90,7 +90,9 @@ Espacio de nombres `panel` del diccionario de interfaz.
 | `positionLabel({ position, total })` | {position} / {total} | {position} / {total} |
 | `positionAriaLabel({ position, total })` | Sección {position} de {total} | Section {position} of {total} |
 
-Identificador de prueba: `data-testid="panel-content"` en la zona de contenido.
+Identificador de prueba: `data-testid="panel-content"` en la zona de contenido. El `<dialog>` expone además `data-phase` con el momento en que está (`closed`, `opening`, `open`, `leaving`, `entering`, `closing` o `navigating`), y el velo lleva `data-part="veil"`.
+
+El panel no tiene un estado propio de "abierto" (PNL-R07): `panelReducer`, función pura de `lib/`, deriva de los cambios de ruta lo único que la ruta no dice, que es qué animación está en curso y quién inició un cierre. `findNeighbours`, también en `lib/`, calcula la sección anterior, la siguiente y la posición (PNL-R15, PNL-R17).
 
 ## 5. Criterios de aceptación
 
@@ -131,4 +133,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Durante M6, por delegación del autor. PNL-R02: el `<dialog>` cubre el viewport y el velo es un hijo suyo. PNL-R11: al cerrar con "Atrás", el diálogo deja de ser modal durante la animación para que el foco vuelva a la escena. PNL-R12: cierre forzado por el navegador. PNL-R20: el fragmento se aplica también al cambiar de sección. §4.6: atributos de prueba y funciones de `lib/`. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

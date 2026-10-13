@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.4 |
+| Versión | 1.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | Todas las demás specs |
 
@@ -94,13 +94,13 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 #### M6 — Panel
 
 - **Entregables:** `DetailPanel` y las páginas de sección.
-- **Criterios de salida:** todos los criterios automáticos de PNL; SYS-AC09 y AC10 en su forma completa; las pruebas E2E de SCN-AC10, AC11 y AC14; los criterios E2E de las siete secciones; VSN-AC01, AC02, AC05 y AC06; I18N-AC11 y AC12; VIS-AC07 y AC10; QLT-AC04 y AC11.
+- **Criterios de salida:** todos los criterios automáticos de PNL; SYS-AC09 y AC10 en su forma completa; las pruebas E2E de SCN-AC10, AC11 y AC14; los criterios E2E de las siete secciones; VSN-AC01, AC02 y AC05; VIS-AC07 y AC10; QLT-AC04 y AC11. VSN-AC06, I18N-AC11 e I18N-AC12 cambian de idioma con una sección abierta, y en la escena el selector de idioma está en la barra fija: se comprueban en M7.
 - **Specs que quedan implementadas:** PNL, CPU, PSU, SSD, RAM, IO, FAN y CMOS, una vez hechas sus revisiones manuales.
 
 #### M7 — Arranque y ajustes
 
 - **Entregables:** `BootScreen` y `BootController`; `FixedBar` y `SettingsMenu`.
-- **Criterios de salida:** todos los criterios automáticos de BOOT y de SET; la prueba E2E de SCN-AC18; STR-AC01 en su forma completa; VSN-AC08; QLT-AC03, AC09, AC10 y AC13.
+- **Criterios de salida:** todos los criterios automáticos de BOOT y de SET; la prueba E2E de SCN-AC18; VSN-AC06, I18N-AC11 e I18N-AC12; STR-AC01 en su forma completa; VSN-AC08; QLT-AC03, AC09, AC10 y AC13.
 - **Tarea del autor:** A5.
 - **Specs que quedan implementadas:** BOOT, SET, SCN y SMP.
 
@@ -140,10 +140,10 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | --- | --- | --- | --- |
 | M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). El autor revisó el cierre y confirmó las enmiendas el 2026-10-13. Complemento posterior del mismo día: `pnpm check:docker` (TST-AC16), con el que la puerta completa, WebKit incluido, pasa también en local. |
 | M1 | 2026-10-13 | `223832a` | CI en verde en los tres motores y `pnpm check:docker` en local. 317 pruebas; cobertura de la lógica: 100 % de líneas y funciones, 97 % de ramas. Adelanta `SITE` y los iconos `copy` y `check`. Incluye ya la preferencia `sceneVariant` y los tokens de la variante boceto (D-66). El autor revisó y aprobó el cierre el 2026-10-13. |
-| M2 | 2026-10-13 | `05156eb` | CI en verde en los tres motores y `pnpm check:docker` en local. Dieciocho derivados de escena, nueve de la fotografía y la imagen para compartir, todos dentro de su peso con la calidad inicial; el boceto no necesitó bajar calidad. Los dos másteres siguen en estado `provisional` hasta la calibración de M5. Por indicación del autor, se continúa con M3 sin esperar su revisión; revisará M2 y M3 juntos. |
-| M3 | 2026-10-13 | `3268169` | CI en verde en los tres motores y `pnpm check:docker` en local. 427 pruebas. Las siete secciones con su contenido en ambos idiomas, el registro y los CVs publicados, que solo llevan título y autor en sus propiedades. Pendiente la tarea A4 del autor (lectura del contenido), que hará junto con la revisión de M2 a M5. |
-| M4 | 2026-10-13 | `8359622` | CI en verde en los tres motores y `pnpm check:docker` en local. 461 pruebas unitarias y de componente y 109 E2E. El sitio ya es legible de principio a fin como página plana. Con el contenido real, la política de seguridad no cabía en una línea de `_headers`: los scripts de datos de Next.js se reúnen en uno (DEP-R32). I18N-AC16 queda cubierto para la página de entrada y la 404; su parte del arranque llega en M7. En una ejecución en contenedor, Firefox agotó el tiempo al cargar una página; la causa se encontró y se corrigió en M5 (TST 1.6). Por indicación del autor, se continúa con M5; revisará M2 a M5 juntos. |
-| M5 | 2026-10-13 | `d8d0b75` | CI en verde en los tres motores, sin ninguna prueba que pase solo al reintentar, y `pnpm check:docker` en local. 589 pruebas unitarias y de componente y 181 E2E. La escena funciona con las dos variantes: imagen, viñeteado, zonas, auras, etiquetas, display de diagnóstico y pista. Las zonas se trazaron y se comprobaron sobre las dos variantes; los dos másteres siguen en `provisional` hasta que el autor revise la calibración con la superposición (A3, SCN-AC17). WebKit descubrió un defecto real, ya corregido: con `src` en el `<img>`, Safari descargaba dos archivos de la imagen (SCN-R35). El tiempo agotado de Firefox visto en M4 era del ejecutor de pruebas y queda resuelto en la prueba base (TST 1.6). Quedan en su forma parcial, según PLAN 1.4: las pruebas E2E de SCN-AC10, AC11 y AC14 (M6) y de SCN-AC18 (M7), y que la pista vuelva a mostrarse tras un reinicio de sesión, que llega con SET en M7. El aura sigue al pie de la letra los valores de VIS §4.4 y resulta discreta; el autor decide en su revisión si la quiere más intensa. Pendiente la revisión conjunta del autor de M2 a M5. |
+| M2 | 2026-10-13 | `05156eb` | CI en verde en los tres motores y `pnpm check:docker` en local. Dieciocho derivados de escena, nueve de la fotografía y la imagen para compartir, todos dentro de su peso con la calidad inicial; el boceto no necesitó bajar calidad. Los dos másteres siguen en estado `provisional` hasta la calibración de M5. Por indicación del autor, se continúa con M3 sin esperar su revisión; revisará M2 y M3 juntos. El autor revisó y aprobó M2 a M5 en conjunto el 2026-10-13. |
+| M3 | 2026-10-13 | `3268169` | CI en verde en los tres motores y `pnpm check:docker` en local. 427 pruebas. Las siete secciones con su contenido en ambos idiomas, el registro y los CVs publicados, que solo llevan título y autor en sus propiedades. Pendiente la tarea A4 del autor (lectura del contenido), que hará junto con la revisión de M2 a M5. El autor leyó el contenido de las siete secciones (A4). El autor revisó y aprobó M2 a M5 en conjunto el 2026-10-13. |
+| M4 | 2026-10-13 | `8359622` | CI en verde en los tres motores y `pnpm check:docker` en local. 461 pruebas unitarias y de componente y 109 E2E. El sitio ya es legible de principio a fin como página plana. Con el contenido real, la política de seguridad no cabía en una línea de `_headers`: los scripts de datos de Next.js se reúnen en uno (DEP-R32). I18N-AC16 queda cubierto para la página de entrada y la 404; su parte del arranque llega en M7. En una ejecución en contenedor, Firefox agotó el tiempo al cargar una página; la causa se encontró y se corrigió en M5 (TST 1.6). Por indicación del autor, se continúa con M5; revisará M2 a M5 juntos. El autor revisó y aprobó M2 a M5 en conjunto el 2026-10-13. |
+| M5 | 2026-10-13 | `d8d0b75` | CI en verde en los tres motores, sin ninguna prueba que pase solo al reintentar, y `pnpm check:docker` en local. 589 pruebas unitarias y de componente y 181 E2E. La escena funciona con las dos variantes: imagen, viñeteado, zonas, auras, etiquetas, display de diagnóstico y pista. Las zonas se trazaron y se comprobaron sobre las dos variantes; los dos másteres siguen en `provisional` hasta que el autor revise la calibración con la superposición (A3, SCN-AC17). WebKit descubrió un defecto real, ya corregido: con `src` en el `<img>`, Safari descargaba dos archivos de la imagen (SCN-R35). El tiempo agotado de Firefox visto en M4 era del ejecutor de pruebas y queda resuelto en la prueba base (TST 1.6). Quedan en su forma parcial, según PLAN 1.4: las pruebas E2E de SCN-AC10, AC11 y AC14 (M6) y de SCN-AC18 (M7), y que la pista vuelva a mostrarse tras un reinicio de sesión, que llega con SET en M7. El aura sigue al pie de la letra los valores de VIS §4.4 y resulta discreta; el autor decide en su revisión si la quiere más intensa. En su revisión, el autor pidió dos cambios en el aura, ya hechos (D-71 y D-72, commits `319ea8d` y `42ed5f8`), y revisó la calibración con la superposición (A3). El autor revisó y aprobó M2 a M5 en conjunto el 2026-10-13. |
 | M6 | — | — | — |
 | M7 | — | — | — |
 | M8 | — | — | — |
@@ -185,6 +185,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | Durante M6, por delegación del autor. VSN-AC06, I18N-AC11 e I18N-AC12 pasan de M6 a M7: necesitan el selector de idioma de la barra fija. Se anota en §4.4 la revisión del autor de M2 a M5. |
 | 2026-10-13 | 1.4 | Durante M5, por delegación del autor. M5 a M7: las pruebas E2E de SCN-AC10, AC11 y AC14 pasan a M6 y la de SCN-AC18 a M7, porque recorren el panel y el menú de ajustes; M5 las comprueba en su forma parcial. M5 añade AST-AC12. |
 | 2026-10-13 | 1.3 | Por decisión del autor (D-66 y D-67). M2 genera los derivados de las dos variantes (AST-AC21); M5 añade SYS-AC20; M8, AST-AC20 y AC22; A3 revisa la calibración sobre las dos variantes. `check:docker` (TST-AC16) se añade como complemento de M0. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor el 2026-10-13. Nuevos PLAN-R12 (M0 adelanta `locale.ts`, `ids.ts`, `getSiteUrl` y `typed-object.ts`; TSC-AC06 pasa de M1 a M0) y PLAN-R13 (marcadores de `assets:*` y `test:lighthouse` hasta M2 y M8). §2: la fecha de publicación es dura. M3: los PDF publicados solo llevan título y autor en sus propiedades. |

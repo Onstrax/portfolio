@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -251,6 +251,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.4 | SCN-AC17: el autor revisó la calibración con la superposición, sobre las dos variantes, y la posición de las etiquetas, dentro de su revisión conjunta de M2 a M5, y la aprobó. Sin cambios en los requisitos. |
 | 2026-10-13 | 1.3 | Por decisión del autor al revisar M5 (D-71): el aura es un halo sin línea de contorno (VIS 2.5). SCN-AC18 y §4.11 dejan de nombrar el trazo. |
 | 2026-10-13 | 1.2 | Durante M5, por delegación del autor (D-69). SCN-R07 y SCN-R26: nuevo `Hotspot.labelShift`, porque ocho etiquetas centradas no caben a 1024×768 px. SCN-R25: sin hover, las etiquetas miden 128 px como máximo. SCN-R33: la pista queda a 8 px del borde y no a 24, para no tapar el display de diagnóstico. SCN-R03: `id` del `<main>`. SCN-R35: los tres formatos de la imagen son `<source>` y el `<img>` no lleva `src`, tras comprobar en WebKit que con `src` se descargaban dos archivos. §4.11: nuevos identificadores y atributos de prueba. SCN-AC09: solo en Chromium. Calibración trazada sobre las dos variantes; pendiente la revisión del autor (SCN-AC17). |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.12 (SCN-R42 a SCN-R44): variante de escena. SCN-R04, R09, R18, R21, R29 y R35 pasan a depender de la variante; SCN-R36: la precarga la inserta el script previo al pintado. SCN-AC02, AC12 y AC17 adaptados; nuevo SCN-AC18. |
