@@ -1,0 +1,111 @@
+import { describe, expect, it } from "vitest";
+
+import { PROJECT_IDS } from "../types";
+import { projectsEn } from "./en";
+import { projectsEs } from "./es";
+import { projectsFacts } from "./facts";
+
+const { projects } = projectsFacts;
+
+describe("projects facts", () => {
+  it("SSD-AC01: holds the nine projects in order with their category, team and repository", () => {
+    expect(projects.map((project) => project.id)).toEqual([...PROJECT_IDS]);
+    expect(projects.map((project) => project.featured)).toEqual([
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ]);
+    expect(projects.map((project) => project.teamSize)).toEqual([2, 6, 1, 1, 4, 4, 3, 5, 2]);
+    expect(projects.map((project) => project.repository)).toEqual([
+      "public",
+      "public",
+      "public",
+      "private",
+      "private",
+      "private",
+      "public",
+      "private",
+      "private",
+    ]);
+  });
+
+  it("SSD-AC01: holds the stack of every project", () => {
+    expect(projects.map((project): readonly string[] => project.stack)).toEqual([
+      ["Python", "SageMath", "LaTeX"],
+      ["Flutter", "FastAPI", "PostgreSQL", "GitHub Actions"],
+      ["Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
+      ["Next.js", "TypeScript", "Tailwind CSS", "Leaflet", "Netlify"],
+      ["GCP", "GitHub Actions", "CI/CD"],
+      ["AWS", "GitHub Actions", "CI/CD"],
+      ["Angular"],
+      ["Angular", "Spring", "MySQL"],
+      ["Java", "Python"],
+    ]);
+  });
+
+  it("SSD-AC01: holds the nine links with their exact addresses", () => {
+    const links = projects.flatMap((project) =>
+      project.links.map((link) => `${project.id} ${link.id} ${link.href}`),
+    );
+    expect(links).toEqual([
+      "thesis repository https://github.com/CesarAAC/Tesis-ZPK-LWE-Autentication",
+      "andespace flutter https://github.com/G33-Moviles-2026-1/G33-Flutter-Moviles-2026-1",
+      "andespace backend https://github.com/G33-Moviles-2026-1/G33-Backend-Moviles-2026-1",
+      "andespace wiki https://github.com/G33-Moviles-2026-1/Wiki",
+      "habicapital code https://github.com/Onstrax/HabiCapital",
+      "dental-site live-site https://martha-landing.netlify.app/",
+      "ahorrapp frontend https://github.com/Onstrax/AhorrApp",
+      "ahorrapp backend https://github.com/Onstrax/AhorrApp-Backend",
+      "ahorrapp landing https://github.com/Onstrax/Ahorrapp-Landing",
+    ]);
+  });
+});
+
+describe("projects names", () => {
+  it("SSD-AC02: every project has a proper name in the facts or a name in both languages, never both", () => {
+    for (const project of projects) {
+      const hasProperName = "properName" in project;
+      expect("name" in projectsEs.projects[project.id], project.id).toBe(!hasProperName);
+      expect("name" in projectsEn.projects[project.id], project.id).toBe(!hasProperName);
+    }
+    expect(
+      projects.filter((project) => "properName" in project).map((project) => project.id),
+    ).toEqual(["andespace", "habicapital", "ahorrapp", "dogspa"]);
+  });
+});
+
+describe("projects texts", () => {
+  it("SSD-AC03: both languages have the same highlights, awards and notes per project", () => {
+    for (const text of [projectsEs, projectsEn]) {
+      expect(PROJECT_IDS.map((id) => text.projects[id].highlights.length)).toEqual([
+        2, 2, 2, 3, 1, 1, 1, 1, 2,
+      ]);
+      expect(PROJECT_IDS.filter((id) => "award" in text.projects[id])).toEqual([
+        "andespace",
+        "ahorrapp",
+        "dogspa",
+        "algorithms",
+      ]);
+      expect(PROJECT_IDS.filter((id) => "note" in text.projects[id])).toEqual(["thesis"]);
+    }
+  });
+
+  it("uses the section and hardware names of VSN §4", () => {
+    expect([projectsEs.meta.title, projectsEs.meta.hardwareName]).toEqual([
+      "Proyectos",
+      "SSD NVMe",
+    ]);
+    expect([projectsEn.meta.title, projectsEn.meta.hardwareName]).toEqual(["Projects", "NVMe SSD"]);
+  });
+
+  it("separates the percentage sign with a non-breaking space in Spanish only (I18N-R40)", () => {
+    expect(projectsEs.projects.habicapital.highlights[1]).toContain("~94 % de cobertura");
+    expect(projectsEn.projects.habicapital.highlights[1]).toContain("~94% reported");
+  });
+});

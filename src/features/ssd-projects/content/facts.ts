@@ -1,0 +1,92 @@
+import type { ProjectsFacts } from "../types";
+
+export const projectsFacts = {
+  projects: [
+    {
+      id: "thesis",
+      featured: true,
+      stack: ["Python", "SageMath", "LaTeX"],
+      teamSize: 2,
+      repository: "public",
+      links: [
+        { id: "repository", href: "https://github.com/CesarAAC/Tesis-ZPK-LWE-Autentication" },
+      ],
+    },
+    {
+      id: "andespace",
+      featured: true,
+      properName: "AndeSpace",
+      stack: ["Flutter", "FastAPI", "PostgreSQL", "GitHub Actions"],
+      teamSize: 6,
+      repository: "public",
+      links: [
+        { id: "flutter", href: "https://github.com/G33-Moviles-2026-1/G33-Flutter-Moviles-2026-1" },
+        { id: "backend", href: "https://github.com/G33-Moviles-2026-1/G33-Backend-Moviles-2026-1" },
+        { id: "wiki", href: "https://github.com/G33-Moviles-2026-1/Wiki" },
+      ],
+    },
+    {
+      id: "habicapital",
+      featured: true,
+      properName: "HabiCapital",
+      stack: ["Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
+      teamSize: 1,
+      repository: "public",
+      links: [{ id: "code", href: "https://github.com/Onstrax/HabiCapital" }],
+    },
+    {
+      id: "dental-site",
+      featured: true,
+      stack: ["Next.js", "TypeScript", "Tailwind CSS", "Leaflet", "Netlify"],
+      teamSize: 1,
+      repository: "private",
+      links: [{ id: "live-site", href: "https://martha-landing.netlify.app/" }],
+    },
+    {
+      id: "monitoring-platform",
+      featured: false,
+      stack: ["GCP", "GitHub Actions", "CI/CD"],
+      teamSize: 4,
+      repository: "private",
+      links: [],
+    },
+    {
+      id: "email-blacklist",
+      featured: false,
+      stack: ["AWS", "GitHub Actions", "CI/CD"],
+      teamSize: 4,
+      repository: "private",
+      links: [],
+    },
+    {
+      id: "ahorrapp",
+      featured: false,
+      properName: "AhorrApp",
+      stack: ["Angular"],
+      teamSize: 3,
+      repository: "public",
+      links: [
+        { id: "frontend", href: "https://github.com/Onstrax/AhorrApp" },
+        { id: "backend", href: "https://github.com/Onstrax/AhorrApp-Backend" },
+        { id: "landing", href: "https://github.com/Onstrax/Ahorrapp-Landing" },
+      ],
+    },
+    {
+      id: "dogspa",
+      featured: false,
+      properName: "DogSPA",
+      stack: ["Angular", "Spring", "MySQL"],
+      teamSize: 5,
+      repository: "private",
+      links: [],
+    },
+    {
+      id: "algorithms",
+      featured: false,
+      stack: ["Java", "Python"],
+      teamSize: 2,
+      repository: "private",
+      links: [],
+    },
+  ],
+} as const satisfies ProjectsFacts;
