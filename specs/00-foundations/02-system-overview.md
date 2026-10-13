@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.1 |
+| Versión | 2.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN |
 
@@ -158,8 +158,9 @@ El **modo de render** decide si el visitante ve la escena o la vista simple.
 | SYS-R17 | El modo DEBE actualizarse sin recargar la página cuando el viewport cruza el umbral (cambio de tamaño de ventana o rotación del dispositivo). |
 | SYS-R18 | En modo `simple`, al cargar `/{locale}/{section}/` con JavaScript activo, la página DEBE desplazarse hasta el ancla de esa sección. Sin JavaScript se muestra la vista simple desde el inicio; esta limitación es aceptada. |
 | SYS-R19 | `/{locale}/cv/` NO DEBE incluir el script previo al pintado ni la capa de la escena. |
-| SYS-R20 | El script previo al pintado es el único script en línea escrito por el proyecto en las páginas de locale. Sus responsabilidades son exactamente tres: fijar `data-mode` (SYS-R13), fijar `data-boot` (definido en BOOT) y programar el temporizador de respaldo que pasa la página a `data-mode="simple"` si el código de la aplicación no se inicia (QLT-R43). Su código fuente vive en un único módulo (`src/shared/lib/pre-paint-script.ts`). |
+| SYS-R20 | El script previo al pintado es el único script en línea escrito por el proyecto en las páginas de locale. Sus responsabilidades son exactamente cuatro: fijar `data-mode` (SYS-R13), fijar `data-boot` (definido en BOOT), fijar `data-scene` con la precarga de su imagen (SYS-R51) y programar el temporizador de respaldo que pasa la página a `data-mode="simple"` si el código de la aplicación no se inicia (QLT-R43). Su código fuente vive en un único módulo (`src/shared/lib/pre-paint-script.ts`). |
 | SYS-R44 | El elemento `<html>` de las páginas de locale lleva `suppressHydrationWarning`: el script previo al pintado le añade atributos antes de la hidratación y, sin esa propiedad, React emitiría una advertencia en consola (QLT-R40). |
+| SYS-R51 | El script previo al pintado escribe en `<html>` el atributo `data-scene` con la variante de escena guardada en preferencias (§4.6), si es válida, o con `photo` en otro caso. En modo `scene` inserta además en `<head>` la precarga de la imagen de esa variante (SCN-R36). Cuando el visitante cambia de variante, el código de la aplicación actualiza el atributo (SCN-R43). |
 
 En modo `scene`, el contenido de la sección abierta existe dos veces en el documento: en la capa base, que está oculta, y en el panel. Los identificadores no se repiten porque cada instancia usa un `idScope` distinto (TSC-R31 a TSC-R33). En el HTML exportado ese contenido aparece una sola vez, en la capa base (SYS-R48).
 
@@ -212,6 +213,7 @@ src/app/
 | Modo de render | Consulta de medios (SYS-R12) | — | `simple` |
 | Idioma preferido | Store de preferencias | `localStorage`, clave `portfolio:v1:prefs`, campo `locale` | Sin valor |
 | Sonido activado | Store de preferencias | `localStorage`, clave `portfolio:v1:prefs`, campo `soundEnabled` | `false` |
+| Variante de escena | Store de preferencias | `localStorage`, clave `portfolio:v1:prefs`, campo `sceneVariant` | `photo` |
 | Arranque ya visto | Store de sesión | `sessionStorage`, clave `portfolio:v1:session`, campo `bootSeen` | `false` |
 | Secciones visitadas | Store de sesión | `sessionStorage`, clave `portfolio:v1:session`, campo `visited` (lista de `ComponentId` primarios) | Lista vacía |
 | Ajustes abiertos | Store de interfaz | Ninguna (memoria) | `false` |
@@ -257,6 +259,7 @@ src/app/
 | `assets:build` | Genera los derivados de imagen y el manifiesto (ver AST). |
 | `assets:check` | Comprueba que derivados y manifiesto corresponden al máster (ver AST). |
 | `check` | Ejecuta, en este orden y deteniéndose en el primer fallo: `format:check`, `lint`, `typecheck`, `test`, `assets:check`, `build`, `test:e2e`. Es la misma puerta que ejecuta CI, que añade `test:lighthouse`. |
+| `check:docker` | Ejecuta `check` dentro de la imagen que reproduce el entorno de CI, con los tres motores de Playwright (TST §4.10). |
 
 ### 4.10 Variables de entorno
 
@@ -301,7 +304,7 @@ src/app/
 | SYS-R47 | `SceneLayer` vive en `src/app/[locale]/(scene)/scene-layer.tsx` y es el único lugar donde se componen los features de armazón de la escena. Tiene exactamente estas responsabilidades: (1) mantener `data-mode` sincronizado con la consulta de SYS-R12 cuando cambia el viewport (SYS-R17); (2) escribir `data-app="ready"` en `<html>` al montarse, que es la señal que consulta el temporizador de respaldo (QLT-R43); (3) cargar bajo demanda, y solo en modo `scene`, los componentes de cliente de `boot-sequence`, `motherboard-scene`, `settings` y `detail-panel` (QLT-R34); (4) capturar cualquier excepción de esos componentes y, en ese caso, escribir `data-mode="simple"` y dejar de renderizarlos (QLT-R44). |
 | SYS-R48 | En el servidor y en modo `simple`, `SceneLayer` no renderiza nada, tampoco sus hijos. Por tanto el panel no forma parte del HTML exportado. |
 | SYS-R49 | Los componentes de cliente reciben por propiedades, desde el layout de servidor, los datos de las secciones que necesitan (nombres, rutas, textos), ya resueltos para el idioma de la página y serializables. NO DEBEN obtenerlos del registro (STR-R32). |
-| SYS-R50 | `src/styles/globals.css` declara las variantes de Tailwind `mode-scene`, `mode-simple`, `boot-play`, `boot-exit` y `boot-done`, que se activan según los atributos `data-mode` y `data-boot` de `<html>`, y la variante `scene-capable`, cuya consulta de medios DEBE ser textualmente la de SYS-R12. Los componentes usan estas variantes y no escriben selectores de atributo propios. |
+| SYS-R50 | `src/styles/globals.css` declara las variantes de Tailwind `mode-scene`, `mode-simple`, `boot-play`, `boot-exit`, `boot-done`, `scene-photo` y `scene-sketch`, que se activan según los atributos `data-mode`, `data-boot` y `data-scene` de `<html>`, y la variante `scene-capable`, cuya consulta de medios DEBE ser textualmente la de SYS-R12. Los componentes usan estas variantes y no escriben selectores de atributo propios. |
 
 ## 5. Criterios de aceptación
 
@@ -326,6 +329,7 @@ src/app/
 | SYS-AC17 | En el HTML exportado de `/es/projects/`, el contenido de la sección Proyectos está dentro de `[data-layer="base"]`, y dentro de `[data-layer="scene"]` no hay ningún elemento `<dialog>` ni `<main>`. | Prueba de exportación |
 | SYS-AC18 | La consulta de medios de la variante `scene-capable` de `globals.css` es idéntica a la constante de `src/shared/config/render-mode.ts`. | Prueba de arquitectura |
 | SYS-AC19 | A 1280×720 px, una vez cargada la página, `<html>` tiene `data-app="ready"`. | Prueba E2E |
+| SYS-AC20 | A 1280×720 px, sin preferencias guardadas, `<html>` tiene `data-scene="photo"`. Con `sceneVariant: "sketch"` guardado, tiene `data-scene="sketch"`, la imagen solicitada es un derivado de la variante `sketch` y no se solicita ningún archivo de la variante `photo`. | Prueba E2E, solo en Chromium |
 
 ## 6. Decisiones y justificación
 
@@ -374,6 +378,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.2 | Por decisión del autor (D-66 y D-67). §4.6: nueva preferencia `sceneVariant`. SYS-R20 y nuevo SYS-R51: el script previo al pintado fija `data-scene` e inserta la precarga de la variante. SYS-R50: variantes `scene-photo` y `scene-sketch`. §4.9: nuevo script `check:docker`. Nuevo SYS-AC20. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. §4.3: los slugs se enumeran en el orden canónico de D-46. Sin cambio de requisitos. |
 | 2026-10-13 | 2.0 | Aprobada por el autor, que necesita empezar la implementación de inmediato. §4.1: once versiones bajan a la anterior que cumple la edad mínima (SYS-R03) y ESLint pasa a 9.39.5; combinación validada en el prototipo. Confirmada la enmienda 1.3. |
 | 2026-10-12 | 1.3 | Confirmada por el autor el 2026-10-13. §4.9: `build` genera además `out/_headers` y `preview` aplica esas cabeceras (DEP). |

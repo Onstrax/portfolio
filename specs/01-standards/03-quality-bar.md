@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.1 |
+| Versión | 2.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
 
@@ -68,7 +68,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 
 | ID | Requisito |
 | --- | --- |
-| QLT-R14 | El contraste cumple VIS §4.1.4. El aura se distingue de su entorno en todo su perímetro (AST-AC12). |
+| QLT-R14 | El contraste cumple VIS §4.1.4. El aura se distingue de su entorno en todo su perímetro, en las dos variantes de la escena (AST-AC12). |
 | QLT-R15 | Con el zoom del navegador al 200 % y al 400 % todo el contenido sigue disponible y sin scroll horizontal. Con el texto ampliado según WCAG 1.4.12 (interlineado 1,5; espaciado entre párrafos 2; entre letras 0,12; entre palabras 0,16) no se recorta ni se solapa ningún texto. |
 | QLT-R16 | La imagen de la escena es decorativa (`alt=""`): su función la transmiten los elementos interactivos. La fotografía del autor lleva un texto alternativo que procede del contenido. |
 | QLT-R17 | En el modo de colores forzados del sistema (`forced-colors: active`), los controles, el anillo de foco y los límites del panel DEBERÍAN seguir siendo visibles. |
@@ -103,6 +103,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | --- | --- | --- | --- |
 | Arranque visible | `/{locale}/`, primera visita | 1280×720 | es |
 | Escena en reposo | `/{locale}/` | 1280×720 | es, en |
+| Escena en reposo, variante boceto | `/{locale}/`, con `sceneVariant: "sketch"` guardado | 1280×720 | es |
 | Escena con una etiqueta visible | `/{locale}/`, foco en `cpu` | 1280×720 | es |
 | Panel abierto, uno por sección | `/{locale}/{section}/`, las siete | 1280×720 | es, en |
 | Menú de ajustes abierto | `/{locale}/` | 1280×720 | es, en |
@@ -281,6 +282,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.2 | Por decisión del autor (D-66). §4.1.7: nuevo estado auditable con la variante boceto. QLT-R14: el aura se distingue en las dos variantes. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. §4.6: filas `ultrawide` y `classic` adaptadas al escenario 16:9 sin recortes (D-48). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Base del marco medida en 171 kB con un prototipo de Next.js 16.4.0 y React 19.3.0. |

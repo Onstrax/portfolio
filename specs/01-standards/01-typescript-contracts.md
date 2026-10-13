@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 2.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -381,7 +381,7 @@ El compilador garantiza la forma del contenido. Lo que los tipos no pueden expre
 | ID | Requisito |
 | --- | --- |
 | TSC-R48 | `src/shared/contracts/state.ts` DEBE contener las declaraciones siguientes, que concretan la tabla de SYS §4.6. |
-| TSC-R49 | El valor almacenado bajo cada clave es exactamente el texto JSON del objeto `PersistedPrefs` o `PersistedSession`, sin envoltorio ni campos adicionales (por ejemplo `{"soundEnabled":false,"locale":"es"}`). El script previo al pintado y la redirección de `/` leen ese formato directamente. |
+| TSC-R49 | El valor almacenado bajo cada clave es exactamente el texto JSON del objeto `PersistedPrefs` o `PersistedSession`, sin envoltorio ni campos adicionales (por ejemplo `{"soundEnabled":false,"sceneVariant":"photo","locale":"es"}`). El script previo al pintado y la redirección de `/` leen ese formato directamente. |
 | TSC-R50 | `src/shared/state/persistence.ts` DEBE exportar `parsePrefs(raw: string \| null): PersistedPrefs` y `parseSession(raw: string \| null): PersistedSession`. Son funciones puras y totales: nunca lanzan. Cada campo se valida por separado y, si falta o es inválido, toma su valor por defecto; en `visited` se descartan los valores que no son `PrimaryComponentId` y los repetidos. |
 | TSC-R51 | Los stores se exponen como hooks en `src/shared/state/`: `usePrefsStore` (tipo `PrefsStore`), `useSessionStore` (tipo `SessionStore`) y `useUiStore` (tipo `UiStore`). Sus acciones se comportan como indica la tabla siguiente. |
 | TSC-R52 | Hasta que se hidratan, los stores devuelven los valores por defecto y `hasHydrated` es `false` (SYS-R26). `src/shared/state/` exporta el componente de cliente `StoreHydrator`, que no renderiza nada y, en un efecto, lee el almacenamiento con las funciones de TSC-R50, vuelca los valores a los stores y pone `hasHydrated` a `true`. `src/app/[locale]/layout.tsx` lo renderiza una vez. |
@@ -389,6 +389,7 @@ El compilador garantiza la forma del contenido. Lo que los tipos no pueden expre
 
 ```ts
 // src/shared/contracts/state.ts
+import { DEFAULT_SCENE_VARIANT, type SceneVariant } from "./assets";
 import type { PrimaryComponentId } from "./ids";
 import type { Locale } from "./locale";
 
@@ -396,6 +397,7 @@ import type { Locale } from "./locale";
 export interface PersistedPrefs {
   readonly locale?: Locale;
   readonly soundEnabled: boolean;
+  readonly sceneVariant: SceneVariant;
 }
 
 /** Valor guardado en `sessionStorage` bajo `STORAGE_KEYS.session`. */
@@ -409,13 +411,17 @@ export const STORAGE_KEYS = {
   session: "portfolio:v1:session",
 } as const;
 
-export const DEFAULT_PREFS: PersistedPrefs = { soundEnabled: false };
+export const DEFAULT_PREFS: PersistedPrefs = {
+  soundEnabled: false,
+  sceneVariant: DEFAULT_SCENE_VARIANT,
+};
 export const DEFAULT_SESSION: PersistedSession = { bootSeen: false, visited: [] };
 
 export interface PrefsStore extends PersistedPrefs {
   readonly hasHydrated: boolean;
   readonly setLocale: (locale: Locale) => void;
   readonly setSoundEnabled: (enabled: boolean) => void;
+  readonly setSceneVariant: (variant: SceneVariant) => void;
 }
 
 export interface SessionStore extends PersistedSession {
@@ -437,6 +443,7 @@ export interface UiStore {
 | --- | --- | --- |
 | `setLocale(locale)` | `locale` toma el valor dado | Escribe `PersistedPrefs` de inmediato |
 | `setSoundEnabled(enabled)` | `soundEnabled` toma el valor dado | Escribe `PersistedPrefs` de inmediato |
+| `setSceneVariant(variant)` | `sceneVariant` toma el valor dado | Escribe `PersistedPrefs` de inmediato |
 | `markBootSeen()` | `bootSeen` pasa a `true` | Escribe `PersistedSession` de inmediato |
 | `markVisited(id)` | Añade `id` al final de `visited` si no estaba; si ya estaba, no cambia nada | Escribe `PersistedSession` solo si hubo cambio |
 | `reset()` | `bootSeen` pasa a `false` y `visited` a lista vacía | Escribe `PersistedSession` de inmediato |
@@ -491,11 +498,22 @@ export function withLocale(pathname: string, target: Locale): AppPath;
 
 | ID | Requisito |
 | --- | --- |
-| TSC-R57 | `src/shared/contracts/assets.ts` DEBE contener las declaraciones siguientes. El manifiesto generado declara `SCENE_ASSET` con `as const satisfies SceneAsset` (AST-R36). El tipo del manifiesto de la fotografía lo define CPU en este mismo archivo. |
+| TSC-R57 | `src/shared/contracts/assets.ts` DEBE contener las declaraciones siguientes. El manifiesto generado declara `SCENE_ASSETS` con `as const satisfies SceneAssets` (AST-R36). El tipo del manifiesto de la fotografía lo define CPU en este mismo archivo. |
 
 ```ts
 // src/shared/contracts/assets.ts
 import type { SitePath } from "./content";
+
+/** Variantes de imagen de la escena (AST §4.10). */
+export const SCENE_VARIANTS = ["photo", "sketch"] as const;
+export type SceneVariant = (typeof SCENE_VARIANTS)[number];
+
+/** Variante que se muestra mientras el visitante no elija otra. */
+export const DEFAULT_SCENE_VARIANT: SceneVariant = "photo";
+
+export function isSceneVariant(value: unknown): value is SceneVariant {
+  return SCENE_VARIANTS.some((variant) => variant === value);
+}
 
 /** Rectángulo en el espacio de escena (AST §4.2). */
 export interface SceneRect {
@@ -528,6 +546,9 @@ export interface SceneAsset {
   };
 }
 
+/** Manifiesto de la escena: una entrada por variante. */
+export type SceneAssets = Readonly<Record<SceneVariant, SceneAsset>>;
+
 export type RenderMode = "scene" | "simple";
 ```
 
@@ -545,7 +566,7 @@ export type RenderMode = "scene" | "simple";
 | TSC-AC08 | `findContentIssues(SECTION_LIST)` devuelve una lista vacía. | Prueba unitaria |
 | TSC-AC09 | Para cada regla C1 a C12 existe un caso de ejemplo que `findContentIssues` marca con esa regla y un caso correcto que no marca. | Prueba unitaria |
 | TSC-AC10 | Todo `SitePath` presente en los hechos corresponde a un archivo existente en `public/`. | Prueba unitaria |
-| TSC-AC11 | `parsePrefs` y `parseSession` devuelven los valores por defecto para `null`, texto que no es JSON, un array, un número y un objeto con tipos erróneos; conservan los campos válidos de un objeto parcialmente inválido; y `parseSession` elimina de `visited` los repetidos y los valores que no son `PrimaryComponentId`. | Prueba unitaria |
+| TSC-AC11 | `parsePrefs` y `parseSession` devuelven los valores por defecto para `null`, texto que no es JSON, un array, un número y un objeto con tipos erróneos; conservan los campos válidos de un objeto parcialmente inválido; `parsePrefs` sustituye por `photo` un `sceneVariant` que no es una variante válida; y `parseSession` elimina de `visited` los repetidos y los valores que no son `PrimaryComponentId`. | Prueba unitaria |
 | TSC-AC12 | Cada acción de los stores produce el efecto y la escritura de la tabla de §4.9; `markVisited` con un identificador ya presente no escribe en el almacenamiento. | Prueba unitaria |
 | TSC-AC13 | Antes de hidratar, los stores devuelven los valores por defecto aunque el almacenamiento contenga otros; después de montar `StoreHydrator` devuelven los valores almacenados y `hasHydrated` es `true`. | Prueba de componente |
 | TSC-AC14 | Las funciones de rutas devuelven los resultados de la tabla de §4.10. | Prueba unitaria |
@@ -580,5 +601,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.1 | Por decisión del autor (D-66). §4.9: `PersistedPrefs` gana `sceneVariant`, con su valor por defecto y la acción `setSceneVariant`. §4.11: `SCENE_VARIANTS`, `SceneVariant`, `DEFAULT_SCENE_VARIANT`, `isSceneVariant` y `SceneAssets`. TSC-AC11 ampliado. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Código normativo compilado y analizado con TypeScript 6.0.3, typescript-eslint 8.71.2 y ESLint 10.12.0. |
 | 2026-10-12 | 2.0 | Nuevo orden canónico decidido por el autor (D-46): cambian `PRIMARY_COMPONENT_IDS`, el orden de `SECTION_BY_COMPONENT` y de `SECTIONS`, y la lista esperada en TSC-AC06. |

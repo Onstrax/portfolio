@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | Todas las demás specs |
 
@@ -70,8 +70,8 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 
 #### M2 — Assets
 
-- **Entregables:** `build-assets.mjs` y `check-assets.mjs`; los derivados de `public/scene/`, `public/portrait/` y `public/og/`; `apple-icon.png`; `manifest.generated.ts`. El máster puede seguir siendo provisional (AST §4.9).
-- **Criterios de salida:** AST-AC08, AC09 y AC13 a AC16; CPU-AC09; SMP-AC14 y AC15; QLT-AC24.
+- **Entregables:** `build-assets.mjs` y `check-assets.mjs`; los derivados de `public/scene/` de las dos variantes, los de `public/portrait/` y `public/og/`; `apple-icon.png`; `manifest.generated.ts`. El máster puede seguir siendo provisional (AST §4.9).
+- **Criterios de salida:** AST-AC08, AC09, AC13 a AC16 y AC21; CPU-AC09; SMP-AC14 y AC15; QLT-AC24.
 
 #### M3 — Secciones
 
@@ -88,7 +88,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 #### M5 — Escena
 
 - **Entregables:** el script previo al pintado; `SceneLayer` con el cambio de modo, la carga bajo demanda y la captura de errores; `ScenePoster`; `Scene` con imagen, viñeteado, zonas, auras, etiquetas, display y pista; la superposición de calibración; `hotspots.ts` calibrado.
-- **Criterios de salida:** SYS-AC05 a AC08, AC10, AC11 y AC17 a AC19; todos los criterios automáticos de SCN; AST-AC17 y AC18; VIS-AC04, AC11 y AC13; QLT-AC14, AC16, AC22 y AC26.
+- **Criterios de salida:** SYS-AC05 a AC08, AC10, AC11 y AC17 a AC20; todos los criterios automáticos de SCN; AST-AC17 y AC18; VIS-AC04, AC11 y AC13; QLT-AC14, AC16, AC22 y AC26.
 - **Tarea del autor:** A3.
 
 #### M6 — Panel
@@ -107,7 +107,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 #### M8 — Calidad
 
 - **Entregables:** el recorrido de axe por todos los estados auditables; las pruebas de presupuestos de peso; la configuración y el script de Lighthouse; las correcciones que resulten.
-- **Criterios de salida:** todos los criterios de QLT y de VIS; TST-AC10 y AC12; AST-AC01 a AC07 y AC10 a AC12, con `PROVENANCE.md` en estado `accepted` y el manifiesto sin `provisional`; la prueba de trazabilidad pasa con todas las specs, salvo DEP y PLAN, en estado "Implementada".
+- **Criterios de salida:** todos los criterios de QLT y de VIS; TST-AC10 y AC12; AST-AC01 a AC07, AC10 a AC12, AC20 y AC22, con las dos secciones de `PROVENANCE.md` en estado `accepted` y el manifiesto sin `provisional`; la prueba de trazabilidad pasa con todas las specs, salvo DEP y PLAN, en estado "Implementada".
 - **Tareas del autor:** A1, A6 y A7.
 
 #### M9 — Publicación
@@ -123,7 +123,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 | --- | --- | --- | --- |
 | A1 | Hecha el 2026-10-13: modelos anotados en `design/scene/PROVENANCE.md` | — | AST-AC19 |
 | A2 | Hacer público el repositorio `Onstrax/portfolio`, ya creado como privado el 2026-10-13 | Al cerrar M9 | DEP-AC11 |
-| A3 | Revisar la calibración de las zonas con la superposición de depuración y la posición de las etiquetas | Durante M5 | SCN-AC17 |
+| A3 | Revisar la calibración de las zonas con la superposición de depuración, sobre las dos variantes de la escena, y la posición de las etiquetas | Durante M5 | SCN-AC17 |
 | A4 | Leer el contenido de las siete secciones en ambos idiomas | Al cerrar M3 y de nuevo, ya en el panel, en M6 | I18N-AC18 y el criterio de revisión manual de cada sección |
 | A5 | Escuchar los cinco efectos de sonido | Durante M7 | SET-AC12 |
 | A6 | Auditoría manual: teclado, lector de pantalla, zoom, movimiento reducido, teléfono, sin JavaScript y consola | Durante M8 | QLT-AC27, VIS-AC12 |
@@ -138,7 +138,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 
 | Hito | Fecha de cierre | Commit de cierre | Observaciones |
 | --- | --- | --- | --- |
-| M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). Pendiente la revisión del autor de PLAN-AC01 y PLAN-AC03. |
+| M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). El autor revisó el cierre y confirmó las enmiendas el 2026-10-13. Complemento posterior del mismo día: `pnpm check:docker` (TST-AC16), con el que la puerta completa, WebKit incluido, pasa también en local. |
 | M1 | — | — | — |
 | M2 | — | — | — |
 | M3 | — | — | — |
@@ -185,6 +185,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.3 | Por decisión del autor (D-66 y D-67). M2 genera los derivados de las dos variantes (AST-AC21); M5 añade SYS-AC20; M8, AST-AC20 y AC22; A3 revisa la calibración sobre las dos variantes. `check:docker` (TST-AC16) se añade como complemento de M0. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor el 2026-10-13. Nuevos PLAN-R12 (M0 adelanta `locale.ts`, `ids.ts`, `getSiteUrl` y `typed-object.ts`; TSC-AC06 pasa de M1 a M0) y PLAN-R13 (marcadores de `assets:*` y `test:lighthouse` hasta M2 y M8). §2: la fecha de publicación es dura. M3: los PDF publicados solo llevan título y autor en sus propiedades. |
 | 2026-10-13 | 1.1 | Aprobada por el autor. PLAN-R02: M0 empieza el 2026-10-13 con las versiones de arranque. Nuevo §4.5 (qué se puede aplazar). A1 hecha; A2 actualizada. |
 | 2026-10-12 | 1.0 | Versión inicial. |

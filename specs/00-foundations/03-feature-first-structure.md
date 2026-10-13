@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.5 |
+| Versión | 1.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS |
 
@@ -41,6 +41,7 @@ Definir dónde vive cada archivo, qué puede importar cada parte del código y c
 ├── CLAUDE.md                  Instrucciones para agentes; apunta a specs/README.md
 ├── README.md                  Presentación del repositorio (ver DEP)
 ├── LICENSE                    Licencias (ver DEP)
+├── .dockerignore              Contexto vacío de la imagen (ver TST §4.10)
 ├── .editorconfig
 ├── .env.example               Variables de entorno (ver SYS §4.10)
 ├── .gitignore
@@ -50,6 +51,8 @@ Definir dónde vive cada archivo, qué puede importar cada parte del código y c
 │   └── workflows/
 │       ├── ci.yml             Pipeline de CI (ver TST)
 │       └── deploy.yml         Publicación en producción (ver DEP)
+├── compose.yaml               Servicio `check` en contenedor (ver TST §4.10)
+├── Dockerfile                 Réplica local del entorno de CI (ver TST §4.10)
 ├── eslint.config.mjs
 ├── lighthouserc.desktop.json  Lighthouse, preajuste de escritorio (ver TST §4.6)
 ├── lighthouserc.mobile.json   Lighthouse, preajuste móvil (ver TST §4.6)
@@ -67,8 +70,9 @@ Definir dónde vive cada archivo, qué puede importar cada parte del código y c
 │   ├── portrait/
 │   │   └── source.jpg         Fotografía original
 │   └── scene/
-│       ├── master.png         Máster de la escena (ver AST)
-│       └── PROVENANCE.md      Procedencia del máster (ver AST)
+│       ├── master.png         Máster de la variante fotografía (ver AST)
+│       ├── master-sketch.png  Máster de la variante boceto (ver AST §4.10)
+│       └── PROVENANCE.md      Procedencia de los dos másteres (ver AST)
 ├── docs/                      Material privado de entrada. NO versionado
 ├── e2e/                       Pruebas E2E y de exportación (ver TST §4.5)
 ├── public/                    Archivos servidos tal cual
@@ -308,6 +312,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.6 | Por decisión del autor (D-66 y D-67). Árbol: se añaden `design/scene/master-sketch.png`, `Dockerfile`, `compose.yaml` y `.dockerignore`. |
 | 2026-10-13 | 1.5 | Decidido por delegación del autor durante M0. STR-R02: `.gitignore` excluye también `next-env.d.ts` y `*.tsbuildinfo`, que se regeneran en cada compilación; `pnpm typecheck` pasa en una copia limpia sin ellos. |
 | 2026-10-13 | 1.4 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 1.4 | Confirmada por el autor el 2026-10-13. Árbol: se añaden `.github/workflows/deploy.yml`, `scripts/build-headers.mjs` y `scripts/smoke-test.mjs` (DEP). |

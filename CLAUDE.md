@@ -40,7 +40,7 @@ Resumen para orientarse; el detalle normativo está en las specs citadas.
 - **La URL es el estado.** `/{locale}/` es la escena sin panel, `/{locale}/{section}/` es el panel de esa sección abierto y `/{locale}/cv/` es siempre la vista simple. Zustand solo guarda preferencias, estado de sesión y si los ajustes están abiertos (SYS §4.3 y §4.6).
 - **Features.** Siete de sección, cada uno con su contenido y un único componente de servidor que sirve al panel y a la vista simple (se distinguen por `idScope`); y cinco de armazón: `boot-sequence`, `motherboard-scene`, `detail-panel`, `settings` y `simple-view`. `features/registry.ts` es el único acceso a las secciones. Dirección de los imports: `app → armazón → registry → secciones → shared` (STR).
 - **Frontera servidor/cliente.** El registro nunca llega al navegador: los layouts de servidor resuelven los datos y los pasan por propiedades. Un armazón con las dos caras expone `index.ts` (cliente) y `server.ts` (servidor). `src/app/[locale]/(scene)/scene-layer.tsx` es el único lugar donde se componen los armazones, cargados bajo demanda (STR-R32, STR-R33, SYS-R47).
-- **Escena.** Imagen pre-renderizada: `design/scene/master.png` genera los derivados de `public/scene/` y `manifest.generated.ts`. Las zonas son enlaces HTML recortados con `clip-path` sobre polígonos en un espacio de 1600×900 unidades (`hotspots.ts`, ligado a la versión del máster); las auras van en un SVG decorativo aparte (AST, SCN).
+- **Escena.** Imagen pre-renderizada: `design/scene/master.png` genera los derivados de `public/scene/` y `manifest.generated.ts`. Las zonas son enlaces HTML recortados con `clip-path` sobre polígonos en un espacio de 1600×900 unidades (`hotspots.ts`, ligado a la versión del máster); las auras van en un SVG decorativo aparte (AST, SCN). Hay dos variantes de imagen, `photo` y `sketch`, que el visitante intercambia en los ajustes: comparten zonas y calibración, y solo cambian la imagen y tres colores (`--scene-aura`, `--scene-backdrop`, `--scene-display`).
 
 ## Reglas que más se incumplen
 
@@ -73,7 +73,7 @@ Resumen para orientarse; el detalle normativo está en las specs citadas.
 - `NEXT_PUBLIC_SITE_URL` es obligatoria para compilar, y por tanto para `pnpm check`. En local y en CI vale `http://localhost:4173` (ver `.env.example`).
 - La superposición de calibración de zonas se abre en `pnpm dev` añadiendo `?debug=hotspots` a la URL.
 - Los scripts los fija SYS §4.9. `pnpm exec vitest run` no mide cobertura; los mínimos solo se aplican con `pnpm test`.
-- En este equipo (CachyOS) el WebKit de Playwright no arranca. Las E2E locales se lanzan con `pnpm test:e2e --project=chromium --project=firefox --project=export`; WebKit lo verifica CI (TST-R44).
+- En este equipo (CachyOS) el WebKit de Playwright no arranca: la puerta local completa es `pnpm check:docker`, que ejecuta `pnpm check` en la imagen de Playwright, igual que CI (TST §4.10). Para iterar rápido sin WebKit: `pnpm test:e2e --project=chromium --project=firefox --project=export`.
 - Las pruebas de lint (`tests/lint/`) analizan fragmentos bajo la ruta de un archivo real; las de arquitectura y trazabilidad leen el repositorio, así que un texto de ejemplo con una infracción literal las hace fallar: se ensambla en tiempo de ejecución.
 
 ## Al terminar un trabajo

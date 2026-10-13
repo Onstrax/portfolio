@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -35,10 +35,10 @@ Feature: `src/features/motherboard-scene/`. `index.ts` exporta el componente de 
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R01 | `Scene` renderiza un **escenario** con la geometría de AST-R03 y, dentro de él, estas capas de abajo arriba: (1) la imagen; (2) el viñeteado de AST-R48; (3) un SVG decorativo con las auras y el display de diagnóstico; (4) las zonas pulsables, como elementos HTML; (5) las etiquetas. Fuera del escenario, el fondo es `void`. |
+| SCN-R01 | `Scene` renderiza un **escenario** con la geometría de AST-R03 y, dentro de él, estas capas de abajo arriba: (1) la imagen de la variante activa (§4.12); (2) el viñeteado de AST-R48; (3) un SVG decorativo con las auras y el display de diagnóstico; (4) las zonas pulsables, como elementos HTML; (5) las etiquetas. Fuera del escenario, el fondo es el de la variante (AST-R03). |
 | SCN-R02 | El SVG decorativo usa `viewBox="0 0 1600 900"`, ocupa todo el escenario, lleva `aria-hidden="true"` y no recibe eventos de puntero. |
 | SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>`. |
-| SCN-R04 | `ScenePoster` es un componente de servidor que renderiza un bloque con el tamaño del escenario, el color medio y el marcador de posición desenfocado de `SCENE_ASSET.placeholder` como fondo. Es lo que se ve bajo el arranque, o en su lugar cuando no hay arranque, hasta que `Scene` se monta. No solicita ningún archivo. |
+| SCN-R04 | `ScenePoster` es un componente de servidor que renderiza, para cada variante, un bloque con el tamaño del escenario que tiene como fondo el color medio y el marcador de posición desenfocado de su entrada en `SCENE_ASSETS`. Solo es visible el de la variante que indica `data-scene` (variantes `scene-photo` y `scene-sketch`, SYS-R50). Es lo que se ve bajo el arranque, o en su lugar cuando no hay arranque, hasta que `Scene` se monta. No solicita ningún archivo. |
 | SCN-R05 | `Scene` recibe por propiedades (SYS-R49) la lista `sections: readonly SectionNavItem[]`, el idioma y las cadenas de interfaz que necesita. NO DEBE importar el registro (STR-R32). |
 
 ```ts
@@ -70,7 +70,7 @@ export interface SectionNavItem {
 | --- | --- |
 | SCN-R07 | Los datos de calibración (AST §4.8) viven en `src/features/motherboard-scene/hotspots.ts`, con la forma siguiente. |
 | SCN-R08 | Cada silueta tiene entre 4 y 24 vértices, todos dentro de la zona segura (AST-R05), y no se cruza a sí misma. |
-| SCN-R09 | `HOTSPOTS_CALIBRATED_FOR` es la versión del máster sobre el que se trazaron los polígonos (AST-R41). |
+| SCN-R09 | `HOTSPOTS_CALIBRATED_FOR` registra, para cada variante, la versión del máster con el que se comprobaron los polígonos (AST-R41). |
 | SCN-R10 | `validateHotspots`, función pura de `src/features/motherboard-scene/lib/`, devuelve la lista de incumplimientos de SCN-R08, de los tamaños mínimos de AST §4.4, de la separación de AST-R11, de la región reservada de AST-R47 y del solapamiento entre áreas pulsables (SCN-R13). Una prueba afirma que, con los datos reales, la lista está vacía. |
 
 ```ts
@@ -95,7 +95,10 @@ export interface Hotspot {
 
 ```ts
 // src/features/motherboard-scene/hotspots.ts
-export const HOTSPOTS_CALIBRATED_FOR = "dc169b385cc7";
+export const HOTSPOTS_CALIBRATED_FOR: Readonly<Record<SceneVariant, string>> = {
+  photo: "dc169b385cc7",
+  sketch: "b71cba0939ff",
+};
 export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
   /* una entrada por cada SceneObjectId, trazada en la calibración */
 };
@@ -117,10 +120,10 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R18 | El SVG decorativo dibuja un aura por cada una de las ocho zonas interactivas, sobre su silueta, con la composición y los valores de VIS §4.4. Las seis primarias usan los valores "primaria"; `cmos` y `settings`, los de "secundaria". La zona `post-display` no tiene aura. |
+| SCN-R18 | El SVG decorativo dibuja un aura por cada una de las ocho zonas interactivas, sobre su silueta, con la composición y los valores de VIS §4.4 y el color de aura de la variante activa (VIS-R44). Las seis primarias usan los valores "primaria"; `cmos` y `settings`, los de "secundaria". La zona `post-display` no tiene aura. |
 | SCN-R19 | El estado de cada aura es: **activo** si su sección está abierta o, para `settings`, si el menú de ajustes está abierto; **hover o foco** si el puntero está sobre su área pulsable o el elemento tiene foco de teclado; **reposo** en otro caso. |
 | SCN-R20 | La respiración del aura (VIS-R16) empieza cuando `data-boot` pasa a `done`, o al montarse la escena si ya lo estaba. |
-| SCN-R21 | El elemento pulsable no puede mostrar un contorno propio, porque `clip-path` lo recortaría. En su lugar, cuando una zona tiene foco de teclado (`:focus-visible`), el SVG decorativo dibuja un rectángulo sin relleno alrededor de la caja de su área pulsable, separado 4 unidades de ella, con un trazo de 2 px en `aura` que no escala con el escenario. Equivale al anillo de foco de VIS-R31. |
+| SCN-R21 | El elemento pulsable no puede mostrar un contorno propio, porque `clip-path` lo recortaría. En su lugar, cuando una zona tiene foco de teclado (`:focus-visible`), el SVG decorativo dibuja un rectángulo sin relleno alrededor de la caja de su área pulsable, separado 4 unidades de ella, con un trazo de 2 px, en el color de aura de la variante, que no escala con el escenario. Equivale al anillo de foco de VIS-R31. |
 
 ### 4.5 Etiquetas
 
@@ -138,7 +141,7 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R29 | Sobre la zona `post-display`, el SVG decorativo dibuja dos dígitos de siete segmentos que muestran, con cero a la izquierda, cuántas secciones primarias se han visitado en la sesión: de `00` a `06`. Los segmentos encendidos van en `boot-ok`; los apagados, en `boot-ok` con opacidad 0,08. Los dígitos ocupan la caja de la zona con un margen interior del 12 %. |
+| SCN-R29 | Sobre la zona `post-display`, el SVG decorativo dibuja dos dígitos de siete segmentos que muestran, con cero a la izquierda, cuántas secciones primarias se han visitado en la sesión: de `00` a `06`. Los segmentos encendidos van en el color de display de la variante (VIS-R44: `boot-ok` en la fotografía e `ink` en el boceto); los apagados, en ese mismo color con opacidad 0,08. Los dígitos ocupan la caja de la zona con un margen interior del 12 %. |
 | SCN-R30 | El valor es la longitud de `visited` en el store de sesión (TSC §4.9). Antes de hidratar se muestra `00`. Al cambiar, se ejecuta la animación M-09. |
 | SCN-R31 | La capa de escena contiene una región con `role="status"`, visible solo para lectores de pantalla, con el texto `common.visitedSectionsLabel({ count, total: 6 })`. Se actualiza al cambiar el valor (QLT-R24). |
 | SCN-R32 | Al pasar el puntero sobre la zona `post-display` se muestra una etiqueta con `scene.postDisplayName` y `common.visitedSectionsLabel`, con las reglas de SCN-R23 a SCN-R27. La zona no es enfocable; el mismo dato está en el menú de ajustes (ver SET), alcanzable con teclado. |
@@ -154,8 +157,8 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R35 | La imagen se renderiza con el elemento `<picture>` de AST-R37, con `alt=""` (QLT-R16), `width` y `height` del máster, `decoding="async"` y `fetchpriority="high"`. Aparece con la animación M-11 cuando termina de decodificarse; hasta entonces se ve `ScenePoster`. |
-| SCN-R36 | El layout del grupo `(scene)` incluye en `<head>` un `<link rel="preload" as="image">` para la imagen, con `imagesrcset` e `imagesizes` equivalentes a los del `<picture>`, el tipo `image/avif` y el atributo `media` igual a la consulta de SYS-R12, de modo que la descarga empiece antes de que cargue el JavaScript y nunca en modo `simple`. |
+| SCN-R35 | La imagen de la variante activa se renderiza con el elemento `<picture>` de AST-R37, con `alt=""` (QLT-R16), `width` y `height` del máster, `decoding="async"` y `fetchpriority="high"`. Aparece con la animación M-11 cuando termina de decodificarse; hasta entonces se ve `ScenePoster`. |
+| SCN-R36 | En modo `scene`, el script previo al pintado (SYS-R51) inserta en `<head>` un `<link rel="preload" as="image">` para la imagen de la variante activa, con `imagesrcset` e `imagesizes` equivalentes a los del `<picture>` y el tipo `image/avif`. Así la descarga empieza antes de que cargue el JavaScript, nunca ocurre en modo `simple` y nunca incluye la otra variante. |
 | SCN-R37 | `Scene` registra la marca `scene:ready` (QLT-R31) la primera vez que se cumplen a la vez dos condiciones: la imagen está decodificada y `data-boot` es `done`. |
 | SCN-R38 | Cuando la URL pasa de una sección al inicio y ningún elemento de la escena tiene el foco, `Scene` enfoca la zona de la sección que se acaba de cerrar (QLT-R08). |
 | SCN-R39 | Las zonas no responden al puntero ni al teclado mientras `data-boot` no es `done` (BOOT-R20). |
@@ -187,12 +190,20 @@ Espacio de nombres `scene` del diccionario de interfaz.
 
 Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display y `data-testid="scene-label"` en cada etiqueta.
 
+### 4.12 Variante de escena
+
+| ID | Requisito |
+| --- | --- |
+| SCN-R42 | La variante activa es `sceneVariant` del store de preferencias (TSC §4.9). Hasta que el store se hidrata, es la que indica `data-scene` en `<html>`, que escribe el script previo al pintado (SYS-R51): la primera imagen que se solicita ya es la de la variante guardada. |
+| SCN-R43 | Cuando cambia la variante, `Scene` actualiza `data-scene`, solicita la imagen de la nueva variante y la muestra, con la animación M-11, cuando termina de decodificarse; hasta entonces sigue visible la anterior. Las zonas, las etiquetas, el orden de tabulación y el foco no cambian. |
+| SCN-R44 | Dependen de la variante únicamente: la imagen y su marcador de posición, el color del aura y del rectángulo de foco, el color de fondo de las franjas y del viñeteado, y el color del display de diagnóstico (VIS-R44). Todo lo demás es idéntico en las dos. |
+
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
 | SCN-AC01 | `buildSectionNav` devuelve, para cada idioma, siete elementos en orden canónico con el título, el nombre de pieza y la ruta de cada sección, e `isPrimary` verdadero solo en los seis primeros. | Prueba unitaria |
-| SCN-AC02 | `validateHotspots(HOTSPOTS)` devuelve una lista vacía, y `HOTSPOTS_CALIBRATED_FOR` coincide con `SCENE_ASSET.version` (AST-AC17). | Prueba unitaria |
+| SCN-AC02 | `validateHotspots(HOTSPOTS)` devuelve una lista vacía, y cada versión de `HOTSPOTS_CALIBRATED_FOR` coincide con la de su variante en `SCENE_ASSETS` (AST-AC17). | Prueba unitaria |
 | SCN-AC03 | Para cada regla de SCN-R10, `validateHotspots` marca un caso de ejemplo que la incumple. | Prueba unitaria |
 | SCN-AC04 | `computeHitArea` devuelve la silueta cuando su caja mide 69 unidades o más en ambas dimensiones; una caja ampliada y centrada cuando no; y, con dos siluetas pequeñas separadas 20 unidades, dos áreas que no se solapan. | Prueba unitaria |
 | SCN-AC05 | En `desktop`, la escena tiene siete enlaces y un botón con los nombres accesibles de SCN-R15, en el orden de SCN-R12; cada enlace apunta a la ruta de su sección. | Prueba E2E |
@@ -202,12 +213,13 @@ Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-tes
 | SCN-AC09 | Con la emulación de un dispositivo sin hover a 1024×768 px, las ocho etiquetas son visibles, todas quedan dentro del escenario y ninguna caja de etiqueta se solapa con otra. | Prueba E2E |
 | SCN-AC10 | El display muestra `00` en una sesión nueva; tras abrir y cerrar Perfil y Proyectos muestra `02`; abrir Perfil otra vez no cambia el valor; abrir "Acerca de este sitio" tampoco. La región de estado contiene "2 de 6 secciones visitadas" en `/es/`. | Prueba E2E |
 | SCN-AC11 | La pista inicial es visible en una sesión nueva con el texto de `scene.hintLabel`, y deja de serlo tras abrir una sección, también después de cerrarla. | Prueba E2E |
-| SCN-AC12 | En `desktop` se solicita exactamente un archivo de la imagen de la escena y es un derivado AVIF; en `mobile` no se solicita ninguno (SYS-R16). | Prueba E2E, solo en Chromium |
+| SCN-AC12 | En `desktop`, en una primera visita, se solicita exactamente un archivo de la imagen de la escena y es un derivado AVIF de la variante `photo`; en `mobile` no se solicita ninguno (SYS-R16). | Prueba E2E, solo en Chromium |
 | SCN-AC13 | En cada viewport de modo `scene` de QLT §4.6, la caja del escenario tiene relación 16:9 con un error menor de 1 px, está centrada y no supera el viewport (AST-AC12). | Prueba E2E |
 | SCN-AC14 | Al cerrar el panel de Proyectos abierto por URL directa, el elemento con foco es la zona `ssd`. | Prueba E2E |
 | SCN-AC15 | El sitio exportado no contiene el código de la superposición de calibración: ningún archivo de `out/` contiene la cadena `debug=hotspots` (AST-AC18). | Prueba de exportación |
 | SCN-AC16 | La imagen tiene `alt=""`; el SVG decorativo y las etiquetas tienen `aria-hidden="true"`. | Prueba de componente |
-| SCN-AC17 | El autor completa la calibración con la superposición y confirma AST-AC10 a AST-AC12 y SCN-R28. | Revisión manual del autor, registrada en `PROVENANCE.md` y en el historial de esta spec |
+| SCN-AC17 | El autor completa la calibración con la superposición, sobre las dos variantes, y confirma AST-AC10 a AST-AC12, AST-AC20 y SCN-R28. | Revisión manual del autor, registrada en `PROVENANCE.md` y en el historial de esta spec |
+| SCN-AC18 | En `desktop`, tras elegir "Boceto" en los ajustes: `<html>` tiene `data-scene="sketch"`, la imagen visible es un derivado de la variante `sketch`, el trazo del aura de `cpu` tiene el color `aura-sketch`, y el enlace de la zona `cpu` conserva su posición, su tamaño y su nombre accesible. Tras recargar la página, todo ello se mantiene. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -220,6 +232,7 @@ Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-tes
 | **Display de dos dígitos, no interactivo** (D-23). | Informa del progreso sin añadir otro control. El texto equivalente llega a los lectores de pantalla por la región de estado y a todos por el menú de ajustes. |
 | **Pista inicial** (SCN-R33). | El aura sugiere que algo se puede pulsar, pero una frase lo confirma a quien no lo intuye. Desaparece en cuanto cumple su función. |
 | **Precarga de la imagen condicionada por la consulta de medios** (SCN-R36). | La descarga empieza con el HTML, en paralelo al JavaScript, y un teléfono nunca la inicia. |
+| **La variante se resuelve antes del primer pintado** (SCN-R36, SCN-R42). | Quien eligió el boceto no debe ver un fotograma de la fotografía ni descargarla. El script previo al pintado ya lee las preferencias para decidir el modo, así que fija también la variante e inicia la descarga de la imagen correcta. Por eso la precarga deja de ser una etiqueta estática, que no puede depender de una preferencia. |
 | **Rectángulo de foco dibujado en el SVG** (SCN-R21). | Es la única forma de mostrar un anillo alrededor de un elemento recortado con `clip-path`. Usa la caja y no la silueta porque un rectángulo se percibe como foco de forma inequívoca. |
 
 ## 7. Preguntas abiertas
@@ -230,4 +243,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.12 (SCN-R42 a SCN-R44): variante de escena. SCN-R04, R09, R18, R21, R29 y R35 pasan a depender de la variante; SCN-R36: la precarga la inserta el script previo al pintado. SCN-AC02, AC12 y AC17 adaptados; nuevo SCN-AC18. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

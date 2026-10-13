@@ -211,6 +211,8 @@ Resumen de una línea por decisión; el detalle y la justificación completa viv
 | D-63 | La implementación sigue diez hitos; el sitio se publica por primera vez al completar el último. | PLAN |
 | D-64 | 2026-10-13: la implementación empieza de inmediato con las versiones anteriores que cumplen la edad mínima de 7 días, y con ESLint 9. | SYS, PLAN |
 | D-65 | 2026-10-13: M0 adelanta los identificadores canónicos y la validación del entorno; los scripts de assets y de Lighthouse existen como marcadores hasta M2 y M8. La publicación debe estar hecha al final del 2026-10-16. | PLAN |
+| D-66 | 2026-10-13: la escena tiene dos variantes de imagen, fotografía (por defecto) y boceto, que el visitante intercambia desde los ajustes. Comparten objetos, zonas y calibración; cambian la imagen, el color del aura, el de las franjas y el del display. | VSN, AST, VIS, SCN, SET, TSC, SYS |
+| D-67 | 2026-10-13: `pnpm check:docker` ejecuta la puerta completa en la imagen de Playwright, para verificar WebKit en un equipo que no es Ubuntu ni Debian. | TST, SYS, STR |
 
 ## 7. Hechos confirmados por el autor
 
@@ -238,6 +240,7 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | F-18 | Detalles rescatados del CV antiguo: materias que dicta como tutor (Introducción a la Programación; Estructuras de Datos y Algoritmos; Diseño y Programación Orientada a Objetos; Desarrollo de Software en Equipo); logro como tutor (los estudiantes mejoran su desempeño, vuelven a contactarlo y lo recomiendan); Hall de la Fama de Estructuras de Datos y Algoritmos, semestre 2022-20, por los Retos 1, 2 y 3; ex co-representante del equipo de calistenia de la universidad, 2022–2024. | PSU, CPU, FAN | CPU-R03, PSU-R03, FAN-R04 |
 | F-19 | Herramientas para el asset de la escena: Gemini (generación y edición) y Upscayl (escalado). | AST | AST §4.5 |
 | F-20 | Idioma de respaldo cuando el navegador no está en español ni en inglés: inglés. | SYS, I18N | SYS-R08, I18N-R01 |
+| F-21 | El boceto de la escena ("Eleventh generation") se generó el 2026-10-13 con la misma herramienta y el mismo modelo que la fotografía, adjuntándola. Sus garabatos de los márgenes se conservan y su aura usa un color propio. | AST, VIS | AST-R51, AST-R52, VIS §4.1.5 |
 
 ## 8. Historial de cambios
 
@@ -251,3 +254,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | El autor aprueba `03-delivery/` y las últimas enmiendas. Todas las specs quedan aprobadas. Decisión D-64: versiones de arranque para empezar ya. |
 | 2026-10-13 | Antes de empezar M0: se retira de las cabeceras de SYS, STR, AST, I18N y QLT la marca de enmienda pendiente, ya confirmada; VSN 2.2 y SYS 2.1 enumeran los slugs en orden canónico; PLAN 1.2 y decisión D-65. |
 | 2026-10-13 | Durante M0, por delegación del autor: STR 1.5 (archivos generados en `.gitignore`) y TST 1.2 (regla de imágenes de Next desactivada, fragmentos de lint sobre archivos reales, WebKit solo en CI); y DEP 1.1 (el servidor de `preview` retira `upgrade-insecure-requests`, que rompía WebKit sobre HTTP). |
+| 2026-10-13 | El autor confirma las enmiendas de M0 y decide D-66 (dos variantes de escena) y D-67 (puerta en contenedor). Hecho F-21. Enmiendas: VSN 2.3, SYS 2.2, STR 1.6, VIS 2.2, AST 3.0, TSC 2.1, QLT 2.2, TST 1.3, SCN 1.1, SET 1.1, SMP 1.1, CMOS 1.1 y PLAN 1.3. |

@@ -3,13 +3,13 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
 ## 1. Propósito
 
-Especificar los controles globales de la escena: la barra fija con el idioma y el acceso a la vista simple, el menú de ajustes que abre el panel frontal (sonido, idioma, progreso y reinicio de sesión) y los efectos de sonido.
+Especificar los controles globales de la escena: la barra fija con el idioma y el acceso a la vista simple, el menú de ajustes que abre el panel frontal (sonido, imagen de la escena, idioma, progreso y reinicio de sesión) y los efectos de sonido.
 
 ## 2. Alcance
 
@@ -53,7 +53,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | SET-R08 | `SettingsMenu` está abierto mientras `settingsOpen` es `true` en el store de interfaz (TSC §4.9). Lo abre y lo cierra la zona `settings` de la escena. |
 | SET-R09 | Es un `<dialog>` nativo abierto con `showModal()`, con `aria-labelledby` apuntando a su título. Su aspecto es una placa oscura de 320 px de ancho, en la capa `z-settings`, con velo transparente. Usa la animación M-08. |
 | SET-R10 | Se coloca junto a la zona `settings`, en el lado de su `labelPlacement` (SCN-R07), y se desplaza lo necesario para quedar dentro del escenario con 8 px de margen. |
-| SET-R11 | Contiene, en este orden: (1) el título `settings.menuTitle`, como `<h2>`, y un botón de cerrar con el icono `close` y el nombre `settings.closeAriaLabel`; (2) el interruptor de sonido; (3) el selector de idioma, precedido de la etiqueta `common.languageLabel`; (4) el progreso, con el texto `common.visitedSectionsLabel({ count, total: 6 })`; (5) el botón de reinicio, con el texto `settings.resetLabel` y, debajo, la descripción `settings.resetDescription`. |
+| SET-R11 | Contiene, en este orden: (1) el título `settings.menuTitle`, como `<h2>`, y un botón de cerrar con el icono `close` y el nombre `settings.closeAriaLabel`; (2) el interruptor de sonido; (3) el selector de imagen de la escena (§4.8); (4) el selector de idioma, precedido de la etiqueta `common.languageLabel`; (5) el progreso, con el texto `common.visitedSectionsLabel({ count, total: 6 })`; (6) el botón de reinicio, con el texto `settings.resetLabel` y, debajo, la descripción `settings.resetDescription`. |
 | SET-R12 | Se cierra con el botón de cerrar, con Esc, con un clic fuera de la placa o al activar de nuevo la zona `settings`. Al abrirse, el foco pasa al interruptor de sonido; al cerrarse, vuelve a la zona `settings` (QLT-R08). |
 | SET-R13 | El menú se cierra si el modo de render pasa a `simple` o si cambia la URL. |
 | SET-R14 | Con el sonido activado, abrir y cerrar el menú reproducen el efecto `toggle`. |
@@ -83,14 +83,14 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | `open` | Se abre el panel de detalle (PNL) | `triangle` | 660 → 880 | 90 |
 | `close` | Se cierra el panel de detalle (PNL) | `triangle` | 660 → 440 | 90 |
 | `step` | Se cambia de sección dentro del panel (PNL) | `triangle` | 740 | 50 |
-| `toggle` | Se enciende el sonido; se abre o se cierra el menú de ajustes | `sine` | 520 | 40 |
+| `toggle` | Se enciende el sonido; se abre o se cierra el menú de ajustes; se cambia la imagen de la escena | `sine` | 520 | 40 |
 
 ### 4.6 Reinicio de sesión
 
 | ID | Requisito |
 | --- | --- |
 | SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). |
-| SET-R25 | El reinicio no cambia el idioma ni la preferencia de sonido. Tras él, el display de diagnóstico muestra `00` y la pista inicial de la escena vuelve a verse (SCN-R33). |
+| SET-R25 | El reinicio no cambia el idioma, la preferencia de sonido ni la imagen de la escena. Tras él, el display de diagnóstico muestra `00` y la pista inicial de la escena vuelve a verse (SCN-R33). |
 | SET-R26 | El botón Power del panel frontal, visible en la imagen, no tiene ninguna función (D-11). |
 
 ### 4.7 Textos de interfaz
@@ -107,6 +107,17 @@ Espacio de nombres `settings` del diccionario de interfaz.
 | `soundDescription` | Efectos breves al abrir y cerrar secciones. | Short effects when opening and closing sections. |
 | `resetLabel` | Reiniciar sesión | Reset session |
 | `resetDescription` | Repite el arranque y borra el progreso. | Replays the boot sequence and clears progress. |
+| `sceneImageLabel` | Imagen de la escena | Scene image |
+| `scenePhotoLabel` | Fotografía | Photo |
+| `sceneSketchLabel` | Boceto | Sketch |
+
+### 4.8 Imagen de la escena
+
+| ID | Requisito |
+| --- | --- |
+| SET-R27 | El selector de imagen de la escena es un `<fieldset>` cuya `<legend>` es `settings.sceneImageLabel`, con un `<input type="radio">` nativo por cada variante de `SCENE_VARIANTS` (TSC §4.11), en ese orden, y las etiquetas `settings.scenePhotoLabel` y `settings.sceneSketchLabel`. Refleja y modifica `sceneVariant` del store de preferencias (TSC §4.9). En una primera visita está marcada la fotografía. |
+| SET-R28 | El cambio se aplica de inmediato y sin cerrar el menú: la escena cambia de imagen como indica SCN-R43. Con el sonido activado se reproduce el efecto `toggle`. |
+| SET-R29 | La variante elegida se conserva entre visitas. El reinicio de sesión no la modifica (SET-R25). |
 
 ## 5. Criterios de aceptación
 
@@ -121,8 +132,9 @@ Espacio de nombres `settings` del diccionario de interfaz.
 | SET-AC07 | Con el sonido apagado, `playSound` no crea ningún `AudioContext`. Con el sonido encendido, cada `SoundName` crea un oscilador con la onda, las frecuencias y la duración de la tabla de §4.5, y la ganancia nunca supera 0,06. | Prueba unitaria con una Web Audio API simulada |
 | SET-AC08 | `playSound` no lanza ni deja promesas rechazadas cuando `AudioContext` no existe, cuando su constructor lanza y cuando `resume()` se rechaza. | Prueba unitaria |
 | SET-AC09 | Tras visitar dos secciones, el menú muestra "2 de 6 secciones visitadas" en `/es/`. Activar "Reiniciar sesión" con una sección abierta: cierra el menú, deja la URL en `/es/`, muestra el arranque y, al terminar, el display marca `00` y la pista inicial es visible. | Prueba E2E |
-| SET-AC10 | El reinicio de sesión conserva el idioma de la página y el valor de `soundEnabled`. | Prueba E2E |
+| SET-AC10 | El reinicio de sesión conserva el idioma de la página y los valores de `soundEnabled` y `sceneVariant`. | Prueba E2E |
 | SET-AC11 | En `mobile` no se renderizan ni la barra fija ni el menú de ajustes. | Prueba E2E |
+| SET-AC13 | El menú de ajustes muestra el grupo "Imagen de la escena" con las opciones "Fotografía" y "Boceto" en `/es/`, y "Scene image", "Photo" y "Sketch" en `/en/`; en una primera visita está marcada la primera. Al elegir "Boceto", el menú sigue abierto, `localStorage` contiene `sceneVariant: "sketch"` y, tras recargar la página, sigue marcada. | Prueba E2E |
 | SET-AC12 | El autor escucha los cinco efectos con el sonido activado y confirma que son discretos y coherentes entre sí. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -134,6 +146,7 @@ Espacio de nombres `settings` del diccionario de interfaz.
 | **Menú como `<dialog>` modal pequeño** (SET-R09). | Mismo patrón que el panel de detalle: foco retenido, Esc y fondo inerte sin código propio. |
 | **Sonidos sintetizados, sin archivos** (D-50). | Cinco pitidos cortos se describen con una tabla y pesan cero bytes; no hay licencias que gestionar ni descargas. Además, un pitido sintético es exactamente lo que emite una placa madre al arrancar. |
 | **Sonido apagado por defecto y nunca al pasar el puntero** (D-12, SET-R23). | Un sitio que suena sin permiso se cierra. El sonido es un extra que el visitante elige. |
+| **La imagen de la escena se elige con botones de opción nativos** (SET-R27, D-66). | Son dos opciones excluyentes: el elemento nativo ya da el grupo, las flechas del teclado y el anuncio correcto en un lector de pantalla. Va en los ajustes y no en la barra fija porque es una preferencia secundaria, como el sonido. |
 | **Reinicio sin confirmación** (SET-R24). | No destruye nada de valor: borra un contador y repite una animación de dos segundos. |
 | **Power sin función** (D-11). | Cualquier acción de "apagar" dejaría al visitante ante una pantalla sin contenido. |
 | **Selector de idioma en `shared/ui`.** | Lo usan tres features de armazón, que no pueden importarse entre sí (STR-R07). |
@@ -146,4 +159,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.8 (SET-R27 a SET-R29): selector de imagen de la escena en el menú de ajustes. SET-R11: nuevo orden del contenido. SET-R25 y SET-AC10: el reinicio conserva la variante. Tres textos nuevos y nuevo SET-AC13. El efecto `toggle` suena también al cambiar de imagen. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.0 |
+| Versión | 3.0 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS |
 
@@ -11,7 +11,7 @@
 
 Especificar la imagen fotorrealista de fondo: qué debe mostrar, cómo se genera, cómo se acepta, cómo se convierte en archivos para la web y cómo se calibran sobre ella las zonas interactivas.
 
-La imagen todavía no existe. Las imágenes de `docs/VisualIdeas/` son inspiración y NO DEBEN usarse como asset.
+La escena tiene dos variantes de imagen, fotografía y boceto (§4.10). Salvo donde se diga otra cosa, los requisitos de esta spec describen la fotografía, que es la variante de referencia; §4.10 dice en qué se aparta el boceto. Las imágenes de `docs/VisualIdeas/` son inspiración y NO DEBEN usarse como asset.
 
 ## 2. Alcance
 
@@ -23,7 +23,8 @@ La imagen todavía no existe. Las imágenes de `docs/VisualIdeas/` son inspiraci
 
 | Término | Definición |
 | --- | --- |
-| **Máster** | El archivo original de la escena a máxima resolución: `design/scene/master.png`. |
+| **Máster** | El archivo original de una variante de la escena a máxima resolución: `design/scene/master.png` para la fotografía y `design/scene/master-sketch.png` para el boceto. |
+| **Variante** | Cada una de las dos imágenes de la escena: `photo` o `sketch` (§4.10). |
 | **Derivado** | Versión del máster redimensionada y comprimida para servirse en la web. |
 | **Manifiesto** | Archivo generado que describe los derivados disponibles y la versión del máster de la que proceden. |
 | **Versión del máster** | Los 12 primeros caracteres hexadecimales del SHA-256 del archivo máster. |
@@ -37,17 +38,17 @@ La imagen todavía no existe. Las imágenes de `docs/VisualIdeas/` son inspiraci
 
 | ID | Requisito |
 | --- | --- |
-| AST-R01 | Los entregables de esta spec son: (1) el máster; (2) el registro de procedencia `design/scene/PROVENANCE.md`; (3) los derivados en `public/scene/`; (4) el manifiesto `src/shared/assets/manifest.generated.ts`; (5) los scripts `scripts/build-assets.mjs` y `scripts/check-assets.mjs`. |
+| AST-R01 | Los entregables de esta spec son: (1) los dos másteres; (2) el registro de procedencia `design/scene/PROVENANCE.md`; (3) los derivados en `public/scene/`; (4) el manifiesto `src/shared/assets/manifest.generated.ts`; (5) los scripts `scripts/build-assets.mjs` y `scripts/check-assets.mjs`. |
 
 ### 4.2 Espacio de escena y encuadre
 
 | ID | Requisito |
 | --- | --- |
 | AST-R02 | El **espacio de escena** es un sistema de coordenadas de 1600×900 unidades con el origen en la esquina superior izquierda, `x` hacia la derecha e `y` hacia abajo. Corresponde a la imagen completa: la unidad es 1/1600 del ancho del máster. Todas las posiciones y medidas de zonas, auras y objetos se expresan en estas unidades. |
-| AST-R03 | El **escenario** es el mayor rectángulo de relación 16:9 que cabe en el viewport, centrado en ambos ejes. Lo que queda fuera del escenario se rellena con el color `void`. La imagen se muestra siempre completa: nunca se recorta. |
+| AST-R03 | El **escenario** es el mayor rectángulo de relación 16:9 que cabe en el viewport, centrado en ambos ejes. Lo que queda fuera del escenario se rellena con el color de fondo de la variante activa: `void` en la fotografía y `paper` en el boceto (VIS-R44). La imagen se muestra siempre completa: nunca se recorta. |
 | AST-R04 | La imagen ocupa exactamente el escenario. La capa de zonas interactivas ocupa el mismo rectángulo, de modo que una coordenada del espacio de escena corresponde siempre al mismo punto de la imagen. |
 | AST-R05 | La **zona segura** es el rectángulo del espacio de escena con `x` entre 16 y 1584 e `y` entre 16 y 884. Todo objeto interactivo queda dentro, de modo que ningún aura toque el borde de la imagen. |
-| AST-R48 | Sobre la imagen se dibuja en código un **viñeteado**: en cada uno de los cuatro bordes del escenario, una franja de 64 unidades con un degradado lineal que va del color `void` opaco, en el borde, a transparente. Así la imagen se funde con las franjas exteriores y no se percibe su límite. |
+| AST-R48 | Sobre la imagen se dibuja en código un **viñeteado**: en cada uno de los cuatro bordes del escenario, una franja de 64 unidades con un degradado lineal que va del color de fondo de la variante (AST-R03), opaco en el borde, a transparente. Así la imagen se funde con las franjas exteriores y no se percibe su límite. |
 
 Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1024×576 px y una unidad de escena mide 0,64 px. Esa es la escala más pequeña posible y la que se usa para fijar tamaños mínimos: un área pulsable de 44 px equivale ahí a 69 unidades. SCN amplía el área pulsable de cada zona hasta ese mínimo cuando el objeto es más pequeño.
 
@@ -111,7 +112,7 @@ Notas sobre el inventario:
 | --- | --- |
 | AST-R25 | La imagen se genera y se edita con **Gemini**, usando su modelo de generación y edición de imágenes más reciente al que tenga acceso el autor. El escalado se hace con **Upscayl**. El retoque manual, si hace falta, con GIMP o Krita. |
 | AST-R26 | El procedimiento de generación es el de los pasos siguientes. |
-| AST-R27 | Todo lo que se haga para obtener el máster DEBE quedar anotado en `design/scene/PROVENANCE.md` con los campos de AST-R28. |
+| AST-R27 | Todo lo que se haga para obtener el máster DEBE quedar anotado en `design/scene/PROVENANCE.md` con los campos de AST-R28, en una sección por máster. |
 | AST-R28 | `PROVENANCE.md` contiene: fecha; estado (`provisional` o `accepted`); herramienta y nombre exacto del modelo de generación tal como lo muestra la herramienta; prompt inicial y cada instrucción de edición, en orden y literales; herramienta, modelo y factor de escalado; lista de retoques manuales; versión del máster (§3); fecha de la calibración; y el resultado de cada criterio AST-AC01 a AST-AC12 con la fecha de comprobación. |
 
 Procedimiento:
@@ -198,18 +199,62 @@ Se usan en el paso 3 del procedimiento, una por turno, sustituyendo lo que va en
 | La fuente de poder muestra una rejilla o un ventilador | `Keep everything else exactly the same. Replace the visible side of the power supply with a solid flat matte black panel carrying one blank pale rectangular sticker with nothing printed on it.` |
 | La cámara está inclinada | No se corrige por edición: se descarta el candidato. |
 
+#### 4.6.3 Prompt del boceto
+
+Se usa adjuntando la fotografía de origen del máster `photo` (AST-R52).
+
+```text
+Redraw the attached photograph as a technical illustration. Keep the exact same
+composition: same top-down camera (90 degrees, flat lay), same framing, and
+every object in the same position, size and orientation as in the photo. Change
+only the rendering style.
+
+STYLE: an engineer's annotated notebook sketch. Clean navy ink linework with
+soft flat color washes, drawn on cream graph paper with a fine light-blue grid
+that replaces the wooden table. No photorealism, no 3D render look, no
+photographic lighting or vignette; only light ink hatching for shadows. Crisp
+edges, everything in focus.
+
+KEEP FROM THE PHOTO, in the same places:
+- the motherboard in the center, vertical, drawn in pale cream with thin blue
+  circuit traces like a blueprint, with all its small capacitors, chips,
+  heatsinks and expansion slots as plain ink line art;
+- the CPU in its socket at the center of the board, tinted light steel blue;
+- the four RAM modules standing vertically to the right of the CPU, tinted
+  green and blue;
+- the M.2 SSD lying horizontally below the CPU, tinted mint green;
+- the rear I/O ports along the left edge of the board, tinted light grey;
+- the round coin-cell battery left of the SSD;
+- the small two-digit display at the bottom right of the board;
+- the power supply box at the left with its blank label and its thick bundle of
+  cables going down, tinted warm orange;
+- the case fan at the upper right, tinted pale violet;
+- the small front-panel module with two round buttons at the right;
+- all the workbench items exactly where they are: the solder spool and the
+  screw organizer at the top left, the loose screws and small chips, the
+  screwdrivers, the bit cases at the right, and the blue anti-static strap at
+  the bottom left. Draw them as lighter, simpler ink sketches so the hardware
+  stands out.
+
+In the empty margins, add a few faint pencil doodles (small graph diagrams,
+arrows, short formulas made of symbols). No other readable text anywhere.
+
+PALETTE: cream paper, navy ink, and soft washes of orange, green, blue, violet
+and grey.
+```
+
 ### 4.7 Derivados y manifiesto
 
 | ID | Requisito |
 | --- | --- |
 | AST-R32 | El máster es `design/scene/master.png`: 3840×2160 px exactos, PNG, sRGB, 8 bits por canal, sin canal alfa, de 30 MB como máximo. Se versiona en el repositorio. |
-| AST-R33 | `pnpm assets:build` genera a partir del máster los nueve derivados de la tabla siguiente en `public/scene/`, con el nombre `scene-<ancho>.<versión>.<extensión>`, donde `<versión>` es la versión del máster. Antes de generar, borra los derivados de versiones anteriores. |
+| AST-R33 | `pnpm assets:build` genera a partir de cada máster los nueve derivados de la tabla siguiente en `public/scene/`, dieciocho en total, con el nombre `scene-<ancho>.<versión>.<extensión>`, donde `<versión>` es la versión de ese máster. Antes de generar, borra los derivados de versiones anteriores. |
 | AST-R34 | Cada derivado DEBE respetar su peso máximo. Los ajustes de calidad iniciales son AVIF 50, WebP 74 y JPEG 78 (progresivo). Si un derivado supera su máximo, el script baja la calidad de ese formato de uno en uno hasta cumplirlo, sin bajar de AVIF 42, WebP 66 y JPEG 70. Si con la calidad mínima sigue superándolo, el script falla e informa del archivo y de su peso; el máximo solo se cambia modificando esta spec. |
 | AST-R46 | Los derivados NO DEBEN contener metadatos EXIF, XMP ni de ubicación (QLT-R47). |
 | AST-R35 | El script genera además un marcador de posición: una versión de 32×18 px, desenfocada, en WebP y codificada como URL de datos, de 1,5 kB como máximo; y el color medio de la imagen en hexadecimal. |
-| AST-R36 | El script escribe `src/shared/assets/manifest.generated.ts`, que exporta la constante `SCENE_ASSET` con la forma indicada más abajo. El manifiesto y los derivados se versionan en el repositorio. |
+| AST-R36 | El script escribe `src/shared/assets/manifest.generated.ts`, que exporta la constante `SCENE_ASSETS`, con una entrada por variante y la forma indicada más abajo. El manifiesto y los derivados se versionan en el repositorio. |
 | AST-R37 | La escena sirve la imagen con un elemento `<picture>` que ofrece AVIF, WebP y JPEG, en ese orden de preferencia, con los tres anchos en `srcset` y `sizes="min(100vw, 177.78vh)"`. |
-| AST-R38 | `pnpm assets:check` falla, indicando la causa, en cualquiera de estos casos: el máster no cumple AST-R32; el máster no cumple AST-R14; la versión del máster no coincide con la del manifiesto; falta algún derivado listado en el manifiesto o sobra alguno en `public/scene/`; algún derivado supera su peso máximo; algún derivado contiene metadatos (AST-R46). |
+| AST-R38 | `pnpm assets:check` falla, indicando la causa, en cualquiera de estos casos: un máster no cumple AST-R32; un máster no cumple el requisito de brillo de su variante (AST-R14 para la fotografía, AST-R51 para el boceto); la versión de un máster no coincide con la de su entrada en el manifiesto; falta algún derivado listado en el manifiesto o sobra alguno en `public/scene/`; algún derivado supera su peso máximo; algún derivado contiene metadatos (AST-R46). |
 | AST-R39 | Los scripts de este apartado generan y comprueban también los derivados de la fotografía del autor, cuyos requisitos define CPU. El manifiesto exporta para ellos una segunda constante, `PORTRAIT_ASSET`. |
 
 | Ancho × alto (px) | AVIF, máximo | WebP, máximo | JPEG, máximo |
@@ -218,30 +263,35 @@ Se usan en el paso 3 del procedimiento, una por turno, sustituyendo lo que va en
 | 2560 × 1440 | 600 kB | 850 kB | 1200 kB |
 | 3840 × 2160 | 1100 kB | 1600 kB | 2200 kB |
 
-Forma de `SCENE_ASSET`:
+Forma de `SCENE_ASSETS`. Las dos entradas tienen la misma estructura; se muestra completa la de `photo`:
 
 ```ts
-export const SCENE_ASSET = {
-  version: "a1b2c3d4e5f6",            // versión del máster
-  provisional: false,                 // ver §4.9
-  width: 3840,
-  height: 2160,
-  sceneSpace: { width: 1600, height: 900 },
-  safeArea: { x: 16, y: 16, width: 1568, height: 868 },
-  sources: {
-    avif: [
-      { width: 1920, src: "/scene/scene-1920.a1b2c3d4e5f6.avif" },
-      { width: 2560, src: "/scene/scene-2560.a1b2c3d4e5f6.avif" },
-      { width: 3840, src: "/scene/scene-3840.a1b2c3d4e5f6.avif" },
-    ],
-    webp: [/* misma estructura, extensión .webp */],
-    jpeg: [/* misma estructura, extensión .jpg */],
+export const SCENE_ASSETS = {
+  photo: {
+    version: "a1b2c3d4e5f6",            // versión del máster
+    provisional: false,                 // ver §4.9
+    width: 3840,
+    height: 2160,
+    sceneSpace: { width: 1600, height: 900 },
+    safeArea: { x: 16, y: 16, width: 1568, height: 868 },
+    sources: {
+      avif: [
+        { width: 1920, src: "/scene/scene-1920.a1b2c3d4e5f6.avif" },
+        { width: 2560, src: "/scene/scene-2560.a1b2c3d4e5f6.avif" },
+        { width: 3840, src: "/scene/scene-3840.a1b2c3d4e5f6.avif" },
+      ],
+      webp: [/* misma estructura, extensión .webp */],
+      jpeg: [/* misma estructura, extensión .jpg */],
+    },
+    placeholder: {
+      color: "#1a140f",
+      dataUrl: "data:image/webp;base64,…",
+    },
   },
-  placeholder: {
-    color: "#1a140f",
-    dataUrl: "data:image/webp;base64,…",
+  sketch: {
+    /* misma estructura, con los datos del máster del boceto */
   },
-} as const;
+} as const satisfies SceneAssets;
 ```
 
 Los valores de `version`, `src`, `color` y `dataUrl` del ejemplo son ilustrativos; los reales los escribe el script.
@@ -253,7 +303,7 @@ La calibración es el paso que convierte una imagen aceptada en una escena inter
 | ID | Requisito |
 | --- | --- |
 | AST-R40 | Cada zona interactiva se define como un polígono en el espacio de escena que sigue la silueta visible de su objeto. La forma exacta de esos datos y su archivo los define SCN. |
-| AST-R41 | Los datos de calibración DEBEN registrar la versión del máster para la que se trazaron. Una prueba unitaria DEBE fallar si esa versión no coincide con `SCENE_ASSET.version`. Cualquier cambio del máster obliga a recalibrar. |
+| AST-R41 | Los datos de calibración DEBEN registrar la versión de cada máster con el que se comprobaron. Una prueba unitaria DEBE fallar si alguna no coincide con la `version` de su entrada en `SCENE_ASSETS`. Cualquier cambio de un máster obliga a revisar la calibración. |
 | AST-R42 | El proyecto DEBE ofrecer una **superposición de calibración**, disponible solo en el servidor de desarrollo al añadir `?debug=hotspots` a la URL. Dibuja sobre la escena: cada polígono con su identificador, su caja mínima de área pulsable, el rectángulo de la zona segura y una cuadrícula cada 100 unidades con sus coordenadas. NO DEBE estar disponible en la compilación de producción. |
 | AST-R43 | El procedimiento de calibración es el de los pasos siguientes. |
 
@@ -269,12 +319,22 @@ Procedimiento:
 
 | ID | Requisito |
 | --- | --- |
-| AST-R44 | Para no bloquear el desarrollo, PUEDE usarse un **máster provisional**: una imagen que cumple AST-R32 pero aún no todos los criterios de composición. Se marca con `provisional` en `PROVENANCE.md`, y el manifiesto lleva `provisional: true`. |
-| AST-R45 | `pnpm assets:check --release` DEBE fallar si el manifiesto tiene `provisional: true`. El proceso de publicación usa esa variante (ver DEP), de modo que un máster provisional nunca llega a producción. |
+| AST-R44 | Para no bloquear el desarrollo, PUEDE usarse un **máster provisional**: una imagen que cumple AST-R32 pero aún no todos los criterios de composición. Se marca con `provisional` en su sección de `PROVENANCE.md`, y su entrada del manifiesto lleva `provisional: true`. |
+| AST-R45 | `pnpm assets:check --release` DEBE fallar si alguna variante tiene `provisional: true` en el manifiesto. El proceso de publicación usa esa variante (ver DEP), de modo que un máster provisional nunca llega a producción. |
+
+### 4.10 Variantes
+
+| ID | Requisito |
+| --- | --- |
+| AST-R49 | La escena tiene dos variantes: `photo`, cuyo máster es `design/scene/master.png`, y `sketch`, cuyo máster es `design/scene/master-sketch.png`. `photo` es la variante de referencia y la que se muestra por defecto: sobre ella se definen la composición, el inventario y la calibración. |
+| AST-R50 | El boceto es un redibujo de la fotografía. Contiene los mismos nueve objetos interactivos, en la misma posición, tamaño y orientación: la silueta de cada objeto en el boceto no se separa más de 8 unidades de la del mismo objeto en la fotografía. Por eso las dos variantes comparten una única calibración (§4.8). |
+| AST-R51 | El boceto cumple todos los requisitos de §4.3 y §4.4, con estas diferencias: (1) en lugar de AST-R08, AST-R12 y AST-R13, es un dibujo a tinta sobre papel cuadriculado claro, sin iluminación fotográfica, y el aura que se dibuja sobre él es la de su variante (VIS-R44); (2) en lugar de AST-R14, el brillo medio de cada una de las cuatro esquinas (un cuadrado de 160×160 unidades) DEBE ser de al menos el 70 %; (3) en lugar de AST-R16, se admiten en los márgenes garabatos a lápiz (diagramas, flechas y fórmulas hechas de símbolos) y, sobre la placa, rótulos ilegibles, pero NO DEBE contener palabras legibles, logotipos, nombres de marca ni marcas de agua; (4) el display de diagnóstico PUEDE mostrar dibujado el contorno de sus segmentos. |
+| AST-R52 | El boceto se genera con la misma herramienta y el mismo modelo que la fotografía, en una conversación nueva, adjuntando la imagen de origen del máster `photo` y con el prompt de §4.6.3. Es la única excepción a la regla de no adjuntar imágenes (§4.5, paso 4): aquí se busca precisamente que el generador reproduzca la composición. Después se escala, se recorta y se reduce con el mismo procedimiento que la fotografía (§4.5, pasos 5 y 6), para que las dos imágenes coincidan píxel a píxel en su encuadre. |
+| AST-R53 | Si se regenera una de las dos variantes, la otra DEBE seguir cumpliendo AST-R50. Si la fotografía cambia de composición, el boceto se regenera a partir de ella. |
 
 ## 5. Criterios de aceptación
 
-Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la **calibración**; AST-AC13 a AST-AC19, los **archivos y scripts**.
+Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la **calibración**; AST-AC13 a AST-AC19 y AST-AC21, los **archivos y scripts**; AST-AC20 y AST-AC22, la **variante boceto**.
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
@@ -285,18 +345,21 @@ Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la
 | AST-AC05 | Cada objeto cumple el aspecto exigido en la tabla de §4.4. La fuente de poder no muestra rejilla ni ventilador. | Revisión manual |
 | AST-AC06 | Una persona que no conoce hardware, a la que se le muestra la imagen con las etiquetas de la escena, señala correctamente cuál es cada uno de los seis componentes primarios. | Revisión manual: prueba informal del autor con una persona; resultado anotado en `PROVENANCE.md` |
 | AST-AC07 | Ningún objeto de atrezo toca, tapa ni se confunde con un objeto interactivo, y la imagen está enfocada en toda su extensión. | Revisión manual |
-| AST-AC08 | El brillo medio de cada esquina cumple AST-R14. | Ejecución de `pnpm assets:check` |
+| AST-AC08 | El brillo medio de cada esquina de cada máster cumple el requisito de su variante (AST-R14 o AST-R51). | Ejecución de `pnpm assets:check` |
 | AST-AC09 | El máster cumple AST-R32. | Ejecución de `pnpm assets:check` |
 | AST-AC10 | En la superposición de calibración, cada objeto interactivo queda completo dentro de la zona segura, cumple su tamaño mínimo de la tabla de §4.4, la placa madre cumple AST-R23 y ningún polígono invade la región reservada de AST-R47. | Revisión manual con la superposición |
 | AST-AC11 | En la superposición, ningún vértice de un polígono se separa de la silueta visible de su objeto más de 8 unidades, y la separación entre polígonos de objetos distintos es de 24 unidades o más. | Revisión manual con la superposición al 200 % de zoom |
-| AST-AC12 | A 1024×600, 1280×720, 1920×1080, 2560×1080 y 1024×768 px, la imagen se ve completa, sin recortes, con franjas del color `void` donde el viewport no es 16:9, y el aura de cada zona se distingue en todo su perímetro. | Prueba E2E para el encuadre; revisión manual del autor para el aura |
-| AST-AC13 | Tras `pnpm assets:build`, `public/scene/` contiene exactamente nueve archivos con los nombres de AST-R33 y cada uno respeta su peso máximo y ninguno contiene metadatos (AST-R46). | Ejecución de `pnpm assets:check` |
-| AST-AC14 | El manifiesto tiene la forma de AST-R36 y su `version` coincide con la del máster. | Ejecución de `pnpm assets:check` y de `pnpm typecheck` |
-| AST-AC15 | Al modificar un solo píxel del máster sin ejecutar `assets:build`, `pnpm assets:check` falla e indica que la versión no coincide. | Prueba de script con archivos de ejemplo |
-| AST-AC16 | Con un manifiesto que tiene `provisional: true`, `pnpm assets:check` termina bien y `pnpm assets:check --release` falla. | Prueba de script |
-| AST-AC17 | Si la versión registrada en los datos de calibración difiere de `SCENE_ASSET.version`, `pnpm test` falla. | Prueba unitaria |
+| AST-AC12 | A 1024×600, 1280×720, 1920×1080, 2560×1080 y 1024×768 px, la imagen se ve completa, sin recortes, con franjas del color de fondo de la variante donde el viewport no es 16:9, y el aura de cada zona se distingue en todo su perímetro. | Prueba E2E para el encuadre; revisión manual del autor para el aura |
+| AST-AC13 | Tras `pnpm assets:build`, `public/scene/` contiene exactamente dieciocho archivos, nueve por variante, con los nombres de AST-R33 y cada uno respeta su peso máximo y ninguno contiene metadatos (AST-R46). | Ejecución de `pnpm assets:check` |
+| AST-AC14 | El manifiesto tiene la forma de AST-R36 y la `version` de cada entrada coincide con la de su máster. | Ejecución de `pnpm assets:check` y de `pnpm typecheck` |
+| AST-AC15 | Al modificar un solo píxel de cualquiera de los dos másteres sin ejecutar `assets:build`, `pnpm assets:check` falla e indica que la versión no coincide. | Prueba de script con archivos de ejemplo |
+| AST-AC16 | Con un manifiesto que tiene `provisional: true` en alguna variante, `pnpm assets:check` termina bien y `pnpm assets:check --release` falla. | Prueba de script |
+| AST-AC17 | Si alguna versión registrada en los datos de calibración difiere de la de su variante en `SCENE_ASSETS`, `pnpm test` falla. | Prueba unitaria |
 | AST-AC18 | La superposición de calibración aparece con `?debug=hotspots` en el servidor de desarrollo y no existe en el sitio exportado: `out/` no contiene su código. | Prueba E2E sobre el sitio exportado y revisión del paquete generado |
 | AST-AC19 | `design/scene/PROVENANCE.md` existe y contiene todos los campos de AST-R28. | Revisión manual del autor |
+| AST-AC20 | En la superposición de calibración, con la variante `sketch` activa, ningún vértice de un polígono se separa de la silueta visible de su objeto más de 8 unidades (AST-R50). | Revisión manual con la superposición al 200 % de zoom |
+| AST-AC21 | `assets:check` rechaza un máster de `photo` con una esquina más clara que el límite de AST-R14 y un máster de `sketch` con una esquina más oscura que el de AST-R51, y acepta ambos cuando los cumplen. | Prueba de script con archivos de ejemplo |
+| AST-AC22 | El boceto cumple AST-R51: contiene los nueve objetos, completos y reconocibles, y ninguna palabra legible, logotipo ni marca. | Revisión manual al 100 % de tamaño, recorriendo toda la imagen |
 
 ## 6. Decisiones y justificación
 
@@ -314,6 +377,8 @@ Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la
 | **Derivados en tres anchos y tres formatos, con máximos de peso.** | AVIF da el menor peso; WebP y JPEG cubren navegadores sin AVIF. Tres anchos cubren desde portátiles hasta pantallas 4K sin servir de más. Los máximos hacen que el rendimiento sea un requisito comprobable y no una intención. |
 | **Derivados y manifiesto versionados, con `assets:check`** (D-32). | La compilación en el proveedor de hosting no necesita `sharp` y es reproducible; el nombre con la versión permite caché indefinida. `assets:check` impide el único riesgo, que es olvidar regenerar. |
 | **Máster provisional con bloqueo de publicación** (§4.9). | Obtener la imagen definitiva puede llevar varias iteraciones. Permite construir y probar la escena mientras tanto, con la garantía mecánica de que no se publica por descuido. |
+| **Dos variantes con una sola calibración** (§4.10, D-66). | El boceto se obtuvo pidiendo al generador que redibujara la fotografía sin mover nada. La correlación de bordes medida el 2026-10-13 da desfases de 0 a 3 unidades por objeto, dentro de las 8 que admite la calibración, así que las zonas, las etiquetas y el orden de foco son los mismos y cambiar de variante es cambiar la imagen y tres colores. |
+| **Reglas propias para el boceto** (AST-R51). | Las reglas de oscuridad existen para que el aura ámbar se distinga y la barra fija se lea; en el boceto lo primero lo resuelve un aura carmesí y lo segundo, que la barra es una placa oscura. Los garabatos de los márgenes no tocan ningún objeto y son parte del carácter del dibujo; lo que sigue prohibido es el texto legible, que el generador escribe mal y que no se puede traducir. |
 | **Registro de procedencia.** | Al ser una imagen generada, deja constancia de cómo se obtuvo, permite reproducirla o mejorarla y documenta que no contiene marcas de terceros. |
 
 ## 7. Preguntas abiertas
@@ -324,6 +389,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 3.0 | Por decisión del autor (D-66): la escena tiene dos variantes. Nuevo §4.10 (AST-R49 a AST-R53) y §4.6.3 con el prompt del boceto. El manifiesto pasa de `SCENE_ASSET` a `SCENE_ASSETS`, con una entrada por variante (AST-R36); derivados, comprobaciones, calibración y máster provisional se aplican por variante (AST-R33, R38, R41, R44, R45); el color de las franjas y del viñeteado depende de la variante (AST-R03, R48). Criterios AST-AC08 y AC12 a AC17 adaptados; nuevos AST-AC20 a AC22. |
 | 2026-10-13 | 2.0 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 2.0 | Máster aceptado por el autor: "Tenth generation", versión `dc169b385cc7`. Confirmado por el autor el 2026-10-12: AST-R03 a AST-R05, el escenario pasa a ser siempre 16:9 sin recortes y la zona segura abarca casi toda la imagen (D-48); nuevo AST-R48 (viñeteado); AST-R11, R14, R23 y R47 ajustados al máster; la fuente ya no necesita mostrar el cable llegando a la placa; §4.5 y §4.6.1, prompt y procedimiento sustituidos por los que funcionaron (D-49); AST-AC12 reescrito. |
 | 2026-10-12 | 1.0 | Versión inicial. Aprobada por el autor. |

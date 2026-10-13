@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
 
@@ -151,7 +151,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | TST-R41 | El flujo declara `permissions: contents: read` y no usa ningún secreto. Toda acción de terceros se referencia por el SHA completo de su commit, con la versión en un comentario. Solo se admiten acciones de las organizaciones `actions` y `pnpm`. |
 | TST-R42 | Cada trabajo tiene un límite de 15 minutos. Un nuevo commit en la misma rama cancela la ejecución anterior de ese `pull_request`. |
 | TST-R43 | Cuando falla un trabajo de pruebas E2E se guarda como artefacto el informe de Playwright con sus trazas. Los informes de Lighthouse y el resumen de cobertura se guardan siempre. Los artefactos se conservan 7 días. |
-| TST-R44 | El autor trabaja solo y PUEDE hacer `push` directo a `main`; no se exigen `pull_request`. Antes de cada `push` DEBE pasar `pnpm check` en local, y el flujo de CI se ejecuta sobre cada `push`. Un commit de `main` cuyo trabajo `ci-ok` falla se corrige antes de cualquier otro cambio, y solo se publica un commit con `ci-ok` en verde (ver DEP). En el equipo del autor (CachyOS), el WebKit de Playwright no arranca por dependencias de sistema que solo existen en Ubuntu y Debian: allí las pruebas E2E se ejecutan con los proyectos `chromium`, `firefox` y `export`, y WebKit lo verifica el flujo de CI en cada `push`. |
+| TST-R44 | El autor trabaja solo y PUEDE hacer `push` directo a `main`; no se exigen `pull_request`. Antes de cada `push` DEBE pasar `pnpm check` en local, y el flujo de CI se ejecuta sobre cada `push`. Un commit de `main` cuyo trabajo `ci-ok` falla se corrige antes de cualquier otro cambio, y solo se publica un commit con `ci-ok` en verde (ver DEP). En un equipo donde el WebKit de Playwright no arranca, como el del autor (CachyOS: faltan dependencias de sistema que solo existen en Ubuntu y Debian), la puerta local es `pnpm check:docker` (§4.10). |
 | TST-R45 | `pnpm check` (SYS-R34) ejecuta en local los mismos comandos que los trabajos `static`, `unit`, `build` y `e2e`. CI añade `lighthouse`. Un cambio que pasa `pnpm check` en local y falla en CI por una diferencia de entorno se trata como un defecto del pipeline. |
 
 | Trabajo | Depende de | Qué ejecuta |
@@ -169,6 +169,14 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | --- | --- |
 | TST-R46 | Los criterios de clase manual se verifican cuando lo indica su spec y, en todo caso, antes de pasar la spec a "Implementada". El resultado se anota en el historial de esa spec con la fecha y los identificadores verificados. |
 | TST-R47 | La auditoría manual de accesibilidad y robustez es la de QLT §4.8. |
+
+### 4.10 Entorno en contenedor
+
+| ID | Requisito |
+| --- | --- |
+| TST-R49 | `Dockerfile` define una imagen que reproduce el entorno de CI: parte de `mcr.microsoft.com/playwright:v<versión>-noble`, donde `<versión>` es exactamente la de `@playwright/test` en `package.json`, e instala el pnpm del campo `packageManager`. La imagen trae Ubuntu 24.04, la versión de Node de `.nvmrc` y los tres motores con sus dependencias. No copia nada del repositorio: `.dockerignore` excluye todo. |
+| TST-R50 | `compose.yaml` define un único servicio, `check`, que monta el repositorio en `/work`, fija `NEXT_PUBLIC_SITE_URL=http://localhost:4173` y ejecuta `pnpm check`. `pnpm check:docker` (SYS §4.9) lo lanza con el usuario del equipo, para que los archivos que escribe no queden a nombre de `root`. |
+| TST-R51 | El contenedor usa las dependencias ya instaladas en el equipo (`node_modules/`); no instala nada. Al cambiar la versión de `@playwright/test` o de pnpm se actualiza `Dockerfile` en el mismo cambio. |
 
 ## 5. Criterios de aceptación
 
@@ -189,6 +197,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | TST-AC13 | `ci.yml` contiene los seis trabajos de TST-R39 con sus dependencias; declara `permissions: contents: read`; toda línea `uses:` referencia un SHA de 40 caracteres de una organización admitida; y no aparece ninguna referencia a `secrets.`. | Prueba unitaria que lee el archivo |
 | TST-AC14 | El flujo de CI termina bien en `main`. | Ejecución en CI |
 | TST-AC15 | El proceso de publicación solo se ejecuta para un commit de `main` cuyo trabajo `ci-ok` terminó bien. | Revisión manual del autor sobre el flujo de publicación, registrada en el historial de esta spec |
+| TST-AC16 | La imagen de `Dockerfile` es la de Playwright en la versión de `@playwright/test`, instala el pnpm de `packageManager` y no copia archivos; el servicio `check` de `compose.yaml` monta el repositorio y ejecuta `pnpm check`; y `package.json` define `check:docker`. | Prueba unitaria que lee los archivos |
 
 ## 6. Decisiones y justificación
 
@@ -205,6 +214,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | **Pruebas de la propia configuración** (TST-R19, TST-AC07, TST-AC10, TST-AC13). | Las reglas de lint, los proyectos de Playwright, los umbrales de Lighthouse y el flujo de CI son requisitos de las specs. Si alguien los relaja por accidente, debe fallar una prueba. |
 | **Lighthouse con el Chromium de Playwright** (TST-R33). | Evita depender del navegador que tenga cada máquina y fija, a través del lockfile, la versión con la que se mide. |
 | **Acciones fijadas por SHA y permisos de solo lectura** (TST-R41). | Una etiqueta de versión de una acción puede reasignarse a otro código; un SHA no. Con permisos de lectura y sin secretos, un flujo comprometido no puede modificar el repositorio. |
+| **La puerta completa en un contenedor** (§4.10, D-67). | El WebKit de Playwright solo se distribuye para Ubuntu y Debian. Ejecutar `pnpm check` dentro de la imagen oficial da en local el mismo sistema, el mismo Node y los mismos tres motores que CI, de modo que un fallo de WebKit se ve antes del `push`. Se monta el repositorio en lugar de copiarlo para no reinstalar dependencias ni duplicar la política de pnpm. |
 | **Un único trabajo obligatorio, `ci-ok`.** | La protección de la rama no necesita cambios cuando se añaden o renombran trabajos. |
 
 ## 7. Preguntas abiertas
@@ -215,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.3 | Por decisión del autor (D-67). Nuevo §4.10 (TST-R49 a TST-R51): `pnpm check:docker` ejecuta la puerta en la imagen de Playwright. TST-R44: esa es la puerta local donde WebKit no arranca. Nuevo TST-AC16. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor durante M0. TST-R15: se desactiva `@next/next/no-img-element`. TST-R19: los fragmentos se analizan bajo la ruta de un archivo real. TST-R44: en el equipo del autor WebKit no arranca; lo verifica CI. |
 | 2026-10-12 | 1.1 | TST-R44 y TST-AC15: por decisión del autor se permite `push` directo a `main`; la garantía pasa a ser que solo se publica con CI en verde (D-45). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Composición de ESLint, reglas `jsx-a11y` y cobertura con Vitest comprobadas en un prototipo con las versiones de SYS §4.1. |

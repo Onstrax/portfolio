@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -81,7 +81,7 @@ export interface AboutText extends SectionTextBase {
 | `quality[1]` | Navegable por completo con teclado y con lector de pantalla, conforme a WCAG 2.2 AA. | Fully navigable by keyboard and screen reader, conforming to WCAG 2.2 AA. |
 | `quality[2]` | Sin JavaScript, o en un teléfono, el mismo contenido se muestra como una página sencilla. | Without JavaScript, or on a phone, the same content is shown as a plain page. |
 | `imageTitle` | La imagen | The image |
-| `image` | La fotografía de la placa se generó con IA y se escaló a alta resolución; las zonas interactivas y las auras se dibujan en código sobre ella. | The motherboard photograph was generated with AI and upscaled to high resolution; the interactive areas and the auras are drawn in code on top of it. |
+| `image` | La fotografía de la placa y su versión en boceto se generaron con IA y se escalaron a alta resolución; las zonas interactivas y las auras se dibujan en código sobre ellas. | The motherboard photograph and its sketch version were generated with AI and upscaled to high resolution; the interactive areas and the auras are drawn in code on top of them. |
 | `repositoryLabel` | Código y especificaciones en GitHub | Code and specifications on GitHub |
 
 ### 4.4 Presentación
@@ -133,4 +133,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Pendiente de la revisión de contenido del autor (A4). `image`: el texto menciona las dos variantes de la escena (D-66). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

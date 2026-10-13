@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.1 |
-| Última actualización | 2026-10-12 |
+| Versión | 2.2 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -22,7 +22,7 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 | ID | Principio |
 | --- | --- |
 | V1 | **Dos mundos, una frontera clara.** La escena es oscura, cálida y fotográfica. El contenido se lee sobre una superficie clara, plana y de alto contraste. Abrir un panel es pasar de "explorar" a "leer". |
-| V2 | **El ámbar significa "se puede pulsar".** En superficies oscuras, el ámbar se reserva para lo interactivo. Nunca se usa como decoración ni para texto sobre superficies claras. |
+| V2 | **El ámbar significa "se puede pulsar".** En superficies oscuras, el ámbar se reserva para lo interactivo. Nunca se usa como decoración ni para texto sobre superficies claras. En la variante boceto de la escena, cuyo fondo es claro, ese papel lo hace el carmesí `aura-sketch` (§4.1.5). |
 | V3 | **La interfaz no compite con la fotografía.** Mientras no se interactúa, sobre la escena solo hay auras y una barra discreta. |
 | V4 | **Tipografía de dos voces.** Monoespaciada para lo que suena a hardware (títulos, etiquetas, registro de arranque); sans-serif para lo que se lee de corrido. |
 | V5 | **El movimiento informa.** Cada animación responde a una acción o indica un cambio de estado. Nada se mueve para adornar, salvo la respiración inicial del aura, que señala interactividad. |
@@ -46,7 +46,7 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 | `plate` | `#0F0E0C` | Fondo de las placas oscuras (barra fija, etiquetas, ajustes); se aplica con opacidad 92 % |
 | `on-dark` | `#F3F1E7` | Texto principal sobre superficies oscuras |
 | `on-dark-muted` | `#B5B1A3` | Texto secundario sobre superficies oscuras |
-| `aura` | `#FFC53D` | Aura de las zonas interactivas; borde, texto y foco de controles interactivos sobre superficies oscuras |
+| `aura` | `#FFC53D` | Aura de las zonas interactivas en la variante fotografía; borde, texto y foco de controles interactivos sobre superficies oscuras, en ambas variantes |
 | `backdrop` | `#050504` | Velo sobre la escena cuando hay un panel abierto; se aplica con opacidad 60 % |
 
 #### 4.1.2 Superficies claras (panel de detalle, vista simple)
@@ -95,6 +95,19 @@ Relaciones de contraste WCAG 2.2 calculadas el 2026-10-12. Mínimos: 4,5:1 para 
 | `boot-text` | `boot-bg` | 14,82:1 | 4,5:1 |
 | `boot-dim` | `boot-bg` | 6,72:1 | 4,5:1 |
 | `boot-ok` | `boot-bg` | 11,67:1 | 4,5:1 |
+| `aura-sketch` | `paper` | 5,78:1 | 3:1 |
+| `ink` | `paper` (display de diagnóstico en el boceto) | 15,16:1 | 3:1 |
+
+#### 4.1.5 Variante boceto de la escena
+
+La variante boceto (AST §4.10) es un dibujo sobre papel claro, donde el ámbar no se distingue: su contraste con el papel es de 1,33:1. Estos dos tokens existen solo para ella.
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| `aura-sketch` | `#B3123A` | Aura y rectángulo de foco de las zonas interactivas en la variante boceto |
+| `paper` | `#F2EBDF` | Franjas fuera del escenario y viñeteado en la variante boceto. Es el color mediano del máster del boceto |
+
+Las placas oscuras (barra fija, etiquetas, ajustes y pista) no cambian con la variante: su fondo es propio y sus acentos siguen en `aura`.
 
 ### 4.2 Tipografía
 
@@ -154,7 +167,7 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 | ID | Requisito |
 | --- | --- |
-| VIS-R13 | El aura se compone de tres elementos del color `aura`: un **trazo** de 2 unidades de grosor sobre el contorno del polígono; un **resplandor** formado por dos copias desenfocadas del trazo (desenfoque gaussiano de 3 y de 10 unidades); y, solo en los estados de hover, foco y activo, un **relleno** del polígono con opacidad 0,08. |
+| VIS-R13 | El aura se compone de tres elementos del color de aura de la variante activa (VIS-R44): un **trazo** de 2 unidades de grosor sobre el contorno del polígono; un **resplandor** formado por dos copias desenfocadas del trazo (desenfoque gaussiano de 3 y de 10 unidades); y, solo en los estados de hover, foco y activo, un **relleno** del polígono con opacidad 0,08. |
 | VIS-R14 | El aura se dibuja sobre el contorno y hacia fuera. En reposo no rellena ni cubre la pieza. |
 | VIS-R15 | Las opacidades por estado son las de la tabla siguiente. Las seis zonas primarias usan los valores "primaria"; `cmos` y `settings` usan los valores "secundaria". |
 | VIS-R16 | Cuando la escena se hace visible, la opacidad del resplandor de las zonas en reposo **respira** durante 4800 ms: dos ciclos de 2400 ms entre el valor mínimo y el máximo de la tabla, con curva `ease-in-out` y todas las zonas en fase. Después queda fija en el valor máximo. La respiración solo se repite cuando la escena vuelve a hacerse visible tras una secuencia de arranque. Se interrumpe en la zona que pasa a hover, foco o activa. |
@@ -284,6 +297,13 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | --- | --- |
 | VIS-R42 | Todos los tokens de esta spec se declaran una sola vez en `src/styles/tokens.css`, con el mismo nombre que en las tablas. Los que corresponden a un espacio de nombres de Tailwind (color, familia tipográfica, radio, sombra, curva) se declaran dentro de `@theme` para que generen clases de utilidad; el resto (duraciones, capas, opacidades y medidas del aura) se declaran como propiedades personalizadas en `:root`. |
 | VIS-R43 | Los componentes referencian tokens, nunca valores literales (ver STR-R22). Un valor que no tenga token y se use en dos o más lugares DEBE convertirse en token y añadirse a esta spec. |
+| VIS-R44 | `src/styles/tokens.css` declara tres propiedades personalizadas cuyo valor depende del atributo `data-scene` de `<html>` (SYS-R51), según la tabla siguiente. Los componentes de la escena usan estas propiedades y nunca eligen el color por su cuenta. Sin el atributo, valen lo que en `photo`. |
+
+| Propiedad | En `photo` | En `sketch` | Uso |
+| --- | --- | --- | --- |
+| `--scene-aura` | `aura` | `aura-sketch` | Trazo, resplandor y relleno del aura; rectángulo de foco de las zonas (SCN-R21) |
+| `--scene-backdrop` | `void` | `paper` | Fondo fuera del escenario y viñeteado (AST-R03, AST-R48) |
+| `--scene-display` | `boot-ok` | `ink` | Segmentos del display de diagnóstico (SCN-R29) |
 
 ## 5. Criterios de aceptación
 
@@ -311,6 +331,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | **Aura ámbar fija** (D-07). | Contraste alto frente a los tonos reales de la escena (entre 5:1 y 9:1 sobre PCB verde oscuro y madera oscura) y coherencia con la luz cálida de la lámpara. Es fija porque su única función es decir "esto se puede pulsar". |
 | **La respiración del aura dura 4,8 segundos y no se repite** (VIS-R16, D-34). | WCAG 2.2.2 (nivel A) exige poder pausar todo movimiento automático de más de 5 segundos. Limitarla cumple el criterio sin añadir un control de pausa: atrae la mirada cuando la escena aparece y después deja el aura fija, que es lo que pidió el autor. La versión 1.0 la definía como un bucle continuo. |
 | **El aura se dibuja hacia fuera del contorno** (VIS-R14). | Sobre metal claro (disipador del CPU, chapa del panel I/O) el ámbar apenas contrasta (1,5:1). Dibujada hacia fuera, se ve contra el PCB o la madera que rodean la pieza. AST exige que ese entorno sea oscuro. |
+| **Carmesí para el aura del boceto** (`aura-sketch`, D-66). | Sobre el papel del boceto, medido en `#F2EBDF`, el ámbar queda en 1,33:1. El carmesí alcanza 5,78:1, no coincide en tono con ninguna de las aguadas del dibujo (naranja, verde, azul, violeta y gris) ni con la tinta azul marino, y se lee como la anotación en rojo de un cuaderno de ingeniería. Es un token aparte porque, sobre las placas oscuras, el carmesí solo llega a 2,82:1: ahí el acento sigue siendo el ámbar. |
 | **Opacidad del 92 % en las placas oscuras.** | Deja intuir la fotografía detrás sin comprometer la lectura: incluso sobre un fondo blanco, que nunca ocurre en la escena, el texto mantiene 14:1 y el secundario 7,5:1. |
 | **`accent` oscuro en lugar del ámbar del aura sobre superficies claras.** | El ámbar del aura no es legible sobre claro. `accent` es el mismo matiz oscurecido hasta superar 4,5:1, así que conserva la identidad sin perder contraste. |
 | **Inter y JetBrains Mono.** | Ambas son variables, de licencia libre y con buena legibilidad en pantalla a tamaños pequeños. La monoespaciada da el carácter técnico; usarla también en el cuerpo cansaría la lectura. |
@@ -325,6 +346,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.2 | Por decisión del autor (D-66). Nuevo §4.1.5 con los tokens `aura-sketch` y `paper`; nuevo VIS-R44 con las propiedades `--scene-aura`, `--scene-backdrop` y `--scene-display`; VIS-R13 usa el color de aura de la variante; dos pares nuevos en la tabla de contraste. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. Inventario de movimiento: se añaden M-11 y M-12 (SCN). `boot-ok` se usa también en el display de diagnóstico. |
 | 2026-10-12 | 1.0 | Versión inicial. Contrastes calculados sobre los valores de §4.1. Aprobada por el autor. |
 | 2026-10-12 | 2.0 | Confirmada por el autor el 2026-10-12. VIS-R16 y M-03: la respiración del aura deja de ser un bucle continuo y pasa a durar 4800 ms tras hacerse visible la escena (D-34, QLT-R19). Nuevo criterio VIS-AC13. |

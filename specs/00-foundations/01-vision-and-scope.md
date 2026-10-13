@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.2 |
+| Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | — |
 
@@ -93,6 +93,7 @@ El orden de esta tabla es el **orden canónico** de las secciones primarias en l
 | VSN-R12 | La escena interactiva NO DEBE requerir scroll de página. Los paneles PUEDEN tener scroll interno. |
 | VSN-R13 | El sitio DEBE funcionar como archivos estáticos, sin servidor de aplicación, base de datos ni llamadas a APIs propias. |
 | VSN-R14 | El sitio DEBE incluir una sección "Acerca de este sitio" que explique el stack, la metodología y enlace al repositorio. |
+| VSN-R20 | La escena DEBE ofrecer dos **variantes de imagen**, fotografía y boceto, con los mismos objetos en las mismas posiciones. El visitante DEBE poder cambiar de una a otra desde los ajustes y su elección se conserva entre visitas. La variante por defecto es la fotografía. |
 
 ### 5.1 Política de contenido y datos personales
 
@@ -122,7 +123,7 @@ No se construye en v1 ni está planificado. Añadir cualquiera de estos puntos e
 - Backend, base de datos, autenticación, CMS o panel de administración.
 - Formulario de contacto (el contacto es por enlaces directos).
 - Blog, noticias o cualquier contenido con fecha de publicación.
-- Selector de tema claro/oscuro.
+- Selector de tema claro/oscuro. La variante de escena de VSN-R20 cambia la imagen y sus auras; los paneles y la vista simple no cambian.
 - Pantalla de "apagado" o cualquier acción que deje la pantalla sin contenido.
 - Capturas de pantalla o demos embebidas de los proyectos (no existen).
 - Cambio de color del aura según el estado de visita.
@@ -153,6 +154,7 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | --- | --- |
 | **Escena** (scene) | La vista interactiva: la imagen del workbench con la placa madre y la capa de elementos interactivos encima. |
 | **Imagen de la escena** / **máster** (scene asset / master) | La imagen fotorrealista de fondo. El máster es el archivo original a máxima resolución; los derivados son sus versiones optimizadas para la web. |
+| **Variante de escena** (scene variant) | Cada una de las dos imágenes con las que se puede ver la escena: `photo` (fotografía) o `sketch` (boceto). Ver AST §4.10. |
 | **Espacio de escena** (scene space) | Sistema de coordenadas de 1600×900 unidades en el que se definen las zonas interactivas (ver AST §4.2). |
 | **Zona segura** (safe area) | Rectángulo del espacio de escena que es visible en todos los viewports admitidos; contiene todos los elementos interactivos. |
 | **Componente** (component) | Una pieza de hardware de la escena que abre una sección. Se identifica con un `ComponentId`. No confundir con "componente de React", que en las specs se llama siempre así, con el apellido. |
@@ -190,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Por decisión del autor (D-66): nuevo VSN-R20, la escena tiene dos variantes de imagen que el visitante intercambia desde los ajustes. Glosario: variante de escena. §7: se aclara que no es un selector de tema. |
 | 2026-10-13 | 2.2 | §4.2: los slugs se enumeran en el orden canónico de D-46. Sin cambio de requisitos. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. VSN-R17: se aclara que la excepción cubre los identificadores que forman parte de URLs públicas enlazadas, como los nombres de usuario en direcciones de repositorios. |
 | 2026-10-12 | 1.0 | Versión inicial. Aprobada por el autor. |

@@ -1,6 +1,8 @@
-# Procedencia del máster de la escena
+# Procedencia de los másteres de la escena
 
-Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`).
+Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`), con una sección por máster.
+
+## Máster de la variante fotografía (`photo`)
 
 | Campo | Valor |
 | --- | --- |
@@ -65,9 +67,9 @@ Cajas estimadas a ojo en el espacio de escena (1600×900 unidades). Sirven como 
 | AST-AC09 (formato del máster) | Conforme | 2026-10-12 |
 | AST-AC10 a AST-AC12 (calibración) | Pendientes | — |
 
-## Segundo máster: boceto
+## Máster de la variante boceto (`sketch`)
 
-Añadido el 2026-10-13 por instrucción del autor, que quiere poder ver el portfolio con cualquiera de las dos imágenes. Las specs todavía no lo recogen: la enmienda de AST, SCN y STR se escribe cuando el autor decida cómo se elige la imagen.
+Añadido el 2026-10-13 por decisión del autor (D-66, AST §4.10).
 
 | Campo | Valor |
 | --- | --- |
@@ -76,16 +78,32 @@ Añadido el 2026-10-13 por instrucción del autor, que quiere poder ver el portf
 | Versión del máster | `b71cba0939ff` |
 | Archivo | `design/scene/master-sketch.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 12,7 MB |
 | Imagen de origen | `docs/Generations/Eleventh generation.jpg`, 1376×768 px |
-| Generación | Pendiente de indicar por el autor: herramienta, modelo y prompt o instrucción de edición |
-| Escalado | `docs/Generations/Eleventh-Upscayled.png`, 22016×12288 px (factor 16) |
-| Recorte y reducción | Los mismos del máster fotográfico: se retiran 85 px de cada lado y se remuestrea con Lanczos a 3840×2160 px (libvips 8.18.7) |
+
+El estado es `provisional` hasta que se complete la calibración sobre esta variante (AST-AC20) y la revisión de AST-AC22.
+
+### Generación
+
+| Campo | Valor |
+| --- | --- |
+| Herramienta | Gemini |
+| Modelo | Nano Banana, el mismo que la fotografía, según indicó el autor |
+| Modo | Conversación nueva, con la imagen de origen de la fotografía (`Tenth generation.jpg`) adjunta. Una sola generación, sin ediciones posteriores |
+| Prompt | El de AST §4.6.3, literal |
+
+### Escalado y normalización
+
+| Paso | Detalle |
+| --- | --- |
+| Escalado | Upscayl, salida PNG sin compresión, 22016×12288 px (factor 16): `docs/Generations/Eleventh-Upscayled.png` |
+| Recorte | El mismo de la fotografía: se retiran 85 px de cada lado de la imagen escalada |
+| Reducción | Remuestreo Lanczos a 3840×2160 px, con libvips 8.18.7 |
 | Retoque manual | Ninguno |
 
 El procedimiento de recorte y reducción se validó aplicándolo a `Tenth-Upscayled.png`: el resultado coincide con `master.png` sin desplazamiento (PSNR de 48 dB).
 
-### Correspondencia con el máster fotográfico
+### Correspondencia con la fotografía (AST-R50)
 
-Medida el 2026-10-13 por correlación de bordes, objeto por objeto, en el espacio de escena. El límite de AST-AC11 es de 8 unidades.
+Medida el 2026-10-13 por correlación de bordes, objeto por objeto, en el espacio de escena. El límite es de 8 unidades.
 
 | Objeto | Desfase respecto a `master.png` (unidades) |
 | --- | --- |
@@ -93,17 +111,13 @@ Medida el 2026-10-13 por correlación de bordes, objeto por objeto, en el espaci
 | `cpu`, `fan`, `settings` | 1 |
 | `io` | 2 |
 | `cmos` | 3 |
-| `ssd`, `post-display` | La medición automática no es fiable por su tamaño; a la vista coinciden en posición, y el disipador del SSD se dibuja algo más corto en vertical |
+| `ssd`, `post-display` | La medición automática no es fiable por su tamaño; a la vista coinciden en posición, y el disipador del SSD se dibuja algo más corto en vertical. Se revisan en la calibración (AST-AC20) |
 
-Los nueve objetos están en el mismo sitio, así que una sola calibración sirve para las dos imágenes. Debe revisarse con la superposición sobre ambas (AST §4.8).
+### Criterios de aceptación del boceto
 
-### Requisitos de AST que este máster no cumple
-
-| Requisito | Situación |
-| --- | --- |
-| AST-R08, AST-R12 (superficie y entorno oscuros) | Es un dibujo sobre papel cuadriculado claro: brillo medio del 84 % |
-| AST-R14 (brillo de las esquinas) | Superior derecha 89,3 %; superior izquierda 87,9 %; inferior izquierda 91,7 %; inferior derecha 79,9 %. Los límites son 12 % y 35 %, así que `assets:check` lo rechazaría tal como está especificado |
-| AST-R16 (sin texto ni marcas) | Tiene fórmulas y gráficas garabateadas en el papel y rótulos ilegibles sobre la placa |
-| AST-R15 (display apagado) | El display de diagnóstico tiene dibujados los segmentos de "88" |
-| Aura (VIS §4.4, QLT-R14) | El ámbar `#FFC53D` sobre el papel claro tiene un contraste cercano a 1,3:1: el aura apenas se distinguiría |
-
+| Criterio | Resultado | Fecha |
+| --- | --- | --- |
+| AST-AC08 (brillo de las esquinas, AST-R51: al menos 70 %) | Conforme: superior derecha 89,3 %; superior izquierda 87,9 %; inferior izquierda 91,7 %; inferior derecha 79,9 % | 2026-10-13 |
+| AST-AC09 (formato del máster) | Conforme | 2026-10-13 |
+| AST-AC20 (los polígonos siguen las siluetas del boceto) | Pendiente de la calibración | — |
+| AST-AC22 (nueve objetos reconocibles y ninguna palabra legible) | Pendiente de la revisión al 100 %. A tamaño de pantalla hay fórmulas y gráficas garabateadas en los márgenes y rótulos ilegibles sobre la placa, que AST-R51 admite | — |

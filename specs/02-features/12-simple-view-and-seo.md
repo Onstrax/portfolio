@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
 ## 1. Propósito
@@ -106,7 +106,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 
 | ID | Requisito |
 | --- | --- |
-| SMP-R21 | `pnpm assets:build` (AST §4.7) genera la imagen para compartir a partir del máster de la escena: el recorte horizontal centrado de 3840×2016 px, reducido a 1200×630 px, en JPEG progresivo de 220 kB como máximo y sin metadatos, en `public/og/og-image.<versión>.jpg`. El manifiesto exporta `OG_ASSET` con `src`, `width` y `height`. `assets:check` comprueba su existencia, sus dimensiones y su peso. |
+| SMP-R21 | `pnpm assets:build` (AST §4.7) genera la imagen para compartir a partir del máster de la variante `photo` de la escena: el recorte horizontal centrado de 3840×2016 px, reducido a 1200×630 px, en JPEG progresivo de 220 kB como máximo y sin metadatos, en `public/og/og-image.<versión>.jpg`. El manifiesto exporta `OG_ASSET` con `src`, `width` y `height`. `assets:check` comprueba su existencia, sus dimensiones y su peso. |
 | SMP-R22 | La imagen para compartir no lleva texto superpuesto: el título lo aportan `og:title` y la plataforma que la muestra. |
 | SMP-R23 | `src/app/icon.svg` es el icono del sitio: un cuadrado de 32×32 unidades con esquinas redondeadas de 6 y fondo del color `void`, y sobre él, centrado, el contorno de un procesador en el color `aura` con trazo de 2: un cuadrado de 14 de lado con tres patillas de 3 de largo en cada uno de sus cuatro lados. Es uno de los tres archivos que pueden contener colores literales (STR-R22). |
 | SMP-R24 | `src/app/apple-icon.png` es la versión de 180×180 px del mismo icono, generada por `pnpm assets:build` a partir de `icon.svg` y versionada. |
@@ -189,4 +189,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | SMP-R21: la imagen para compartir sale del máster de la variante `photo` (D-66). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |
