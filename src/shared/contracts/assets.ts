@@ -42,6 +42,23 @@ export interface SceneAsset {
   };
 }
 
+/** Derivatives of the author's portrait (CPU-R10). */
+export interface PortraitAsset {
+  readonly version: string;
+  readonly sources: {
+    readonly avif: readonly ImageSource[];
+    readonly webp: readonly ImageSource[];
+    readonly jpeg: readonly ImageSource[];
+  };
+}
+
+/** Image shown when the site is shared (SMP §4.7). */
+export interface OgAsset {
+  readonly src: SitePath;
+  readonly width: 1200;
+  readonly height: 630;
+}
+
 /** Scene manifest: one entry per variant. */
 export type SceneAssets = Readonly<Record<SceneVariant, SceneAsset>>;
 
