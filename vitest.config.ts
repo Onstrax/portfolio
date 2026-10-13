@@ -25,6 +25,8 @@ export default defineConfig({
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
   test: {
+    // The site is built with `trailingSlash: true` (SYS-R05); next/link reads it from this variable.
+    env: { __NEXT_TRAILING_SLASH: "true" },
     projects: [
       {
         extends: true,

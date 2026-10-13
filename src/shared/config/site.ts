@@ -1,4 +1,5 @@
-import type { ExternalUrl } from "@/shared/contracts/content";
+import type { ExternalUrl, SitePath } from "@/shared/contracts/content";
+import type { Locale } from "@/shared/contracts/locale";
 
 interface SiteConfig {
   readonly authorName: string;
@@ -10,6 +11,12 @@ export const SITE = {
   authorName: "Juan Esteban Álvarez García",
   repositoryUrl: "https://github.com/Onstrax/portfolio",
 } as const satisfies SiteConfig;
+
+/** Published résumés, one per language. The only definition of these paths (IO-R02). */
+export const CV_FILES: Readonly<Record<Locale, SitePath>> = {
+  es: "/cv/juan-esteban-alvarez-garcia-cv-es.pdf",
+  en: "/cv/juan-esteban-alvarez-garcia-cv-en.pdf",
+};
 
 /** Name of the only required environment variable: the public origin of the site (SYS-R35). */
 export const SITE_URL_ENV = "NEXT_PUBLIC_SITE_URL";
