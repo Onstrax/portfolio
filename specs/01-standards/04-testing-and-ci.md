@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
 
@@ -67,7 +67,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 
 | ID | Requisito |
 | --- | --- |
-| TST-R07 | Los archivos `*.test.ts` se ejecutan en entorno Node y los `*.test.tsx` en un DOM simulado con jsdom. `vitest.setup.ts` registra las aserciones de `@testing-library/jest-dom` y limpia el DOM después de cada prueba. |
+| TST-R07 | Los archivos `*.test.ts` se ejecutan en entorno Node y los `*.test.tsx` en un DOM simulado con jsdom. `vitest.setup.ts` registra las aserciones de `@testing-library/jest-dom` y limpia el DOM después de cada prueba. La configuración de Vitest define la variable `__NEXT_TRAILING_SLASH`, para que `next/link` genere en las pruebas las mismas rutas con barra final que el sitio compilado (SYS-R05). |
 | TST-R08 | `pnpm test` mide la cobertura con el proveedor V8 sobre la **lógica** (§3) y sobre `src/features/registry.ts`, y falla si no se alcanzan estos mínimos: 95 % de líneas, 95 % de funciones, 95 % de sentencias y 90 % de ramas. Los archivos `*.generated.ts` quedan excluidos. |
 | TST-R09 | Una prueba de componente interactúa como lo haría un visitante: localiza elementos por rol y nombre accesible y actúa con `@testing-library/user-event`. NO DEBE comprobar nombres de clases, estado interno ni detalles de implementación. |
 | TST-R10 | Solo se simulan las fronteras con el navegador: almacenamiento, `matchMedia`, audio, temporizadores y el enrutador de Next.js. NO DEBEN simularse módulos propios de lógica: se usan los reales. |
@@ -225,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.4 | Durante M3, por delegación del autor. TST-R07: Vitest define `__NEXT_TRAILING_SLASH`. |
 | 2026-10-13 | 1.3 | Por decisión del autor (D-67). Nuevo §4.10 (TST-R49 a TST-R51): `pnpm check:docker` ejecuta la puerta en la imagen de Playwright. TST-R44: esa es la puerta local donde WebKit no arranca. Nuevo TST-AC16. TST-R51: el servicio desactiva `verifyDepsBeforeRun`. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor durante M0. TST-R15: se desactiva `@next/next/no-img-element`. TST-R19: los fragmentos se analizan bajo la ruta de un archivo real. TST-R44: en el equipo del autor WebKit no arranca; lo verifica CI. |
 | 2026-10-12 | 1.1 | TST-R44 y TST-AC15: por decisión del autor se permite `push` directo a `main`; la garantía pasa a ser que solo se publica con CI en verde (D-45). |
