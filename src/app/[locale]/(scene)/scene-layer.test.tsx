@@ -94,6 +94,32 @@ describe("SceneLayer", () => {
     expect(screen.getByRole("link", { name: "SSD NVMe: Proyectos" })).toBeInTheDocument();
   });
 
+  it("never writes the simple mode while hydrating in a viewport that can show the scene", async () => {
+    stubViewport(true);
+    // What the pre-paint script leaves before the application starts.
+    root.dataset["mode"] = "scene";
+    // Every value that the attribute had and lost, in order.
+    const written: (string | null)[] = [];
+    const observer = new MutationObserver((mutations) => {
+      written.push(...mutations.map((mutation) => mutation.oldValue));
+    });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-mode"],
+      attributeOldValue: true,
+    });
+
+    const container = document.createElement("div");
+    document.body.append(container);
+    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>, { container, hydrate: true });
+    await findScene();
+    written.push(...observer.takeRecords().map((mutation) => mutation.oldValue));
+    observer.disconnect();
+
+    expect(written).not.toContain("simple");
+    expect(root.dataset["mode"]).toBe("scene");
+  });
+
   it("SYS-AC17: in simple mode renders nothing, not even the content of the page", () => {
     stubViewport(false);
     const { container } = render(

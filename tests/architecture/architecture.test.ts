@@ -20,6 +20,10 @@ import {
   findTestHygieneViolations,
   findTransitionAllViolations,
   formatViolations,
+  SECTION_FEATURES,
+  SHARED_FOLDERS,
+  SHELL_FEATURES,
+  SRC_FOLDERS,
   type Violation,
 } from "./detect";
 import { listPaths, readSources } from "./repository";
@@ -54,6 +58,24 @@ describe("architecture of src", () => {
 
   it("STR-AC01: src holds nothing outside the folders and features of STR", () => {
     expectNone(findStructureViolations(SRC_PATHS));
+  });
+
+  it("STR-AC01: src holds every folder and the twelve features of STR", () => {
+    const entries = (prefix: string): readonly string[] =>
+      [
+        ...new Set(
+          SRC_PATHS.filter((path) => path.startsWith(prefix)).map(
+            (path) => path.slice(prefix.length).split("/")[0] ?? "",
+          ),
+        ),
+      ].sort();
+
+    expect(entries("src/")).toEqual([...SRC_FOLDERS].sort());
+    expect(entries("src/shared/")).toEqual([...SHARED_FOLDERS].sort());
+    // Besides the features there is only the registry, with its tests.
+    const features = entries("src/features/").filter((entry) => !entry.startsWith("registry."));
+    expect(features).toEqual([...SHELL_FEATURES, ...SECTION_FEATURES].sort());
+    expect(entries("src/features/")).toContain("registry.ts");
   });
 
   it("STR-AC02: no file imports against the layer table", () => {

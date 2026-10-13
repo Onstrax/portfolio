@@ -11,6 +11,7 @@ import type { SectionNavItem } from "@/shared/contracts/navigation";
 import { useUiDictionary } from "@/shared/i18n/use-ui-dictionary";
 import { useSessionStore } from "@/shared/state/session-store";
 import { useUiStore } from "@/shared/state/ui-store";
+import { STAGE_BOX } from "@/shared/ui/stage.styles";
 
 import { useDocumentAttribute } from "../hooks/use-document-attribute";
 import { useElementSize } from "../hooks/use-element-size";
@@ -25,7 +26,7 @@ import { SCENE_CONTENT_ID } from "../lib/scene-ids";
 import { SCENE_HEIGHT, SCENE_WIDTH, toClipPath, toStageRect } from "../lib/scene-space";
 import { Aura } from "./aura";
 import { PostDisplay } from "./post-display";
-import { HINT_STATES, STAGE, STAGE_LAYER, VIEWPORT, ZONE } from "./scene.styles";
+import { HINT_STATES, SCENE_VIEWPORT, STAGE_LAYER, ZONE } from "./scene.styles";
 import { SceneImages } from "./scene-images";
 import { SceneLabel } from "./scene-label";
 import { Vignette } from "./vignette";
@@ -99,6 +100,13 @@ export function Scene({ sections }: SceneProps) {
   const [decoded, setDecoded] = useState<readonly SceneVariant[]>([]);
   const [hasOpenedSection, setHasOpenedSection] = useState(false);
   if (openSlug !== null && !hasOpenedSection) setHasOpenedSection(true);
+  // A session reset brings the hint back (SET-R25). It shows as the boot sequence being unseen.
+  const isBootSeen = useSessionStore((state) => state.bootSeen);
+  const [wasBootSeen, setWasBootSeen] = useState(isBootSeen);
+  if (wasBootSeen !== isBootSeen) {
+    setWasBootSeen(isBootSeen);
+    if (wasBootSeen && openSlug === null) setHasOpenedSection(false);
+  }
 
   const primaryTotal = sections.filter((section) => section.isPrimary).length;
   const visitedLabel = common.visitedSectionsLabel({ count: visitedCount, total: primaryTotal });
@@ -178,14 +186,11 @@ export function Scene({ sections }: SceneProps) {
   const isHintVisible = hasSession && visitedCount === 0 && !hasOpenedSection;
 
   return (
-    <main
-      id={SCENE_CONTENT_ID}
-      tabIndex={-1}
-      inert={!isBootDone}
-      className={`${VIEWPORT} focus:outline-none`}
-    >
-      <h1 className="sr-only">{scene.pageTitle}</h1>
-      <div ref={stage} data-testid="scene-root" className={STAGE}>
+    <main id={SCENE_CONTENT_ID} tabIndex={-1} inert={!isBootDone} className={SCENE_VIEWPORT}>
+      <h1 tabIndex={-1} className="sr-only">
+        {scene.pageTitle}
+      </h1>
+      <div ref={stage} data-testid="scene-root" className={STAGE_BOX}>
         <SceneImages
           variant={variant}
           onReady={(ready) => {
@@ -229,6 +234,7 @@ export function Scene({ sections }: SceneProps) {
         <button
           type="button"
           data-zone="settings"
+          data-label-placement={HOTSPOTS.settings.labelPlacement}
           aria-haspopup="dialog"
           aria-expanded={isSettingsOpen}
           style={zoneStyle("settings")}

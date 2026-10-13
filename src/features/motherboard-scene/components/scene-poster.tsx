@@ -4,7 +4,7 @@ import { SCENE_ASSETS } from "@/shared/assets/manifest.generated";
 import { SCENE_VARIANTS, type SceneVariant } from "@/shared/contracts/assets";
 import { cn } from "@/shared/lib/cn";
 
-import { STAGE, VIEWPORT } from "./scene.styles";
+import { STAGE_BOX, STAGE_VIEWPORT } from "@/shared/ui/stage.styles";
 
 type PosterStyle = CSSProperties & Readonly<Record<`--poster-${string}`, string>>;
 
@@ -29,7 +29,7 @@ export function ScenePoster() {
     <div
       aria-hidden="true"
       data-testid="scene-poster"
-      className={cn(VIEWPORT, "bg-(--scene-backdrop)")}
+      className={cn(STAGE_VIEWPORT, "bg-(--scene-backdrop)")}
     >
       {SCENE_VARIANTS.map((variant) => (
         <div
@@ -37,7 +37,7 @@ export function ScenePoster() {
           data-variant={variant}
           style={posterStyle(variant)}
           className={cn(
-            STAGE,
+            STAGE_BOX,
             "col-start-1 row-start-1 bg-(--poster-color) bg-(image:--poster-image) bg-cover",
             VISIBLE_WITH[variant],
           )}

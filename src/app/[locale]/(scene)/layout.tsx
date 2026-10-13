@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { BootScreen } from "@/features/boot-sequence/server";
 import { ScenePoster, SCENE_CONTENT_ID } from "@/features/motherboard-scene/server";
 import { SECTION_LIST } from "@/features/registry";
 import { SectionScroller } from "@/features/simple-view";
@@ -43,7 +44,8 @@ export default async function SceneGroupLayout({ children, params }: SceneGroupL
         <div className="mode-scene:hidden">
           <SkipLink label={common.skipToContentLabel} targetId={CONTENT_ID} />
         </div>
-        <div className="mode-scene:block hidden">
+        {/* Hidden during the boot sequence, whose only control is its skip button (BOOT-R15). */}
+        <div className="mode-scene:block boot-play:hidden boot-exit:hidden hidden">
           <SkipLink label={common.skipToContentLabel} targetId={SCENE_CONTENT_ID} surface="scene" />
         </div>
         <div data-layer="base" className="mode-scene:hidden">
@@ -51,6 +53,7 @@ export default async function SceneGroupLayout({ children, params }: SceneGroupL
           <PersonJsonLd locale={locale} />
         </div>
         <div data-layer="scene" className="mode-scene:block hidden">
+          <BootScreen locale={locale} />
           <ScenePoster />
           <SceneLayer sections={buildSectionNav(SECTION_LIST, locale)}>{children}</SceneLayer>
         </div>

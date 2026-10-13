@@ -3,9 +3,14 @@
 import { Component, lazy, type ReactNode, Suspense, useLayoutEffect, useState } from "react";
 
 import type { SectionNavItem } from "@/shared/contracts/navigation";
-import { useRenderMode } from "@/shared/state/use-render-mode";
+import { readRenderMode, useRenderMode } from "@/shared/state/use-render-mode";
 
-// The code of the scene is only downloaded in scene mode (QLT-R34).
+// The code of the scene layer is only downloaded in scene mode (QLT-R34).
+const BootController = lazy(async () => {
+  const feature = await import("@/features/boot-sequence");
+  return { default: feature.BootController };
+});
+
 const Scene = lazy(async () => {
   const feature = await import("@/features/motherboard-scene");
   return { default: feature.Scene };
@@ -14,6 +19,16 @@ const Scene = lazy(async () => {
 const DetailPanel = lazy(async () => {
   const feature = await import("@/features/detail-panel");
   return { default: feature.DetailPanel };
+});
+
+const FixedBar = lazy(async () => {
+  const feature = await import("@/features/settings");
+  return { default: feature.FixedBar };
+});
+
+const SettingsMenu = lazy(async () => {
+  const feature = await import("@/features/settings");
+  return { default: feature.SettingsMenu };
 });
 
 interface SceneBoundaryProps {
@@ -64,9 +79,12 @@ export function SceneLayer({ sections, children }: SceneLayerProps) {
     root.dataset["boot"] ??= "done";
   }, []);
 
+  // While React hydrates, `viewportMode` still holds the value of the server, which is `simple`.
+  // Writing that would show the simple view for an instant (SYS-R15), so the attribute always
+  // takes what the viewport says at this moment; `mode` only tells when to look again.
   useLayoutEffect(() => {
-    document.documentElement.dataset["mode"] = mode;
-  }, [mode]);
+    document.documentElement.dataset["mode"] = hasFailed ? "simple" : readRenderMode();
+  }, [mode, hasFailed]);
 
   if (mode !== "scene") return null;
   return (
@@ -76,10 +94,22 @@ export function SceneLayer({ sections, children }: SceneLayerProps) {
       }}
     >
       <Suspense fallback={null}>
+        <BootController />
+      </Suspense>
+      {/* Before the scene, so that its controls come first in the tab order (SET-R03). */}
+      <Suspense fallback={null}>
+        <FixedBar focusKey="bar" />
+      </Suspense>
+      <Suspense fallback={null}>
         <Scene sections={sections} />
       </Suspense>
       <Suspense fallback={null}>
-        <DetailPanel sections={sections}>{children}</DetailPanel>
+        <SettingsMenu sections={sections} focusKey="bar" />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DetailPanel sections={sections} toolbar={<FixedBar focusKey="panel-bar" />}>
+          {children}
+        </DetailPanel>
       </Suspense>
     </SceneBoundary>
   );

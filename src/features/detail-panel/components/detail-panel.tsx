@@ -82,6 +82,11 @@ interface DetailPanelProps {
   readonly sections: readonly SectionNavItem[];
   /** Content of the section that the route names; nothing on the home page. */
   readonly children: ReactNode;
+  /**
+   * Controls that must stay at hand while the panel is open. A modal dialog leaves the rest of
+   * the page inert, so what the visitor still needs is drawn inside it, over the veil (PNL-R25).
+   */
+  readonly toolbar?: ReactNode;
 }
 
 /**
@@ -89,7 +94,7 @@ interface DetailPanelProps {
  * section (PNL-R07): opening, closing and moving between sections are navigations, and this
  * component only adds their animations, the focus and the history rules of PNL-R10.
  */
-export function DetailPanel({ sections, children }: DetailPanelProps) {
+export function DetailPanel({ sections, children, toolbar }: DetailPanelProps) {
   const { panel } = useUiDictionary();
   const locale = useLocale();
   const router = useRouter();
@@ -111,6 +116,7 @@ export function DetailPanel({ sections, children }: DetailPanelProps) {
   const veil = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const content = useRef<HTMLDivElement>(null);
+  const toolbarSlot = useRef<HTMLDivElement>(null);
 
   const { phase, wasOpenedInSite } = state;
   const modality = panelModality(state);
@@ -158,7 +164,9 @@ export function DetailPanel({ sections, children }: DetailPanelProps) {
   // is a primary section, it counts as visited (PNL-R22).
   useEffect(() => {
     if (shownSlug === null) return;
-    title.current?.focus();
+    // Unless the focus was just placed on a control of the toolbar, as a change of language does
+    // with its switcher (I18N-R27).
+    if (toolbarSlot.current?.contains(document.activeElement) !== true) title.current?.focus();
     const zone = content.current;
     if (zone === null) return;
     zone.scrollTop = 0;
@@ -285,6 +293,12 @@ export function DetailPanel({ sections, children }: DetailPanelProps) {
               <ChevronRightIcon />
             </Link>
           </footer>
+        </div>
+      )}
+      {/* `contents`: the slot must not take a row of the grid that centers the frame. */}
+      {neighbours !== null && (
+        <div ref={toolbarSlot} className="contents">
+          {toolbar}
         </div>
       )}
     </dialog>

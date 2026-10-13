@@ -1,8 +1,10 @@
-/** Covers the viewport and centers the stage in it (AST-R03). */
-export const VIEWPORT = "fixed inset-0 grid place-items-center overflow-hidden";
+import { DARK_PLATE, STAGE_VIEWPORT } from "@/shared/ui/stage.styles";
 
-/** The stage: the largest 16:9 rectangle that fits in the viewport (AST-R03). */
-export const STAGE = "relative aspect-video w-[min(100vw,calc(100dvh*16/9))]";
+/**
+ * Viewport of the scene. Under the boot sequence it is invisible, and it comes forward while the
+ * boot screen fades (M-02).
+ */
+export const SCENE_VIEWPORT = `${STAGE_VIEWPORT} boot-play:opacity-0 boot-exit:scene-in focus:outline-none`;
 
 /** Layer that fills the stage and lets the pointer through. */
 export const STAGE_LAYER = "pointer-events-none absolute inset-0 size-full";
@@ -60,8 +62,7 @@ export const LABEL_NAME =
   "font-mono text-sm leading-5 font-semibold tracking-[0.06em] text-on-dark uppercase";
 export const LABEL_CONTENT = "font-mono text-xs leading-4 text-on-dark-muted";
 
-const HINT_BASE =
-  "pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) w-max max-w-[calc(100%-1rem)] -translate-x-1/2 rounded-plate border border-on-dark-muted/25 bg-plate/[calc(var(--opacity-plate)*100%)] px-3 py-2 text-sm leading-5 text-on-dark shadow-plate transition-[opacity,visibility] duration-(--duration-base) ease-out";
+const HINT_BASE = `${DARK_PLATE} pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) w-max max-w-[calc(100%-1rem)] -translate-x-1/2 px-3 py-2 text-sm leading-5 transition-[opacity,visibility] duration-(--duration-base) ease-out`;
 
 /** Appearance and removal of the hint (M-12). */
 export const HINT_STATES = {
