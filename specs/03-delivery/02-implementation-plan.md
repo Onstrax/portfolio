@@ -139,7 +139,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | Hito | Fecha de cierre | Commit de cierre | Observaciones |
 | --- | --- | --- | --- |
 | M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). El autor revisó el cierre y confirmó las enmiendas el 2026-10-13. Complemento posterior del mismo día: `pnpm check:docker` (TST-AC16), con el que la puerta completa, WebKit incluido, pasa también en local. |
-| M1 | — | — | — |
+| M1 | 2026-10-13 | `223832a` | CI en verde en los tres motores y `pnpm check:docker` en local. 317 pruebas; cobertura de la lógica: 100 % de líneas y funciones, 97 % de ramas. Adelanta `SITE` y los iconos `copy` y `check`. Incluye ya la preferencia `sceneVariant` y los tokens de la variante boceto (D-66). Pendiente la revisión del autor de PLAN-AC01 y PLAN-AC03. |
 | M2 | — | — | — |
 | M3 | — | — | — |
 | M4 | — | — | — |
