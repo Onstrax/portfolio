@@ -38,14 +38,18 @@ for (const [locale, fragments] of Object.entries(CONTENT)) {
   });
 }
 
-test("SMP-AC06: navigation, download and language links work without JavaScript", async ({
-  page,
-}) => {
+// The download has a test of its own: in Firefox, the navigation that a download link starts and
+// abandons can be reported late, and then the next navigation of the page is never seen to end.
+test("SMP-AC06: the download link works without JavaScript", async ({ page }) => {
   await page.goto("/es/");
 
   const download = page.waitForEvent("download");
   await page.getByRole("link", { name: "Descargar CV (PDF)" }).first().click();
   expect((await download).suggestedFilename()).toBe("juan-esteban-alvarez-garcia-cv-es.pdf");
+});
+
+test("SMP-AC06: language and navigation links work without JavaScript", async ({ page }) => {
+  await page.goto("/es/");
 
   await page.getByRole("link", { name: "English" }).click();
   await expect(page).toHaveURL("/en/");
