@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: { unoptimized: true },
   reactStrictMode: true,
+  // Keeps `next dev` from appending its own block to CLAUDE.md (SYS-R05).
+  agentRules: false,
 };
 
 export default function config(phase: string): NextConfig {
