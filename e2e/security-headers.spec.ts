@@ -22,6 +22,8 @@ test("DEP-AC05: the preview server sends the production headers and the page hon
   expect(policy).toContain("default-src 'self'");
   expect(policy).toMatch(/script-src 'self' 'sha256-/);
   expect(policy).not.toContain("'unsafe-inline' ");
+  // The preview is plain HTTP: with this directive WebKit would request every asset over HTTPS.
+  expect(policy).not.toContain("upgrade-insecure-requests");
 
   // A policy violation is reported as a console error, which the base test turns into a failure.
   await expect(page.locator("html")).toHaveAttribute("lang", "es");

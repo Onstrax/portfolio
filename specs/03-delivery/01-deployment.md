@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Versión | 1.1 |
+| Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
 ## 1. Propósito
@@ -71,7 +71,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | --- | --- |
 | DEP-R18 | `scripts/build-headers.mjs` se ejecuta al final de `pnpm build` (SYS §4.9) y escribe `out/_headers`, el archivo de cabeceras que Cloudflare Pages aplica al servir el sitio. |
 | DEP-R19 | El archivo contiene una regla para `/*` con las cabeceras de la primera tabla, las reglas de caché de la segunda tabla y una regla por cada documento HTML de `out/` con su política de seguridad de contenido (DEP-R21). |
-| DEP-R20 | `scripts/serve-static.mjs` aplica las reglas de `out/_headers` a sus respuestas (SYS §4.9), de modo que las pruebas E2E se ejecuten bajo las mismas cabeceras que producción y una infracción de la política haga fallar una prueba (TST-R23). |
+| DEP-R20 | `scripts/serve-static.mjs` aplica las reglas de `out/_headers` a sus respuestas (SYS §4.9), de modo que las pruebas E2E se ejecuten bajo las mismas cabeceras que producción y una infracción de la política haga fallar una prueba (TST-R23). Única diferencia: al servir por HTTP sin cifrar, retira de la política la directiva `upgrade-insecure-requests`, porque WebKit la obedece también en `localhost` y pediría todos los recursos por HTTPS a un servidor que no lo ofrece. El archivo `out/_headers`, que es lo que se publica, la conserva. |
 
 | Cabecera | Valor |
 | --- | --- |
@@ -149,7 +149,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | DEP-AC02 | Para cada documento HTML de `out/`, `_headers` tiene una regla para su ruta con una política que contiene las directivas de §4.6, y el conjunto de hashes de `script-src` es exactamente el de los scripts en línea de ese documento. | Prueba de exportación |
 | DEP-AC03 | Ninguna política contiene `'unsafe-inline'` ni `'unsafe-eval'` en `script-src`. | Prueba de exportación |
 | DEP-AC04 | Con una carpeta de ejemplo, `build-headers.mjs` genera los hashes correctos de dos scripts en línea, ignora un bloque `application/ld+json`, y falla cuando la política de un documento superaría los 2000 caracteres. | Prueba de script |
-| DEP-AC05 | Las respuestas de `pnpm preview` para `/es/` incluyen las cabeceras de §4.5 y la política del documento, y durante las pruebas E2E no se registra ninguna infracción de la política (QLT-AC21). | Prueba E2E |
+| DEP-AC05 | Las respuestas de `pnpm preview` para `/es/` incluyen las cabeceras de §4.5 y la política del documento, sin la directiva `upgrade-insecure-requests` (DEP-R20), y durante las pruebas E2E no se registra ninguna infracción de la política (QLT-AC21). | Prueba E2E |
 | DEP-AC06 | `deploy.yml` se dispara solo con `workflow_run` del flujo de CI sobre `main` con resultado correcto y con `workflow_dispatch`; referencia únicamente los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`; toda línea `uses:` apunta a un SHA de 40 caracteres de una organización admitida; y ejecuta `assets:check --release` antes de compilar. | Prueba unitaria que lee el archivo |
 | DEP-AC07 | `smoke-test.mjs`, contra un servidor de ejemplo, termina bien cuando se cumplen todas las comprobaciones de DEP-R16 y con error cuando falta la cabecera de la política, cuando una página responde 500 y cuando la ruta inexistente responde 200. | Prueba de script |
 | DEP-AC08 | `LICENSE` contiene el texto de la licencia MIT con el nombre del autor. | Prueba unitaria que lee el archivo |
@@ -179,5 +179,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Decidido por delegación del autor durante M0, tras fallar WebKit en el primer CI. DEP-R20 y DEP-AC05: el servidor de `preview` retira `upgrade-insecure-requests` de la política, porque sirve por HTTP; `out/_headers` no cambia. |
 | 2026-10-13 | 1.0 | Aprobada por el autor. Repositorio `Onstrax/portfolio` creado, por ahora privado. |
 | 2026-10-12 | 1.0 | Versión inicial. Límites de Cloudflare Pages y funcionamiento de `_headers`, de la subida directa y de Web Analytics comprobados en la documentación de Cloudflare ese día. |

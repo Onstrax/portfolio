@@ -44,6 +44,20 @@ function parseHeaderRules(text) {
   return rules;
 }
 
+/**
+ * Adapts a header to a server that speaks plain HTTP. `upgrade-insecure-requests` tells the browser
+ * to fetch every asset over HTTPS, which this server does not offer: WebKit obeys it on localhost
+ * and the page loads nothing. Everything else is served exactly as in production (DEP-R20).
+ */
+function forPlainHttp(name, value) {
+  if (name.toLowerCase() !== "content-security-policy") return value;
+  return value
+    .split(";")
+    .map((directive) => directive.trim())
+    .filter((directive) => directive !== "" && directive !== "upgrade-insecure-requests")
+    .join("; ");
+}
+
 function matchesRoute(route, pathname) {
   if (!route.includes("*")) return route === pathname;
   const [prefix, suffix = ""] = route.split("*");
@@ -94,7 +108,7 @@ const server = createServer(async (request, response) => {
 
   for (const rule of headerRules) {
     if (!matchesRoute(rule.route, pathname)) continue;
-    for (const [name, value] of rule.headers) response.setHeader(name, value);
+    for (const [name, value] of rule.headers) response.setHeader(name, forPlainHttp(name, value));
   }
   response.setHeader(
     "Content-Type",
