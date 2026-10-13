@@ -2,7 +2,7 @@ import { act, render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { useRenderMode } from "./use-render-mode";
+import { readRenderMode, useRenderMode } from "./use-render-mode";
 
 /** Replaces `matchMedia` with a query whose result the test controls. */
 function stubMatchMedia(initial: boolean) {
@@ -74,6 +74,13 @@ describe("useRenderMode", () => {
 
     unmount();
     expect(media.listeners.size).toBe(0);
+  });
+
+  it("reads the mode of the viewport at any moment, outside React", () => {
+    const media = stubMatchMedia(true);
+    expect(readRenderMode()).toBe("scene");
+    media.set(false);
+    expect(readRenderMode()).toBe("simple");
   });
 
   it("is simple on the server, where there is no viewport", () => {

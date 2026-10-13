@@ -11,7 +11,8 @@ function subscribe(onChange: () => void): () => void {
   };
 }
 
-function getSnapshot(): RenderMode {
+/** Render mode that the viewport allows right now. Only for the browser. */
+export function readRenderMode(): RenderMode {
   return window.matchMedia(RENDER_MODE_QUERY).matches ? "scene" : "simple";
 }
 
@@ -24,5 +25,5 @@ function getServerSnapshot(): RenderMode {
  * rotated (SYS-R12, SYS-R17). On the server, and until hydration ends, it is `simple`.
  */
 export function useRenderMode(): RenderMode {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  return useSyncExternalStore(subscribe, readRenderMode, getServerSnapshot);
 }

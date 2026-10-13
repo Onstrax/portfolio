@@ -57,6 +57,76 @@
   }
 }
 
+/* Lines of the boot log, which appear one by one (M-01). Their delay is set on each line. */
+@keyframes boot-line {
+  from {
+    opacity: 0;
+  }
+}
+
+@utility boot-line {
+  animation: boot-line var(--duration-instant) linear backwards;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* From the boot sequence to the scene (M-02): the boot screen fades and the scene comes closer. */
+@keyframes scene-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@utility boot-out {
+  animation: fade-out var(--duration-slow) var(--ease-in) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: var(--duration-fast);
+  }
+}
+
+@utility scene-in {
+  animation: scene-in var(--duration-scene) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in var(--duration-fast) var(--ease-out) both;
+  }
+}
+
+/* Opening and closing of the settings menu (M-08). */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes menu-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@utility menu-in {
+  animation: menu-in var(--duration-fast) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-name: fade-in;
+  }
+}
+
+@utility menu-out {
+  animation: menu-out var(--duration-fast) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-name: fade-out;
+  }
+}
+
 /*
  * Opening and closing of the detail panel (M-06). With reduced motion only the opacity changes,
  * in 150 ms. Every animation keeps its last frame, so that nothing flashes between two phases.
