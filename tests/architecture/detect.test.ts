@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   findClientBoundaryViolations,
+  findAttributeLiteralViolations,
   findClientSectionViolations,
   findColorViolations,
   findDisableCommentViolations,
@@ -9,8 +10,11 @@ import {
   findE2eViolations,
   findFeatureAnatomyViolations,
   findImportViolations,
+  findRouteLiteralViolations,
+  findStorageAccessViolations,
   findStructureViolations,
   findTestHygieneViolations,
+  findTransitionAllViolations,
   formatViolations,
   type SourceFile,
   type Violation,
@@ -31,6 +35,9 @@ function rules(violations: readonly Violation[]): readonly string[] {
 // The samples below must not trip the real architecture tests when this file is scanned, so the
 // forbidden fragments are assembled at runtime instead of being written out.
 const DOT = ".";
+const SLASH = "/";
+const TICK = "`";
+const TRANSITION = "transition";
 const OPEN = "(";
 const SNAPSHOT = "Snapshot";
 const TIMEOUT = "Timeout";
@@ -377,6 +384,120 @@ describe("E2E conventions (TST-AC09)", () => {
       file("e2e/open-section.spec.ts", 'await page.getByRole("link", { name: "Perfil" }).click();'),
       file("e2e/open-section.spec.ts", `await page.locator('a[href$="${DOT}pdf"]').click();`),
       file("e2e/support/export.ts", `files.filter((name) => name.endsWith("${DOT}html"));`),
+    ]);
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("transitions (VIS-AC06)", () => {
+  it.each([`className="${TRANSITION}-all duration-150"`, `${TRANSITION}: all 150ms ease;`])(
+    "reports %s",
+    (line) => {
+      expect(rules(findTransitionAllViolations([file("src/shared/ui/chip.tsx", line)]))).toEqual([
+        "VIS-AC06",
+      ]);
+    },
+  );
+
+  it("accepts transitions that name their properties", () => {
+    const violations = findTransitionAllViolations([
+      file("src/shared/ui/chip.tsx", `className="${TRANSITION}-opacity duration-150"`),
+      file("src/styles/globals.css", `${TRANSITION}: opacity 150ms, transform 150ms;`),
+    ]);
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("route literals (TSC-AC15)", () => {
+  const LOCALES = ["es", "en"];
+
+  it.each([
+    `const href = "${SLASH}es${SLASH}projects${SLASH}";`,
+    `const href = '${SLASH}en';`,
+    `const href = ${TICK}${SLASH}\${locale}${SLASH}cv${SLASH}${TICK};`,
+    `const href = ${TICK}${SLASH}\${props.locale}${TICK};`,
+  ])("reports %s", (line) => {
+    const violations = findRouteLiteralViolations([file("src/shared/ui/chip.tsx", line)], LOCALES);
+    expect(rules(violations)).toEqual(["TSC-AC15"]);
+  });
+
+  it("accepts routes.ts, test files and strings that are not locale paths", () => {
+    const path = `const href = "${SLASH}es${SLASH}";`;
+    const violations = findRouteLiteralViolations(
+      [
+        file("src/shared/config/routes.ts", path),
+        file("src/shared/config/routes.test.ts", path),
+        file("src/shared/ui/chip.test.tsx", path),
+        file(
+          "src/shared/ui/chip.tsx",
+          `const file = "${SLASH}cv${SLASH}resume.pdf"; const word = "${SLASH}enable";`,
+        ),
+      ],
+      LOCALES,
+    );
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("storage access (TSC-AC15)", () => {
+  const allowed = "src/shared/state/safe-storage.ts";
+
+  it.each([
+    `window${DOT}localStorage${DOT}getItem("key");`,
+    `sessionStorage${DOT}setItem("key", "value");`,
+    `const area = globalThis${DOT}sessionStorage;`,
+    `localStorage["key"] = "value";`,
+  ])("reports %s", (line) => {
+    const violations = findStorageAccessViolations(
+      [file("src/shared/ui/chip.tsx", line)],
+      [allowed],
+    );
+    expect(rules(violations)).toEqual(["TSC-AC15"]);
+  });
+
+  it("accepts the allowed files, test files and mentions in comments", () => {
+    const access = `window${DOT}localStorage${DOT}getItem("key");`;
+    const violations = findStorageAccessViolations(
+      [
+        file(allowed, access),
+        file("src/shared/state/stores.test.ts", access),
+        file(
+          "src/shared/contracts/state.ts",
+          "/** Value stored in `localStorage` under the key. */",
+        ),
+      ],
+      [allowed],
+    );
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("attribute literals (I18N-AC09)", () => {
+  it.each([
+    "aria-label",
+    "aria-description",
+    "aria-roledescription",
+    "aria-valuetext",
+    "title",
+    "alt",
+    "placeholder",
+  ])("I18N-AC09: reports a hand-written %s", (attribute) => {
+    const violations = findAttributeLiteralViolations([
+      file("src/shared/ui/sample.tsx", `<div ${attribute}="Close the panel" />`),
+      file("src/shared/ui/other.tsx", `<div ${attribute}={'Close the panel'} />`),
+    ]);
+    expect(rules(violations)).toEqual(["I18N-AC09", "I18N-AC09"]);
+  });
+
+  it("I18N-AC09: accepts an empty alt, values from a dictionary and test files", () => {
+    const violations = findAttributeLiteralViolations([
+      file(
+        "src/shared/ui/sample.tsx",
+        '<img alt="" src={source} /><button aria-label={labels.close} />',
+      ),
+      file("src/shared/ui/sample.tsx", "<button aria-label={closeLabel} data-title={title} />"),
+      file("src/shared/ui/sample.test.tsx", '<button aria-label="Close" />'),
+      file("src/shared/lib/helper.ts", 'const title = "Close";'),
     ]);
     expect(violations).toEqual([]);
   });

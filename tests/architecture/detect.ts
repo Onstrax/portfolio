@@ -536,6 +536,102 @@ export function findE2eViolations(files: readonly SourceFile[]): readonly Violat
   return violations;
 }
 
+/** VIS-AC06: transitions name the properties they animate; `all` is never used. */
+export function findTransitionAllViolations(files: readonly SourceFile[]): readonly Violation[] {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    if (!file.path.startsWith("src/")) continue;
+    for (const match of file.content.matchAll(/\btransition-all\b|\btransition\s*:\s*all\b/g)) {
+      violations.push({
+        rule: "VIS-AC06",
+        file: file.path,
+        line: lineAt(file.content, match.index),
+        message: "animate only opacity and transform: `transition: all` is not allowed (VIS-R34)",
+      });
+    }
+  }
+  return violations;
+}
+
+const ROUTES_MODULE = "src/shared/config/routes.ts";
+
+/**
+ * TSC-AC15: internal paths are built with the route helpers. Reports string literals that start
+ * with a locale segment and templates that concatenate one, outside routes.ts and test files.
+ */
+export function findRouteLiteralViolations(
+  files: readonly SourceFile[],
+  locales: readonly string[],
+): readonly Violation[] {
+  const literal = new RegExp(`["'\`]/(?:${locales.join("|")})(?:/|["'\`])`, "g");
+  const template = /`\/\$\{[^}]*locale[^}]*\}/gi;
+  const violations: Violation[] = [];
+  for (const file of files) {
+    if (!file.path.startsWith("src/") || !isCode(file.path)) continue;
+    if (file.path === ROUTES_MODULE || isTestFile(file.path)) continue;
+    for (const pattern of [literal, template]) {
+      for (const match of file.content.matchAll(pattern)) {
+        violations.push({
+          rule: "TSC-AC15",
+          file: file.path,
+          line: lineAt(file.content, match.index),
+          message: "build internal paths with the helpers of shared/config/routes (TSC-R55)",
+        });
+      }
+    }
+  }
+  return violations;
+}
+
+const STORAGE_ACCESS_PATTERN =
+  /\b(?:localStorage|sessionStorage)\s*(?:\.|\[)|\.\s*(?:localStorage|sessionStorage)\b/g;
+
+/** TSC-AC15: browser storage is only touched by the files that TSC-R53 allows. */
+export function findStorageAccessViolations(
+  files: readonly SourceFile[],
+  allowedFiles: readonly string[],
+): readonly Violation[] {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    if (!file.path.startsWith("src/") || !isCode(file.path)) continue;
+    if (allowedFiles.includes(file.path) || isTestFile(file.path)) continue;
+    for (const match of file.content.matchAll(STORAGE_ACCESS_PATTERN)) {
+      violations.push({
+        rule: "TSC-AC15",
+        file: file.path,
+        line: lineAt(file.content, match.index),
+        message: "browser storage is only accessed through shared/state/safe-storage (TSC-R53)",
+      });
+    }
+  }
+  return violations;
+}
+
+const TEXT_ATTRIBUTE_PATTERN =
+  /(?<![\w-])(aria-label|aria-description|aria-roledescription|aria-valuetext|title|alt|placeholder)\s*=\s*(?:"([^"]*)"|'([^']*)'|\{\s*"([^"]*)"\s*\}|\{\s*'([^']*)'\s*\}|\{\s*`([^`]*)`\s*\})/g;
+
+/** I18N-AC09: attributes that the visitor perceives never carry a hand-written string. */
+export function findAttributeLiteralViolations(files: readonly SourceFile[]): readonly Violation[] {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    if (!file.path.startsWith("src/") || !file.path.endsWith(".tsx") || isTestFile(file.path)) {
+      continue;
+    }
+    for (const match of file.content.matchAll(TEXT_ATTRIBUTE_PATTERN)) {
+      const groups: readonly (string | undefined)[] = match.slice(2);
+      const text = groups.find((group) => group !== undefined) ?? "";
+      if (text === "") continue;
+      violations.push({
+        rule: "I18N-AC09",
+        file: file.path,
+        line: lineAt(file.content, match.index),
+        message: `the ${match[1] ?? "attribute"} attribute must take its text from a dictionary (I18N-R05)`,
+      });
+    }
+  }
+  return violations;
+}
+
 export function formatViolations(violations: readonly Violation[]): string {
   return violations
     .map((item) => `${item.file}:${String(item.line)} [${item.rule}] ${item.message}`)

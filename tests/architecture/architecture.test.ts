@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { LOCALES } from "../../src/shared/contracts/locale";
 import {
+  findAttributeLiteralViolations,
   findClientBoundaryViolations,
   findClientSectionViolations,
   findColorViolations,
@@ -9,8 +11,11 @@ import {
   findE2eViolations,
   findFeatureAnatomyViolations,
   findImportViolations,
+  findRouteLiteralViolations,
+  findStorageAccessViolations,
   findStructureViolations,
   findTestHygieneViolations,
+  findTransitionAllViolations,
   formatViolations,
   type Violation,
 } from "./detect";
@@ -22,6 +27,12 @@ const CHECKED = readSources(["src", "scripts", "e2e", "tests"]);
 
 /** Client files allowed inside section features, with the requirement that authorizes each. */
 const CLIENT_SECTION_EXCEPTIONS: readonly string[] = [];
+
+/** Files that may touch browser storage directly (TSC-R53). */
+const STORAGE_FILES: readonly string[] = [
+  "src/shared/state/safe-storage.ts",
+  "src/shared/lib/pre-paint-script.ts",
+];
 
 /** Files where an ESLint rule may be disabled (TST-R17). */
 const DISABLE_COMMENT_FILES: readonly string[] = ["src/shared/lib/typed-object.ts"];
@@ -75,6 +86,21 @@ describe("architecture of src", () => {
 
   it("STR-AC12: client code never reaches the registry, a section or a server entry point", () => {
     expectNone(findClientBoundaryViolations(SRC));
+  });
+});
+
+describe("conventions of src", () => {
+  it("VIS-AC06: no transition animates every property", () => {
+    expectNone(findTransitionAllViolations(SRC));
+  });
+
+  it("TSC-AC15: paths come from the route helpers and storage from the guarded module", () => {
+    expectNone(findRouteLiteralViolations(SRC, LOCALES));
+    expectNone(findStorageAccessViolations(SRC, STORAGE_FILES));
+  });
+
+  it("I18N-AC09: no perceivable attribute carries a hand-written string", () => {
+    expectNone(findAttributeLiteralViolations(SRC));
   });
 });
 
