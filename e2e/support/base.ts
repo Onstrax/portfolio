@@ -43,8 +43,22 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
       page.on("pageerror", (error) => {
         record("exception", error.message);
       });
+      // A request failed if it never got a response. One that the browser cancels after the
+      // response arrived is not a failure: the Next.js router probes a page with HEAD before
+      // prefetching it, and a navigation interrupts downloads in progress.
+      const failures: Promise<void>[] = [];
       page.on("requestfailed", (request) => {
-        record("failed-request", `${request.url()} ${request.failure()?.errorText ?? ""}`.trim());
+        const detail = `${request.url()} ${request.failure()?.errorText ?? ""}`.trim();
+        failures.push(
+          request
+            .response()
+            .then((response) => {
+              if (response === null) record("failed-request", detail);
+            })
+            .catch(() => {
+              record("failed-request", detail);
+            }),
+        );
       });
       page.on("response", (response) => {
         if (response.status() >= 400) {
@@ -58,6 +72,7 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
       });
 
       await use(undefined);
+      await Promise.all(failures);
 
       expect(issues, "the page must load without errors, warnings or foreign requests").toEqual([]);
     },

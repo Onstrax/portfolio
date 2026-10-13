@@ -33,6 +33,7 @@ const CLIENT_SECTION_EXCEPTIONS: readonly string[] = [];
 const STORAGE_FILES: readonly string[] = [
   "src/shared/state/safe-storage.ts",
   "src/shared/lib/pre-paint-script.ts",
+  "src/shared/lib/language-redirect-script.ts",
 ];
 
 /** Files where an ESLint rule may be disabled (TST-R17). */
