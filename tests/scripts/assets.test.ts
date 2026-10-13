@@ -95,6 +95,8 @@ beforeAll(async () => {
     .jpeg()
     .toFile(at("design/portrait/source.jpg"));
   await copyFile(path.join(REPO, "src/app/icon.svg"), at("src/app/icon.svg"));
+  await mkdir(at("src/styles"), { recursive: true });
+  await copyFile(path.join(REPO, "src/styles/tokens.css"), at("src/styles/tokens.css"));
 
   await run("node", [BUILD, "--root", root]);
 
@@ -139,6 +141,9 @@ describe("assets:build", () => {
     expect(manifest).toContain("export const SCENE_ASSETS = {");
     expect(manifest).toContain("export const PORTRAIT_ASSET = {");
     expect(manifest).toContain("export const OG_ASSET = {");
+    expect(manifest).toContain(
+      'export const SITE_THEME = {\n  "themeColor": "#0a0907"\n} as const satisfies SiteTheme;',
+    );
   });
 
   it("marks in the manifest the masters that the provenance record calls provisional", async () => {
@@ -235,6 +240,14 @@ describe("assets:check", () => {
     await rm(at("public/scene/scene-1920.000000000000.avif"));
     expect(extra.code).toBe(1);
     expect(extra.output).toContain("scene-1920.000000000000.avif is not listed in the manifest");
+  });
+
+  it("fails when the theme color of the manifest differs from tokens.css", async () => {
+    const manifest = (originals.get(MANIFEST) ?? "").toString();
+    await writeFile(at(MANIFEST), manifest.replace('"#0a0907"', '"#000000"'));
+    const result = await check();
+    expect(result.code).toBe(1);
+    expect(result.output).toContain("does not carry the theme color of tokens.css");
   });
 
   it("fails when a published image carries metadata", async () => {

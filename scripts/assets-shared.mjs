@@ -57,6 +57,7 @@ export const QUALITY = {
 export const FOLDERS = { scene: "public/scene", portrait: "public/portrait", og: "public/og" };
 export const MANIFEST = "src/shared/assets/manifest.generated.ts";
 export const PROVENANCE = "design/scene/PROVENANCE.md";
+export const TOKENS = "src/styles/tokens.css";
 
 /** Reads `--root <dir>` and `--release` from the command line. */
 export function parseOptions(args) {
@@ -127,6 +128,14 @@ export function brightnessProblems(variantId, corners) {
   return problems;
 }
 
+/** Colors that the manifest copies from tokens.css, the only place where they are defined. */
+export async function readSiteTheme(root) {
+  const css = await readFile(path.join(root, TOKENS), "utf8");
+  const themeColor = /^\s*--color-void:\s*(#[0-9a-fA-F]{6});/m.exec(css)?.[1];
+  if (themeColor === undefined) throw new Error(`${TOKENS} does not define --color-void`);
+  return { themeColor: themeColor.toLowerCase() };
+}
+
 /** State of each master in the provenance record: `provisional` or `accepted` (AST-R44). */
 export async function readMasterStates(root) {
   const text = await readFile(path.join(root, PROVENANCE), "utf8");
@@ -149,6 +158,7 @@ const MANIFEST_EXPORTS = {
   scene: { name: "SCENE_ASSETS", type: "SceneAssets" },
   portrait: { name: "PORTRAIT_ASSET", type: "PortraitAsset" },
   og: { name: "OG_ASSET", type: "OgAsset" },
+  theme: { name: "SITE_THEME", type: "SiteTheme" },
 };
 
 /** Source of the manifest module. Each constant is written as JSON so that it can be read back. */

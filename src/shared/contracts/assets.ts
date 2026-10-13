@@ -59,6 +59,12 @@ export interface OgAsset {
   readonly height: 630;
 }
 
+/** Colors that HTML metadata needs as literal values, copied from tokens.css by the build. */
+export interface SiteTheme {
+  /** Value of the `void` token, for the `theme-color` meta tag (SMP-R15). */
+  readonly themeColor: `#${string}`;
+}
+
 /** Scene manifest: one entry per variant. */
 export type SceneAssets = Readonly<Record<SceneVariant, SceneAsset>>;
 

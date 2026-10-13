@@ -20,6 +20,7 @@ import {
   portraitFileName,
   QUALITY,
   readMasterStates,
+  readSiteTheme,
   renderManifest,
   SAFE_AREA,
   SCENE_SIZES,
@@ -195,7 +196,8 @@ async function main() {
   await buildAppleIcon();
 
   await mkdir(path.dirname(at(MANIFEST)), { recursive: true });
-  await writeFile(at(MANIFEST), renderManifest({ scene, portrait, og }), "utf8");
+  const theme = await readSiteTheme(root);
+  await writeFile(at(MANIFEST), renderManifest({ scene, portrait, og, theme }), "utf8");
   console.log(`assets:build: wrote ${MANIFEST}`);
 }
 

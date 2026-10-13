@@ -20,6 +20,7 @@ import {
   PORTRAIT,
   portraitFileName,
   readManifest,
+  readSiteTheme,
   SCENE_SIZES,
   SCENE_VARIANTS,
   sceneFileName,
@@ -194,6 +195,12 @@ async function main() {
   await checkPortrait(manifest);
   await checkOg(manifest);
   await checkAppleIcon();
+  const theme = await readSiteTheme(root);
+  if (manifest.theme?.themeColor !== theme.themeColor) {
+    problems.push(
+      `the manifest does not carry the theme color of tokens.css (${theme.themeColor}): run pnpm assets:build`,
+    );
+  }
 
   if (problems.length > 0) {
     for (const problem of problems) console.error(`assets:check: ${problem}`);
