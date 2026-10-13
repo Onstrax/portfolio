@@ -6,9 +6,7 @@ import type { ReactNode } from "react";
 
 import { SITE_THEME } from "@/shared/assets/manifest.generated";
 import { isLocale, LOCALES } from "@/shared/contracts/locale";
-import { LOCALE_META } from "@/shared/i18n/locales";
 import { StoreHydrator } from "@/shared/state/store-hydrator";
-import { FONT_VARIABLES } from "@/shared/ui/fonts";
 
 interface LocaleLayoutProps {
   readonly children: ReactNode;
@@ -23,17 +21,20 @@ export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
 
+/**
+ * Common to every page of a language: styles, base metadata and the stores (TSC-R52). The
+ * document itself is rendered by the layout of each group, because only the pages of the scene
+ * carry the pre-paint script in their `<head>` (SYS-R13, SYS-R19).
+ */
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
   if (!isLocale(locale)) {
     notFound();
   }
   return (
-    <html lang={LOCALE_META[locale].htmlLang} className={FONT_VARIABLES}>
-      <body>
-        <StoreHydrator />
-        {children}
-      </body>
-    </html>
+    <>
+      <StoreHydrator />
+      {children}
+    </>
   );
 }
