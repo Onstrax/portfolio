@@ -62,6 +62,35 @@ describe("build-headers.mjs", () => {
     );
   });
 
+  it("DEP-AC04: merges the data scripts of Next.js into one, in order, and hashes the result", async () => {
+    const chunks = [
+      "(self.__next_f=self.__next_f||[]).push([0])",
+      'self.__next_f.push([1,"first"])',
+      'self.__next_f.push([1,"second"])',
+    ];
+    const folder = await exportedSite({
+      "es/index.html": page(
+        `<script>${FIRST_SCRIPT}</script>`,
+        ...chunks.map((chunk) => `<script>${chunk}</script>`),
+      ),
+    });
+
+    await run("node", [SCRIPT, folder]);
+    const merged = chunks.join(";");
+    const html = await readFile(path.join(folder, "es/index.html"), "utf8");
+    const headers = await readFile(path.join(folder, "_headers"), "utf8");
+
+    expect(html).toContain(`<script>${FIRST_SCRIPT}</script><script>${merged}</script>`);
+    expect(html.match(/<script>/g)).toHaveLength(2);
+    expect(headers).toContain(
+      `script-src 'self' ${hashOf(FIRST_SCRIPT)} ${hashOf(merged)} https://static.cloudflareinsights.com;`,
+    );
+
+    // Running it again changes nothing: there is a single data script left to merge.
+    await run("node", [SCRIPT, folder]);
+    expect(await readFile(path.join(folder, "es/index.html"), "utf8")).toBe(html);
+  });
+
   it("DEP-AC04: fails when the policy of a document would exceed 2000 characters", async () => {
     const scripts = Array.from(
       { length: 40 },

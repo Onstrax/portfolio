@@ -120,6 +120,9 @@ const server = createServer(async (request, response) => {
     response.end("Not found");
     return;
   }
+  // A static host states the size of every file, also in answer to HEAD, which the Next.js
+  // router uses to probe a page before prefetching it.
+  response.setHeader("Content-Length", (await stat(file)).size);
   response.writeHead(status);
   if (request.method === "HEAD") {
     response.end();

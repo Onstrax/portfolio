@@ -1,5 +1,6 @@
 // Writes `<outDir>/_headers`, the header rules Cloudflare Pages applies when serving the site
-// (DEP §4.5 and §4.6). Runs at the end of `pnpm build`. Usage: node scripts/build-headers.mjs [outDir]
+// (DEP §4.5 and §4.6), after joining the data scripts of Next.js in every document (DEP-R32).
+// Runs at the end of `pnpm build`. Usage: node scripts/build-headers.mjs [outDir]
 import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -50,13 +51,44 @@ function routeOf(file) {
   return `/${file}`;
 }
 
+function isExecutableInline(attributes, content) {
+  if (/\ssrc\s*=/i.test(attributes) || content.length === 0) return false;
+  const type = /\stype\s*=\s*["']?([^"'\s>]*)/i.exec(attributes)?.[1]?.toLowerCase() ?? "";
+  return EXECUTABLE_TYPES.has(type);
+}
+
+/** Next.js delivers the data of a page in many small inline scripts that push to this array. */
+const NEXT_DATA_SCRIPT = /^\(?self\.__next_f\b/;
+
+/**
+ * Joins the data scripts of Next.js into a single script, in their original order and where the
+ * first one was. A page with real content carries dozens of them, and one hash per script would
+ * not fit in the 2000 characters of a `_headers` line (DEP-R32). Other inline scripts stay as
+ * they are.
+ */
+function mergeNextDataScripts(html) {
+  const chunks = [];
+  for (const [, attributes, content] of html.matchAll(SCRIPT_PATTERN)) {
+    if (isExecutableInline(attributes, content) && NEXT_DATA_SCRIPT.test(content)) {
+      chunks.push(content);
+    }
+  }
+  if (chunks.length < 2) return html;
+
+  let isFirst = true;
+  return html.replace(SCRIPT_PATTERN, (element, attributes, content) => {
+    if (!isExecutableInline(attributes, content) || !NEXT_DATA_SCRIPT.test(content)) return element;
+    if (!isFirst) return "";
+    isFirst = false;
+    return `<script>${chunks.join(";")}</script>`;
+  });
+}
+
 /** SHA-256 hashes of the inline scripts that the browser executes, in document order. */
 function inlineScriptHashes(html) {
   const hashes = [];
   for (const [, attributes, content] of html.matchAll(SCRIPT_PATTERN)) {
-    if (/\ssrc\s*=/i.test(attributes) || content.length === 0) continue;
-    const type = /\stype\s*=\s*["']?([^"'\s>]*)/i.exec(attributes)?.[1]?.toLowerCase() ?? "";
-    if (!EXECUTABLE_TYPES.has(type)) continue;
+    if (!isExecutableInline(attributes, content)) continue;
     const hash = `'sha256-${createHash("sha256").update(content, "utf8").digest("base64")}'`;
     if (!hashes.includes(hash)) hashes.push(hash);
   }
@@ -88,7 +120,9 @@ async function main() {
   ];
 
   for (const file of await findHtmlFiles(outDir)) {
-    const html = await readFile(path.join(outDir, file), "utf8");
+    const original = await readFile(path.join(outDir, file), "utf8");
+    const html = mergeNextDataScripts(original);
+    if (html !== original) await writeFile(path.join(outDir, file), html, "utf8");
     const policy = contentSecurityPolicy(inlineScriptHashes(html));
     rules.push({ route: routeOf(file), headers: [["Content-Security-Policy", policy]] });
   }
