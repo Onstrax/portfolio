@@ -37,9 +37,42 @@
     outline-offset: 2px;
   }
 
+  /* Anchors and section URLs scroll smoothly, unless the visitor asked for less motion (SMP-R11). */
+  html {
+    scroll-behavior: smooth;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+  }
+}
+
+/*
+ * Printing any page prints the simple view in black on white, even when the scene is on screen
+ * (SMP-R12). What must not be printed carries the `print:hidden` utility in its component.
+ */
+@media print {
+  html,
+  body {
+    background-color: var(--color-print-paper);
+    color: var(--color-print-ink);
+  }
+
+  [data-layer="scene"] {
+    display: none !important;
+  }
+
+  [data-layer="base"] {
+    display: block !important;
+  }
+
+  a[target="_blank"]::after {
+    content: " (" attr(href) ")";
+  }
+
+  article {
+    break-inside: avoid;
   }
 }

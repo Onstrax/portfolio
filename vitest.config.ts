@@ -26,7 +26,8 @@ export default defineConfig({
   },
   test: {
     // The site is built with `trailingSlash: true` (SYS-R05); next/link reads it from this variable.
-    env: { __NEXT_TRAILING_SLASH: "true" },
+    // The origin of the site is the one of the preview server, as in local and CI builds (SYS-R35).
+    env: { __NEXT_TRAILING_SLASH: "true", NEXT_PUBLIC_SITE_URL: "http://localhost:4173" },
     projects: [
       {
         extends: true,

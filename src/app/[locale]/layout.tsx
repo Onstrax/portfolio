@@ -1,21 +1,14 @@
 import "@/styles/globals.css";
 
-import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Viewport } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { SITE_THEME } from "@/shared/assets/manifest.generated";
 import { isLocale, LOCALES } from "@/shared/contracts/locale";
 import { LOCALE_META } from "@/shared/i18n/locales";
-import { cn } from "@/shared/lib/cn";
 import { StoreHydrator } from "@/shared/state/store-hydrator";
-
-// The two families of the visual system, self-hosted at build time (VIS-R05, SYS-R33).
-const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-jetbrains-mono",
-});
+import { FONT_VARIABLES } from "@/shared/ui/fonts";
 
 interface LocaleLayoutProps {
   readonly children: ReactNode;
@@ -23,6 +16,8 @@ interface LocaleLayoutProps {
 }
 
 export const dynamicParams = false;
+
+export const viewport: Viewport = { themeColor: SITE_THEME.themeColor };
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -34,10 +29,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     notFound();
   }
   return (
-    <html
-      lang={LOCALE_META[locale].htmlLang}
-      className={cn(inter.variable, jetBrainsMono.variable)}
-    >
+    <html lang={LOCALE_META[locale].htmlLang} className={FONT_VARIABLES}>
       <body>
         <StoreHydrator />
         {children}

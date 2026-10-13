@@ -36,6 +36,10 @@
   --color-aura-sketch: #b3123a;
   --color-paper: #f2ebdf;
 
+  /* Printing (VIS §4.1.6) */
+  --color-print-paper: #ffffff;
+  --color-print-ink: #000000;
+
   /* Typography (VIS §4.2). The font variables are set by next/font in the locale layout. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
