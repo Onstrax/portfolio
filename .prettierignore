@@ -1,0 +1,8 @@
+# Formatting exclusions (TST-R14)
+specs/
+design/
+public/
+out/
+coverage/
+pnpm-lock.yaml
+*.generated.ts

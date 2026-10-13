@@ -1,0 +1,23 @@
+# pnpm settings (SYS-R45). Changing any of them requires updating SYS §4.11 first.
+
+# Reject versions published less than 7 days ago (SYS-R37). No exclusions.
+minimumReleaseAge: 10080
+
+# Reject a version published with weaker provenance than earlier ones of the same package.
+trustPolicy: no-downgrade
+
+# Exempt versions older than 30 days from the trust policy.
+trustPolicyIgnoreAfter: 43200
+
+# Transitive dependencies must come from the registry.
+blockExoticSubdeps: true
+
+# Fail the install on any undecided install script (SYS-R38).
+strictDepBuilds: true
+
+allowBuilds:
+  # Ships prebuilt binaries; its install script is not needed.
+  unrs-resolver: false
+
+# Save exact versions when adding dependencies (SYS-R01).
+saveExact: true
