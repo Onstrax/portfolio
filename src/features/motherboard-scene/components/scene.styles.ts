@@ -26,8 +26,6 @@ export type ImageState = keyof typeof IMAGE_STATES;
 /** Transition between the states of an aura (M-04). */
 export const AURA_PART = "transition-opacity duration-(--duration-fast) ease-out";
 
-export const AURA_STROKE = "fill-none stroke-(--scene-aura)";
-
 /** Opacity range of the breath of each tier, read by the `aura-breath` animation (VIS-R16). */
 export const AURA_GLOW_RANGE = {
   primary:

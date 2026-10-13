@@ -194,9 +194,8 @@ test.describe("scene on a desktop", () => {
 
       await expect(label(page, name)).toBeVisible();
       await expect(label(page, name)).toContainText(title);
-      await expect.poll(() => auraOpacity(page, "cpu", "stroke")).toBe("1");
-      await expect.poll(() => auraOpacity(page, "cpu", "glow")).toBe("0.85");
-      await expect.poll(() => auraOpacity(page, "cpu", "fill")).toBe("0.08");
+      await expect.poll(() => auraOpacity(page, "cpu", "glow")).toBe("1");
+      await expect.poll(() => auraOpacity(page, "cpu", "fill")).toBe("0.14");
       await expect(page.locator('[data-aura="cpu"] [data-part="focus-ring"]')).toHaveCount(1);
     });
   }
@@ -276,8 +275,8 @@ test.describe("scene on a desktop", () => {
     await expect
       .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
       .toBe(0);
-    expect(await auraOpacity(page, "psu", "glow")).toBe("0.45");
-    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.27");
+    expect(await auraOpacity(page, "psu", "glow")).toBe("0.7");
+    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.6");
   });
 });
 
@@ -334,6 +333,8 @@ test.describe("scripts of the scene", () => {
     // A second browser, so that the phone does not find the files of the desktop in its cache.
     const context = await browser.newContext({ viewport: VIEWPORTS.mobile });
     const phone = await context.newPage();
+    // Same precaution that the base test takes with its own page (TST-R26).
+    await phone.goto("about:blank");
     const onPhone = recordScriptRequests(phone);
     await phone.goto(`${ORIGIN}/es/`);
     await expect(html(phone)).toHaveAttribute("data-app", "ready");

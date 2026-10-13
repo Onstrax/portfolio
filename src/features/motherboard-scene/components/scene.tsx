@@ -23,7 +23,7 @@ import { boundingBox } from "../lib/geometry";
 import { isLabelVisible } from "../lib/label-state";
 import { SCENE_CONTENT_ID } from "../lib/scene-ids";
 import { SCENE_HEIGHT, SCENE_WIDTH, toClipPath, toStageRect } from "../lib/scene-space";
-import { Aura, AuraFilters } from "./aura";
+import { Aura } from "./aura";
 import { PostDisplay } from "./post-display";
 import { HINT_STATES, STAGE, STAGE_LAYER, VIEWPORT, ZONE } from "./scene.styles";
 import { SceneImages } from "./scene-images";
@@ -199,9 +199,6 @@ export function Scene({ sections }: SceneProps) {
           viewBox={`0 0 ${String(SCENE_WIDTH)} ${String(SCENE_HEIGHT)}`}
           className={STAGE_LAYER}
         >
-          <defs>
-            <AuraFilters />
-          </defs>
           {[...auraStates].map(([id, state]) => (
             <Aura
               key={id}

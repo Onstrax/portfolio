@@ -47,7 +47,6 @@ function aura(id: string) {
     Number(group?.querySelector(`[data-part="${name}"]`)?.getAttribute("opacity"));
   return {
     state: group?.getAttribute("data-state"),
-    stroke: part("stroke"),
     glow: part("glow"),
     fill: part("fill"),
   };
@@ -210,29 +209,64 @@ describe("Scene: structure", () => {
 describe("Scene: auras", () => {
   it("VIS-AC11: a primary and a secondary zone at rest have the opacities of the table", () => {
     renderScene();
-    expect(aura("cpu")).toEqual({ state: "rest", stroke: 0.55, glow: 0.45, fill: 0 });
-    expect(aura("cmos")).toEqual({ state: "rest", stroke: 0.35, glow: 0.27, fill: 0 });
-    expect(aura("settings")).toEqual({ state: "rest", stroke: 0.35, glow: 0.27, fill: 0 });
+    expect(aura("cpu")).toEqual({ state: "rest", glow: 0.7, fill: 0 });
+    expect(aura("cmos")).toEqual({ state: "rest", glow: 0.6, fill: 0 });
+    expect(aura("settings")).toEqual({ state: "rest", glow: 0.6, fill: 0 });
   });
 
   it("VIS-AC11: under the pointer they take the hover opacities", () => {
     renderScene();
     fireEvent.pointerEnter(zone("cpu"));
-    expect(aura("cpu")).toEqual({ state: "hover", stroke: 1, glow: 0.85, fill: 0.08 });
+    expect(aura("cpu")).toEqual({ state: "hover", glow: 1, fill: 0.14 });
     expect(aura("psu").state).toBe("rest");
 
     fireEvent.pointerEnter(zone("cmos"));
-    expect(aura("cmos")).toEqual({ state: "hover", stroke: 0.8, glow: 0.6, fill: 0.08 });
+    expect(aura("cmos")).toEqual({ state: "hover", glow: 0.9, fill: 0.14 });
   });
 
   it("VIS-AC11: with their section or menu open they take the active opacities", () => {
     renderScene("es", "/es/profile/");
-    expect(aura("cpu")).toEqual({ state: "active", stroke: 1, glow: 0.85, fill: 0.08 });
+    expect(aura("cpu")).toEqual({ state: "active", glow: 1, fill: 0.14 });
 
     act(() => {
       useUiStore.getState().openSettings();
     });
-    expect(aura("settings")).toEqual({ state: "active", stroke: 0.8, glow: 0.6, fill: 0.08 });
+    expect(aura("settings")).toEqual({ state: "active", glow: 0.9, fill: 0.14 });
+  });
+
+  it("draws the aura as a halo around the piece, without any outline", () => {
+    renderScene();
+    const group = document.querySelector('[data-aura="psu"]');
+    const shapes = [...(group?.querySelectorAll("polygon") ?? [])];
+
+    expect(shapes).toHaveLength(2);
+    for (const shape of shapes) expect(shape).not.toHaveAttribute("stroke-width");
+    expect(group?.querySelector('[data-part="stroke"]')).toBeNull();
+
+    // The halo is the blurred silhouette minus the piece itself.
+    const filter = group?.querySelector("filter");
+    expect(
+      [...(filter?.querySelectorAll("feGaussianBlur") ?? [])].map((blur) =>
+        blur.getAttribute("stdDeviation"),
+      ),
+    ).toEqual(["18", "6", "1.5"]);
+    expect(filter?.querySelector("feComposite")).toHaveAttribute("operator", "out");
+    expect(group?.querySelector('[data-part="glow"] polygon')).toHaveAttribute(
+      "filter",
+      "url(#scene-aura-halo-psu)",
+    );
+  });
+
+  it("gives the halo of every zone room to fade out before its filter ends", () => {
+    renderScene();
+    const filter = document.querySelector('[data-aura="cmos"] filter');
+    expect(filter).toHaveAttribute("filterUnits", "userSpaceOnUse");
+    expect(["x", "y", "width", "height"].map((name) => filter?.getAttribute(name))).toEqual([
+      "553",
+      "400",
+      "156",
+      "157",
+    ]);
   });
 
   it("draws one aura per interactive zone and none for the diagnostic display", () => {
@@ -247,7 +281,7 @@ describe("Scene: auras", () => {
     await userEvent.tab();
 
     expect(zone("cpu")).toHaveFocus();
-    expect(aura("cpu")).toMatchObject({ state: "hover", stroke: 1, glow: 0.85 });
+    expect(aura("cpu")).toMatchObject({ state: "hover", glow: 1 });
     expect(label("Procesador (CPU)")).toHaveAttribute("data-visible", "true");
     expect(label("Procesador (CPU)")).toHaveTextContent("Procesador (CPU)Perfil");
 

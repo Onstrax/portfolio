@@ -82,21 +82,18 @@
   --opacity-disabled: 0.45;
 
   /* Aura, in scene units and opacities (VIS §4.4) */
-  --aura-stroke-width: 2;
-  --aura-glow-blur-near: 3;
-  --aura-glow-blur-far: 10;
-  --aura-fill-opacity: 0.08;
+  --aura-glow-blur-near: 6;
+  --aura-glow-blur-far: 18;
+  --aura-glow-gain: 1.5;
+  --aura-edge-feather: 1.5;
+  --aura-fill-opacity: 0.14;
   --aura-breath-cycle: 2400ms;
-  --aura-primary-stroke-rest: 0.55;
-  --aura-primary-glow-rest-min: 0.3;
-  --aura-primary-glow-rest-max: 0.45;
-  --aura-primary-stroke-active: 1;
-  --aura-primary-glow-active: 0.85;
-  --aura-secondary-stroke-rest: 0.35;
-  --aura-secondary-glow-rest-min: 0.18;
-  --aura-secondary-glow-rest-max: 0.27;
-  --aura-secondary-stroke-active: 0.8;
-  --aura-secondary-glow-active: 0.6;
+  --aura-primary-glow-rest-min: 0.45;
+  --aura-primary-glow-rest-max: 0.7;
+  --aura-primary-glow-active: 1;
+  --aura-secondary-glow-rest-min: 0.4;
+  --aura-secondary-glow-rest-max: 0.6;
+  --aura-secondary-glow-active: 0.9;
 
   /* Colors that depend on the scene variant (VIS-R44). Without the attribute: the photograph. */
   --scene-aura: var(--color-aura);
