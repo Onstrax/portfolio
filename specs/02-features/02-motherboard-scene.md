@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -196,7 +196,7 @@ Espacio de nombres `scene` del diccionario de interfaz.
 
 Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display, `data-testid="scene-label"` en cada etiqueta, `data-testid="scene-hint"` en la pista, `data-testid="scene-auras"` en el SVG decorativo, `data-testid="scene-poster"` en el póster y `data-testid="calibration-overlay"` en la superposición de calibración.
 
-Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`stroke`, `glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
+Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
 
 ### 4.12 Variante de escena
 
@@ -227,7 +227,7 @@ Además, estos atributos exponen a las pruebas el estado que de otro modo solo e
 | SCN-AC15 | El sitio exportado no contiene el código de la superposición de calibración: ningún archivo de `out/` contiene la cadena `debug=hotspots` (AST-AC18). | Prueba de exportación |
 | SCN-AC16 | La imagen tiene `alt=""`; el SVG decorativo y las etiquetas tienen `aria-hidden="true"`. | Prueba de componente |
 | SCN-AC17 | El autor completa la calibración con la superposición, sobre las dos variantes, y confirma AST-AC10 a AST-AC12, AST-AC20 y SCN-R28. | Revisión manual del autor, registrada en `PROVENANCE.md` y en el historial de esta spec |
-| SCN-AC18 | En `desktop`, tras elegir "Boceto" en los ajustes: `<html>` tiene `data-scene="sketch"`, la imagen visible es un derivado de la variante `sketch`, el trazo del aura de `cpu` tiene el color `aura-sketch`, y el enlace de la zona `cpu` conserva su posición, su tamaño y su nombre accesible. Tras recargar la página, todo ello se mantiene. | Prueba E2E |
+| SCN-AC18 | En `desktop`, tras elegir "Boceto" en los ajustes: `<html>` tiene `data-scene="sketch"`, la imagen visible es un derivado de la variante `sketch`, el halo del aura de `cpu` tiene el color `aura-sketch`, y el enlace de la zona `cpu` conserva su posición, su tamaño y su nombre accesible. Tras recargar la página, todo ello se mantiene. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -251,6 +251,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.3 | Por decisión del autor al revisar M5 (D-71): el aura es un halo sin línea de contorno (VIS 2.5). SCN-AC18 y §4.11 dejan de nombrar el trazo. |
 | 2026-10-13 | 1.2 | Durante M5, por delegación del autor (D-69). SCN-R07 y SCN-R26: nuevo `Hotspot.labelShift`, porque ocho etiquetas centradas no caben a 1024×768 px. SCN-R25: sin hover, las etiquetas miden 128 px como máximo. SCN-R33: la pista queda a 8 px del borde y no a 24, para no tapar el display de diagnóstico. SCN-R03: `id` del `<main>`. SCN-R35: los tres formatos de la imagen son `<source>` y el `<img>` no lleva `src`, tras comprobar en WebKit que con `src` se descargaban dos archivos. §4.11: nuevos identificadores y atributos de prueba. SCN-AC09: solo en Chromium. Calibración trazada sobre las dos variantes; pendiente la revisión del autor (SCN-AC17). |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.12 (SCN-R42 a SCN-R44): variante de escena. SCN-R04, R09, R18, R21, R29 y R35 pasan a depender de la variante; SCN-R36: la precarga la inserta el script previo al pintado. SCN-AC02, AC12 y AC17 adaptados; nuevo SCN-AC18. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

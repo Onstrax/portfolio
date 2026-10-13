@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.4 |
+| Versión | 2.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -176,19 +176,19 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 | ID | Requisito |
 | --- | --- |
-| VIS-R13 | El aura se compone de tres elementos del color de aura de la variante activa (VIS-R44): un **trazo** de 2 unidades de grosor sobre el contorno del polígono; un **resplandor** formado por dos copias desenfocadas del trazo (desenfoque gaussiano de 3 y de 10 unidades); y, solo en los estados de hover, foco y activo, un **relleno** del polígono con opacidad 0,08. |
-| VIS-R14 | El aura se dibuja sobre el contorno y hacia fuera. En reposo no rellena ni cubre la pieza. |
+| VIS-R13 | El aura es un **halo**: luz del color de aura de la variante activa (VIS-R44) que parece salir de detrás de la pieza. Se obtiene desenfocando dos veces la silueta rellena (desenfoque gaussiano de 6 y de 18 unidades), sumando ambas copias, multiplicando su opacidad por 1,5 y eliminando la parte que cae sobre la propia pieza, con un borde interior suavizado 1,5 unidades. El aura NO DEBE dibujar ninguna línea de contorno. Solo en los estados de hover, foco y activo se añade un **relleno** de la silueta con opacidad 0,14. |
+| VIS-R14 | El halo se dibuja alrededor de la pieza y hacia fuera, más intenso junto a ella y desvanecido a unas 50 unidades. En reposo no rellena ni cubre la pieza. |
 | VIS-R15 | Las opacidades por estado son las de la tabla siguiente. Las seis zonas primarias usan los valores "primaria"; `cmos` y `settings` usan los valores "secundaria". |
-| VIS-R16 | Cuando la escena se hace visible, la opacidad del resplandor de las zonas en reposo **respira** durante 4800 ms: dos ciclos de 2400 ms entre el valor mínimo y el máximo de la tabla, con curva `ease-in-out` y todas las zonas en fase. Después queda fija en el valor máximo. La respiración solo se repite cuando la escena vuelve a hacerse visible tras una secuencia de arranque. Se interrumpe en la zona que pasa a hover, foco o activa. |
+| VIS-R16 | Cuando la escena se hace visible, la opacidad del halo de las zonas en reposo **respira** durante 4800 ms: dos ciclos de 2400 ms entre el valor mínimo y el máximo de la tabla, con curva `ease-in-out` y todas las zonas en fase. Después queda fija en el valor máximo. La respiración solo se repite cuando la escena vuelve a hacerse visible tras una secuencia de arranque. Se interrumpe en la zona que pasa a hover, foco o activa. |
 | VIS-R17 | El cambio entre estados es una transición de opacidad de `duration-fast`. Solo se anima la opacidad; el radio de desenfoque nunca se anima. |
-| VIS-R18 | Con `prefers-reduced-motion: reduce` no hay respiración: en reposo el resplandor queda fijo en su valor máximo. |
+| VIS-R18 | Con `prefers-reduced-motion: reduce` no hay respiración: en reposo el halo queda fijo en su valor máximo. |
 | VIS-R19 | El color y la forma del aura son los mismos para todas las zonas y no cambian según se haya visitado o no la sección (D-07). |
 
-| Estado | Trazo, primaria | Resplandor, primaria | Trazo, secundaria | Resplandor, secundaria |
-| --- | --- | --- | --- | --- |
-| Reposo | 0,55 | 0,30 a 0,45 | 0,35 | 0,18 a 0,27 |
-| Hover o foco de teclado | 1,00 | 0,85 | 0,80 | 0,60 |
-| Activo (su panel o menú está abierto) | 1,00 | 0,85 | 0,80 | 0,60 |
+| Estado | Halo, primaria | Halo, secundaria | Relleno |
+| --- | --- | --- | --- |
+| Reposo | 0,45 a 0,70 | 0,40 a 0,60 | 0 |
+| Hover o foco de teclado | 1,00 | 0,90 | 0,14 |
+| Activo (su panel o menú está abierto) | 1,00 | 0,90 | 0,14 |
 
 ### 4.5 Superficies
 
@@ -279,8 +279,8 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | --- | --- | --- | --- | --- |
 | M-01 | Aparición de las líneas del registro de arranque | Definida en BOOT; usa solo opacidad | Definida en BOOT; total de 2000 ms como máximo | Definida en BOOT |
 | M-02 | Paso del arranque a la escena | Arranque: opacidad 1 → 0. Escena: opacidad 0 → 1 y escala 1,04 → 1 | Arranque: `duration-slow`, `ease-in`. Escena: `duration-scene`, `ease-out` | Fundido cruzado de 150 ms, sin escala |
-| M-03 | Respiración del aura | Opacidad del resplandor (VIS-R16) | Dos ciclos de 2400 ms (4800 ms en total), `ease-in-out`; no es un bucle | Desactivada (VIS-R18) |
-| M-04 | Cambio de estado del aura | Opacidad de trazo, resplandor y relleno | `duration-fast`, `ease-out` | Igual |
+| M-03 | Respiración del aura | Opacidad del halo (VIS-R16) | Dos ciclos de 2400 ms (4800 ms en total), `ease-in-out`; no es un bucle | Desactivada (VIS-R18) |
+| M-04 | Cambio de estado del aura | Opacidad de halo y relleno | `duration-fast`, `ease-out` | Igual |
 | M-05 | Etiqueta de escena | Entrada: opacidad 0 → 1 y desplazamiento de 4 px → 0. Salida: opacidad 1 → 0 | Entrada: `duration-fast`, `ease-out`. Salida: `duration-instant`, `ease-in` | Solo opacidad |
 | M-06 | Apertura y cierre del panel | Velo: opacidad 0 ↔ 0,6. Panel: opacidad 0 ↔ 1, escala 0,97 ↔ 1, desplazamiento vertical 8 px ↔ 0 | Apertura: `duration-base`, `ease-out`. Cierre: `duration-fast`, `ease-in` | Solo opacidad, 150 ms |
 | M-07 | Cambio de sección dentro del panel | Contenido saliente: opacidad 1 → 0 y desplazamiento horizontal de 16 px. Contenido entrante: lo inverso | `duration-fast` cada fase, `ease-in` y `ease-out` | Cambio instantáneo |
@@ -310,7 +310,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 
 | Propiedad | En `photo` | En `sketch` | Uso |
 | --- | --- | --- | --- |
-| `--scene-aura` | `aura` | `aura-sketch` | Trazo, resplandor y relleno del aura; rectángulo de foco de las zonas (SCN-R21) |
+| `--scene-aura` | `aura` | `aura-sketch` | Halo y relleno del aura; rectángulo de foco de las zonas (SCN-R21) |
 | `--scene-backdrop` | `void` | `paper` | Fondo fuera del escenario y viñeteado (AST-R03, AST-R48) |
 | `--scene-display` | `boot-ok` | `ink` | Segmentos del display de diagnóstico (SCN-R29) |
 
@@ -329,7 +329,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | VIS-AC09 | Las únicas familias tipográficas cargadas son Inter y JetBrains Mono. | Prueba E2E que consulta `document.fonts` |
 | VIS-AC10 | A 1280×720 px y a 1920×1080 px, el panel cumple VIS-R24: no supera los máximos, queda dentro del viewport y, con un contenido más alto que la pantalla, la cabecera y el pie siguen visibles mientras el contenido hace scroll. | Prueba E2E |
 | VIS-AC11 | Las opacidades del aura en reposo, hover y activo coinciden con la tabla de §4.4 para una zona primaria y una secundaria. | Prueba de componente que lee los atributos del SVG |
-| VIS-AC13 | Sin movimiento reducido, la respiración del aura termina antes de 5 segundos desde que la escena es visible y el resplandor de las zonas en reposo queda en su valor máximo. | Prueba E2E |
+| VIS-AC13 | Sin movimiento reducido, la respiración del aura termina antes de 5 segundos desde que la escena es visible y el halo de las zonas en reposo queda en su valor máximo. | Prueba E2E |
 | VIS-AC12 | El autor revisa el panel, las etiquetas y la barra fija sobre la imagen final de la escena y confirma que el aura se distingue en todo el perímetro de cada zona y que el panel corresponde a la referencia `DetailIdea1Component`. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -355,6 +355,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.5 | Por decisión del autor al revisar M5 (D-71): el aura deja de tener línea de contorno y pasa a ser un halo que rodea la pieza. VIS-R13 y VIS-R14 reescritos, tabla de opacidades de §4.4 sustituida (sin columnas de trazo, valores más altos), M-03 y M-04 adaptados. El rectángulo de foco de teclado (SCN-R21) no cambia. |
 | 2026-10-13 | 2.4 | Durante M5, por delegación del autor. VIS-R21: ancho máximo de la etiqueta sin hover y color de su borde según la variante. VIS-R31: sobre la escena, el anillo de foco usa el color de aura de la variante. |
 | 2026-10-13 | 2.3 | Durante M4, por delegación del autor. Nuevo §4.1.6 con los tokens `print-paper` y `print-ink` para la hoja de impresión (SMP-R12). |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). Nuevo §4.1.5 con los tokens `aura-sketch` y `paper`; nuevo VIS-R44 con las propiedades `--scene-aura`, `--scene-backdrop` y `--scene-display`; VIS-R13 usa el color de aura de la variante; dos pares nuevos en la tabla de contraste. |
