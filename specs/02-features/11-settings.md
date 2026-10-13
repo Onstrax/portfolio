@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
@@ -34,7 +34,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | ID | Requisito |
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
-| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2) y un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`. |
+| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2) y un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`. Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma y la vista simple sigan al alcance (PNL-R25). |
 | SET-R03 | Sus controles preceden en el orden de tabulación a las zonas de la escena (QLT-R07). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
@@ -52,10 +52,10 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | --- | --- |
 | SET-R08 | `SettingsMenu` está abierto mientras `settingsOpen` es `true` en el store de interfaz (TSC §4.9). Lo abre y lo cierra la zona `settings` de la escena. |
 | SET-R09 | Es un `<dialog>` nativo abierto con `showModal()`, con `aria-labelledby` apuntando a su título. Su aspecto es una placa oscura de 320 px de ancho, en la capa `z-settings`, con velo transparente. Usa la animación M-08. |
-| SET-R10 | Se coloca junto a la zona `settings`, en el lado de su `labelPlacement` (SCN-R07), y se desplaza lo necesario para quedar dentro del escenario con 8 px de margen. |
+| SET-R10 | Se coloca junto a la zona `settings` y dentro del escenario, con 8 px de margen. Va en el lado de su `labelPlacement` (SCN-R07); si ahí no cabe, en el lado opuesto, y después en los otros dos. A lo largo del lado elegido queda centrado respecto a la zona y se desplaza lo necesario para no salirse. Así el menú no tapa la pieza que lo abre. La posición la calcula `menuPosition`, función pura de `lib/`. |
 | SET-R11 | Contiene, en este orden: (1) el título `settings.menuTitle`, como `<h2>`, y un botón de cerrar con el icono `close` y el nombre `settings.closeAriaLabel`; (2) el interruptor de sonido; (3) el selector de imagen de la escena (§4.8); (4) el selector de idioma, precedido de la etiqueta `common.languageLabel`; (5) el progreso, con el texto `common.visitedSectionsLabel({ count, total: 6 })`; (6) el botón de reinicio, con el texto `settings.resetLabel` y, debajo, la descripción `settings.resetDescription`. |
-| SET-R12 | Se cierra con el botón de cerrar, con Esc, con un clic fuera de la placa o al activar de nuevo la zona `settings`. Al abrirse, el foco pasa al interruptor de sonido; al cerrarse, vuelve a la zona `settings` (QLT-R08). |
-| SET-R13 | El menú se cierra si el modo de render pasa a `simple` o si cambia la URL. |
+| SET-R12 | Se cierra con el botón de cerrar, con Esc, con un clic fuera de la placa o al activar de nuevo la zona `settings`. Al abrirse, el foco pasa al interruptor de sonido; al cerrarse, vuelve a la zona `settings` (QLT-R08). Como el menú es modal, una segunda activación de la zona es un clic sobre lo que queda detrás de él, que lo cierra igual que cualquier clic fuera de la placa. |
+| SET-R13 | El menú se cierra si el modo de render pasa a `simple` o si cambia la URL. Elegir un idioma en el menú lo cierra antes de navegar, y el foco queda después en el selector de la barra fija (I18N-R27). |
 | SET-R14 | Con el sonido activado, abrir y cerrar el menú reproducen el efecto `toggle`. |
 
 ### 4.4 Sonido e interruptor
@@ -89,13 +89,13 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 
 | ID | Requisito |
 | --- | --- |
-| SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). |
+| SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). El paso (2) es una salvaguarda: el menú y el panel son modales y no pueden estar abiertos a la vez. |
 | SET-R25 | El reinicio no cambia el idioma, la preferencia de sonido ni la imagen de la escena. Tras él, el display de diagnóstico muestra `00` y la pista inicial de la escena vuelve a verse (SCN-R33). |
 | SET-R26 | El botón Power del panel frontal, visible en la imagen, no tiene ninguna función (D-11). |
 
 ### 4.7 Textos de interfaz
 
-Espacio de nombres `settings` del diccionario de interfaz.
+Espacio de nombres `settings` del diccionario de interfaz. Identificador de prueba: `data-testid="settings-menu"` en la placa del menú.
 
 | Clave | Español | Inglés |
 | --- | --- | --- |
@@ -131,7 +131,7 @@ Espacio de nombres `settings` del diccionario de interfaz.
 | SET-AC06 | El interruptor de sonido tiene `role="switch"` y `aria-checked="false"` en una primera visita. Al activarlo pasa a `"true"`, `localStorage` contiene `soundEnabled: true`, y tras recargar la página sigue en `"true"`. | Prueba E2E |
 | SET-AC07 | Con el sonido apagado, `playSound` no crea ningún `AudioContext`. Con el sonido encendido, cada `SoundName` crea un oscilador con la onda, las frecuencias y la duración de la tabla de §4.5, y la ganancia nunca supera 0,06. | Prueba unitaria con una Web Audio API simulada |
 | SET-AC08 | `playSound` no lanza ni deja promesas rechazadas cuando `AudioContext` no existe, cuando su constructor lanza y cuando `resume()` se rechaza. | Prueba unitaria |
-| SET-AC09 | Tras visitar dos secciones, el menú muestra "2 de 6 secciones visitadas" en `/es/`. Activar "Reiniciar sesión" con una sección abierta: cierra el menú, deja la URL en `/es/`, muestra el arranque y, al terminar, el display marca `00` y la pista inicial es visible. | Prueba E2E |
+| SET-AC09 | Tras visitar dos secciones, el menú muestra "2 de 6 secciones visitadas" en `/es/`. Activar "Reiniciar sesión": cierra el menú, deja la URL en `/es/`, muestra el arranque y, al terminar, el display marca `00` y la pista inicial es visible. | Prueba E2E |
 | SET-AC10 | El reinicio de sesión conserva el idioma de la página y los valores de `soundEnabled` y `sceneVariant`. | Prueba E2E |
 | SET-AC11 | En `mobile` no se renderizan ni la barra fija ni el menú de ajustes. | Prueba E2E |
 | SET-AC13 | El menú de ajustes muestra el grupo "Imagen de la escena" con las opciones "Fotografía" y "Boceto" en `/es/`, y "Scene image", "Photo" y "Sketch" en `/en/`; en una primera visita está marcada la primera. Al elegir "Boceto", el menú sigue abierto, `localStorage` contiene `sceneVariant: "sketch"` y, tras recargar la página, sigue marcada. | Prueba E2E |
@@ -159,5 +159,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73 y D-75). SET-R10: el menú elige un lado con sitio en lugar de tapar la pieza que lo abre. SET-R02: la barra fija se dibuja también dentro del panel abierto. SET-R12 y SET-R13 precisados. SET-R24 y SET-AC09: el reinicio no puede ocurrir con una sección abierta, porque los dos diálogos son modales. §4.7: identificador de prueba. |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.8 (SET-R27 a SET-R29): selector de imagen de la escena en el menú de ajustes. SET-R11: nuevo orden del contenido. SET-R25 y SET-AC10: el reinicio conserva la variante. Tres textos nuevos y nuevo SET-AC13. El efecto `toggle` suena también al cambiar de imagen. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

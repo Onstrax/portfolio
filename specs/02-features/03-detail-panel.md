@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST, SCN |
 
@@ -39,6 +39,7 @@ Feature: `src/features/detail-panel/`. `index.ts` exporta el componente de clien
 | PNL-R04 | **Cabecera:** el título de la sección actual como `<h2>` con `tabindex="-1"`; un chip con el nombre de la pieza de hardware; y el botón de cerrar, con el icono `close` y el nombre accesible `panel.closeAriaLabel`. |
 | PNL-R05 | **Pie:** un enlace a la sección anterior, un indicador de posición y un enlace a la sección siguiente (§4.3). |
 | PNL-R06 | **Zona de contenido:** contiene el contenido dentro de un `<div>` con scroll vertical propio. Es enfocable (`tabindex="0"`) cuando su contenido desborda, para poder desplazarla con el teclado. |
+| PNL-R25 | `DetailPanel` admite una propiedad `toolbar`, con controles que deben seguir al alcance mientras el panel está abierto. Un diálogo modal deja inerte el resto de la página, así que los dibuja dentro del `<dialog>`, sobre el velo. `SceneLayer` le pasa la barra fija (SET-R02). El panel no conoce su contenido. Al dibujar una sección, el foco pasa al título salvo que ya esté en uno de esos controles, como ocurre tras un cambio de idioma (I18N-R27). |
 
 ### 4.2 Apertura y cierre
 
@@ -133,5 +134,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73). Nuevo PNL-R25: la propiedad `toolbar`, con la que la barra fija sigue operable con el panel abierto; sin ella no había forma de cambiar de idioma con una sección abierta (VSN-AC06, I18N-AC11). |
 | 2026-10-13 | 1.1 | Durante M6, por delegación del autor. PNL-R02: el `<dialog>` cubre el viewport y el velo es un hijo suyo. PNL-R11: al cerrar con "Atrás", el diálogo deja de ser modal durante la animación para que el foco vuelva a la escena. PNL-R12: cierre forzado por el navegador. PNL-R20: el fragmento se aplica también al cambiar de sección. §4.6: atributos de prueba y funciones de `lib/`. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

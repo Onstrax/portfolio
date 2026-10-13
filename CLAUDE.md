@@ -54,7 +54,7 @@ Resumen para orientarse; el detalle normativo está en las specs citadas.
 - **Hitos:** solo se implementa el hito en curso, sin adelantar ni dejar código preparado para uno posterior. Dentro del hito: lógica con TDD, después componentes, después E2E (PLAN §4.1).
 - **Commits:** Conventional Commits en inglés, con el feature o el área como ámbito, asunto de 72 caracteres como máximo y, en el cuerpo, los identificadores de los requisitos o criterios que implementa (PLAN-R07).
 - **Specs:** toda edición sube la versión y añade una fila al historial (README §5.2). Prettier no las formatea: están excluidas a propósito.
-- **E2E:** corren contra el sitio exportado, nunca contra `pnpm dev`; localizan por rol y nombre accesible y escriben literalmente los textos que esperan (TST §4.5). Un `data-testid` o un atributo `data-*` de prueba solo se usa si la spec de su funcionalidad lo nombra (para la escena, SCN §4.11).
+- **E2E:** corren contra el sitio exportado, nunca contra `pnpm dev`; localizan por rol y nombre accesible y escriben literalmente los textos que esperan (TST §4.5). Un `data-testid` o un atributo `data-*` de prueba solo se usa si la spec de su funcionalidad lo nombra (para la escena, SCN §4.11). La prueba base empieza con el arranque ya visto; las pruebas del arranque lo desactivan con `test.use({ bootSeen: false })` (TST-R26).
 - **`docs/`** es material privado del autor: no se lee desde el código ni se versiona.
 
 ## Comandos

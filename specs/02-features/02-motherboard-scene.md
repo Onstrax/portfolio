@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.4 |
+| Versión | 1.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -37,7 +37,7 @@ Feature: `src/features/motherboard-scene/`. `index.ts` exporta el componente de 
 | --- | --- |
 | SCN-R01 | `Scene` renderiza un **escenario** con la geometría de AST-R03 y, dentro de él, estas capas de abajo arriba: (1) la imagen de la variante activa (§4.12); (2) el viñeteado de AST-R48; (3) un SVG decorativo con las auras y el display de diagnóstico; (4) las zonas pulsables, como elementos HTML; (5) las etiquetas. Fuera del escenario, el fondo es el de la variante (AST-R03). |
 | SCN-R02 | El SVG decorativo usa `viewBox="0 0 1600 900"`, ocupa todo el escenario, lleva `aria-hidden="true"` y no recibe eventos de puntero. |
-| SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>` con `id="scene"`, que es el destino del enlace de salto en modo `scene` (SYS-R46). |
+| SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>` con `id="scene"`, que es el destino del enlace de salto en modo `scene` (SYS-R46). El `<h1>` lleva `tabindex="-1"` para recibir el foco al terminar el arranque (BOOT-R21). |
 | SCN-R04 | `ScenePoster` es un componente de servidor que renderiza, para cada variante, un bloque con el tamaño del escenario que tiene como fondo el color medio y el marcador de posición desenfocado de su entrada en `SCENE_ASSETS`. Solo es visible el de la variante que indica `data-scene` (variantes `scene-photo` y `scene-sketch`, SYS-R50). Es lo que se ve bajo el arranque, o en su lugar cuando no hay arranque, hasta que `Scene` se monta. No solicita ningún archivo. |
 | SCN-R05 | `Scene` recibe por propiedades (SYS-R49) la lista `sections: readonly SectionNavItem[]`, el idioma y las cadenas de interfaz que necesita. NO DEBE importar el registro (STR-R32). |
 
@@ -156,7 +156,7 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R33 | Mientras `visited` está vacío y no hay ninguna sección abierta, se muestra en la parte inferior central del escenario, a 8 px del borde, una placa oscura (VIS §4.5.1) con el texto `scene.hintLabel`. Desaparece al abrir la primera sección y no vuelve a mostrarse hasta un reinicio de sesión. Usa la animación M-12. |
+| SCN-R33 | Mientras `visited` está vacío y no hay ninguna sección abierta, se muestra en la parte inferior central del escenario, a 8 px del borde, una placa oscura (VIS §4.5.1) con el texto `scene.hintLabel`. Desaparece al abrir la primera sección y no vuelve a mostrarse hasta un reinicio de sesión. Usa la animación M-12. Un reinicio de sesión se detecta porque `bootSeen` deja de ser `true` en el store de sesión. |
 | SCN-R34 | La pista no es interactiva, no recibe eventos de puntero y forma parte del contenido legible por lectores de pantalla. |
 
 ### 4.8 Imagen y disponibilidad
@@ -196,7 +196,7 @@ Espacio de nombres `scene` del diccionario de interfaz.
 
 Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display, `data-testid="scene-label"` en cada etiqueta, `data-testid="scene-hint"` en la pista, `data-testid="scene-auras"` en el SVG decorativo, `data-testid="scene-poster"` en el póster y `data-testid="calibration-overlay"` en la superposición de calibración.
 
-Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
+Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable) y, en la zona `settings`, `data-label-placement` con su lado, que el menú de ajustes lee para colocarse (SET-R10); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
 
 ### 4.12 Variante de escena
 
@@ -251,6 +251,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | Durante M7, por delegación del autor. SCN-R03: el `<h1>` es enfocable por programa. SCN-R33: cómo se detecta el reinicio de sesión. §4.11: `data-label-placement` en la zona `settings`. La geometría del escenario pasa a `src/shared/ui/stage.styles.ts`, porque la usan también la barra fija y el póster. |
 | 2026-10-13 | 1.4 | SCN-AC17: el autor revisó la calibración con la superposición, sobre las dos variantes, y la posición de las etiquetas, dentro de su revisión conjunta de M2 a M5, y la aprobó. Sin cambios en los requisitos. |
 | 2026-10-13 | 1.3 | Por decisión del autor al revisar M5 (D-71): el aura es un halo sin línea de contorno (VIS 2.5). SCN-AC18 y §4.11 dejan de nombrar el trazo. |
 | 2026-10-13 | 1.2 | Durante M5, por delegación del autor (D-69). SCN-R07 y SCN-R26: nuevo `Hotspot.labelShift`, porque ocho etiquetas centradas no caben a 1024×768 px. SCN-R25: sin hover, las etiquetas miden 128 px como máximo. SCN-R33: la pista queda a 8 px del borde y no a 24, para no tapar el display de diagnóstico. SCN-R03: `id` del `<main>`. SCN-R35: los tres formatos de la imagen son `<source>` y el `<img>` no lleva `src`, tras comprobar en WebKit que con `src` se descargaban dos archivos. §4.11: nuevos identificadores y atributos de prueba. SCN-AC09: solo en Chromium. Calibración trazada sobre las dos variantes; pendiente la revisión del autor (SCN-AC17). |
