@@ -6,6 +6,7 @@ import {
   findClientBoundaryViolations,
   findClientSectionViolations,
   findColorViolations,
+  findContentFileViolations,
   findDisableCommentViolations,
   findDocsReadViolations,
   findE2eViolations,
@@ -97,6 +98,10 @@ describe("conventions of src", () => {
   it("TSC-AC15: paths come from the route helpers and storage from the guarded module", () => {
     expectNone(findRouteLiteralViolations(SRC, LOCALES));
     expectNone(findStorageAccessViolations(SRC, STORAGE_FILES));
+  });
+
+  it("TSC-AC18: content files use no Date objects and declare their content with satisfies", () => {
+    expectNone(findContentFileViolations(SRC));
   });
 
   it("I18N-AC09: no perceivable attribute carries a hand-written string", () => {

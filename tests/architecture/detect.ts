@@ -249,7 +249,7 @@ export function findStructureViolations(paths: readonly string[]): readonly Viol
       continue;
     }
     if (area === "features") {
-      const isRegistry = rest.length === 0 && /^registry(?:\.test)?\.ts$/.test(name);
+      const isRegistry = rest.length === 0 && /^registry(?:\.[\w-]+)*\.tsx?$/.test(name);
       const isKnownFeature =
         rest.length > 0 && (includes(SHELL_FEATURES, name) || includes(SECTION_FEATURES, name));
       if (!isRegistry && !isKnownFeature) {
@@ -626,6 +626,41 @@ export function findAttributeLiteralViolations(files: readonly SourceFile[]): re
         file: file.path,
         line: lineAt(file.content, match.index),
         message: `the ${match[1] ?? "attribute"} attribute must take its text from a dictionary (I18N-R05)`,
+      });
+    }
+  }
+  return violations;
+}
+
+const CONTENT_FILE = /^src\/features\/([\w-]+)\/content\/(facts|es|en)\.ts$/;
+
+/**
+ * TSC-AC18: content files hold no `Date` objects, facts are declared with `as const satisfies`
+ * and texts with `satisfies` (TSC-R15, TSC-R40).
+ */
+export function findContentFileViolations(files: readonly SourceFile[]): readonly Violation[] {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    const kind = CONTENT_FILE.exec(file.path)?.[2];
+    if (kind === undefined) continue;
+    for (const match of file.content.matchAll(/\bnew Date\b|\bDate\./g)) {
+      violations.push({
+        rule: "TSC-AC18",
+        file: file.path,
+        line: lineAt(file.content, match.index),
+        message: "content uses PartialDate, never Date objects (TSC-R15)",
+      });
+    }
+    const declaration = kind === "facts" ? /\}\s*as const satisfies \w+;/ : /\}\s*satisfies \w+;/;
+    if (!declaration.test(file.content)) {
+      violations.push({
+        rule: "TSC-AC18",
+        file: file.path,
+        line: 1,
+        message:
+          kind === "facts"
+            ? "facts must be declared with `as const satisfies` (TSC-R40)"
+            : "texts must be declared with `satisfies` (TSC-R40)",
       });
     }
   }

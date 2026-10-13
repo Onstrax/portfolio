@@ -5,6 +5,7 @@ import {
   findAttributeLiteralViolations,
   findClientSectionViolations,
   findColorViolations,
+  findContentFileViolations,
   findDisableCommentViolations,
   findDocsReadViolations,
   findE2eViolations,
@@ -36,6 +37,7 @@ function rules(violations: readonly Violation[]): readonly string[] {
 // forbidden fragments are assembled at runtime instead of being written out.
 const DOT = ".";
 const SLASH = "/";
+const DATE = "Date";
 const TICK = "`";
 const TRANSITION = "transition";
 const OPEN = "(";
@@ -157,6 +159,7 @@ describe("repository structure (STR-AC01)", () => {
       "src/app/layout.tsx",
       "src/features/registry.ts",
       "src/features/registry.test.ts",
+      "src/features/registry.sections.test.tsx",
       "src/features/detail-panel/index.ts",
       "src/features/cmos-about/content/facts.ts",
       "src/shared/contracts/ids.ts",
@@ -498,6 +501,45 @@ describe("attribute literals (I18N-AC09)", () => {
       file("src/shared/ui/sample.tsx", "<button aria-label={closeLabel} data-title={title} />"),
       file("src/shared/ui/sample.test.tsx", '<button aria-label="Close" />'),
       file("src/shared/lib/helper.ts", 'const title = "Close";'),
+    ]);
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("content files (TSC-AC18)", () => {
+  const FACTS = "src/features/ssd-projects/content/facts.ts";
+  const TEXT = "src/features/ssd-projects/content/es.ts";
+
+  it("reports Date objects in content", () => {
+    const violations = findContentFileViolations([
+      file(
+        FACTS,
+        `export const facts = {\n  start: new ${DATE}(2024, 6),\n} as const satisfies Facts;\n`,
+      ),
+      file(TEXT, `export const text = {\n  now: String(${DATE}.now()),\n} satisfies Text;\n`),
+    ]);
+    expect(rules(violations)).toEqual(["TSC-AC18", "TSC-AC18"]);
+  });
+
+  it("reports facts and texts that are not declared with satisfies", () => {
+    const violations = findContentFileViolations([
+      file(FACTS, "export const facts: Facts = {\n  id: 1,\n};\n"),
+      file(FACTS, "export const facts = {\n  id: 1,\n} satisfies Facts;\n"),
+      file(TEXT, "export const text: Text = {\n  title: 1,\n};\n"),
+    ]);
+    expect(violations.map((violation) => violation.message)).toEqual([
+      "facts must be declared with `as const satisfies` (TSC-R40)",
+      "facts must be declared with `as const satisfies` (TSC-R40)",
+      "texts must be declared with `satisfies` (TSC-R40)",
+    ]);
+  });
+
+  it("accepts well-declared content and ignores files outside content folders", () => {
+    const violations = findContentFileViolations([
+      file(FACTS, "export const facts = {\n  id: 1,\n} as const satisfies Facts;\n"),
+      file(TEXT, "export const text = {\n  title: 1,\n} satisfies Text;\n"),
+      file("src/features/ssd-projects/lib/helper.ts", `export const now = ${DATE}.now();\n`),
+      file("src/features/ssd-projects/content/content.test.ts", `const today = new ${DATE}();\n`),
     ]);
     expect(violations).toEqual([]);
   });
