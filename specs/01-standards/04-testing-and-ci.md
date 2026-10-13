@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.4 |
+| Versión | 1.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
 
@@ -102,7 +102,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | TST-R20 | Las pruebas E2E se ejecutan contra el sitio exportado (`out/`), servido por `pnpm preview` en `http://localhost:4173`. Playwright arranca y detiene ese servidor. Nunca se ejecutan contra el servidor de desarrollo. |
 | TST-R21 | `playwright.config.ts` define exactamente los proyectos de la tabla siguiente. |
 | TST-R22 | Las pruebas fijan su viewport con las constantes de `e2e/support/viewports.ts`, que reproducen la matriz de QLT §4.6. Las que usan `desktop` o `mobile` se ejecutan en los tres motores; las que usan otro viewport, las de presupuestos de peso y las de `scene:ready` se ejecutan solo en Chromium y se omiten en los demás con una razón explícita. |
-| TST-R23 | Todas las pruebas E2E parten de una prueba base común, definida en `e2e/support/`, que hace fallar cualquier prueba en la que ocurra alguna de estas cosas: un mensaje de consola de tipo error o advertencia; una excepción no capturada; una petición con respuesta de error o fallida; o una petición a un origen distinto de `localhost:4173`. Una prueba que necesite provocar una de estas situaciones lo declara de forma explícita y local. |
+| TST-R23 | Todas las pruebas E2E parten de una prueba base común, definida en `e2e/support/`, que hace fallar cualquier prueba en la que ocurra alguna de estas cosas: un mensaje de consola de tipo error o advertencia; una excepción no capturada; una petición con respuesta de error o fallida; o una petición a un origen distinto de `localhost:4173`. Una prueba que necesite provocar una de estas situaciones lo declara de forma explícita y local. Una petición es fallida cuando no llega a recibir respuesta. No lo es la que el navegador cancela después de recibirla, como el `HEAD` con el que el enrutador de Next.js sondea una página antes de precargarla o la descarga que interrumpe una navegación. |
 | TST-R24 | Los elementos se localizan por rol y nombre accesible. Un atributo `data-testid` solo se usa para elementos sin rol propio, y cada uno DEBE estar nombrado en la spec de su funcionalidad. NO DEBEN usarse selectores de clase ni de estructura. |
 | TST-R25 | Los textos que una prueba espera encontrar se escriben literalmente en la prueba, en el idioma correspondiente. Las pruebas E2E NO DEBEN importar de `src/`, salvo constantes de `src/shared/contracts/` y `src/shared/config/`. |
 | TST-R26 | Cada prueba empieza con un contexto de navegador nuevo. Por defecto, la prueba base marca el arranque como ya visto antes de cargar la página, para no esperar 2 segundos en cada prueba; las pruebas de la secuencia de arranque desactivan ese ajuste. |
@@ -225,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | Durante M4, por delegación del autor. TST-R23: se precisa qué es una petición fallida. |
 | 2026-10-13 | 1.4 | Durante M3, por delegación del autor. TST-R07: Vitest define `__NEXT_TRAILING_SLASH`. |
 | 2026-10-13 | 1.3 | Por decisión del autor (D-67). Nuevo §4.10 (TST-R49 a TST-R51): `pnpm check:docker` ejecuta la puerta en la imagen de Playwright. TST-R44: esa es la puerta local donde WebKit no arranca. Nuevo TST-AC16. TST-R51: el servicio desactiva `verifyDepsBeforeRun`. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor durante M0. TST-R15: se desactiva `@next/next/no-img-element`. TST-R19: los fragmentos se analizan bajo la ruta de un archivo real. TST-R44: en el equipo del autor WebKit no arranca; lo verifica CI. |

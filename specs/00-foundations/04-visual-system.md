@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.2 |
+| Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -108,6 +108,15 @@ La variante boceto (AST §4.10) es un dibujo sobre papel claro, donde el ámbar 
 | `paper` | `#F2EBDF` | Franjas fuera del escenario y viñeteado en la variante boceto. Es el color mediano del máster del boceto |
 
 Las placas oscuras (barra fija, etiquetas, ajustes y pista) no cambian con la variante: su fondo es propio y sus acentos siguen en `aura`.
+
+#### 4.1.6 Impresión
+
+La hoja de impresión de la vista simple (SMP-R12) usa negro sobre blanco.
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| `print-paper` | `#FFFFFF` | Fondo de la página impresa |
+| `print-ink` | `#000000` | Texto de la página impresa |
 
 ### 4.2 Tipografía
 
@@ -346,6 +355,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Durante M4, por delegación del autor. Nuevo §4.1.6 con los tokens `print-paper` y `print-ink` para la hoja de impresión (SMP-R12). |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). Nuevo §4.1.5 con los tokens `aura-sketch` y `paper`; nuevo VIS-R44 con las propiedades `--scene-aura`, `--scene-backdrop` y `--scene-display`; VIS-R13 usa el color de aura de la variante; dos pares nuevos en la tabla de contraste. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. Inventario de movimiento: se añaden M-11 y M-12 (SCN). `boot-ok` se usa también en el display de diagnóstico. |
 | 2026-10-12 | 1.0 | Versión inicial. Contrastes calculados sobre los valores de §4.1. Aprobada por el autor. |

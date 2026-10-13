@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.2 |
+| Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -498,7 +498,7 @@ export function withLocale(pathname: string, target: Locale): AppPath;
 
 | ID | Requisito |
 | --- | --- |
-| TSC-R57 | `src/shared/contracts/assets.ts` DEBE contener las declaraciones siguientes. El manifiesto generado declara `SCENE_ASSETS` con `as const satisfies SceneAssets` (AST-R36). El tipo del manifiesto de la fotografía lo define CPU en este mismo archivo. |
+| TSC-R57 | `src/shared/contracts/assets.ts` DEBE contener las declaraciones siguientes. El manifiesto generado declara `SCENE_ASSETS` con `as const satisfies SceneAssets` (AST-R36). El tipo del manifiesto de la fotografía lo define CPU en este mismo archivo; `OgAsset`, SMP; y `SiteTheme`, con el color que necesita la etiqueta `theme-color`, AST-R36. |
 
 ```ts
 // src/shared/contracts/assets.ts
@@ -601,6 +601,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Durante M4. TSC-R57: `assets.ts` contiene también `OgAsset` y `SiteTheme`. |
 | 2026-10-13 | 2.2 | Aclaraciones surgidas al implementar M1, por delegación del autor. TSC-R50: `serializePrefs` y `serializeSession`. TSC-R53, TSC-R55 y TSC-AC15: los archivos de prueba quedan exentos de las dos restricciones. |
 | 2026-10-13 | 2.1 | Por decisión del autor (D-66). §4.9: `PersistedPrefs` gana `sceneVariant`, con su valor por defecto y la acción `setSceneVariant`. §4.11: `SCENE_VARIANTS`, `SceneVariant`, `DEFAULT_SCENE_VARIANT`, `isSceneVariant` y `SceneAssets`. TSC-AC11 ampliado. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Código normativo compilado y analizado con TypeScript 6.0.3, typescript-eslint 8.71.2 y ESLint 10.12.0. |

@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 3.1 |
+| Versión | 3.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS |
 
@@ -252,7 +252,7 @@ and grey.
 | AST-R34 | Cada derivado DEBE respetar su peso máximo. Los ajustes de calidad iniciales son AVIF 50, WebP 74 y JPEG 78 (progresivo). Si un derivado supera su máximo, el script baja la calidad de ese formato de uno en uno hasta cumplirlo, sin bajar de AVIF 42, WebP 66 y JPEG 70. Si con la calidad mínima sigue superándolo, el script falla e informa del archivo y de su peso; el máximo solo se cambia modificando esta spec. |
 | AST-R46 | Los derivados NO DEBEN contener metadatos EXIF, XMP ni de ubicación (QLT-R47). |
 | AST-R35 | El script genera además un marcador de posición: una versión de 32×18 px, desenfocada, en WebP y codificada como URL de datos, de 1,5 kB como máximo; y el color medio de la imagen en hexadecimal. |
-| AST-R36 | El script escribe `src/shared/assets/manifest.generated.ts`, que exporta la constante `SCENE_ASSETS`, con una entrada por variante y la forma indicada más abajo. El manifiesto y los derivados se versionan en el repositorio. |
+| AST-R36 | El script escribe `src/shared/assets/manifest.generated.ts`, que exporta la constante `SCENE_ASSETS`, con una entrada por variante y la forma indicada más abajo, y la constante `SITE_THEME`, con el valor del token `void` leído de `src/styles/tokens.css` para la etiqueta `theme-color` (SMP-R15). El manifiesto y los derivados se versionan en el repositorio. |
 | AST-R37 | La escena sirve la imagen con un elemento `<picture>` que ofrece AVIF, WebP y JPEG, en ese orden de preferencia, con los tres anchos en `srcset` y `sizes="min(100vw, 177.78vh)"`. |
 | AST-R38 | `pnpm assets:check` falla, indicando la causa, en cualquiera de estos casos: un máster no cumple AST-R32; un máster no cumple el requisito de brillo de su variante (AST-R14 para la fotografía, AST-R51 para el boceto); la versión de un máster no coincide con la de su entrada en el manifiesto; falta algún derivado listado en el manifiesto o sobra alguno en `public/scene/`; algún derivado supera su peso máximo; algún derivado contiene metadatos (AST-R46). |
 | AST-R54 | Los dos scripts aceptan la opción `--root <carpeta>`, que indica el repositorio sobre el que trabajan; sin ella usan la carpeta actual. Sirve para probarlos sobre archivos de ejemplo. `assets:build` toma el estado `provisional` o `accepted` de cada máster de su sección de `PROVENANCE.md`. El manifiesto escribe cada constante en formato JSON, de modo que `assets:check` lo lee sin compilar TypeScript. |
@@ -390,6 +390,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 3.2 | Durante M4, por delegación del autor. AST-R36: el manifiesto exporta además `SITE_THEME`, y `assets:check` comprueba que coincide con `tokens.css`. |
 | 2026-10-13 | 3.1 | Durante M2, por delegación del autor. Nuevo AST-R54: opción `--root`, origen del estado provisional y formato del manifiesto. |
 | 2026-10-13 | 3.0 | Por decisión del autor (D-66): la escena tiene dos variantes. Nuevo §4.10 (AST-R49 a AST-R53) y §4.6.3 con el prompt del boceto. El manifiesto pasa de `SCENE_ASSET` a `SCENE_ASSETS`, con una entrada por variante (AST-R36); derivados, comprobaciones, calibración y máster provisional se aplican por variante (AST-R33, R38, R41, R44, R45); el color de las franjas y del viñeteado depende de la variante (AST-R03, R48). Criterios AST-AC08 y AC12 a AC17 adaptados; nuevos AST-AC20 a AC22. |
 | 2026-10-13 | 2.0 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |

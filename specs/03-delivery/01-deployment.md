@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
@@ -70,6 +70,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | ID | Requisito |
 | --- | --- |
 | DEP-R18 | `scripts/build-headers.mjs` se ejecuta al final de `pnpm build` (SYS §4.9) y escribe `out/_headers`, el archivo de cabeceras que Cloudflare Pages aplica al servir el sitio. |
+| DEP-R32 | Antes de calcular los hashes, `build-headers.mjs` reúne en un único script, en su orden original y en el lugar del primero, los scripts en línea con los que Next.js entrega los datos de cada página (los que escriben en `self.__next_f`), y reescribe el documento. Una página con contenido real lleva decenas de ellos, y un hash por cada uno no cabe en los 2000 caracteres de una línea de `_headers` (DEP-R10). Los demás scripts en línea no se tocan. La operación es idempotente. |
 | DEP-R19 | El archivo contiene una regla para `/*` con las cabeceras de la primera tabla, las reglas de caché de la segunda tabla y una regla por cada documento HTML de `out/` con su política de seguridad de contenido (DEP-R21). |
 | DEP-R20 | `scripts/serve-static.mjs` aplica las reglas de `out/_headers` a sus respuestas (SYS §4.9), de modo que las pruebas E2E se ejecuten bajo las mismas cabeceras que producción y una infracción de la política haga fallar una prueba (TST-R23). Única diferencia: al servir por HTTP sin cifrar, retira de la política la directiva `upgrade-insecure-requests`, porque WebKit la obedece también en `localhost` y pediría todos los recursos por HTTPS a un servidor que no lo ofrece. El archivo `out/_headers`, que es lo que se publica, la conserva. |
 
@@ -148,7 +149,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | DEP-AC01 | Tras `pnpm build`, `out/_headers` existe, tiene 100 reglas o menos, ninguna línea supera 2000 caracteres, y contiene la regla `/*` con las seis cabeceras de §4.5 y las reglas de caché de la segunda tabla. | Prueba de exportación |
 | DEP-AC02 | Para cada documento HTML de `out/`, `_headers` tiene una regla para su ruta con una política que contiene las directivas de §4.6, y el conjunto de hashes de `script-src` es exactamente el de los scripts en línea de ese documento. | Prueba de exportación |
 | DEP-AC03 | Ninguna política contiene `'unsafe-inline'` ni `'unsafe-eval'` en `script-src`. | Prueba de exportación |
-| DEP-AC04 | Con una carpeta de ejemplo, `build-headers.mjs` genera los hashes correctos de dos scripts en línea, ignora un bloque `application/ld+json`, y falla cuando la política de un documento superaría los 2000 caracteres. | Prueba de script |
+| DEP-AC04 | Con una carpeta de ejemplo, `build-headers.mjs` genera los hashes correctos de dos scripts en línea, ignora un bloque `application/ld+json`, reúne en uno los scripts de datos de Next.js (DEP-R32), y falla cuando la política de un documento superaría los 2000 caracteres. | Prueba de script |
 | DEP-AC05 | Las respuestas de `pnpm preview` para `/es/` incluyen las cabeceras de §4.5 y la política del documento, sin la directiva `upgrade-insecure-requests` (DEP-R20), y durante las pruebas E2E no se registra ninguna infracción de la política (QLT-AC21). | Prueba E2E |
 | DEP-AC06 | `deploy.yml` se dispara solo con `workflow_run` del flujo de CI sobre `main` con resultado correcto y con `workflow_dispatch`; referencia únicamente los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`; toda línea `uses:` apunta a un SHA de 40 caracteres de una organización admitida; y ejecuta `assets:check --release` antes de compilar. | Prueba unitaria que lee el archivo |
 | DEP-AC07 | `smoke-test.mjs`, contra un servidor de ejemplo, termina bien cuando se cumplen todas las comprobaciones de DEP-R16 y con error cuando falta la cabecera de la política, cuando una página responde 500 y cuando la ruta inexistente responde 200. | Prueba de script |
@@ -164,7 +165,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | **Cloudflare Pages** (D-15). | Su plan gratuito no cobra por tráfico, admite cabeceras propias y da una dirección con el nombre del autor. Como el sitio son archivos estáticos, nada ata al proveedor: el plan alternativo es cuestión de minutos. Nadie puede garantizar que un servicio sea gratuito para siempre; lo que sí se puede garantizar es que cambiar de servicio no cueste nada. |
 | **Subida directa desde GitHub Actions, no la integración con Git de Cloudflare** (D-59). | La integración compila en Cloudflare con cada `push`, sin esperar al CI. Subir la carpeta ya compilada desde un flujo que solo corre tras un CI en verde es lo que hace cierta la regla de TST-R44, y evita depender del entorno de compilación del proveedor. |
 | **Se vuelve a compilar para publicar.** | El CI compila con la URL local que necesitan las pruebas. Las URLs canónicas y del sitemap deben llevar la de producción, así que se compila de nuevo el mismo commit con esa única diferencia, y la comprobación posterior confirma que quedó bien. |
-| **Política de seguridad por hash, generada tras compilar** (D-60). | Next.js inserta varios scripts en línea en cada página. Permitirlos con `'unsafe-inline'` anularía la protección. En el prototipo del 2026-10-12, cada página exportada tenía 5 o 6, y la directiva completa ocupaba unos 340 caracteres, muy por debajo del límite de 2000. Para un perfil orientado a seguridad, es coherente que el sitio no use atajos aquí. |
+| **Política de seguridad por hash, generada tras compilar** (D-60). | Next.js inserta varios scripts en línea en cada página. Permitirlos con `'unsafe-inline'` anularía la protección. En el prototipo del 2026-10-12, cada página exportada tenía 5 o 6. Con el contenido real, el 2026-10-13, cada página tenía 52 y su política ocupaba 3072 caracteres, por encima del límite de 2000: por eso se reúnen en uno (DEP-R32), y la línea más larga queda en 426. Para un perfil orientado a seguridad, es coherente que el sitio no use atajos aquí. |
 | **Las pruebas se ejecutan con las cabeceras reales** (DEP-R20). | Una política de seguridad que solo se aplica en producción se rompe en producción. Aplicarla en el servidor de pruebas convierte cualquier infracción en una prueba fallida. |
 | **Analítica insertada por Cloudflare** (D-61). | Sin código ni identificadores que mantener, y con la certeza de que el desarrollo local y el CI nunca envían datos. Al no usar cookies, no hace falta aviso de consentimiento. |
 | **MIT para el código y derechos reservados para el contenido** (D-62). | El código y las specs son la parte que tiene sentido compartir. La fotografía, los CVs y los textos sobre el autor son datos personales, y nadie debería reutilizarlos. |
@@ -179,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Durante M4, por delegación del autor: un requisito resultó inviable con el contenido real. Nuevo DEP-R32: los scripts de datos de Next.js se reúnen en uno por documento antes de calcular los hashes, porque 52 hashes no caben en una línea de `_headers`. DEP-AC04 ampliado. |
 | 2026-10-13 | 1.1 | Decidido por delegación del autor durante M0, tras fallar WebKit en el primer CI. DEP-R20 y DEP-AC05: el servidor de `preview` retira `upgrade-insecure-requests` de la política, porque sirve por HTTP; `out/_headers` no cambia. |
 | 2026-10-13 | 1.0 | Aprobada por el autor. Repositorio `Onstrax/portfolio` creado, por ahora privado. |
 | 2026-10-12 | 1.0 | Versión inicial. Límites de Cloudflare Pages y funcionamiento de `_headers`, de la subida directa y de Web Analytics comprobados en la documentación de Cloudflare ese día. |

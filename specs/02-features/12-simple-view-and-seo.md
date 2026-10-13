@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
@@ -64,7 +64,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 | SMP-R09 | `SectionScroller` es un componente de cliente que no renderiza nada. En modo `simple`, cuando la URL es la de una sección, desplaza la página hasta la `<section>` de ese slug y lleva el foco a su `<h2>`, que tiene `tabindex="-1"` (SYS-R18). Si la URL tiene además un fragmento, se desplaza al elemento con ese `id`. Lo hace al cargar la página y cada vez que el modo pasa de `scene` a `simple`. |
 | SMP-R10 | En modo `scene`, la capa base está oculta con `display: none` y `SectionScroller` no actúa. |
 | SMP-R11 | El desplazamiento es instantáneo con movimiento reducido y suave en otro caso (`scroll-behavior`). |
-| SMP-R12 | **Impresión.** Al imprimir cualquier página con idioma se imprime la vista simple, en negro sobre blanco, sin la capa de escena, la navegación, el selector de idioma, el aviso ni los botones; los enlaces externos muestran su URL a continuación del texto; y ninguna sección de proyecto o de experiencia se parte entre dos páginas si cabe en una. |
+| SMP-R12 | **Impresión.** Al imprimir cualquier página con idioma se imprime la vista simple, en negro sobre blanco, sin la capa de escena, la navegación, el selector de idioma, el aviso ni los botones (todo enlace o control con aspecto de botón); los enlaces externos muestran su URL a continuación del texto; y ninguna sección de proyecto o de experiencia se parte entre dos páginas si cabe en una. |
 
 ### 4.4 Títulos y descripciones
 
@@ -72,7 +72,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 | --- | --- |
 | SMP-R13 | `getPageMetadata(view, locale)` devuelve los metadatos de cada página, y las páginas de `src/app/` lo usan en `generateMetadata`. No se escriben metadatos a mano en las páginas. |
 | SMP-R14 | El título y la descripción de cada vista son los de la tabla siguiente, con los textos del espacio de nombres `site` (§4.8) y de `meta` de la sección (TSC-R26). Cumplen QLT-R37. |
-| SMP-R15 | Cada página declara: URL canónica, alternativas `hreflang` y `x-default` (I18N-R28, I18N-R29); `og:title`, `og:description`, `og:url`, `og:type` con valor `profile` en el inicio y `website` en el resto, `og:locale` y sus alternativas (I18N-R30), `og:site_name` con `SITE.authorName` y `og:image` con sus dimensiones y `site.ogImageAlt`; tarjeta de Twitter de tipo `summary_large_image`; y `theme-color` con el valor del token `void`. |
+| SMP-R15 | Cada página declara: URL canónica, alternativas `hreflang` y `x-default` (I18N-R28, I18N-R29); `og:title`, `og:description`, `og:url`, `og:type` con valor `profile` en el inicio y `website` en el resto, `og:locale` y sus alternativas (I18N-R30), `og:site_name` con `SITE.authorName` y `og:image` con sus dimensiones y `site.ogImageAlt`; tarjeta de Twitter de tipo `summary_large_image`; y `theme-color` con el valor del token `void`, que el layout de locale toma de `SITE_THEME` en el manifiesto generado (AST-R36), porque el código no puede escribir colores literales (STR-R22). |
 | SMP-R16 | Todas las URLs de los metadatos son absolutas y se construyen con el origen del sitio y los ayudantes de rutas (TSC §4.10). |
 | SMP-R17 | Las páginas `/` y 404 usan como título `languageGate.title` y `notFound.title` en inglés (I18N §4.3.2) y llevan `robots: noindex`. No son páginas de contenido (QLT-R39). |
 
@@ -86,7 +86,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 
 | ID | Requisito |
 | --- | --- |
-| SMP-R18 | `PersonJsonLd` renderiza, solo en las páginas de inicio, un bloque `<script type="application/ld+json">` con un objeto `Person` de schema.org. Sus campos son los de la tabla siguiente y proceden de `SITE`, de `SECTIONS.profile` y de `SECTIONS.contact`; ningún valor se escribe a mano en este feature. |
+| SMP-R18 | `PersonJsonLd` renderiza, en la capa base del grupo `(scene)` y por tanto en las páginas de inicio y de sección, un bloque `<script type="application/ld+json">` con un objeto `Person` de schema.org. Sus campos son los de la tabla siguiente y proceden de `SITE`, de `SECTIONS.profile` y de `SECTIONS.contact`; ningún valor se escribe a mano en este feature. |
 | SMP-R19 | `src/app/sitemap.ts` devuelve `getSitemapEntries()`: las 18 páginas con idioma (dos de inicio, catorce de sección y dos de `cv`), cada una con sus alternativas por idioma. No incluye `/`. |
 | SMP-R20 | `src/app/robots.ts` permite el rastreo de todo el sitio a cualquier agente y declara la URL absoluta del sitemap. |
 
@@ -161,7 +161,7 @@ Espacio de nombres `site`:
 | SMP-AC08 | Con la emulación de medio de impresión, no son visibles la navegación, el selector de idioma, el aviso ni los botones, y el color de fondo calculado del cuerpo es blanco. | Prueba E2E |
 | SMP-AC09 | `getPageMetadata` devuelve, para las 18 páginas, títulos y descripciones únicos dentro de los límites de QLT-R37, con los valores de la tabla de §4.4. | Prueba unitaria |
 | SMP-AC10 | El HTML exportado de cada página con idioma contiene los metadatos de SMP-R15 con URLs absolutas que empiezan por el origen del sitio (I18N-AC15, QLT-AC19). | Prueba de exportación |
-| SMP-AC11 | El HTML exportado de `/es/` y `/en/` contiene un único bloque JSON-LD válido con `@type` `Person` y los nueve campos de §4.5; las demás páginas no lo contienen (QLT-AC20). | Prueba de exportación |
+| SMP-AC11 | El HTML exportado de las páginas de inicio y de sección contiene un único bloque JSON-LD válido con `@type` `Person` y los nueve campos de §4.5; las páginas `/{locale}/cv/`, `/` y 404 no lo contienen (QLT-AC20). | Prueba de exportación |
 | SMP-AC12 | `out/sitemap.xml` lista exactamente las 18 URLs de SMP-R19 con sus alternativas, y `out/robots.txt` referencia el sitemap con URL absoluta. | Prueba de exportación |
 | SMP-AC13 | `out/index.html` y `out/404.html` contienen `noindex`; ninguna otra página lo contiene. | Prueba de exportación |
 | SMP-AC14 | `public/og/` contiene exactamente un archivo, de 1200×630 px y 220 kB como máximo, y `OG_ASSET.src` apunta a él. | Ejecución de `pnpm assets:check` |
@@ -178,6 +178,7 @@ Espacio de nombres `site`:
 | **Navegación por anclas, sin JavaScript** (SMP-R08). | Es la vista que debe funcionar siempre, también cuando todo lo demás falla (QLT-R43, QLT-R44). |
 | **Cada página es su propia canónica, también `/cv/`** (SMP-R15, I18N-R28). | El inicio y `/cv/` comparten contenido, pero son destinos distintos para una persona: uno abre la escena y el otro no. Declararlas alternativas entre idiomas y dejar que el buscador elija es más simple y menos frágil que canonizar una hacia la otra. |
 | **Datos estructurados derivados de las secciones** (SMP-R18). | El correo, los perfiles y la universidad ya están escritos en Perfil y Contacto. Copiarlos aquí los duplicaría (SYS-R30). |
+| **Datos estructurados en todas las páginas del grupo `(scene)`** (SMP-R18). | El contenido de una página nunca llega al HTML del servidor en ese grupo, porque `SceneLayer` no lo renderiza allí (SYS-R48): lo único que el servidor escribe es el layout, que no sabe si la ruta es el inicio o una sección. Poner el bloque en el layout lo lleva a las dieciséis páginas, todas con la misma `url` del inicio. La alternativa, una ruta paralela solo para el inicio, añadía estructura a `src/app/` sin beneficio para los buscadores. La versión 1.1 lo limitaba al inicio. |
 | **Imagen para compartir sin texto** (SMP-R22). | Renderizar texto sobre la imagen depende de las fuentes instaladas en la máquina que la genera. La fotografía de la placa identifica el sitio por sí sola. |
 | **Hoja de impresión** (SMP-R12). | Hay quien imprime o guarda como PDF el perfil de un candidato. Cuesta pocas reglas y evita que salga una captura de la escena. |
 
@@ -189,5 +190,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Durante M4, por delegación del autor. SMP-R18 y SMP-AC11: los datos estructurados van en la capa base del grupo `(scene)`, es decir, en inicio y secciones. SMP-R15: `theme-color` sale del manifiesto. SMP-R12: se aclara qué cuenta como botón al imprimir. |
 | 2026-10-13 | 1.1 | SMP-R21: la imagen para compartir sale del máster de la variante `photo` (D-66). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

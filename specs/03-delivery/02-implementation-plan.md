@@ -141,7 +141,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). El autor revisó el cierre y confirmó las enmiendas el 2026-10-13. Complemento posterior del mismo día: `pnpm check:docker` (TST-AC16), con el que la puerta completa, WebKit incluido, pasa también en local. |
 | M1 | 2026-10-13 | `223832a` | CI en verde en los tres motores y `pnpm check:docker` en local. 317 pruebas; cobertura de la lógica: 100 % de líneas y funciones, 97 % de ramas. Adelanta `SITE` y los iconos `copy` y `check`. Incluye ya la preferencia `sceneVariant` y los tokens de la variante boceto (D-66). El autor revisó y aprobó el cierre el 2026-10-13. |
 | M2 | 2026-10-13 | `05156eb` | CI en verde en los tres motores y `pnpm check:docker` en local. Dieciocho derivados de escena, nueve de la fotografía y la imagen para compartir, todos dentro de su peso con la calidad inicial; el boceto no necesitó bajar calidad. Los dos másteres siguen en estado `provisional` hasta la calibración de M5. Por indicación del autor, se continúa con M3 sin esperar su revisión; revisará M2 y M3 juntos. |
-| M3 | — | — | — |
+| M3 | 2026-10-13 | `3268169` | CI en verde en los tres motores y `pnpm check:docker` en local. 427 pruebas. Las siete secciones con su contenido en ambos idiomas, el registro y los CVs publicados, que solo llevan título y autor en sus propiedades. Pendiente la tarea A4 del autor (lectura del contenido), que hará junto con la revisión de M2 a M5. |
 | M4 | — | — | — |
 | M5 | — | — | — |
 | M6 | — | — | — |

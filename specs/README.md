@@ -258,3 +258,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | Durante M1, por delegación del autor: TSC 2.2 (funciones de serialización; los archivos de prueba quedan exentos de las restricciones de rutas y de almacenamiento) y nota en PLAN sobre `SITE` y los iconos `copy` y `check`. |
 | 2026-10-13 | Durante M2, por delegación del autor: STR 1.7 (`scripts/assets-shared.mjs`) y AST 3.1 (AST-R54). |
 | 2026-10-13 | Durante M3: IO 1.1 (propiedades de los PDF publicados) y TST 1.4 (barra final de las rutas en las pruebas). |
+| 2026-10-13 | Durante M4, por delegación del autor: DEP 1.2 (DEP-R32, los scripts de datos de Next.js se reúnen en uno), SMP 1.2 (datos estructurados en inicio y secciones; `theme-color` desde el manifiesto), AST 3.2, VIS 2.3 (tokens de impresión), TST 1.5 y TSC 2.3. |
