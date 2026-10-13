@@ -12,7 +12,9 @@ Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`
 | Archivo | `design/scene/master.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 11,1 MB |
 | Imagen de origen | `docs/Generations/Tenth generation.jpg`, 1376×768 px |
 
-El estado es `provisional` porque faltan la calibración de las zonas interactivas y los criterios que dependen de ella (AST-AC10 a AST-AC12). Pasa a `accepted` cuando se completen.
+El estado es `provisional` porque falta que el autor revise la calibración de las zonas interactivas con la superposición (SCN-AC17) y los criterios que dependen de ella (AST-AC10 a AST-AC12). Pasa a `accepted` cuando se completen.
+
+Calibración: las nueve zonas se trazaron el 2026-10-13 sobre este máster (`src/features/motherboard-scene/hotspots.ts`, versión `dc169b385cc7`).
 
 ## Generación
 
@@ -65,7 +67,7 @@ Cajas estimadas a ojo en el espacio de escena (1600×900 unidades). Sirven como 
 | AST-AC07 (atrezo y enfoque) | Conforme | 2026-10-12 |
 | AST-AC08 (brillo de las esquinas) | Conforme: superior derecha 4,5 %; superior izquierda 29,5 %; inferior izquierda 7,6 %; inferior derecha 7,4 % | 2026-10-12 |
 | AST-AC09 (formato del máster) | Conforme | 2026-10-12 |
-| AST-AC10 a AST-AC12 (calibración) | Pendientes | — |
+| AST-AC10 a AST-AC12 (calibración) | Zonas trazadas y comprobadas a la vista con la superposición. `validateHotspots` no encuentra incumplimientos (zona segura, tamaños mínimos, separación, esquina reservada) y una prueba E2E comprueba el encuadre de AST-AC12 en los cinco viewports. Pendiente la revisión del autor al 200 % | 2026-10-13 |
 
 ## Máster de la variante boceto (`sketch`)
 
@@ -79,7 +81,9 @@ Añadido el 2026-10-13 por decisión del autor (D-66, AST §4.10).
 | Archivo | `design/scene/master-sketch.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 12,7 MB |
 | Imagen de origen | `docs/Generations/Eleventh generation.jpg`, 1376×768 px |
 
-El estado es `provisional` hasta que se complete la calibración sobre esta variante (AST-AC20) y la revisión de AST-AC22.
+El estado es `provisional` hasta que el autor revise la calibración sobre esta variante (AST-AC20) y complete la revisión de AST-AC22.
+
+Calibración: los polígonos de la fotografía se comprobaron sobre este máster el 2026-10-13 (versión `b71cba0939ff`); no necesitaron ningún ajuste.
 
 ### Generación
 
@@ -119,5 +123,5 @@ Medida el 2026-10-13 por correlación de bordes, objeto por objeto, en el espaci
 | --- | --- | --- |
 | AST-AC08 (brillo de las esquinas, AST-R51: al menos 70 %) | Conforme: superior derecha 89,3 %; superior izquierda 87,9 %; inferior izquierda 91,7 %; inferior derecha 79,9 % | 2026-10-13 |
 | AST-AC09 (formato del máster) | Conforme | 2026-10-13 |
-| AST-AC20 (los polígonos siguen las siluetas del boceto) | Pendiente de la calibración | — |
+| AST-AC20 (los polígonos siguen las siluetas del boceto) | Comprobado a la vista con la superposición: los nueve polígonos siguen las siluetas. Pendiente la revisión del autor al 200 % | 2026-10-13 |
 | AST-AC22 (nueve objetos reconocibles y ninguna palabra legible) | Pendiente de la revisión al 100 %. A tamaño de pantalla hay fórmulas y gráficas garabateadas en los márgenes y rótulos ilegibles sobre la placa, que AST-R51 admite | — |
