@@ -138,7 +138,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 
 | Hito | Fecha de cierre | Commit de cierre | Observaciones |
 | --- | --- | --- | --- |
-| M0 | — | — | — |
+| M0 | 2026-10-13 | `ff3389b` | CI en verde en los tres motores. El primer `push` (`0fdef20`) falló solo en WebKit y se corrigió en este commit (DEP 1.1). En el equipo del autor WebKit no arranca: lo verifica CI (TST-R44). `assets:*` y `test:lighthouse` son marcadores hasta M2 y M8 (PLAN-R13). Pendiente la revisión del autor de PLAN-AC01 y PLAN-AC03. |
 | M1 | — | — | — |
 | M2 | — | — | — |
 | M3 | — | — | — |
