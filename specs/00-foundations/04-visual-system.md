@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.5 |
+| Versión | 2.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -176,8 +176,8 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 | ID | Requisito |
 | --- | --- |
-| VIS-R13 | El aura es un **halo**: luz del color de aura de la variante activa (VIS-R44) que parece salir de detrás de la pieza. Se obtiene desenfocando dos veces la silueta rellena (desenfoque gaussiano de 6 y de 18 unidades), sumando ambas copias, multiplicando su opacidad por 1,5 y eliminando la parte que cae sobre la propia pieza, con un borde interior suavizado 1,5 unidades. El aura NO DEBE dibujar ninguna línea de contorno. Solo en los estados de hover, foco y activo se añade un **relleno** de la silueta con opacidad 0,14. |
-| VIS-R14 | El halo se dibuja alrededor de la pieza y hacia fuera, más intenso junto a ella y desvanecido a unas 50 unidades. En reposo no rellena ni cubre la pieza. |
+| VIS-R13 | El aura tiene dos partes del color de aura de la variante activa (VIS-R44). Un **halo**: luz que parece salir de detrás de la pieza; se obtiene desenfocando dos veces la silueta rellena (desenfoque gaussiano de 6 y de 18 unidades), sumando ambas copias, multiplicando su opacidad por 1,5 y eliminando la parte que cae sobre la propia pieza, con un borde interior suavizado 1,5 unidades. Y un **relleno** de la silueta, presente en todos los estados, que hace brillar también la pieza. El aura NO DEBE dibujar ninguna línea de contorno. |
+| VIS-R14 | El halo se dibuja alrededor de la pieza y hacia fuera, más intenso junto a ella y desvanecido a unas 50 unidades. El relleno cubre la pieza entera con una opacidad baja, que deja ver la imagen. En hover, foco y activo suben los dos. |
 | VIS-R15 | Las opacidades por estado son las de la tabla siguiente. Las seis zonas primarias usan los valores "primaria"; `cmos` y `settings` usan los valores "secundaria". |
 | VIS-R16 | Cuando la escena se hace visible, la opacidad del halo de las zonas en reposo **respira** durante 4800 ms: dos ciclos de 2400 ms entre el valor mínimo y el máximo de la tabla, con curva `ease-in-out` y todas las zonas en fase. Después queda fija en el valor máximo. La respiración solo se repite cuando la escena vuelve a hacerse visible tras una secuencia de arranque. Se interrumpe en la zona que pasa a hover, foco o activa. |
 | VIS-R17 | El cambio entre estados es una transición de opacidad de `duration-fast`. Solo se anima la opacidad; el radio de desenfoque nunca se anima. |
@@ -186,7 +186,7 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 | Estado | Halo, primaria | Halo, secundaria | Relleno |
 | --- | --- | --- | --- |
-| Reposo | 0,45 a 0,70 | 0,40 a 0,60 | 0 |
+| Reposo | 0,32 a 0,50 | 0,28 a 0,42 | 0,08 |
 | Hover o foco de teclado | 1,00 | 0,90 | 0,14 |
 | Activo (su panel o menú está abierto) | 1,00 | 0,90 | 0,14 |
 
@@ -355,6 +355,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.6 | Por decisión del autor al revisar el halo (D-72): el relleno de la pieza pasa a estar en todos los estados, y el halo en reposo baja de intensidad para que el paso a hover se note más. VIS-R13, VIS-R14 y tabla de §4.4. Los valores de hover y activo no cambian. |
 | 2026-10-13 | 2.5 | Por decisión del autor al revisar M5 (D-71): el aura deja de tener línea de contorno y pasa a ser un halo que rodea la pieza. VIS-R13 y VIS-R14 reescritos, tabla de opacidades de §4.4 sustituida (sin columnas de trazo, valores más altos), M-03 y M-04 adaptados. El rectángulo de foco de teclado (SCN-R21) no cambia. |
 | 2026-10-13 | 2.4 | Durante M5, por delegación del autor. VIS-R21: ancho máximo de la etiqueta sin hover y color de su borde según la variante. VIS-R31: sobre la escena, el anillo de foco usa el color de aura de la variante. |
 | 2026-10-13 | 2.3 | Durante M4, por delegación del autor. Nuevo §4.1.6 con los tokens `print-paper` y `print-ink` para la hoja de impresión (SMP-R12). |
