@@ -11,6 +11,11 @@ const Scene = lazy(async () => {
   return { default: feature.Scene };
 });
 
+const DetailPanel = lazy(async () => {
+  const feature = await import("@/features/detail-panel");
+  return { default: feature.DetailPanel };
+});
+
 interface SceneBoundaryProps {
   readonly onError: () => void;
   readonly children: ReactNode;
@@ -36,7 +41,7 @@ class SceneBoundary extends Component<SceneBoundaryProps, { readonly hasFailed: 
 interface SceneLayerProps {
   /** The seven sections, resolved by the server layout for the language of the page (SYS-R49). */
   readonly sections: readonly SectionNavItem[];
-  /** Content of the page. */
+  /** Content of the page: the section that the detail panel shows, or nothing on the home. */
   readonly children: ReactNode;
 }
 
@@ -73,7 +78,9 @@ export function SceneLayer({ sections, children }: SceneLayerProps) {
       <Suspense fallback={null}>
         <Scene sections={sections} />
       </Suspense>
-      {children}
+      <Suspense fallback={null}>
+        <DetailPanel sections={sections}>{children}</DetailPanel>
+      </Suspense>
     </SceneBoundary>
   );
 }

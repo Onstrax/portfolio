@@ -57,6 +57,95 @@
   }
 }
 
+/*
+ * Opening and closing of the detail panel (M-06). With reduced motion only the opacity changes,
+ * in 150 ms. Every animation keeps its last frame, so that nothing flashes between two phases.
+ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+@keyframes panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+
+@utility panel-in {
+  animation: panel-in var(--duration-base) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in var(--duration-fast) var(--ease-out) both;
+  }
+}
+
+@utility panel-out {
+  animation: panel-out var(--duration-fast) var(--ease-in) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-out var(--duration-fast) var(--ease-in) both;
+  }
+}
+
+@utility veil-in {
+  animation: fade-in var(--duration-base) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: var(--duration-fast);
+  }
+}
+
+@utility veil-out {
+  animation: fade-out var(--duration-fast) var(--ease-in) both;
+}
+
+/* Change of section inside the panel (M-07). With reduced motion the change is instant. */
+@keyframes content-out {
+  to {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+
+@keyframes content-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@utility content-out {
+  animation: content-out var(--duration-fast) var(--ease-in) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility content-in {
+  animation: content-in var(--duration-fast) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 @layer base {
   html {
     background-color: var(--color-screen);

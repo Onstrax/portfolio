@@ -7,6 +7,7 @@ const navigation = vi.hoisted(() => ({ locale: "es", pathname: "/es/" }));
 vi.mock("next/navigation", () => ({
   useParams: () => ({ locale: navigation.locale }),
   usePathname: () => navigation.pathname,
+  useRouter: () => ({ back: vi.fn(), replace: vi.fn() }),
 }));
 
 import { SECTION_LIST } from "@/features/registry";
@@ -46,6 +47,16 @@ function Broken(): never {
 }
 
 beforeEach(() => {
+  navigation.pathname = "/es/";
+  // jsdom does not implement the methods of `<dialog>`: these do what the tests need of them.
+  const open = function (this: HTMLDialogElement): void {
+    this.setAttribute("open", "");
+  };
+  HTMLDialogElement.prototype.show = open;
+  HTMLDialogElement.prototype.showModal = open;
+  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement): void {
+    this.removeAttribute("open");
+  };
   vi.stubGlobal(
     "ResizeObserver",
     class {
@@ -122,16 +133,20 @@ describe("SceneLayer", () => {
     expect(await findScene()).toBeInTheDocument();
   });
 
-  it("QLT-AC22: when a component of the layer throws, the page is left in the simple view", () => {
+  it("QLT-AC22: when a component of the layer throws, the page is left in the simple view", async () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
     const viewport = stubViewport(true);
+    // The content of a section is drawn by the panel: a section that throws breaks the layer.
+    navigation.pathname = "/es/projects/";
     const { container } = render(
       <SceneLayer sections={SECTIONS}>
         <Broken />
       </SceneLayer>,
     );
 
-    expect(root.dataset["mode"]).toBe("simple");
+    await vi.waitFor(() => {
+      expect(root.dataset["mode"]).toBe("simple");
+    });
     expect(container).toBeEmptyDOMElement();
 
     // The viewport still allows the scene, but a layer that failed is not tried again.
@@ -140,6 +155,19 @@ describe("SceneLayer", () => {
     });
     expect(root.dataset["mode"]).toBe("simple");
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("shows the content of a section inside the detail panel", async () => {
+    stubViewport(true);
+    navigation.pathname = "/es/projects/";
+    render(
+      <SceneLayer sections={SECTIONS}>
+        <p>Simulación de banca digital segura</p>
+      </SceneLayer>,
+    );
+
+    const panel = await screen.findByRole("dialog", { name: "Proyectos" }, { timeout: 10_000 });
+    expect(panel).toHaveTextContent("Simulación de banca digital segura");
   });
 
   it("marks the boot sequence as done when a client navigation lost what the script wrote", () => {
