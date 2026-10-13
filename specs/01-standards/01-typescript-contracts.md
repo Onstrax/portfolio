@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.1 |
+| Versión | 2.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -382,10 +382,10 @@ El compilador garantiza la forma del contenido. Lo que los tipos no pueden expre
 | --- | --- |
 | TSC-R48 | `src/shared/contracts/state.ts` DEBE contener las declaraciones siguientes, que concretan la tabla de SYS §4.6. |
 | TSC-R49 | El valor almacenado bajo cada clave es exactamente el texto JSON del objeto `PersistedPrefs` o `PersistedSession`, sin envoltorio ni campos adicionales (por ejemplo `{"soundEnabled":false,"sceneVariant":"photo","locale":"es"}`). El script previo al pintado y la redirección de `/` leen ese formato directamente. |
-| TSC-R50 | `src/shared/state/persistence.ts` DEBE exportar `parsePrefs(raw: string \| null): PersistedPrefs` y `parseSession(raw: string \| null): PersistedSession`. Son funciones puras y totales: nunca lanzan. Cada campo se valida por separado y, si falta o es inválido, toma su valor por defecto; en `visited` se descartan los valores que no son `PrimaryComponentId` y los repetidos. |
+| TSC-R50 | `src/shared/state/persistence.ts` DEBE exportar `parsePrefs(raw: string \| null): PersistedPrefs` y `parseSession(raw: string \| null): PersistedSession`. Son funciones puras y totales: nunca lanzan. El mismo módulo exporta sus inversas, `serializePrefs` y `serializeSession`, que escriben exactamente el formato de TSC-R49 y descartan cualquier campo que no sea persistente. Cada campo se valida por separado y, si falta o es inválido, toma su valor por defecto; en `visited` se descartan los valores que no son `PrimaryComponentId` y los repetidos. |
 | TSC-R51 | Los stores se exponen como hooks en `src/shared/state/`: `usePrefsStore` (tipo `PrefsStore`), `useSessionStore` (tipo `SessionStore`) y `useUiStore` (tipo `UiStore`). Sus acciones se comportan como indica la tabla siguiente. |
 | TSC-R52 | Hasta que se hidratan, los stores devuelven los valores por defecto y `hasHydrated` es `false` (SYS-R26). `src/shared/state/` exporta el componente de cliente `StoreHydrator`, que no renderiza nada y, en un efecto, lee el almacenamiento con las funciones de TSC-R50, vuelca los valores a los stores y pone `hasHydrated` a `true`. `src/app/[locale]/layout.tsx` lo renderiza una vez. |
-| TSC-R53 | Toda lectura y escritura del almacenamiento pasa por un único módulo, `src/shared/state/safe-storage.ts`, que captura cualquier excepción (SYS-R27). Ningún otro archivo de `src/` accede a `localStorage` ni a `sessionStorage`, salvo el script previo al pintado y la redirección de `/`, que se ejecutan antes que React. |
+| TSC-R53 | Toda lectura y escritura del almacenamiento pasa por un único módulo, `src/shared/state/safe-storage.ts`, que captura cualquier excepción (SYS-R27). Ningún otro archivo de `src/` accede a `localStorage` ni a `sessionStorage`, salvo el script previo al pintado y la redirección de `/`, que se ejecutan antes que React. Los archivos de prueba quedan exentos, porque necesitan preparar y leer el almacenamiento para comprobarlo. |
 
 ```ts
 // src/shared/contracts/state.ts
@@ -454,7 +454,7 @@ export interface UiStore {
 | ID | Requisito |
 | --- | --- |
 | TSC-R54 | `src/shared/config/routes.ts` DEBE exportar los tipos y las funciones siguientes, con el comportamiento de la tabla de ejemplos. Son funciones puras. De las funciones se muestra solo la firma. |
-| TSC-R55 | Toda ruta interna del sitio se construye con estas funciones. NO DEBEN aparecer en `src/` literales de ruta que contengan un locale (por ejemplo `"/es/"` o una plantilla que concatene el locale) fuera de `routes.ts` y de sus pruebas. |
+| TSC-R55 | Toda ruta interna del sitio se construye con estas funciones. NO DEBEN aparecer en `src/` literales de ruta que contengan un locale (por ejemplo `"/es/"` o una plantilla que concatene el locale) fuera de `routes.ts` y de los archivos de prueba, que escriben literalmente las rutas que esperan. |
 | TSC-R56 | `parsePath` acepta la ruta con o sin barra final. Devuelve `null` para cualquier ruta que no corresponda a una de las tres vistas. |
 
 ```ts
@@ -570,7 +570,7 @@ export type RenderMode = "scene" | "simple";
 | TSC-AC12 | Cada acción de los stores produce el efecto y la escritura de la tabla de §4.9; `markVisited` con un identificador ya presente no escribe en el almacenamiento. | Prueba unitaria |
 | TSC-AC13 | Antes de hidratar, los stores devuelven los valores por defecto aunque el almacenamiento contenga otros; después de montar `StoreHydrator` devuelven los valores almacenados y `hasHydrated` es `true`. | Prueba de componente |
 | TSC-AC14 | Las funciones de rutas devuelven los resultados de la tabla de §4.10. | Prueba unitaria |
-| TSC-AC15 | No hay literales de ruta con locale en `src/` fuera de `routes.ts` y sus pruebas, ni accesos a `localStorage` o `sessionStorage` fuera de los archivos que permite TSC-R53. | Prueba de arquitectura |
+| TSC-AC15 | No hay literales de ruta con locale en `src/` fuera de `routes.ts` y de los archivos de prueba, ni accesos a `localStorage` o `sessionStorage` fuera de los archivos que permite TSC-R53. | Prueba de arquitectura |
 | TSC-AC16 | Al renderizar en un mismo documento las siete secciones con `idScope=""` y de nuevo con `idScope="panel-"`, para cada idioma: no hay ningún atributo `id` repetido, todo `id` de la primera tanda empieza por el slug de su sección, y ningún componente renderiza `<h1>`, `<h2>` ni un elemento de región como raíz. | Prueba de componente |
 | TSC-AC17 | El HTML que produce cada sección con `idScope=""` es idéntico al que produce con `idScope="panel-"` una vez eliminado ese prefijo de los atributos `id` y de los que los referencian. | Prueba de componente |
 | TSC-AC18 | Ningún archivo `content/*.ts` contiene `new Date` ni `Date.`, y cada feature de sección declara sus hechos y textos con `satisfies` (TSC-R40). | Prueba de arquitectura |
@@ -601,6 +601,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.2 | Aclaraciones surgidas al implementar M1, por delegación del autor. TSC-R50: `serializePrefs` y `serializeSession`. TSC-R53, TSC-R55 y TSC-AC15: los archivos de prueba quedan exentos de las dos restricciones. |
 | 2026-10-13 | 2.1 | Por decisión del autor (D-66). §4.9: `PersistedPrefs` gana `sceneVariant`, con su valor por defecto y la acción `setSceneVariant`. §4.11: `SCENE_VARIANTS`, `SceneVariant`, `DEFAULT_SCENE_VARIANT`, `isSceneVariant` y `SceneAssets`. TSC-AC11 ampliado. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Código normativo compilado y analizado con TypeScript 6.0.3, typescript-eslint 8.71.2 y ESLint 10.12.0. |
 | 2026-10-12 | 2.0 | Nuevo orden canónico decidido por el autor (D-46): cambian `PRIMARY_COMPONENT_IDS`, el orden de `SECTION_BY_COMPONENT` y de `SECTIONS`, y la lista esperada en TSC-AC06. |

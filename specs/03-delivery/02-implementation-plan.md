@@ -65,7 +65,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 
 #### M1 — Cimientos compartidos
 
-- **Entregables:** `shared/contracts/`, `shared/config/routes.ts`, `shared/state/` con sus tres stores y `StoreHydrator`, `shared/i18n/` con los dos diccionarios y los formateadores, `shared/lib/` (integridad de contenido, `cn`, `typed-object`, `section-nav`, sonido), `styles/tokens.css` y `globals.css` con las variantes de SYS-R50, fuentes, y las primitivas de `shared/ui/`: chip, enlace externo, enlace con aspecto de botón, `PeriodText`, `LanguageSwitcher`, `CopyButton` e iconos base.
+- **Entregables:** `shared/contracts/`, `shared/config/routes.ts`, `shared/state/` con sus tres stores y `StoreHydrator`, `shared/i18n/` con los dos diccionarios y los formateadores, `shared/lib/` (integridad de contenido, `cn`, `typed-object`, `section-nav`, sonido), `styles/tokens.css` y `globals.css` con las variantes de SYS-R50, fuentes, y las primitivas de `shared/ui/`: chip, enlace externo, enlace con aspecto de botón, `PeriodText`, `LanguageSwitcher`, `CopyButton` e iconos base. Incluye además dos piezas que estas necesitan y que otras specs listan como suyas: `SITE` en `shared/config/site.ts` (SMP-R01), de donde los diccionarios toman el nombre del autor, y los iconos `copy` y `check` (IO §4.5), que usa `CopyButton`.
 - **Criterios de salida:** TSC-AC05, AC09 y AC11 a AC15; I18N-AC01 a AC09; VIS-AC01, AC02 y AC06; STR-AC07; SET-AC07 y AC08; IO-AC05; SCN-AC01.
 
 #### M2 — Assets
