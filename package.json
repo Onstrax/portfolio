@@ -21,7 +21,8 @@
     "test:lighthouse": "node scripts/run-lighthouse.mjs",
     "assets:build": "node scripts/build-assets.mjs",
     "assets:check": "node scripts/check-assets.mjs",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm assets:check && pnpm build && pnpm test:e2e"
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm assets:check && pnpm build && pnpm test:e2e",
+    "check:docker": "docker compose run --rm --user $(id -u):$(id -g) check"
   },
   "dependencies": {
     "motion": "14.0.0",

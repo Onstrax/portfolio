@@ -1,0 +1,12 @@
+# Runs the full gate inside the CI replica image: `pnpm check:docker` (TST §4.10).
+services:
+  check:
+    build: .
+    init: true
+    ipc: host
+    working_dir: /work
+    volumes:
+      - .:/work
+    environment:
+      NEXT_PUBLIC_SITE_URL: http://localhost:4173
+    command: pnpm check
