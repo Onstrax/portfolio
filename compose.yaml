@@ -9,4 +9,6 @@ services:
       - .:/work
     environment:
       NEXT_PUBLIC_SITE_URL: http://localhost:4173
+      # The mounted node_modules belong to the host store: pnpm must not try to reinstall them.
+      pnpm_config_verify_deps_before_run: "false"
     command: pnpm check

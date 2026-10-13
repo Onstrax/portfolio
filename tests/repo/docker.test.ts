@@ -27,6 +27,7 @@ describe("container environment", () => {
     expect(compose).toMatch(/^ {2}check:\n/m);
     expect(compose).toContain("      - .:/work\n");
     expect(compose).toContain("      NEXT_PUBLIC_SITE_URL: http://localhost:4173\n");
+    expect(compose).toContain('      pnpm_config_verify_deps_before_run: "false"\n');
     expect(compose).toContain("    command: pnpm check\n");
     expect(manifestField("scripts", "check:docker")).toBe(
       "docker compose run --rm --user $(id -u):$(id -g) check",

@@ -176,7 +176,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | --- | --- |
 | TST-R49 | `Dockerfile` define una imagen que reproduce el entorno de CI: parte de `mcr.microsoft.com/playwright:v<versión>-noble`, donde `<versión>` es exactamente la de `@playwright/test` en `package.json`, e instala el pnpm del campo `packageManager`. La imagen trae Ubuntu 24.04, la versión de Node de `.nvmrc` y los tres motores con sus dependencias. No copia nada del repositorio: `.dockerignore` excluye todo. |
 | TST-R50 | `compose.yaml` define un único servicio, `check`, que monta el repositorio en `/work`, fija `NEXT_PUBLIC_SITE_URL=http://localhost:4173` y ejecuta `pnpm check`. `pnpm check:docker` (SYS §4.9) lo lanza con el usuario del equipo, para que los archivos que escribe no queden a nombre de `root`. |
-| TST-R51 | El contenedor usa las dependencias ya instaladas en el equipo (`node_modules/`); no instala nada. Al cambiar la versión de `@playwright/test` o de pnpm se actualiza `Dockerfile` en el mismo cambio. |
+| TST-R51 | El contenedor usa las dependencias ya instaladas en el equipo (`node_modules/`); no instala nada. Para ello el servicio desactiva la comprobación de pnpm `verifyDepsBeforeRun`, que dentro del contenedor intentaría borrarlas y reinstalarlas contra otro almacén. Al cambiar la versión de `@playwright/test` o de pnpm se actualiza `Dockerfile` en el mismo cambio. |
 
 ## 5. Criterios de aceptación
 
@@ -225,7 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
-| 2026-10-13 | 1.3 | Por decisión del autor (D-67). Nuevo §4.10 (TST-R49 a TST-R51): `pnpm check:docker` ejecuta la puerta en la imagen de Playwright. TST-R44: esa es la puerta local donde WebKit no arranca. Nuevo TST-AC16. |
+| 2026-10-13 | 1.3 | Por decisión del autor (D-67). Nuevo §4.10 (TST-R49 a TST-R51): `pnpm check:docker` ejecuta la puerta en la imagen de Playwright. TST-R44: esa es la puerta local donde WebKit no arranca. Nuevo TST-AC16. TST-R51: el servicio desactiva `verifyDepsBeforeRun`. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor durante M0. TST-R15: se desactiva `@next/next/no-img-element`. TST-R19: los fragmentos se analizan bajo la ruta de un archivo real. TST-R44: en el equipo del autor WebKit no arranca; lo verifica CI. |
 | 2026-10-12 | 1.1 | TST-R44 y TST-AC15: por decisión del autor se permite `push` directo a `main`; la garantía pasa a ser que solo se publica con CI en verde (D-45). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Composición de ESLint, reglas `jsx-a11y` y cobertura con Vitest comprobadas en un prototipo con las versiones de SYS §4.1. |
