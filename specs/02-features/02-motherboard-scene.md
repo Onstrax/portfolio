@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -37,7 +37,7 @@ Feature: `src/features/motherboard-scene/`. `index.ts` exporta el componente de 
 | --- | --- |
 | SCN-R01 | `Scene` renderiza un **escenario** con la geometría de AST-R03 y, dentro de él, estas capas de abajo arriba: (1) la imagen de la variante activa (§4.12); (2) el viñeteado de AST-R48; (3) un SVG decorativo con las auras y el display de diagnóstico; (4) las zonas pulsables, como elementos HTML; (5) las etiquetas. Fuera del escenario, el fondo es el de la variante (AST-R03). |
 | SCN-R02 | El SVG decorativo usa `viewBox="0 0 1600 900"`, ocupa todo el escenario, lleva `aria-hidden="true"` y no recibe eventos de puntero. |
-| SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>`. |
+| SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>` con `id="scene"`, que es el destino del enlace de salto en modo `scene` (SYS-R46). |
 | SCN-R04 | `ScenePoster` es un componente de servidor que renderiza, para cada variante, un bloque con el tamaño del escenario que tiene como fondo el color medio y el marcador de posición desenfocado de su entrada en `SCENE_ASSETS`. Solo es visible el de la variante que indica `data-scene` (variantes `scene-photo` y `scene-sketch`, SYS-R50). Es lo que se ve bajo el arranque, o en su lugar cuando no hay arranque, hasta que `Scene` se monta. No solicita ningún archivo. |
 | SCN-R05 | `Scene` recibe por propiedades (SYS-R49) la lista `sections: readonly SectionNavItem[]`, el idioma y las cadenas de interfaz que necesita. NO DEBE importar el registro (STR-R32). |
 
@@ -90,6 +90,12 @@ export interface Hotspot {
   /** Silueta en el espacio de escena (AST §4.2). */
   readonly polygon: readonly ScenePoint[];
   readonly labelPlacement: LabelPlacement;
+  /**
+   * Desplazamiento de la etiqueta a lo largo de su lado, en unidades de escena: hacia la derecha
+   * con `top` y `bottom`, hacia abajo con `left` y `right`. La calibración lo usa para separar
+   * las etiquetas entre sí (SCN-R28).
+   */
+  readonly labelShift?: number;
 }
 ```
 
@@ -132,8 +138,8 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 | SCN-R22 | Cada zona interactiva tiene una etiqueta con el aspecto de VIS-R21 y dos líneas: el nombre de la pieza (`hardwareName`) y el nombre de la sección (`title`). Para `settings`: `scene.settingsHardwareName` y `scene.settingsTitle`. |
 | SCN-R23 | La etiqueta se muestra mientras el puntero está sobre el área pulsable de su zona o sobre la propia etiqueta, o mientras la zona tiene foco de teclado. Al salir el puntero, se oculta tras 150 ms, salvo que en ese tiempo vuelva a entrar en la zona o en la etiqueta. Usa la animación M-05. |
 | SCN-R24 | Pulsar Esc mientras una etiqueta es visible la oculta sin mover el puntero ni el foco. No vuelve a mostrarse hasta que el puntero salga y entre de nuevo o el foco cambie (QLT-R12). |
-| SCN-R25 | En dispositivos sin hover (`(hover: none)`), las ocho etiquetas están siempre visibles. |
-| SCN-R26 | La etiqueta se coloca junto al lado de la caja del área pulsable que indica `labelPlacement`, a 12 unidades, centrada respecto a ese lado. Si así se saliera del escenario, se desplaza lo necesario para quedar dentro, con 8 px de margen. |
+| SCN-R25 | En dispositivos sin hover (`(hover: none)`), las ocho etiquetas están siempre visibles. Para que quepan a la vez, ahí miden 128 px de ancho como máximo y su texto salta de línea (VIS-R21). |
+| SCN-R26 | La etiqueta se coloca junto al lado de la caja del área pulsable que indica `labelPlacement`, a 12 unidades, centrada respecto a ese lado y desplazada a lo largo de él lo que indique `labelShift`. Si así se saliera del escenario, se desplaza lo necesario para quedar dentro, con 8 px de margen. La posición la calcula `labelPosition`, función pura de `lib/`, a partir del tamaño medido de la etiqueta y del escenario. |
 | SCN-R27 | Las etiquetas llevan `aria-hidden="true"`: su información ya está en el nombre accesible de la zona. |
 | SCN-R28 | La calibración elige cada `labelPlacement` de modo que, con las ocho etiquetas visibles a la vez a 1024×768 px, ninguna tape otra etiqueta ni el área pulsable de otra zona. |
 
@@ -150,14 +156,14 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R33 | Mientras `visited` está vacío y no hay ninguna sección abierta, se muestra en la parte inferior central del escenario, a 24 px del borde, una placa oscura (VIS §4.5.1) con el texto `scene.hintLabel`. Desaparece al abrir la primera sección y no vuelve a mostrarse hasta un reinicio de sesión. Usa la animación M-12. |
+| SCN-R33 | Mientras `visited` está vacío y no hay ninguna sección abierta, se muestra en la parte inferior central del escenario, a 8 px del borde, una placa oscura (VIS §4.5.1) con el texto `scene.hintLabel`. Desaparece al abrir la primera sección y no vuelve a mostrarse hasta un reinicio de sesión. Usa la animación M-12. |
 | SCN-R34 | La pista no es interactiva, no recibe eventos de puntero y forma parte del contenido legible por lectores de pantalla. |
 
 ### 4.8 Imagen y disponibilidad
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R35 | La imagen de la variante activa se renderiza con el elemento `<picture>` de AST-R37, con `alt=""` (QLT-R16), `width` y `height` del máster, `decoding="async"` y `fetchpriority="high"`. Aparece con la animación M-11 cuando termina de decodificarse; hasta entonces se ve `ScenePoster`. |
+| SCN-R35 | La imagen de la variante activa se renderiza con el elemento `<picture>` de AST-R37, con `alt=""` (QLT-R16), `width` y `height` del máster, `decoding="async"` y `fetchpriority="high"`. Los tres formatos se ofrecen como elementos `<source>` y el `<img>` no lleva `src` ni `srcset`: la escena se crea desde JavaScript, y WebKit empieza a descargar el `src` de una imagen en cuanto se le asigna, antes de que esté dentro de su `<picture>`, con lo que Safari descargaría el JPEG además del AVIF. Aparece con la animación M-11 cuando termina de decodificarse; hasta entonces se ve `ScenePoster`. |
 | SCN-R36 | En modo `scene`, el script previo al pintado (SYS-R51) inserta en `<head>` un `<link rel="preload" as="image">` para la imagen de la variante activa, con `imagesrcset` e `imagesizes` equivalentes a los del `<picture>` y el tipo `image/avif`. Así la descarga empieza antes de que cargue el JavaScript, nunca ocurre en modo `simple` y nunca incluye la otra variante. |
 | SCN-R37 | `Scene` registra la marca `scene:ready` (QLT-R31) la primera vez que se cumplen a la vez dos condiciones: la imagen está decodificada y `data-boot` es `done`. |
 | SCN-R38 | Cuando la URL pasa de una sección al inicio y ningún elemento de la escena tiene el foco, `Scene` enfoca la zona de la sección que se acaba de cerrar (QLT-R08). |
@@ -188,7 +194,9 @@ Espacio de nombres `scene` del diccionario de interfaz.
 | `postDisplayName` | Display de diagnóstico | Diagnostic display |
 | `hintLabel` | Cada componente iluminado abre una sección. | Each glowing component opens a section. |
 
-Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display y `data-testid="scene-label"` en cada etiqueta.
+Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display, `data-testid="scene-label"` en cada etiqueta, `data-testid="scene-hint"` en la pista, `data-testid="scene-auras"` en el SVG decorativo, `data-testid="scene-poster"` en el póster y `data-testid="calibration-overlay"` en la superposición de calibración.
+
+Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`stroke`, `glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
 
 ### 4.12 Variante de escena
 
@@ -210,7 +218,7 @@ Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-tes
 | SCN-AC06 | En `desktop`, hacer clic en el centro de la caja de cada zona de sección lleva a la URL de su sección; hacer clic en un punto del escenario fuera de toda zona no cambia la URL. | Prueba E2E |
 | SCN-AC07 | Con el foco en la zona `cpu`: su etiqueta es visible y contiene "Procesador (CPU)" y "Perfil" en `/es/`, y "Processor (CPU)" y "Profile" en `/en/`; el aura está en los valores de hover de VIS §4.4; y el SVG muestra el rectángulo de foco de SCN-R21. | Prueba E2E |
 | SCN-AC08 | Al pasar el puntero sobre una zona aparece su etiqueta; al llevarlo sobre la etiqueta, sigue visible; Esc la oculta sin mover el puntero; al sacar el puntero de ambas, desaparece. | Prueba E2E |
-| SCN-AC09 | Con la emulación de un dispositivo sin hover a 1024×768 px, las ocho etiquetas son visibles, todas quedan dentro del escenario y ninguna caja de etiqueta se solapa con otra. | Prueba E2E |
+| SCN-AC09 | Con la emulación de un dispositivo sin hover a 1024×768 px, las ocho etiquetas son visibles, todas quedan dentro del escenario y ninguna caja de etiqueta se solapa con otra. | Prueba E2E, solo en Chromium, que es el único motor que emula un dispositivo sin hover |
 | SCN-AC10 | El display muestra `00` en una sesión nueva; tras abrir y cerrar Perfil y Proyectos muestra `02`; abrir Perfil otra vez no cambia el valor; abrir "Acerca de este sitio" tampoco. La región de estado contiene "2 de 6 secciones visitadas" en `/es/`. | Prueba E2E |
 | SCN-AC11 | La pista inicial es visible en una sesión nueva con el texto de `scene.hintLabel`, y deja de serlo tras abrir una sección, también después de cerrarla. | Prueba E2E |
 | SCN-AC12 | En `desktop`, en una primera visita, se solicita exactamente un archivo de la imagen de la escena y es un derivado AVIF de la variante `photo`; en `mobile` no se solicita ninguno (SYS-R16). | Prueba E2E, solo en Chromium |
@@ -243,5 +251,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Durante M5, por delegación del autor (D-69). SCN-R07 y SCN-R26: nuevo `Hotspot.labelShift`, porque ocho etiquetas centradas no caben a 1024×768 px. SCN-R25: sin hover, las etiquetas miden 128 px como máximo. SCN-R33: la pista queda a 8 px del borde y no a 24, para no tapar el display de diagnóstico. SCN-R03: `id` del `<main>`. SCN-R35: los tres formatos de la imagen son `<source>` y el `<img>` no lleva `src`, tras comprobar en WebKit que con `src` se descargaban dos archivos. §4.11: nuevos identificadores y atributos de prueba. SCN-AC09: solo en Chromium. Calibración trazada sobre las dos variantes; pendiente la revisión del autor (SCN-AC17). |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.12 (SCN-R42 a SCN-R44): variante de escena. SCN-R04, R09, R18, R21, R29 y R35 pasan a depender de la variante; SCN-R36: la precarga la inserta el script previo al pintado. SCN-AC02, AC12 y AC17 adaptados; nuevo SCN-AC18. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

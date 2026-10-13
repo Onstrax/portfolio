@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | Todas las demás specs |
 
@@ -88,19 +88,19 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 #### M5 — Escena
 
 - **Entregables:** el script previo al pintado; `SceneLayer` con el cambio de modo, la carga bajo demanda y la captura de errores; `ScenePoster`; `Scene` con imagen, viñeteado, zonas, auras, etiquetas, display y pista; la superposición de calibración; `hotspots.ts` calibrado.
-- **Criterios de salida:** SYS-AC05 a AC08, AC10, AC11 y AC17 a AC20; todos los criterios automáticos de SCN; AST-AC17 y AC18; VIS-AC04, AC11 y AC13; QLT-AC14, AC16, AC22 y AC26.
+- **Criterios de salida:** SYS-AC05 a AC08, AC10, AC11 y AC17 a AC20; todos los criterios automáticos de SCN; AST-AC12, AC17 y AC18; VIS-AC04, AC11 y AC13; QLT-AC14, AC16, AC22 y AC26. Cuatro criterios de SCN describen recorridos que pasan por piezas de hitos posteriores: SCN-AC10, AC11 y AC14 necesitan el panel y SCN-AC18, el menú de ajustes. En M5 se comprueban en su forma parcial (PLAN-R09), con pruebas de componente sobre `Scene`; su prueba E2E se escribe en M6 y en M7. Lo mismo ocurre con la parte de SYS-AC10 que dice "los paneles abren".
 - **Tarea del autor:** A3.
 
 #### M6 — Panel
 
 - **Entregables:** `DetailPanel` y las páginas de sección.
-- **Criterios de salida:** todos los criterios automáticos de PNL; SYS-AC09; los criterios E2E de las siete secciones; VSN-AC01, AC02, AC05 y AC06; I18N-AC11 y AC12; VIS-AC07 y AC10; QLT-AC04 y AC11.
+- **Criterios de salida:** todos los criterios automáticos de PNL; SYS-AC09 y AC10 en su forma completa; las pruebas E2E de SCN-AC10, AC11 y AC14; los criterios E2E de las siete secciones; VSN-AC01, AC02, AC05 y AC06; I18N-AC11 y AC12; VIS-AC07 y AC10; QLT-AC04 y AC11.
 - **Specs que quedan implementadas:** PNL, CPU, PSU, SSD, RAM, IO, FAN y CMOS, una vez hechas sus revisiones manuales.
 
 #### M7 — Arranque y ajustes
 
 - **Entregables:** `BootScreen` y `BootController`; `FixedBar` y `SettingsMenu`.
-- **Criterios de salida:** todos los criterios automáticos de BOOT y de SET; STR-AC01 en su forma completa; VSN-AC08; QLT-AC03, AC09, AC10 y AC13.
+- **Criterios de salida:** todos los criterios automáticos de BOOT y de SET; la prueba E2E de SCN-AC18; STR-AC01 en su forma completa; VSN-AC08; QLT-AC03, AC09, AC10 y AC13.
 - **Tarea del autor:** A5.
 - **Specs que quedan implementadas:** BOOT, SET, SCN y SMP.
 
@@ -142,7 +142,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | M1 | 2026-10-13 | `223832a` | CI en verde en los tres motores y `pnpm check:docker` en local. 317 pruebas; cobertura de la lógica: 100 % de líneas y funciones, 97 % de ramas. Adelanta `SITE` y los iconos `copy` y `check`. Incluye ya la preferencia `sceneVariant` y los tokens de la variante boceto (D-66). El autor revisó y aprobó el cierre el 2026-10-13. |
 | M2 | 2026-10-13 | `05156eb` | CI en verde en los tres motores y `pnpm check:docker` en local. Dieciocho derivados de escena, nueve de la fotografía y la imagen para compartir, todos dentro de su peso con la calidad inicial; el boceto no necesitó bajar calidad. Los dos másteres siguen en estado `provisional` hasta la calibración de M5. Por indicación del autor, se continúa con M3 sin esperar su revisión; revisará M2 y M3 juntos. |
 | M3 | 2026-10-13 | `3268169` | CI en verde en los tres motores y `pnpm check:docker` en local. 427 pruebas. Las siete secciones con su contenido en ambos idiomas, el registro y los CVs publicados, que solo llevan título y autor en sus propiedades. Pendiente la tarea A4 del autor (lectura del contenido), que hará junto con la revisión de M2 a M5. |
-| M4 | — | — | — |
+| M4 | 2026-10-13 | `8359622` | CI en verde en los tres motores y `pnpm check:docker` en local. 461 pruebas unitarias y de componente y 109 E2E. El sitio ya es legible de principio a fin como página plana. Con el contenido real, la política de seguridad no cabía en una línea de `_headers`: los scripts de datos de Next.js se reúnen en uno (DEP-R32). I18N-AC16 queda cubierto para la página de entrada y la 404; su parte del arranque llega en M7. En una ejecución en contenedor, Firefox agotó el tiempo al cargar una página; la causa se encontró y se corrigió en M5 (TST 1.6). Por indicación del autor, se continúa con M5; revisará M2 a M5 juntos. |
 | M5 | — | — | — |
 | M6 | — | — | — |
 | M7 | — | — | — |
@@ -185,6 +185,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.4 | Durante M5, por delegación del autor. M5 a M7: las pruebas E2E de SCN-AC10, AC11 y AC14 pasan a M6 y la de SCN-AC18 a M7, porque recorren el panel y el menú de ajustes; M5 las comprueba en su forma parcial. M5 añade AST-AC12. |
 | 2026-10-13 | 1.3 | Por decisión del autor (D-66 y D-67). M2 genera los derivados de las dos variantes (AST-AC21); M5 añade SYS-AC20; M8, AST-AC20 y AC22; A3 revisa la calibración sobre las dos variantes. `check:docker` (TST-AC16) se añade como complemento de M0. |
 | 2026-10-13 | 1.2 | Decidido por delegación del autor el 2026-10-13. Nuevos PLAN-R12 (M0 adelanta `locale.ts`, `ids.ts`, `getSiteUrl` y `typed-object.ts`; TSC-AC06 pasa de M1 a M0) y PLAN-R13 (marcadores de `assets:*` y `test:lighthouse` hasta M2 y M8). §2: la fecha de publicación es dura. M3: los PDF publicados solo llevan título y autor en sus propiedades. |
 | 2026-10-13 | 1.1 | Aprobada por el autor. PLAN-R02: M0 empieza el 2026-10-13 con las versiones de arranque. Nuevo §4.5 (qué se puede aplazar). A1 hecha; A2 actualizada. |

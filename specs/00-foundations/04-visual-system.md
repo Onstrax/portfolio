@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.3 |
+| Versión | 2.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -199,7 +199,7 @@ Superficie de la barra fija, las etiquetas de la escena y el menú de ajustes.
 | ID | Requisito |
 | --- | --- |
 | VIS-R20 | Fondo `plate` con opacidad 92 %, radio `radius-plate`, sombra `shadow-plate` y borde de 1 px en `on-dark-muted` con opacidad 25 %. |
-| VIS-R21 | La etiqueta de escena tiene relleno interior de 8 px en vertical y 12 px en horizontal, y un borde de 1 px en `aura` con opacidad 60 % en lugar del borde de VIS-R20. Contiene dos líneas: nombre (`on-dark`) y contenido (`on-dark-muted`), con los roles tipográficos de §4.2. |
+| VIS-R21 | La etiqueta de escena tiene relleno interior de 8 px en vertical y 12 px en horizontal, y un borde de 1 px en `aura` con opacidad 60 % en lugar del borde de VIS-R20. Contiene dos líneas: nombre (`on-dark`) y contenido (`on-dark-muted`), con los roles tipográficos de §4.2. Cada línea ocupa un solo renglón, salvo en dispositivos sin hover, donde la etiqueta mide 128 px de ancho como máximo y el texto salta de renglón (SCN-R25). El borde usa el color de aura de la variante activa (VIS-R44). |
 
 #### 4.5.2 Panel claro
 
@@ -240,7 +240,7 @@ Superficie del panel de detalle. Reproduce la referencia `DetailIdea1Component`:
 | --- | --- |
 | VIS-R29 | Los controles tienen exactamente los estilos de la tabla siguiente. |
 | VIS-R30 | Todo control con el que se interactúa mediante puntero mide al menos 44×44 px de área pulsable. Quedan exentos los enlaces dentro de una línea de texto. |
-| VIS-R31 | Todo elemento enfocable DEBE mostrar un anillo de foco con `:focus-visible`: contorno de 2 px con separación de 2 px, en `aura` sobre superficies oscuras y en `ink` sobre superficies claras. El anillo NO DEBE eliminarse ni sustituirse por un cambio de color. |
+| VIS-R31 | Todo elemento enfocable DEBE mostrar un anillo de foco con `:focus-visible`: contorno de 2 px con separación de 2 px, en `aura` sobre superficies oscuras y en `ink` sobre superficies claras. Sobre la escena, el color es el de aura de la variante activa (VIS-R44). El anillo NO DEBE eliminarse ni sustituirse por un cambio de color. |
 | VIS-R32 | Un control deshabilitado se muestra con opacidad 0,45 y cursor por defecto, y no reacciona a hover. |
 
 | Control | Reposo | Hover | Pulsado |
@@ -355,6 +355,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.4 | Durante M5, por delegación del autor. VIS-R21: ancho máximo de la etiqueta sin hover y color de su borde según la variante. VIS-R31: sobre la escena, el anillo de foco usa el color de aura de la variante. |
 | 2026-10-13 | 2.3 | Durante M4, por delegación del autor. Nuevo §4.1.6 con los tokens `print-paper` y `print-ink` para la hoja de impresión (SMP-R12). |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). Nuevo §4.1.5 con los tokens `aura-sketch` y `paper`; nuevo VIS-R44 con las propiedades `--scene-aura`, `--scene-backdrop` y `--scene-display`; VIS-R13 usa el color de aura de la variante; dos pares nuevos en la tabla de contraste. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. Inventario de movimiento: se añaden M-11 y M-12 (SCN). `boot-ok` se usa también en el display de diagnóstico. |

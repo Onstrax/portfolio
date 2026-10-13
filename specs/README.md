@@ -213,6 +213,9 @@ Resumen de una línea por decisión; el detalle y la justificación completa viv
 | D-65 | 2026-10-13: M0 adelanta los identificadores canónicos y la validación del entorno; los scripts de assets y de Lighthouse existen como marcadores hasta M2 y M8. La publicación debe estar hecha al final del 2026-10-16. | PLAN |
 | D-66 | 2026-10-13: la escena tiene dos variantes de imagen, fotografía (por defecto) y boceto, que el visitante intercambia desde los ajustes. Comparten objetos, zonas y calibración; cambian la imagen, el color del aura, el de las franjas y el del display. | VSN, AST, VIS, SCN, SET, TSC, SYS |
 | D-67 | 2026-10-13: `pnpm check:docker` ejecuta la puerta completa en la imagen de Playwright, para verificar WebKit en un equipo que no es Ubuntu ni Debian. | TST, SYS, STR |
+| D-68 | 2026-10-13, por delegación del autor: el elemento `<html>` lo renderiza el layout de cada grupo de rutas, no el de `[locale]`. Es la única forma de que el script previo al pintado quede en `<head>` en las páginas de la escena y no exista en `/cv/`. Como una navegación del cliente entre grupos o entre idiomas vuelve a montar `<html>`, la aplicación restablece los atributos que ese script escribió. | SYS |
+| D-69 | 2026-10-13, por delegación del autor: cada zona puede desplazar su etiqueta a lo largo de su lado (`labelShift`); sin hover, las etiquetas miden 128 px como máximo; y la pista inicial queda a 8 px del borde inferior. Con las etiquetas centradas y de una sola línea, las ocho no cabían a 1024×768 px, y a 24 px la pista tapaba el display de diagnóstico. | SCN, VIS |
+| D-70 | 2026-10-13, por delegación del autor: `next dev` no escribe en `CLAUDE.md` (`agentRules: false`). Next.js 16 añade por defecto un bloque propio a ese archivo cada vez que arranca el servidor de desarrollo. | SYS |
 
 ## 7. Hechos confirmados por el autor
 
@@ -259,3 +262,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | Durante M2, por delegación del autor: STR 1.7 (`scripts/assets-shared.mjs`) y AST 3.1 (AST-R54). |
 | 2026-10-13 | Durante M3: IO 1.1 (propiedades de los PDF publicados) y TST 1.4 (barra final de las rutas en las pruebas). |
 | 2026-10-13 | Durante M4, por delegación del autor: DEP 1.2 (DEP-R32, los scripts de datos de Next.js se reúnen en uno), SMP 1.2 (datos estructurados en inicio y secciones; `theme-color` desde el manifiesto), AST 3.2, VIS 2.3 (tokens de impresión), TST 1.5 y TSC 2.3. |
+| 2026-10-13 | Durante M5, por delegación del autor: decisiones D-68 a D-70. SYS 2.3 (`<html>` en los layouts de grupo, dos enlaces de salto, variante `no-hover`, `agentRules`), SCN 1.2 (`labelShift`, etiquetas sin hover, posición de la pista, atributos de prueba), VIS 2.4, TST 1.6 (peticiones canceladas y preparación de Firefox en la prueba base) y PLAN 1.4 (reparto de cuatro pruebas E2E de SCN entre M6 y M7). |

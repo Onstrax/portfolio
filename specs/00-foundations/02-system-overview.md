@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.2 |
+| Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN |
 
@@ -121,7 +121,7 @@ Versiones verificadas contra el registro de npm el 2026-10-12. La combinación N
 
 | ID | Requisito |
 | --- | --- |
-| SYS-R05 | `next.config.ts` DEBE establecer `output: "export"`, `trailingSlash: true`, `images: { unoptimized: true }` y `reactStrictMode: true`. |
+| SYS-R05 | `next.config.ts` DEBE establecer `output: "export"`, `trailingSlash: true`, `images: { unoptimized: true }`, `reactStrictMode: true` y `agentRules: false`. Este último impide que `next dev` añada por su cuenta un bloque de texto a `CLAUDE.md`, que es un archivo del autor. |
 | SYS-R06 | Todas las rutas DEBEN generarse de forma estática en compilación. Los segmentos dinámicos declaran `generateStaticParams` y `export const dynamicParams = false`. |
 | SYS-R07 | NO DEBEN usarse funciones que requieran servidor en runtime: manejadores de ruta dinámicos, middleware o proxy, Server Actions, `cookies()`, `headers()`, ni revalidación. |
 
@@ -159,7 +159,7 @@ El **modo de render** decide si el visitante ve la escena o la vista simple.
 | SYS-R18 | En modo `simple`, al cargar `/{locale}/{section}/` con JavaScript activo, la página DEBE desplazarse hasta el ancla de esa sección. Sin JavaScript se muestra la vista simple desde el inicio; esta limitación es aceptada. |
 | SYS-R19 | `/{locale}/cv/` NO DEBE incluir el script previo al pintado ni la capa de la escena. |
 | SYS-R20 | El script previo al pintado es el único script en línea escrito por el proyecto en las páginas de locale. Sus responsabilidades son exactamente cuatro: fijar `data-mode` (SYS-R13), fijar `data-boot` (definido en BOOT), fijar `data-scene` con la precarga de su imagen (SYS-R51) y programar el temporizador de respaldo que pasa la página a `data-mode="simple"` si el código de la aplicación no se inicia (QLT-R43). Su código fuente vive en un único módulo (`src/shared/lib/pre-paint-script.ts`). |
-| SYS-R44 | El elemento `<html>` de las páginas de locale lleva `suppressHydrationWarning`: el script previo al pintado le añade atributos antes de la hidratación y, sin esa propiedad, React emitiría una advertencia en consola (QLT-R40). |
+| SYS-R44 | El elemento `<html>` de las páginas de inicio y de sección lleva `suppressHydrationWarning`: el script previo al pintado le añade atributos antes de la hidratación y, sin esa propiedad, React emitiría una advertencia en consola (QLT-R40). |
 | SYS-R51 | El script previo al pintado escribe en `<html>` el atributo `data-scene` con la variante de escena guardada en preferencias (§4.6), si es válida, o con `photo` en otro caso. En modo `scene` inserta además en `<head>` la precarga de la imagen de esa variante (SCN-R36). Cuando el visitante cambia de variante, el código de la aplicación actualiza el atributo (SCN-R43). |
 
 En modo `scene`, el contenido de la sección abierta existe dos veces en el documento: en la capa base, que está oculta, y en el panel. Los identificadores no se repiten porque cada instancia usa un `idScope` distinto (TSC-R31 a TSC-R33). En el HTML exportado ese contenido aparece una sola vez, en la capa base (SYS-R48).
@@ -172,6 +172,7 @@ En modo `scene`, el contenido de la sección abierta existe dos veces en el docu
 | SYS-R22 | El atributo `lang` de `<html>` DEBE coincidir con el locale de la ruta. Las páginas `/` y 404 usan `lang="en"`. |
 | SYS-R23 | La escena DEBE vivir en el layout del grupo `(scene)` para que **no se desmonte** al navegar entre el inicio y las secciones: abrir, cerrar o cambiar de panel no recarga la imagen ni repite el arranque. |
 | SYS-R24 | Abrir, cerrar y cambiar de sección DEBEN ser navegaciones del lado del cliente entre rutas (componente `Link` o el enrutador de Next.js), nunca estado local. El botón Atrás del navegador cierra el panel abierto. |
+| SYS-R52 | El elemento `<html>`, con su atributo `lang` y las variables de las fuentes, lo renderiza el layout de cada grupo de rutas y no el de `[locale]`: solo así el script previo al pintado queda dentro de `<head>` en las páginas del grupo `(scene)` y no existe en las del grupo `(plain)` (SYS-R13, SYS-R19). Una navegación del lado del cliente que cambia de grupo o de idioma vuelve a montar `<html>`, y React elimina los atributos que escribió el script previo al pintado; `SceneLayer` y `Scene` los restablecen antes del siguiente pintado (SYS-R47, SCN-R43). |
 
 ```text
 src/app/
@@ -183,16 +184,18 @@ src/app/
 ├── robots.ts                  robots.txt (ver SMP).
 ├── sitemap.ts                 sitemap.xml (ver SMP).
 └── [locale]/
-    ├── layout.tsx             <html lang={locale}>, fuentes, estilos globales, metadatos base
-    │                          y StoreHydrator (TSC-R52).
+    ├── layout.tsx             Estilos globales, metadatos base y StoreHydrator (TSC-R52).
+    │                          No renderiza <html>: lo hace el layout de cada grupo (SYS-R52).
     ├── (scene)/
-    │   ├── layout.tsx         Script previo al pintado + capa base + capa de escena (§4.13).
+    │   ├── layout.tsx         <html lang={locale}> con el script previo al pintado en <head>,
+    │   │                      capa base y capa de escena (§4.13).
     │   ├── scene-layer.tsx    Componente de cliente SceneLayer (SYS-R47).
     │   ├── page.tsx           "/{locale}/"            No renderiza nada: no hay panel.
     │   └── [section]/
     │       └── page.tsx       "/{locale}/{section}/"  Renderiza el contenido de la sección,
     │                                                  que SceneLayer muestra en el panel.
     └── (plain)/
+        ├── layout.tsx         <html lang={locale}> sin script previo al pintado (SYS-R19).
         └── cv/
             └── page.tsx       "/{locale}/cv/"         Vista simple.
 ```
@@ -300,11 +303,11 @@ src/app/
 
 | ID | Requisito |
 | --- | --- |
-| SYS-R46 | El layout del grupo `(scene)` renderiza, en este orden: el script previo al pintado; la **capa base**, un `<div data-layer="base">` con la vista simple; y la **capa de escena**, un `<div data-layer="scene">`. La capa de escena tiene tres hijos: la pantalla de arranque y el póster de la escena, ambos renderizados en el servidor como HTML estático, y el componente de cliente `SceneLayer`, que recibe como hijos el contenido de la página. |
-| SYS-R47 | `SceneLayer` vive en `src/app/[locale]/(scene)/scene-layer.tsx` y es el único lugar donde se componen los features de armazón de la escena. Tiene exactamente estas responsabilidades: (1) mantener `data-mode` sincronizado con la consulta de SYS-R12 cuando cambia el viewport (SYS-R17); (2) escribir `data-app="ready"` en `<html>` al montarse, que es la señal que consulta el temporizador de respaldo (QLT-R43); (3) cargar bajo demanda, y solo en modo `scene`, los componentes de cliente de `boot-sequence`, `motherboard-scene`, `settings` y `detail-panel` (QLT-R34); (4) capturar cualquier excepción de esos componentes y, en ese caso, escribir `data-mode="simple"` y dejar de renderizarlos (QLT-R44). |
+| SYS-R46 | El layout del grupo `(scene)` renderiza, en este orden: el script previo al pintado; dos enlaces de salto, de los que el CSS muestra solo el del modo activo (el de modo `simple` lleva al contenido de la vista simple y el de modo `scene`, al `<main>` de la escena); la **capa base**, un `<div data-layer="base">` con la vista simple; y la **capa de escena**, un `<div data-layer="scene">`. La capa de escena tiene tres hijos: la pantalla de arranque y el póster de la escena, ambos renderizados en el servidor como HTML estático, y el componente de cliente `SceneLayer`, que recibe como hijos el contenido de la página. |
+| SYS-R47 | `SceneLayer` vive en `src/app/[locale]/(scene)/scene-layer.tsx` y es el único lugar donde se componen los features de armazón de la escena. Tiene exactamente estas responsabilidades: (1) mantener `data-mode` sincronizado con la consulta de SYS-R12 cuando cambia el viewport (SYS-R17); (2) escribir `data-app="ready"` en `<html>` al montarse, que es la señal que consulta el temporizador de respaldo (QLT-R43), y escribir `data-boot="done"` si el atributo no existe, lo que ocurre cuando una navegación del lado del cliente ha vuelto a montar `<html>` (SYS-R52): una navegación así nunca inicia el arranque; (3) cargar bajo demanda, y solo en modo `scene`, los componentes de cliente de `boot-sequence`, `motherboard-scene`, `settings` y `detail-panel` (QLT-R34); (4) capturar cualquier excepción de esos componentes y, en ese caso, escribir `data-mode="simple"` y dejar de renderizarlos (QLT-R44). |
 | SYS-R48 | En el servidor y en modo `simple`, `SceneLayer` no renderiza nada, tampoco sus hijos. Por tanto el panel no forma parte del HTML exportado. |
 | SYS-R49 | Los componentes de cliente reciben por propiedades, desde el layout de servidor, los datos de las secciones que necesitan (nombres, rutas, textos), ya resueltos para el idioma de la página y serializables. NO DEBEN obtenerlos del registro (STR-R32). |
-| SYS-R50 | `src/styles/globals.css` declara las variantes de Tailwind `mode-scene`, `mode-simple`, `boot-play`, `boot-exit`, `boot-done`, `scene-photo` y `scene-sketch`, que se activan según los atributos `data-mode`, `data-boot` y `data-scene` de `<html>`, y la variante `scene-capable`, cuya consulta de medios DEBE ser textualmente la de SYS-R12. Los componentes usan estas variantes y no escriben selectores de atributo propios. |
+| SYS-R50 | `src/styles/globals.css` declara las variantes de Tailwind `mode-scene`, `mode-simple`, `boot-play`, `boot-exit`, `boot-done`, `scene-photo` y `scene-sketch`, que se activan según los atributos `data-mode`, `data-boot` y `data-scene` de `<html>`, la variante `scene-capable`, cuya consulta de medios DEBE ser textualmente la de SYS-R12, y la variante `no-hover`, con la consulta `(hover: none)` (SCN-R25). Los componentes usan estas variantes y no escriben selectores de atributo propios. |
 
 ## 5. Criterios de aceptación
 
@@ -378,6 +381,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Durante M5, por delegación del autor (D-68). Nuevo SYS-R52 y árbol de `src/app/`: el elemento `<html>` pasa a los layouts de grupo, con un layout nuevo en `(plain)`, porque es la única forma de que el script previo al pintado quede en `<head>` solo en las páginas de la escena. SYS-R46: dos enlaces de salto, uno por modo. SYS-R47: `SceneLayer` restablece `data-boot` tras una navegación del cliente. SYS-R50: variante `no-hover`. SYS-R05: `agentRules: false`. SYS-R44 precisado. |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66 y D-67). §4.6: nueva preferencia `sceneVariant`. SYS-R20 y nuevo SYS-R51: el script previo al pintado fija `data-scene` e inserta la precarga de la variante. SYS-R50: variantes `scene-photo` y `scene-sketch`. §4.9: nuevo script `check:docker`. Nuevo SYS-AC20. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. §4.3: los slugs se enumeran en el orden canónico de D-46. Sin cambio de requisitos. |
 | 2026-10-13 | 2.0 | Aprobada por el autor, que necesita empezar la implementación de inmediato. §4.1: once versiones bajan a la anterior que cumple la edad mínima (SYS-R03) y ESLint pasa a 9.39.5; combinación validada en el prototipo. Confirmada la enmienda 1.3. |
