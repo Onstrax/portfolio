@@ -62,3 +62,9 @@ test("SCN-AC15, AST-AC18: the export holds nothing of the calibration overlay", 
   expect(files.length).toBeGreaterThan(40);
   expect(files.filter((file) => readFileSync(file, "utf8").includes(marker))).toEqual([]);
 });
+
+test("PNL-AC12: no exported page contains a dialog element", () => {
+  for (const file of SCENE_DOCUMENTS) {
+    expect(readExportedFile(file), file).not.toContain("<dialog");
+  }
+});

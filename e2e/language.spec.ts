@@ -15,10 +15,7 @@ test.describe("entry page with a Spanish browser", () => {
 
     await expect(page).toHaveURL("/en/projects/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.getByRole("link", { name: "NVMe SSD: Projects" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    await expect(page.getByRole("dialog", { name: "Projects" })).toBeVisible();
   });
 
   test("I18N-AC13: after choosing English, the entry page leads to the English home", async ({

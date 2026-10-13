@@ -113,12 +113,10 @@ test.describe("scene on a desktop", () => {
 
     await page.getByRole("link", { name: "SSD NVMe: Proyectos" }).click();
     await expect(page).toHaveURL("/es/projects/");
-    await expect(page.getByRole("link", { name: "SSD NVMe: Proyectos" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    await expect(page.getByRole("dialog", { name: "Proyectos" })).toBeVisible();
     await page.goBack();
     await expect(page).toHaveURL("/es/");
+    await expect(page.getByRole("dialog")).toBeHidden();
 
     await expect(stage(page)).toHaveAttribute("data-kept", "yes");
     expect(sceneRequests).toHaveLength(1);
@@ -134,6 +132,8 @@ test.describe("scene on a desktop", () => {
     for (const { name, href } of ZONES) {
       await page.getByRole("link", { name }).click();
       await expect(page).toHaveURL(href);
+      await page.keyboard.press("Escape");
+      await expect(page).toHaveURL("/es/");
     }
     await page.goto("/es/cv/");
     await page.getByRole("link", { name: "Ver la versión interactiva" }).click();
@@ -172,6 +172,7 @@ test.describe("scene on a desktop", () => {
       await expect(page).toHaveURL(href);
       await page.goBack();
       await expect(page).toHaveURL("/es/");
+      await expect(page.getByRole("dialog")).toBeHidden();
     }
 
     // A point of the workbench, between the power supply and the board.
@@ -282,7 +283,7 @@ test.describe("scene on a desktop", () => {
 });
 
 test.describe("scene without browser storage", () => {
-  test("SYS-AC10: the scene loads and the sections open when storage throws on every access", async ({
+  test("SYS-AC10: the scene loads and the panels open when storage throws on every access", async ({
     page,
   }) => {
     await page.addInitScript(() => {
@@ -302,9 +303,15 @@ test.describe("scene without browser storage", () => {
 
     await page.getByRole("link", { name: "Memoria RAM: Stack tecnológico" }).click();
     await expect(page).toHaveURL("/es/stack/");
-    await expect(
-      page.getByRole("link", { name: "Memoria RAM: Stack tecnológico" }),
-    ).toHaveAttribute("aria-current", "page");
+    const panel = page.getByRole("dialog", { name: "Stack tecnológico" });
+    await expect(panel).toBeVisible();
+    await expect(panel.getByRole("heading", { name: "Lenguajes" })).toBeVisible();
+
+    await panel.getByRole("link", { name: "Sección siguiente: Contacto" }).click();
+    await expect(page.getByRole("dialog", { name: "Contacto" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page).toHaveURL("/es/");
+    await expect(page.getByTestId("post-display")).toHaveAttribute("data-value", "02");
   });
 });
 
