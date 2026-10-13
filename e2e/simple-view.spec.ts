@@ -118,7 +118,7 @@ test.describe("simple view on a desktop", () => {
     page,
     request,
   }) => {
-    const response = await page.goto("/en/");
+    const response = await page.goto("/en/cv/");
     expect(response?.status()).toBe(200);
     expect(response?.headers()["content-type"]).toContain("text/html");
     await expect(page.getByRole("heading", { level: 2 })).toHaveCount(7);
@@ -155,5 +155,42 @@ test.describe("simple view in narrow viewports", () => {
     await expect(page.locator("html")).not.toHaveAttribute("data-mode", "scene");
     await expect(page.getByRole("main")).toBeVisible();
     expect(await hasHorizontalScroll(page)).toBe(false);
+  });
+});
+
+test.describe("focus ring of the simple view", () => {
+  test("VIS-AC04: every focusable element of the simple view shows a focus ring in the ink color", async ({
+    page,
+  }) => {
+    await page.goto("/es/cv/");
+    const visited: string[] = [];
+
+    // The tour ends where Tab leaves the document or comes back to an element already visited.
+    for (let presses = 0; presses < 200; presses += 1) {
+      await page.keyboard.press("Tab");
+      const focused = await page.evaluate(() => {
+        const element = document.activeElement;
+        if (element === null || element === document.body) return null;
+        if (element.hasAttribute("data-focus-visited")) return null;
+        element.setAttribute("data-focus-visited", "");
+        const style = getComputedStyle(element);
+        return {
+          name: [element.tagName, element.textContent.trim(), element.getAttribute("href")].join(
+            " ",
+          ),
+          width: Number.parseFloat(style.outlineWidth),
+          style: style.outlineStyle,
+          color: style.outlineColor,
+        };
+      });
+      if (focused === null) break;
+      visited.push(focused.name);
+      expect(focused.width, focused.name).toBeGreaterThanOrEqual(2);
+      expect(focused.style, focused.name).toBe("solid");
+      expect(focused.color, focused.name).toBe("rgb(21, 23, 26)");
+    }
+
+    expect(visited.length).toBeGreaterThan(20);
+    expect(visited[0]).toContain("Saltar al contenido");
   });
 });

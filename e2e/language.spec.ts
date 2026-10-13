@@ -15,15 +15,18 @@ test.describe("entry page with a Spanish browser", () => {
 
     await expect(page).toHaveURL("/en/projects/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.getByRole("heading", { level: 2, name: "Projects" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "NVMe SSD: Projects" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
   test("I18N-AC13: after choosing English, the entry page leads to the English home", async ({
     page,
   }) => {
-    await page.goto("/es/");
+    await page.goto("/es/cv/");
     await page.getByRole("banner").getByRole("link", { name: "English" }).click();
-    await expect(page).toHaveURL("/en/");
+    await expect(page).toHaveURL("/en/cv/");
 
     await page.goto("/");
     await expect(page).toHaveURL("/en/");
@@ -31,7 +34,7 @@ test.describe("entry page with a Spanish browser", () => {
 
   test("I18N-AC13: opening a URL in English does not change the preference", async ({ page }) => {
     await page.goto("/en/");
-    await expect(page.getByRole("heading", { level: 2, name: "Profile" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Processor (CPU): Profile" })).toBeVisible();
 
     await page.goto("/");
     await expect(page).toHaveURL("/es/");

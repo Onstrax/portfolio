@@ -16,3 +16,30 @@ export function recordSceneImageRequests(page: Page): readonly string[] {
   });
   return requests;
 }
+
+export interface Box {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/** `true` when two boxes share some area. */
+export function boxesOverlap(first: Box, second: Box): boolean {
+  return (
+    first.x < second.x + second.width &&
+    second.x < first.x + first.width &&
+    first.y < second.y + second.height &&
+    second.y < first.y + first.height
+  );
+}
+
+/** Paths of the JavaScript files that the page requests from now on. */
+export function recordScriptRequests(page: Page): Set<string> {
+  const requests = new Set<string>();
+  page.on("request", (request) => {
+    const { pathname } = new URL(request.url());
+    if (pathname.endsWith(".js")) requests.add(pathname);
+  });
+  return requests;
+}
