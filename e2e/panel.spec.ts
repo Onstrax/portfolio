@@ -158,7 +158,7 @@ test.describe("opening and closing the panel", () => {
       await page.keyboard.press("Tab");
       const isOutside = await page.evaluate(() => {
         const active = document.activeElement;
-        const modal = document.querySelector("dialog");
+        const modal = document.querySelector("dialog[data-phase]");
         return active !== null && active !== document.body && modal?.contains(active) !== true;
       });
       expect(isOutside, `after ${String(presses + 1)} presses of Tab`).toBe(false);
@@ -246,7 +246,7 @@ test.describe("moving between sections", () => {
     expect(await content.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
     expect(
       await page
-        .locator("dialog")
+        .locator("dialog[data-phase]")
         .evaluate((element) => element.scrollTop + document.documentElement.scrollTop),
     ).toBe(0);
 
@@ -433,6 +433,43 @@ test.describe("look of the panel", () => {
     expect(bottom).toBeLessThanOrEqual((frame?.y ?? 0) + (frame?.height ?? 0));
   });
 
+  test("VIS-AC04: every focusable element of a panel shows a focus ring, in ink or in the aura color", async ({
+    page,
+  }) => {
+    await page.goto("/es/contact/");
+    const dialog = panel(page, "Contacto");
+    await expect(dialog).toBeVisible();
+    const colors = new Set<string>();
+
+    // The tour ends when Tab comes back to an element already visited.
+    for (let presses = 0; presses < 60; presses += 1) {
+      await page.keyboard.press("Tab");
+      const focused = await page.evaluate(() => {
+        const element = document.activeElement;
+        if (element === null || element === document.body) return "outside";
+        if (element.hasAttribute("data-focus-visited")) return "visited";
+        element.setAttribute("data-focus-visited", "");
+        const style = getComputedStyle(element);
+        return {
+          name: [element.tagName, element.textContent.trim().slice(0, 30)].join(" "),
+          isInside: document.querySelector("dialog[data-phase]")?.contains(element) === true,
+          width: Number.parseFloat(style.outlineWidth),
+          style: style.outlineStyle,
+          color: style.outlineColor,
+        };
+      });
+      if (focused === "visited") break;
+      if (focused === "outside") continue;
+      expect(focused.isInside, focused.name).toBe(true);
+      expect(focused.width, focused.name).toBeGreaterThanOrEqual(2);
+      expect(focused.style, focused.name).toBe("solid");
+      colors.add(focused.color);
+    }
+
+    // Ink on the light screen of the panel, the aura on the dark plate of the bar.
+    expect([...colors].sort()).toEqual(["rgb(21, 23, 26)", "rgb(255, 197, 61)"]);
+  });
+
   test("VIS-AC07: body text in a panel measures 16 px or more, and no visible text less than 12 px", async ({
     page,
   }) => {
@@ -466,7 +503,7 @@ test.describe("look of the panel", () => {
       await page.goto("/es/");
       /** Animations in course inside the dialog: their longest duration and whether one moves it. */
       const animations = () =>
-        page.locator("dialog").evaluate((element) => {
+        page.locator("dialog[data-phase]").evaluate((element) => {
           const running = element.getAnimations({ subtree: true });
           return {
             longest: Math.max(

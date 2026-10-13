@@ -68,3 +68,29 @@ test("PNL-AC12: no exported page contains a dialog element", () => {
     expect(readExportedFile(file), file).not.toContain("<dialog");
   }
 });
+
+test("BOOT-AC04: the home holds the whole boot log, marked as English and decorative; the cv page has none", () => {
+  const html = readExportedFile("es/index.html");
+  const screen = html.indexOf('data-testid="boot-screen"');
+  const log = /<div[^>]*data-part="log"[^>]*>/.exec(html.slice(screen))?.[0] ?? "";
+
+  expect(screen).toBeGreaterThan(html.indexOf('data-layer="scene"'));
+  expect(log).toContain('lang="en"');
+  expect(log).toContain('aria-hidden="true"');
+  for (const fragment of [
+    "Booting portfolio kernel 1.0 (juan-esteban-alvarez-garcia)",
+    "Detecting hardware on motherboard...",
+    "cpu0: Juan Esteban Álvarez García",
+    "Starting graphical interface...",
+    "Reached target portfolio.target",
+    "[    0.000000]",
+    "[    0.142512]",
+  ]) {
+    expect(html.slice(screen), fragment).toContain(fragment);
+  }
+  expect((html.slice(screen).match(/data-part="line"/g) ?? []).length).toBeGreaterThanOrEqual(11);
+
+  for (const locale of LOCALES) {
+    expect(readExportedFile(`${locale}/cv/index.html`)).not.toContain('data-testid="boot-screen"');
+  }
+});

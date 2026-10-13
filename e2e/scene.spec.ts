@@ -81,6 +81,31 @@ test.describe("scene on a desktop", () => {
     await expect(page.getByRole("main")).toHaveCount(1);
   });
 
+  test("the page never passes through the simple mode while the scene loads", async ({ page }) => {
+    // Every value that data-mode had and lost, from the first moment of the document.
+    await page.addInitScript(() => {
+      const seen: (string | null)[] = [];
+      Object.assign(window, { modesSeen: seen });
+      // The document, not <html>: when this runs the root element may not exist yet.
+      new MutationObserver((mutations) => {
+        seen.push(...mutations.map((mutation) => mutation.oldValue));
+      }).observe(document, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["data-mode"],
+        attributeOldValue: true,
+      });
+    });
+    await page.goto("/es/");
+    await expect(stage(page)).toBeVisible();
+    await expect(page.locator("img[data-state=shown]")).toBeVisible();
+
+    expect(
+      await page.evaluate(() => (window as unknown as { modesSeen: unknown }).modesSeen),
+    ).not.toContain("simple");
+    await expect(html(page)).toHaveAttribute("data-mode", "scene");
+  });
+
   test("SYS-AC07: crossing the threshold switches between scene and simple view without reloading", async ({
     page,
   }) => {
@@ -232,15 +257,18 @@ test.describe("scene on a desktop", () => {
     await page.goto("/es/");
     await expect(stage(page)).toBeVisible();
 
-    await page.keyboard.press("Tab");
-    const skipLink = page.getByRole("link", { name: "Saltar al contenido" });
-    await expect(skipLink).toBeFocused();
-    const outline = await skipLink.evaluate((element) => {
-      const style = getComputedStyle(element);
-      return { width: Number.parseFloat(style.outlineWidth), color: style.outlineColor };
-    });
-    expect(outline.width).toBeGreaterThanOrEqual(2);
-    expect(outline.color).toBe(AURA);
+    // First the skip link and the controls of the fixed bar, which sit on dark plates.
+    for (const name of ["Saltar al contenido", "English", "Vista simple"]) {
+      await page.keyboard.press("Tab");
+      const control = page.getByRole("link", { name });
+      await expect(control).toBeFocused();
+      const outline = await control.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return { width: Number.parseFloat(style.outlineWidth), color: style.outlineColor };
+      });
+      expect(outline.width, name).toBeGreaterThanOrEqual(2);
+      expect(outline.color, name).toBe(AURA);
+    }
 
     for (const id of [...ZONES.map((zone) => zone.id), "settings"]) {
       await page.keyboard.press("Tab");
