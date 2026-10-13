@@ -1,0 +1,167 @@
+# IO — Sección Contacto
+
+| Campo | Valor |
+| --- | --- |
+| Estado | Aprobada |
+| Versión | 1.0 |
+| Última actualización | 2026-10-12 |
+| Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
+
+## 1. Propósito
+
+Especificar la sección que abre el panel I/O: las vías para contactar a Juan Esteban y la descarga de su currículum en ambos idiomas. Es el destino de quien ya decidió escribirle, así que cada vía debe funcionar con un solo clic.
+
+## 2. Alcance
+
+**Incluye:** tipos, hechos y textos de la sección, los archivos del CV, el botón de copiar, su presentación y su línea de arranque.
+
+**No incluye:** un formulario de contacto (VSN §7) ni la disponibilidad laboral, que se muestra en Perfil (ver CPU).
+
+Feature: `src/features/io-contact/`. Exporta `ioContactSection`. Fuentes: CVs actualizados y hecho F-13 del README.
+
+## 3. Definiciones
+
+No aplica.
+
+## 4. Requisitos
+
+### 4.1 Archivos del CV
+
+| ID | Requisito |
+| --- | --- |
+| IO-R01 | Los CVs publicados son copias de `docs/CVs/CV_Juan_Esteban_Alvarez_Garcia_ES_Actualizado.pdf` y `docs/CVs/CV_Juan_Esteban_Alvarez_Garcia_EN_Actualizado.pdf`, guardadas en `public/cv/` con los nombres `juan-esteban-alvarez-garcia-cv-es.pdf` y `juan-esteban-alvarez-garcia-cv-en.pdf`. |
+| IO-R02 | `src/shared/config/site.ts` exporta `CV_FILES: Readonly<Record<Locale, SitePath>>` con las rutas `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` y `/cv/juan-esteban-alvarez-garcia-cv-en.pdf`. Es la única definición de esas rutas; la usan Perfil, Contacto y la vista simple. |
+| IO-R03 | Todo enlace de descarga del CV lleva el atributo `download` y el atributo `type="application/pdf"`. |
+| IO-R04 | Cada vez que el autor actualiza un CV, sustituye el archivo de `public/cv/` conservando el nombre. Antes de publicar, comprueba que las propiedades del documento PDF no contienen datos distintos de su nombre y el título. |
+| IO-R05 | Los CVs publicados DEBEN ser coherentes con el contenido del sitio. Si un dato cambia en un CV, se actualiza la spec de la sección afectada en el mismo cambio. |
+
+### 4.2 Tipos
+
+| ID | Requisito |
+| --- | --- |
+| IO-R06 | `src/features/io-contact/types.ts` declara los tipos siguientes. |
+
+```ts
+export const CONTACT_IDS = ["email", "whatsapp", "linkedin", "github"] as const;
+export type ContactId = (typeof CONTACT_IDS)[number];
+
+export interface ContactFact extends LinkFact<ContactId> {
+  /** Texto que se muestra como valor: la dirección, el número o el nombre de usuario. */
+  readonly display: string;
+}
+
+export interface ContactFacts {
+  readonly email: string;
+  readonly channels: readonly ContactFact[];
+}
+
+export interface ContactText extends SectionTextBase {
+  readonly intro: string;
+  readonly channelsTitle: string;
+  readonly channelLabels: Readonly<Record<ContactId, string>>;
+  readonly copyEmailAriaLabel: string;
+  readonly cvTitle: string;
+  readonly cvLabels: Readonly<Record<Locale, string>>;
+}
+```
+
+### 4.3 Hechos
+
+| ID | Requisito |
+| --- | --- |
+| IO-R07 | `content/facts.ts` contiene exactamente los valores de la tabla siguiente (F-12, F-13). `email` es `"juanalvarezgcl@gmail.com"`. |
+
+| `id` | `href` | `display` |
+| --- | --- | --- |
+| `email` | `mailto:juanalvarezgcl@gmail.com` | `juanalvarezgcl@gmail.com` |
+| `whatsapp` | `https://wa.me/573005628702` | `+57 300 562 8702` |
+| `linkedin` | `https://www.linkedin.com/in/juan-esteban-alvarez-garcia-21bb70364/` | `juan-esteban-alvarez-garcia` |
+| `github` | `https://github.com/Onstrax` | `Onstrax` |
+
+### 4.4 Textos
+
+| ID | Requisito |
+| --- | --- |
+| IO-R08 | `content/es.ts` y `content/en.ts` contienen exactamente los textos de la tabla siguiente. |
+
+| Campo | Español | Inglés |
+| --- | --- | --- |
+| `meta.title` | Contacto | Contact |
+| `meta.hardwareName` | Panel I/O | I/O panel |
+| `meta.description` | Contacto de Juan Esteban Álvarez García: correo, WhatsApp, LinkedIn, GitHub y descarga del currículum en español y en inglés. | Contact details of Juan Esteban Álvarez García: email, WhatsApp, LinkedIn, GitHub and résumé download in Spanish and English. |
+| `intro` | La forma más rápida de contactarme es por correo o por WhatsApp. | The fastest way to reach me is by email or WhatsApp. |
+| `channelsTitle` | Canales | Channels |
+| `channelLabels.email` | Correo | Email |
+| `channelLabels.whatsapp` | WhatsApp | WhatsApp |
+| `channelLabels.linkedin` | LinkedIn | LinkedIn |
+| `channelLabels.github` | GitHub | GitHub |
+| `copyEmailAriaLabel` | Copiar la dirección de correo | Copy the email address |
+| `cvTitle` | Currículum | Résumé |
+| `cvLabels.es` | Descargar en español (PDF) | Download in Spanish (PDF) |
+| `cvLabels.en` | Descargar en inglés (PDF) | Download in English (PDF) |
+
+### 4.5 Presentación
+
+| ID | Requisito |
+| --- | --- |
+| IO-R09 | El componente raíz, `ContactSection`, renderiza `intro` y dos bloques con encabezado `<h3>`: `channelsTitle` (icono `plug`) y `cvTitle` (icono `file-text`). Cumple TSC §4.5.1. |
+| IO-R10 | Los canales se muestran como una lista de descripción (`<dl>`), en el orden de `facts.channels`. Cada canal tiene como término su icono y su `channelLabels`, y como descripción un enlace a su `href` cuyo texto es `display`. Los canales `whatsapp`, `linkedin` y `github` son enlaces externos (SYS-R40); `email` es un enlace `mailto:` que no abre pestaña. |
+| IO-R11 | Junto al canal `email` hay un botón de copiar (IO-R13) que copia `facts.email`. Su texto visible es `common.copyLabel` y su nombre accesible, `copyEmailAriaLabel`. |
+| IO-R12 | El bloque del currículum muestra dos enlaces de descarga, uno por idioma, con los textos de `cvLabels` y el icono `download`. El del idioma de la página va primero y con aspecto de botón primario; el otro, con aspecto de botón secundario. |
+
+Iconos propios de esta sección: `plug`, `mail`, `copy`, `check` y los tres iconos de marca `whatsapp`, `linkedin` y `github` (VIS-R39).
+
+### 4.6 Botón de copiar
+
+| ID | Requisito |
+| --- | --- |
+| IO-R13 | `CopyButton` es un componente de cliente de `src/shared/ui/`. Recibe el texto que copia, su etiqueta visible, su nombre accesible y el texto de confirmación. Es el único código de cliente que usa esta sección y no forma parte del feature (STR-R26). |
+| IO-R14 | El botón se renderiza con el atributo `hidden` y lo pierde al hidratarse, de modo que sin JavaScript no se muestre un botón que no funciona. Tampoco se muestra si el navegador no ofrece la API del portapapeles. |
+| IO-R15 | Al activarlo: copia el texto al portapapeles; durante 2 segundos su icono pasa de `copy` a `check` y su texto visible a `common.copiedAnnouncement`; y ese mismo texto se anuncia en una región con `role="status"`. Si la copia falla, el botón no cambia y no se muestra ningún error. |
+
+### 4.7 Línea de arranque
+
+| ID | Requisito |
+| --- | --- |
+| IO-R16 | `bootLines` contiene una línea, construida con el número de canales y sus `id`. |
+
+| `message` | `status` |
+| --- | --- |
+| `io: 4 ports up (email, whatsapp, linkedin, github)` | `ok` |
+
+## 5. Criterios de aceptación
+
+| ID | Criterio | Verificación |
+| --- | --- | --- |
+| IO-AC01 | Los hechos contienen los cuatro canales de §4.3 en ese orden, con sus `href` y `display` exactos. | Prueba unitaria |
+| IO-AC02 | `CV_FILES` contiene las dos rutas de IO-R02 y ambos archivos existen en `public/cv/`, empiezan por la firma `%PDF` y pesan menos de 500 kB. | Prueba unitaria |
+| IO-AC03 | El componente renderiza, en ambos idiomas, dos `<h3>`, una lista de descripción con cuatro canales y dos enlaces de descarga con los atributos `download` y `type="application/pdf"`; en `/es/` el primero es el del CV en español y en `/en/` el del CV en inglés. | Prueba de componente |
+| IO-AC04 | El enlace de correo tiene `href` `mailto:juanalvarezgcl@gmail.com` y no tiene `target`; los otros tres canales tienen `target="_blank"` y `rel="noopener noreferrer"`. | Prueba de componente |
+| IO-AC05 | `CopyButton`: sin hidratar tiene el atributo `hidden`; tras montarse, no. Al activarlo llama a la API del portapapeles con el texto recibido, muestra el texto de confirmación durante 2 segundos y lo expone en una región `role="status"`. Si la API rechaza la copia, no cambia y no lanza. | Prueba de componente |
+| IO-AC06 | `bootLines` es exactamente la tabla de §4.7. | Prueba unitaria |
+| IO-AC07 | En `desktop`, abrir la zona del panel I/O en `/es/` muestra el panel "Contacto" con la dirección de correo, el número de WhatsApp y el enlace "Descargar en español (PDF)"; en `/en/`, "Contact" y "Download in English (PDF)". | Prueba E2E |
+| IO-AC08 | En `desktop`, activar el enlace de descarga del CV inicia la descarga de un archivo llamado `juan-esteban-alvarez-garcia-cv-es.pdf` (VSN-AC02). | Prueba E2E |
+| IO-AC09 | Activar el botón de copiar deja la dirección de correo en el portapapeles. | Prueba E2E, solo en Chromium |
+| IO-AC10 | El autor abre cada canal desde el sitio desplegado, en escritorio y en un teléfono, y confirma que llega a su correo, a su chat de WhatsApp y a sus perfiles; revisa ambos idiomas (I18N-AC18) y las propiedades de los dos PDF (IO-R04). | Revisión manual del autor, registrada en el historial de esta spec |
+
+## 6. Decisiones y justificación
+
+| Decisión | Justificación |
+| --- | --- |
+| **Enlaces directos, sin formulario.** | Un formulario exige un servicio externo o un servidor, y añade un paso. Un enlace a correo o WhatsApp abre la aplicación que el visitante ya usa. |
+| **Botón de copiar el correo** (IO-R11). | En muchos equipos corporativos el enlace `mailto:` no abre nada útil, porque el correo se usa en el navegador. Copiar la dirección siempre funciona. |
+| **Número de WhatsApp visible** (F-13). | El autor lo decidió a sabiendas de que un número publicado puede recibir mensajes no deseados. |
+| **Los dos CVs disponibles en ambas versiones del sitio** (IO-R12). | Un reclutador puede leer el sitio en un idioma y necesitar el CV en el otro para su empresa. |
+| **Rutas del CV en la configuración del sitio** (IO-R02). | Las necesitan tres features que no pueden importarse entre sí; es un dato del sitio, no de una sección. |
+| **Nombres de archivo estables.** | Actualizar un CV no rompe los enlaces ya compartidos. |
+| **El botón de copiar se oculta sin JavaScript** (IO-R14). | La vista simple debe funcionar entera sin JavaScript (QLT-R41); un botón inerte la haría parecer rota. |
+
+## 7. Preguntas abiertas
+
+Ninguna.
+
+## 8. Historial de cambios
+
+| Fecha | Versión | Cambio |
+| --- | --- | --- |
+| 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-13 y la parte de F-12 relativa al contacto. |
