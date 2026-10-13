@@ -1,1 +1,45 @@
 @import "tailwindcss";
+@import "./tokens.css";
+
+/*
+ * Variants driven by the attributes that the pre-paint script writes on <html> (SYS-R50).
+ * Components use these variants and never write attribute selectors of their own.
+ */
+@custom-variant mode-scene (&:where([data-mode="scene"], [data-mode="scene"] *));
+@custom-variant mode-simple (&:where(:root:not([data-mode="scene"]), :root:not([data-mode="scene"]) *));
+@custom-variant boot-play (&:where([data-boot="play"], [data-boot="play"] *));
+@custom-variant boot-exit (&:where([data-boot="exit"], [data-boot="exit"] *));
+@custom-variant boot-done (&:where([data-boot="done"], [data-boot="done"] *));
+@custom-variant scene-photo (&:where(:root:not([data-scene="sketch"]), :root:not([data-scene="sketch"]) *));
+@custom-variant scene-sketch (&:where([data-scene="sketch"], [data-scene="sketch"] *));
+
+/* Viewport able to show the scene. The query must be, word for word, the one of SYS-R12. */
+@custom-variant scene-capable (@media (min-width: 1024px) and (min-height: 600px));
+
+@layer base {
+  html {
+    background-color: var(--color-screen);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  /* Focus ring of light surfaces; dark surfaces switch the color to the aura (VIS-R31). */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
