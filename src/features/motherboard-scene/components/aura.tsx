@@ -43,7 +43,8 @@ interface AuraProps {
 /**
  * Aura of a zone: light that seems to come from behind the piece. The silhouette is blurred twice,
  * a tight glow and a wide one, and what falls on the piece itself is removed, so there is a halo
- * around it and no line. While the zone is lit, a faint fill covers the piece (VIS-R13, VIS-R14).
+ * around it and no line. A faint fill makes the piece itself glow, more while the zone is lit
+ * (VIS-R13, VIS-R14).
  */
 export function Aura({ id, polygon, hitArea, state, hasFocusRing, canBreathe }: AuraProps) {
   const tier = auraTier(id);

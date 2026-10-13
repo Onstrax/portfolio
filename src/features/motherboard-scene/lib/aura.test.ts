@@ -7,7 +7,7 @@ import {
   AURA_BREATH_CYCLE_MS,
   AURA_BREATH_MS,
   AURA_EDGE_FEATHER,
-  AURA_FILL_OPACITY,
+  AURA_FILL,
   AURA_GAIN,
   AURA_GLOW_REST_MIN,
   AURA_OPACITY,
@@ -28,17 +28,17 @@ describe("aura values", () => {
   it("VIS-AC11: has the opacities of the table of the visual system", () => {
     expect(AURA_OPACITY).toEqual({
       primary: {
-        rest: { glow: 0.7, fill: 0 },
+        rest: { glow: 0.5, fill: 0.08 },
         hover: { glow: 1, fill: 0.14 },
         active: { glow: 1, fill: 0.14 },
       },
       secondary: {
-        rest: { glow: 0.6, fill: 0 },
+        rest: { glow: 0.42, fill: 0.08 },
         hover: { glow: 0.9, fill: 0.14 },
         active: { glow: 0.9, fill: 0.14 },
       },
     });
-    expect(AURA_GLOW_REST_MIN).toEqual({ primary: 0.45, secondary: 0.4 });
+    expect(AURA_GLOW_REST_MIN).toEqual({ primary: 0.32, secondary: 0.28 });
   });
 
   it("mirrors the aura tokens of tokens.css", () => {
@@ -46,7 +46,8 @@ describe("aura values", () => {
     expect(AURA_BLUR_FAR).toBe(token("glow-blur-far"));
     expect(AURA_EDGE_FEATHER).toBe(token("edge-feather"));
     expect(AURA_GAIN).toBe(token("glow-gain"));
-    expect(AURA_FILL_OPACITY).toBe(token("fill-opacity"));
+    expect(AURA_FILL.rest).toBe(token("fill-rest"));
+    expect(AURA_FILL.active).toBe(token("fill-active"));
     expect(AURA_BREATH_CYCLE_MS).toBe(token("breath-cycle"));
     for (const tier of ["primary", "secondary"] as const) {
       expect(AURA_OPACITY[tier].rest.glow).toBe(token(`${tier}-glow-rest-max`));

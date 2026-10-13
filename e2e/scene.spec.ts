@@ -275,8 +275,9 @@ test.describe("scene on a desktop", () => {
     await expect
       .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
       .toBe(0);
-    expect(await auraOpacity(page, "psu", "glow")).toBe("0.7");
-    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.6");
+    expect(await auraOpacity(page, "psu", "glow")).toBe("0.5");
+    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.42");
+    expect(await auraOpacity(page, "psu", "fill")).toBe("0.08");
   });
 });
 
@@ -362,7 +363,8 @@ test.describe("when JavaScript files cannot be downloaded", () => {
     await expect(html(page)).toHaveAttribute("data-mode", "scene");
     await expect(page.getByRole("heading", { level: 1 })).toBeHidden();
 
-    await expect(html(page)).toHaveAttribute("data-mode", "simple", { timeout: 5500 });
+    // The timer is of 5 s, which a unit test checks; a busy machine can fire it somewhat later.
+    await expect(html(page)).toHaveAttribute("data-mode", "simple", { timeout: 10_000 });
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Juan Esteban Álvarez García");
     await expect(page.getByRole("heading", { level: 2 })).toHaveCount(7);
   });

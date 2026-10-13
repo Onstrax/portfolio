@@ -21,12 +21,13 @@ export const AURA_BLUR_FAR = 18;
 export const AURA_EDGE_FEATHER = 1.5;
 /** Factor that brightens the halo, whose blur leaves half of its light at the border. */
 export const AURA_GAIN = 1.5;
-export const AURA_FILL_OPACITY = 0.14;
+/** Opacity of the fill that makes the piece itself glow: at rest and while the zone is lit. */
+export const AURA_FILL = { rest: 0.08, active: 0.14 } as const;
 
 /** Lowest opacity of the glow while it breathes; the highest is its opacity at rest (VIS-R16). */
 export const AURA_GLOW_REST_MIN: Readonly<Record<AuraTier, number>> = {
-  primary: 0.45,
-  secondary: 0.4,
+  primary: 0.32,
+  secondary: 0.28,
 };
 
 /** Duration of one cycle of the breath and number of cycles (VIS-R16). */
@@ -35,14 +36,22 @@ export const AURA_BREATH_CYCLES = 2;
 export const AURA_BREATH_MS = AURA_BREATH_CYCLE_MS * AURA_BREATH_CYCLES;
 
 const LIT = {
-  primary: { glow: 1, fill: AURA_FILL_OPACITY },
-  secondary: { glow: 0.9, fill: AURA_FILL_OPACITY },
+  primary: { glow: 1, fill: AURA_FILL.active },
+  secondary: { glow: 0.9, fill: AURA_FILL.active },
 } as const;
 
 /** Opacity of each part of the aura, by tier and state (table of VIS §4.4). */
 export const AURA_OPACITY: Readonly<Record<AuraTier, Readonly<Record<AuraState, AuraOpacity>>>> = {
-  primary: { rest: { glow: 0.7, fill: 0 }, hover: LIT.primary, active: LIT.primary },
-  secondary: { rest: { glow: 0.6, fill: 0 }, hover: LIT.secondary, active: LIT.secondary },
+  primary: {
+    rest: { glow: 0.5, fill: AURA_FILL.rest },
+    hover: LIT.primary,
+    active: LIT.primary,
+  },
+  secondary: {
+    rest: { glow: 0.42, fill: AURA_FILL.rest },
+    hover: LIT.secondary,
+    active: LIT.secondary,
+  },
 };
 
 export function auraTier(id: SceneObjectId): AuraTier {

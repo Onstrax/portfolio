@@ -36,6 +36,11 @@ function stubViewport(isSceneCapable: boolean) {
   };
 }
 
+/** The scene arrives with a dynamic import, which can take a moment the first time. */
+function findScene(): Promise<HTMLElement> {
+  return screen.findByTestId("scene-root", undefined, { timeout: 10_000 });
+}
+
 function Broken(): never {
   throw new Error("The scene layer broke on purpose");
 }
@@ -74,7 +79,7 @@ describe("SceneLayer", () => {
     render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
 
     expect(root.dataset["mode"]).toBe("scene");
-    expect(await screen.findByTestId("scene-root")).toBeInTheDocument();
+    expect(await findScene()).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "SSD NVMe: Proyectos" })).toBeInTheDocument();
   });
 
@@ -102,7 +107,7 @@ describe("SceneLayer", () => {
   it("SYS-AC07: follows the viewport across the threshold without reloading, both ways", async () => {
     const viewport = stubViewport(true);
     const { container } = render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
-    await screen.findByTestId("scene-root");
+    await findScene();
 
     act(() => {
       viewport.resize(false);
@@ -114,7 +119,7 @@ describe("SceneLayer", () => {
       viewport.resize(true);
     });
     expect(root.dataset["mode"]).toBe("scene");
-    expect(await screen.findByTestId("scene-root")).toBeInTheDocument();
+    expect(await findScene()).toBeInTheDocument();
   });
 
   it("QLT-AC22: when a component of the layer throws, the page is left in the simple view", () => {

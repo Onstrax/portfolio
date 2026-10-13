@@ -86,13 +86,14 @@
   --aura-glow-blur-far: 18;
   --aura-glow-gain: 1.5;
   --aura-edge-feather: 1.5;
-  --aura-fill-opacity: 0.14;
+  --aura-fill-rest: 0.08;
+  --aura-fill-active: 0.14;
   --aura-breath-cycle: 2400ms;
-  --aura-primary-glow-rest-min: 0.45;
-  --aura-primary-glow-rest-max: 0.7;
+  --aura-primary-glow-rest-min: 0.32;
+  --aura-primary-glow-rest-max: 0.5;
   --aura-primary-glow-active: 1;
-  --aura-secondary-glow-rest-min: 0.4;
-  --aura-secondary-glow-rest-max: 0.6;
+  --aura-secondary-glow-rest-min: 0.28;
+  --aura-secondary-glow-rest-max: 0.42;
   --aura-secondary-glow-active: 0.9;
 
   /* Colors that depend on the scene variant (VIS-R44). Without the attribute: the photograph. */

@@ -209,9 +209,9 @@ describe("Scene: structure", () => {
 describe("Scene: auras", () => {
   it("VIS-AC11: a primary and a secondary zone at rest have the opacities of the table", () => {
     renderScene();
-    expect(aura("cpu")).toEqual({ state: "rest", glow: 0.7, fill: 0 });
-    expect(aura("cmos")).toEqual({ state: "rest", glow: 0.6, fill: 0 });
-    expect(aura("settings")).toEqual({ state: "rest", glow: 0.6, fill: 0 });
+    expect(aura("cpu")).toEqual({ state: "rest", glow: 0.5, fill: 0.08 });
+    expect(aura("cmos")).toEqual({ state: "rest", glow: 0.42, fill: 0.08 });
+    expect(aura("settings")).toEqual({ state: "rest", glow: 0.42, fill: 0.08 });
   });
 
   it("VIS-AC11: under the pointer they take the hover opacities", () => {
