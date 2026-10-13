@@ -1,13 +1,26 @@
+import type { Page } from "@playwright/test";
+
 import { expect, test } from "./support/base";
 
 const PREFS_KEY = "portfolio:v1:prefs";
+
+/**
+ * Waits until the entry page has sent the browser to a home. The page itself is asked where it
+ * is: Firefox sometimes does not report the end of a navigation that a script started, and an
+ * assertion on the URL of Playwright would then wait for it in vain (TST-R26).
+ */
+async function expectRedirectTo(page: Page, path: string): Promise<void> {
+  await expect
+    .poll(() => page.evaluate(() => window.location.pathname).catch(() => "navigating"))
+    .toBe(path);
+}
 
 test.describe("entry page with a Spanish browser", () => {
   test.use({ locale: "es-CO" });
 
   test("SYS-AC04: leads to the Spanish home", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveURL("/es/");
+    await expectRedirectTo(page, "/es/");
   });
 
   test("I18N-AC10: a URL in English stays in English", async ({ page }) => {
@@ -26,7 +39,7 @@ test.describe("entry page with a Spanish browser", () => {
     await expect(page).toHaveURL("/en/cv/");
 
     await page.goto("/");
-    await expect(page).toHaveURL("/en/");
+    await expectRedirectTo(page, "/en/");
   });
 
   test("I18N-AC13: opening a URL in English does not change the preference", async ({ page }) => {
@@ -34,7 +47,7 @@ test.describe("entry page with a Spanish browser", () => {
     await expect(page.getByRole("link", { name: "Processor (CPU): Profile" })).toBeVisible();
 
     await page.goto("/");
-    await expect(page).toHaveURL("/es/");
+    await expectRedirectTo(page, "/es/");
   });
 });
 
@@ -43,7 +56,7 @@ test.describe("entry page with a German browser", () => {
 
   test("SYS-AC04: leads to the English home", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveURL("/en/");
+    await expectRedirectTo(page, "/en/");
   });
 });
 
@@ -59,7 +72,7 @@ test.describe("entry page with an English browser", () => {
     }, PREFS_KEY);
 
     await page.goto("/");
-    await expect(page).toHaveURL("/es/");
+    await expectRedirectTo(page, "/es/");
   });
 });
 
