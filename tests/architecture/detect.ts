@@ -667,6 +667,15 @@ export function findContentFileViolations(files: readonly SourceFile[]): readonl
   return violations;
 }
 
+/**
+ * SYS-AC18: media query of a Tailwind variant declared with `@custom-variant name (@media …);`,
+ * or `undefined` when the stylesheet declares no such variant.
+ */
+export function findCustomVariantQuery(css: string, name: string): string | undefined {
+  const pattern = new RegExp(`@custom-variant\\s+${name}\\s+\\(@media\\s+(.+)\\);`);
+  return pattern.exec(css)?.[1];
+}
+
 export function formatViolations(violations: readonly Violation[]): string {
   return violations
     .map((item) => `${item.file}:${String(item.line)} [${item.rule}] ${item.message}`)

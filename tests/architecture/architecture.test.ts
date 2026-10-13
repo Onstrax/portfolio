@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { RENDER_MODE_QUERY } from "../../src/shared/config/render-mode";
 import { LOCALES } from "../../src/shared/contracts/locale";
 import {
   findAttributeLiteralViolations,
@@ -7,6 +8,7 @@ import {
   findClientSectionViolations,
   findColorViolations,
   findContentFileViolations,
+  findCustomVariantQuery,
   findDisableCommentViolations,
   findDocsReadViolations,
   findE2eViolations,
@@ -107,6 +109,11 @@ describe("conventions of src", () => {
 
   it("I18N-AC09: no perceivable attribute carries a hand-written string", () => {
     expectNone(findAttributeLiteralViolations(SRC));
+  });
+
+  it("SYS-AC18: the scene-capable variant uses the media query of the render mode constant", () => {
+    const globals = SRC.find((file) => file.path === "src/styles/globals.css");
+    expect(findCustomVariantQuery(globals?.content ?? "", "scene-capable")).toBe(RENDER_MODE_QUERY);
   });
 });
 

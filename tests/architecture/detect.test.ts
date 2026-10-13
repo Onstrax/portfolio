@@ -6,6 +6,7 @@ import {
   findClientSectionViolations,
   findColorViolations,
   findContentFileViolations,
+  findCustomVariantQuery,
   findDisableCommentViolations,
   findDocsReadViolations,
   findE2eViolations,
@@ -551,5 +552,25 @@ describe("formatViolations", () => {
       { rule: "STR-AC02", file: "src/app/page.tsx", line: 3, message: "not allowed" },
     ]);
     expect(text).toBe("src/app/page.tsx:3 [STR-AC02] not allowed");
+  });
+});
+
+describe("findCustomVariantQuery", () => {
+  const css = [
+    '@custom-variant mode-scene (&:where([data-mode="scene"], [data-mode="scene"] *));',
+    "@custom-variant scene-capable (@media (min-width: 1024px) and (min-height: 600px));",
+    "@custom-variant no-hover (@media (hover: none));",
+  ].join("\n");
+
+  it("returns the media query of the variant with that name", () => {
+    expect(findCustomVariantQuery(css, "scene-capable")).toBe(
+      "(min-width: 1024px) and (min-height: 600px)",
+    );
+    expect(findCustomVariantQuery(css, "no-hover")).toBe("(hover: none)");
+  });
+
+  it("returns nothing for a variant that is missing or is not a media query", () => {
+    expect(findCustomVariantQuery(css, "scene-wide")).toBeUndefined();
+    expect(findCustomVariantQuery(css, "mode-scene")).toBeUndefined();
   });
 });

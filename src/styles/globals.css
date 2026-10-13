@@ -16,6 +16,47 @@
 /* Viewport able to show the scene. The query must be, word for word, the one of SYS-R12. */
 @custom-variant scene-capable (@media (min-width: 1024px) and (min-height: 600px));
 
+/* Devices whose pointer cannot hover: the labels of the scene are always shown there (SCN-R25). */
+@custom-variant no-hover (@media (hover: none));
+
+/*
+ * Breath of an aura at rest: two cycles between the lowest and the highest opacity of its glow,
+ * which the element declares in `--aura-glow-min` and `--aura-glow-max` (VIS-R16, M-03).
+ */
+@keyframes aura-breath {
+  0%,
+  100% {
+    opacity: var(--aura-glow-max);
+  }
+
+  50% {
+    opacity: var(--aura-glow-min);
+  }
+}
+
+@utility aura-breath {
+  animation: aura-breath var(--aura-breath-cycle) var(--ease-in-out) 2;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* New value on the diagnostic display (M-09). */
+@keyframes display-change {
+  from {
+    opacity: 0.4;
+  }
+}
+
+@utility display-change {
+  animation: display-change var(--duration-fast) var(--ease-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 @layer base {
   html {
     background-color: var(--color-screen);
