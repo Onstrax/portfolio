@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.6 |
+| Versión | 1.7 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS |
 
@@ -81,6 +81,7 @@ Definir dónde vive cada archivo, qué puede importar cada parte del código y c
 │   ├── portrait/              Derivados de la fotografía (generados, versionados)
 │   └── scene/                 Derivados de la escena (generados, versionados)
 ├── scripts/
+│   ├── assets-shared.mjs      Constantes y funciones comunes de `assets:build` y `assets:check`
 │   ├── build-assets.mjs       Script de `assets:build`
 │   ├── build-headers.mjs      Genera `out/_headers` tras compilar (ver DEP)
 │   ├── check-assets.mjs       Script de `assets:check`
@@ -312,6 +313,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.7 | Durante M2, por delegación del autor. Árbol: se añade `scripts/assets-shared.mjs`, para que la lista de derivados, sus pesos máximos y la medición del brillo estén escritos una sola vez. |
 | 2026-10-13 | 1.6 | Por decisión del autor (D-66 y D-67). Árbol: se añaden `design/scene/master-sketch.png`, `Dockerfile`, `compose.yaml` y `.dockerignore`. |
 | 2026-10-13 | 1.5 | Decidido por delegación del autor durante M0. STR-R02: `.gitignore` excluye también `next-env.d.ts` y `*.tsbuildinfo`, que se regeneran en cada compilación; `pnpm typecheck` pasa en una copia limpia sin ellos. |
 | 2026-10-13 | 1.4 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |

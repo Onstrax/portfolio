@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 3.0 |
+| Versión | 3.1 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS |
 
@@ -255,6 +255,7 @@ and grey.
 | AST-R36 | El script escribe `src/shared/assets/manifest.generated.ts`, que exporta la constante `SCENE_ASSETS`, con una entrada por variante y la forma indicada más abajo. El manifiesto y los derivados se versionan en el repositorio. |
 | AST-R37 | La escena sirve la imagen con un elemento `<picture>` que ofrece AVIF, WebP y JPEG, en ese orden de preferencia, con los tres anchos en `srcset` y `sizes="min(100vw, 177.78vh)"`. |
 | AST-R38 | `pnpm assets:check` falla, indicando la causa, en cualquiera de estos casos: un máster no cumple AST-R32; un máster no cumple el requisito de brillo de su variante (AST-R14 para la fotografía, AST-R51 para el boceto); la versión de un máster no coincide con la de su entrada en el manifiesto; falta algún derivado listado en el manifiesto o sobra alguno en `public/scene/`; algún derivado supera su peso máximo; algún derivado contiene metadatos (AST-R46). |
+| AST-R54 | Los dos scripts aceptan la opción `--root <carpeta>`, que indica el repositorio sobre el que trabajan; sin ella usan la carpeta actual. Sirve para probarlos sobre archivos de ejemplo. `assets:build` toma el estado `provisional` o `accepted` de cada máster de su sección de `PROVENANCE.md`. El manifiesto escribe cada constante en formato JSON, de modo que `assets:check` lo lee sin compilar TypeScript. |
 | AST-R39 | Los scripts de este apartado generan y comprueban también los derivados de la fotografía del autor, cuyos requisitos define CPU. El manifiesto exporta para ellos una segunda constante, `PORTRAIT_ASSET`. |
 
 | Ancho × alto (px) | AVIF, máximo | WebP, máximo | JPEG, máximo |
@@ -389,6 +390,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 3.1 | Durante M2, por delegación del autor. Nuevo AST-R54: opción `--root`, origen del estado provisional y formato del manifiesto. |
 | 2026-10-13 | 3.0 | Por decisión del autor (D-66): la escena tiene dos variantes. Nuevo §4.10 (AST-R49 a AST-R53) y §4.6.3 con el prompt del boceto. El manifiesto pasa de `SCENE_ASSET` a `SCENE_ASSETS`, con una entrada por variante (AST-R36); derivados, comprobaciones, calibración y máster provisional se aplican por variante (AST-R33, R38, R41, R44, R45); el color de las franjas y del viñeteado depende de la variante (AST-R03, R48). Criterios AST-AC08 y AC12 a AC17 adaptados; nuevos AST-AC20 a AC22. |
 | 2026-10-13 | 2.0 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 2.0 | Máster aceptado por el autor: "Tenth generation", versión `dc169b385cc7`. Confirmado por el autor el 2026-10-12: AST-R03 a AST-R05, el escenario pasa a ser siempre 16:9 sin recortes y la zona segura abarca casi toda la imagen (D-48); nuevo AST-R48 (viñeteado); AST-R11, R14, R23 y R47 ajustados al máster; la fuente ya no necesita mostrar el cable llegando a la placa; §4.5 y §4.6.1, prompt y procedimiento sustituidos por los que funcionaron (D-49); AST-AC12 reescrito. |
