@@ -1,3 +1,16 @@
+import type { ExternalUrl } from "@/shared/contracts/content";
+
+interface SiteConfig {
+  readonly authorName: string;
+  readonly repositoryUrl: ExternalUrl;
+}
+
+/** Facts about the site itself. The author name is written only here (SMP-R02). */
+export const SITE = {
+  authorName: "Juan Esteban Álvarez García",
+  repositoryUrl: "https://github.com/Onstrax/portfolio",
+} as const satisfies SiteConfig;
+
 /** Name of the only required environment variable: the public origin of the site (SYS-R35). */
 export const SITE_URL_ENV = "NEXT_PUBLIC_SITE_URL";
 

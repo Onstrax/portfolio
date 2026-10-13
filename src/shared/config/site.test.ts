@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getSiteUrl } from "./site";
+import { getSiteUrl, SITE } from "./site";
 
 describe("getSiteUrl", () => {
   it("SYS-AC13: returns the origin when the variable is a valid http or https origin", () => {
@@ -33,5 +33,14 @@ describe("getSiteUrl", () => {
     expect(() => getSiteUrl({ NEXT_PUBLIC_SITE_URL: "https://example.pages.dev/" })).toThrow(
       "NEXT_PUBLIC_SITE_URL",
     );
+  });
+});
+
+describe("SITE", () => {
+  it("holds the author name and the public repository", () => {
+    expect(SITE).toEqual({
+      authorName: "Juan Esteban Álvarez García",
+      repositoryUrl: "https://github.com/Onstrax/portfolio",
+    });
   });
 });
