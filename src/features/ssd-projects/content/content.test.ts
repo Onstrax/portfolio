@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { PROJECT_IDS } from "../types";
+import { CASE_STUDY_IDS } from "@/shared/contracts/ids";
+
+import { PROJECT_IDS, type ProjectId } from "../types";
 import { projectsEn } from "./en";
 import { projectsEs } from "./es";
 import { projectsFacts } from "./facts";
@@ -122,5 +124,48 @@ describe("projects texts", () => {
       text: expect.stringContaining("~94% reported") as unknown,
       emphasis: "~94% reported code coverage",
     });
+  });
+});
+
+describe("case studies", () => {
+  it("TSC-AC19: every case study is a project of this section", () => {
+    // Compiles only while every `CaseStudyId` is also a `ProjectId`.
+    const projectIds: readonly ProjectId[] = CASE_STUDY_IDS;
+    for (const id of projectIds) {
+      expect(PROJECT_IDS).toContain(id);
+    }
+  });
+
+  it("SSD-AC11: both languages hold one case per case study, with team contributions only for team work", () => {
+    for (const text of [projectsEs, projectsEn]) {
+      expect(Object.keys(text.cases)).toEqual([...CASE_STUDY_IDS]);
+      for (const id of CASE_STUDY_IDS) {
+        const project = projects.find((item) => item.id === id);
+        const isTeamWork = project !== undefined && project.teamSize > 1;
+        expect("teamContributions" in text.cases[id], id).toBe(isTeamWork);
+      }
+    }
+    expect(CASE_STUDY_IDS.filter((id) => "teamContributions" in projectsEs.cases[id])).toEqual([
+      "thesis",
+      "andespace",
+    ]);
+  });
+
+  it("SSD-AC11: holds the texts of the spec, with the emphasized outcomes", () => {
+    expect(projectsEs.cases.thesis.title).toBe("Tesis de autenticación poscuántica");
+    expect(projectsEn.cases["dental-site"].title).toBe("Dental practice website");
+    expect(projectsEs.cases.thesis.outcome[1]).toEqual({
+      text: "El tiempo de ejecución pasó de varios segundos a menos de medio segundo.",
+      emphasis: "menos de medio segundo",
+    });
+    expect(projectsEn.cases.andespace.outcome[0]).toEqual({
+      text: "Best Project in its section in Mobile Application Development.",
+      emphasis: "Best Project in its section",
+    });
+    expect(projectsEs.cases["dental-site"].decisions[0]?.choice).toBe(
+      "Reescribir los textos con un lenguaje cercano al paciente.",
+    );
+    expect(projectsEs.caseLinkLabel).toBe("Leer el caso completo");
+    expect(projectsEn.caseLinkLabel).toBe("Read the full case study");
   });
 });

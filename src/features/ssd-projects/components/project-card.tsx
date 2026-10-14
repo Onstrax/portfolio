@@ -1,10 +1,17 @@
+import Link from "next/link";
+
+import { caseStudyPath } from "@/shared/config/routes";
 import type { ExternalUrl } from "@/shared/contracts/content";
+import { isCaseStudyId } from "@/shared/contracts/ids";
 import type { Locale } from "@/shared/contracts/locale";
 import { BulletList } from "@/shared/ui/bullet-list";
 import { Chip } from "@/shared/ui/chip";
 import { ExternalLink } from "@/shared/ui/external-link";
+import { cn } from "@/shared/lib/cn";
 import { FactChips } from "@/shared/ui/fact-chips";
 import { AwardIcon } from "@/shared/ui/icons/award";
+import { ChevronRightIcon } from "@/shared/ui/icons/chevron-right";
+import { BUTTON_BASE, BUTTON_VARIANTS } from "@/shared/ui/link.styles";
 import { RichText } from "@/shared/ui/rich-text";
 
 import { projectName } from "../lib/project-name";
@@ -61,6 +68,17 @@ export function ProjectCard({ project, text, locale, id }: ProjectCardProps) {
               ),
           )}
         </ul>
+      )}
+      {isCaseStudyId(project.id) && (
+        <p>
+          <Link
+            href={caseStudyPath(locale, project.id)}
+            className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary)}
+          >
+            {text.caseLinkLabel}
+            <ChevronRightIcon />
+          </Link>
+        </p>
       )}
     </article>
   );

@@ -76,7 +76,9 @@ describe("ProjectsSection", () => {
 
   it("SSD-AC06: renders twelve external links that open safely in a new tab", () => {
     render(<ProjectsSection locale="en" idScope="" />);
-    const links = screen.getAllByRole("link");
+    const links = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href")?.startsWith("https://") === true);
     expect(links).toHaveLength(12);
     for (const link of links) {
       expect(link).toHaveAttribute("target", "_blank");
@@ -127,5 +129,26 @@ describe("ProjectsSection", () => {
       ["projects-habicapital", "~94% reported code coverage"],
       ["projects-dental-site", "2-3 new clients per month"],
     ]);
+  });
+
+  it("SSD-AC12: links the three case studies from their cards, and no other card", () => {
+    for (const [locale, name] of [
+      ["es", "Leer el caso completo"],
+      ["en", "Read the full case study"],
+    ] as const) {
+      const view = render(<ProjectsSection locale={locale} idScope="" />);
+      const links = screen.getAllByRole("link", { name });
+      expect(links.map((link) => [link.closest("article")?.id, link.getAttribute("href")])).toEqual(
+        [
+          ["projects-thesis", `/${locale}/projects/thesis/`],
+          ["projects-andespace", `/${locale}/projects/andespace/`],
+          ["projects-dental-site", `/${locale}/projects/dental-site/`],
+        ],
+      );
+      for (const link of links) {
+        expect(link).not.toHaveAttribute("target");
+      }
+      view.unmount();
+    }
   });
 });

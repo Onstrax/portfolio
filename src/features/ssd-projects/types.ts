@@ -4,6 +4,8 @@ import type {
   RichLine,
   TeamSize,
 } from "@/shared/contracts/content";
+import type { CaseStudyText } from "@/shared/contracts/case-study";
+import type { CaseStudyId } from "@/shared/contracts/ids";
 import type { SectionTextBase } from "@/shared/contracts/section";
 
 export const PROJECT_IDS = [
@@ -63,4 +65,8 @@ export interface ProjectsText extends SectionTextBase {
   readonly moreTitle: string;
   readonly projects: Readonly<Record<ProjectId, ProjectText>>;
   readonly linkLabels: Readonly<Record<ProjectLinkId, string>>;
+  /** Text of the link from a card to its case study (SSD-R07). */
+  readonly caseLinkLabel: string;
+  /** Content of the case studies (SSD-R11, TSC-R60). */
+  readonly cases: Readonly<Record<CaseStudyId, CaseStudyText>>;
 }
