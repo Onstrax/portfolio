@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.5 |
+| Versión | 1.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -147,7 +147,7 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R29 | Sobre la zona `post-display`, el SVG decorativo dibuja dos dígitos de siete segmentos que muestran, con cero a la izquierda, cuántas secciones primarias se han visitado en la sesión: de `00` a `06`. Los segmentos encendidos van en el color de display de la variante (VIS-R44: `boot-ok` en la fotografía e `ink` en el boceto); los apagados, en ese mismo color con opacidad 0,08. Los dígitos ocupan la caja de la zona con un margen interior del 12 %. |
+| SCN-R29 | Sobre la zona `post-display`, el SVG decorativo dibuja dos dígitos de siete segmentos que muestran, con cero a la izquierda, cuántas secciones primarias se han visitado en la sesión: de `00` a `06`. Los segmentos encendidos van en el color de display de la variante (VIS-R44: `boot-ok` en la fotografía e `ink` en el boceto); los apagados, en ese mismo color con opacidad 0,08. Los dígitos ocupan la caja de la zona con un margen interior del 12 %. Bajo los dígitos se dibuja un rectángulo del color de fondo del display de la variante (VIS-R44), que deja a la vista el marco del display: es transparente en la fotografía y `paper` en el boceto, cuya imagen trae dibujado el contorno de los segmentos (AST-R51) y hacía ilegibles los dígitos. |
 | SCN-R30 | El valor es la longitud de `visited` en el store de sesión (TSC §4.9). Antes de hidratar se muestra `00`. Al cambiar, se ejecuta la animación M-09. |
 | SCN-R31 | La capa de escena contiene una región con `role="status"`, visible solo para lectores de pantalla, con el texto `common.visitedSectionsLabel({ count, total: 6 })`. Se actualiza al cambiar el valor (QLT-R24). |
 | SCN-R32 | Al pasar el puntero sobre la zona `post-display` se muestra una etiqueta con `scene.postDisplayName` y `common.visitedSectionsLabel`, con las reglas de SCN-R23 a SCN-R27. La zona no es enfocable; el mismo dato está en el menú de ajustes (ver SET), alcanzable con teclado. |
@@ -251,6 +251,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.6 | Por indicación del autor al revisar las imágenes (D-76). SCN-R29: fondo bajo los dígitos del display, visible en el boceto. |
 | 2026-10-13 | 1.5 | Durante M7, por delegación del autor. SCN-R03: el `<h1>` es enfocable por programa. SCN-R33: cómo se detecta el reinicio de sesión. §4.11: `data-label-placement` en la zona `settings`. La geometría del escenario pasa a `src/shared/ui/stage.styles.ts`, porque la usan también la barra fija y el póster. |
 | 2026-10-13 | 1.4 | SCN-AC17: el autor revisó la calibración con la superposición, sobre las dos variantes, y la posición de las etiquetas, dentro de su revisión conjunta de M2 a M5, y la aprobó. Sin cambios en los requisitos. |
 | 2026-10-13 | 1.3 | Por decisión del autor al revisar M5 (D-71): el aura es un halo sin línea de contorno (VIS 2.5). SCN-AC18 y §4.11 dejan de nombrar el trazo. |

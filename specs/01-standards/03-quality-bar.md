@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.2 |
+| Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
 
@@ -27,7 +27,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | **Carga inicial** | Todo lo que el navegador descarga desde que empieza la navegación hasta que la página queda en reposo, sin que el visitante haya interactuado. |
 | **Peso** | Tamaño de un recurso comprimido con gzip de nivel 9. Las fuentes `woff2` y las imágenes se miden tal cual, porque ya están comprimidas. |
 | **Base del marco** | El JavaScript de Next.js y React que carga cualquier página aunque no tenga código propio. Medido el 2026-10-12 con Next.js 16.4.0 y React 19.3.0: 171 kB. |
-| **Preajuste** | Configuración de Lighthouse que simula un tipo de dispositivo: `desktop` (pantalla de 1350×940 px, sin limitación) o `mobile` (pantalla de 412×823 px, red 4G lenta y CPU cuatro veces más lenta). |
+| **Preajuste** | Configuración de Lighthouse que simula un tipo de dispositivo: `desktop` (pantalla de 1350×940 px, sin limitación) o `mobile` (pantalla de 412×823 px, red 4G lenta y CPU cuatro veces más lenta). Lighthouse puede **estimar** el efecto de esa limitación con un modelo, que es su modo por defecto, o **aplicarla** de verdad al navegador mientras carga la página (QLT-R30). |
 
 ## 4. Requisitos
 
@@ -117,7 +117,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | ID | Requisito |
 | --- | --- |
 | QLT-R29 | Lighthouse DEBE alcanzar las puntuaciones de la tabla siguiente en cada página y preajuste indicados. Cada medición es la mediana de tres ejecuciones sobre el sitio exportado. |
-| QLT-R30 | En esas mismas ejecuciones, las métricas de laboratorio DEBEN respetar los límites de la segunda tabla. |
+| QLT-R30 | Las métricas de laboratorio DEBEN respetar los límites de la segunda tabla, también como mediana de tres ejecuciones. Se toman de esas mismas ejecuciones, con una excepción: el Largest Contentful Paint del preajuste `mobile` se mide en una pasada aparte, con la red y el procesador limitados de verdad en el navegador. En las demás, Lighthouse carga la página sin limitación y estima con un modelo cuánto habría tardado; para estas páginas, esa estimación sitúa el pintado del texto bastante más tarde de lo que se mide al aplicar la limitación (ver el historial, versión 2.3). |
 | QLT-R31 | La capa de escena DEBE registrar la marca `scene:ready` con `performance.mark` en el momento en que la imagen está decodificada y las zonas admiten interacción. En Chromium a 1280×720 px, sin limitación de red, `scene:ready` ocurre como máximo 3000 ms después del inicio de la navegación en una primera visita (con arranque) y 1200 ms cuando el arranque se omite. |
 | QLT-R32 | El primer pintado NO DEBE depender de JavaScript descargado: la vista simple y la primera pantalla del arranque se pintan con el HTML y el CSS del servidor más el script previo al pintado. |
 | QLT-R33 | Los recursos de la carga inicial DEBEN respetar los presupuestos de peso de la tercera tabla. Un presupuesto solo se cambia modificando esta spec. |
@@ -282,6 +282,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Durante M8, por delegación del autor (D-77). QLT-R30 y glosario: el Largest Contentful Paint del preajuste `mobile` se mide con la limitación aplicada de verdad, no estimada; el límite de 2,5 s no cambia. Medido el 2026-10-13 en `/es/` y `/en/cv/`: 1,6 s con limitación aplicada y 2,7 s con la estimación por defecto de Lighthouse. |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). §4.1.7: nuevo estado auditable con la variante boceto. QLT-R14: el aura se distingue en las dos variantes. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. §4.6: filas `ultrawide` y `classic` adaptadas al escenario 16:9 sin recortes (D-48). |

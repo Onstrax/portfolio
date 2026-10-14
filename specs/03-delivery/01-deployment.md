@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
@@ -72,7 +72,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | DEP-R18 | `scripts/build-headers.mjs` se ejecuta al final de `pnpm build` (SYS §4.9) y escribe `out/_headers`, el archivo de cabeceras que Cloudflare Pages aplica al servir el sitio. |
 | DEP-R32 | Antes de calcular los hashes, `build-headers.mjs` reúne en un único script, en su orden original y en el lugar del primero, los scripts en línea con los que Next.js entrega los datos de cada página (los que escriben en `self.__next_f`), y reescribe el documento. Una página con contenido real lleva decenas de ellos, y un hash por cada uno no cabe en los 2000 caracteres de una línea de `_headers` (DEP-R10). Los demás scripts en línea no se tocan. La operación es idempotente. |
 | DEP-R19 | El archivo contiene una regla para `/*` con las cabeceras de la primera tabla, las reglas de caché de la segunda tabla y una regla por cada documento HTML de `out/` con su política de seguridad de contenido (DEP-R21). |
-| DEP-R20 | `scripts/serve-static.mjs` aplica las reglas de `out/_headers` a sus respuestas (SYS §4.9), de modo que las pruebas E2E se ejecuten bajo las mismas cabeceras que producción y una infracción de la política haga fallar una prueba (TST-R23). Única diferencia: al servir por HTTP sin cifrar, retira de la política la directiva `upgrade-insecure-requests`, porque WebKit la obedece también en `localhost` y pediría todos los recursos por HTTPS a un servidor que no lo ofrece. El archivo `out/_headers`, que es lo que se publica, la conserva. |
+| DEP-R20 | `scripts/serve-static.mjs` aplica las reglas de `out/_headers` a sus respuestas (SYS §4.9), de modo que las pruebas E2E se ejecuten bajo las mismas cabeceras que producción y una infracción de la política haga fallar una prueba (TST-R23). Única diferencia: al servir por HTTP sin cifrar, retira de la política la directiva `upgrade-insecure-requests`, porque WebKit la obedece también en `localhost` y pediría todos los recursos por HTTPS a un servidor que no lo ofrece. El archivo `out/_headers`, que es lo que se publica, la conserva. Además comprime con gzip las respuestas de texto (HTML, CSS, JavaScript, JSON, SVG, XML y texto plano) cuando el navegador lo admite, como hace el alojamiento: sin ello, Lighthouse mediría un sitio varias veces más pesado que el publicado. |
 
 | Cabecera | Valor |
 | --- | --- |
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.3 | Durante M8, por delegación del autor (D-77). DEP-R20: el servidor de `preview` comprime con gzip las respuestas de texto. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor: un requisito resultó inviable con el contenido real. Nuevo DEP-R32: los scripts de datos de Next.js se reúnen en uno por documento antes de calcular los hashes, porque 52 hashes no caben en una línea de `_headers`. DEP-AC04 ampliado. |
 | 2026-10-13 | 1.1 | Decidido por delegación del autor durante M0, tras fallar WebKit en el primer CI. DEP-R20 y DEP-AC05: el servidor de `preview` retira `upgrade-insecure-requests` de la política, porque sirve por HTTP; `out/_headers` no cambia. |
 | 2026-10-13 | 1.0 | Aprobada por el autor. Repositorio `Onstrax/portfolio` creado, por ahora privado. |

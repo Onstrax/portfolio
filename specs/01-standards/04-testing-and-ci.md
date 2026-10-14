@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.7 |
+| Versión | 1.8 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
 
@@ -128,8 +128,8 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 
 | ID | Requisito |
 | --- | --- |
-| TST-R31 | `pnpm test:lighthouse` ejecuta `scripts/run-lighthouse.mjs`, que lanza Lighthouse CI dos veces contra el sitio exportado servido por `pnpm preview`: una con `lighthouserc.desktop.json` y otra con `lighthouserc.mobile.json`. |
-| TST-R32 | Cada archivo de configuración declara sus páginas, su preajuste, tres ejecuciones por página y, como aserciones, exactamente los umbrales y límites de las tablas de QLT-R29 y QLT-R30. El comando falla si alguna aserción no se cumple. |
+| TST-R31 | `pnpm test:lighthouse` ejecuta `scripts/run-lighthouse.mjs`, que lanza Lighthouse CI tres veces contra el sitio exportado servido por `pnpm preview`: con `lighthouserc.desktop.json`, con `lighthouserc.mobile.json` y con `lighthouserc.mobile-lcp.json`. La tercera pasada repite las páginas del preajuste `mobile` y mide solo su Largest Contentful Paint, con la limitación de red y de procesador aplicada de verdad al navegador (QLT-R30). Si `preview` no está en marcha, el script lo arranca y lo detiene al terminar. Los informes de cada pasada quedan en `.lighthouseci/<pasada>/`. |
+| TST-R32 | Cada archivo de configuración declara sus páginas, su preajuste, tres ejecuciones por página y, como aserciones sobre la mediana, exactamente los umbrales y límites de las tablas de QLT-R29 y QLT-R30 que le corresponden: `lighthouserc.mobile.json` aserta las cuatro puntuaciones, el Cumulative Layout Shift y el Total Blocking Time; `lighthouserc.mobile-lcp.json`, solo el Largest Contentful Paint. El script ejecuta las tres pasadas aunque una falle, para que el informe sea completo, y el comando falla si alguna aserción no se cumple. |
 | TST-R33 | Lighthouse usa el Chromium que instala Playwright, cuya ruta resuelve el script, de modo que no hace falta otro navegador en la máquina ni en CI. |
 
 ### 4.7 Trazabilidad
@@ -160,7 +160,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | `unit` | — | `pnpm test` (con cobertura) |
 | `build` | — | `pnpm assets:check` y `pnpm build` con `NEXT_PUBLIC_SITE_URL=http://localhost:4173`; guarda `out/` como artefacto |
 | `e2e` | `build` | Matriz de tres ejecuciones: `chromium` junto con `export`, `firefox` y `webkit`. Cada una descarga `out/`, instala su navegador y ejecuta `pnpm test:e2e` para sus proyectos |
-| `lighthouse` | `build` | Descarga `out/` y ejecuta `pnpm test:lighthouse` |
+| `lighthouse` | `build` | Descarga `out/`, instala Chromium con Playwright (TST-R33) y ejecuta `pnpm test:lighthouse` |
 | `ci-ok` | Todos los anteriores | Termina bien solo si todos los anteriores terminaron bien. Es la única comprobación obligatoria de la rama |
 
 ### 4.9 Verificación manual
@@ -191,7 +191,7 @@ Definir qué se prueba, con qué herramienta, dónde vive cada prueba y qué se 
 | TST-AC07 | `playwright.config.ts` define exactamente los cuatro proyectos de TST-R21, usa `http://localhost:4173` como URL base y arranca el servidor con `pnpm preview`. | Prueba unitaria que lee la configuración |
 | TST-AC08 | Con la prueba base, una página que escribe un error en la consola hace fallar la prueba; lo mismo una página que solicita un recurso de otro origen. | Prueba E2E marcada como fallo esperado |
 | TST-AC09 | Ningún archivo de `e2e/` importa de `src/` fuera de `src/shared/contracts/` y `src/shared/config/`, ni usa selectores de clase. | Prueba de arquitectura |
-| TST-AC10 | Los dos archivos de configuración de Lighthouse contienen las páginas, los preajustes, el número de ejecuciones y las aserciones que corresponden a las tablas de QLT-R29 y QLT-R30. | Prueba unitaria que lee los archivos |
+| TST-AC10 | Los tres archivos de configuración de Lighthouse contienen las páginas, los preajustes, el número de ejecuciones y las aserciones que corresponden a las tablas de QLT-R29 y QLT-R30, repartidas como indica TST-R32. | Prueba unitaria que lee los archivos |
 | TST-AC11 | La función de trazabilidad, sobre textos de ejemplo, detecta cada uno de los cuatro casos de TST-R36 y clasifica correctamente un criterio automático, uno de puerta y uno manual. | Prueba unitaria |
 | TST-AC12 | La prueba de trazabilidad pasa sobre las specs y las pruebas reales del repositorio. | Prueba unitaria |
 | TST-AC13 | `ci.yml` contiene los seis trabajos de TST-R39 con sus dependencias; declara `permissions: contents: read`; toda línea `uses:` referencia un SHA de 40 caracteres de una organización admitida; y no aparece ninguna referencia a `secrets.`. | Prueba unitaria que lee el archivo |
@@ -225,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). TST-R31, TST-R32 y TST-AC10: Lighthouse se ejecuta en tres pasadas; la tercera mide el Largest Contentful Paint del preajuste `mobile` con la limitación aplicada de verdad. §4.8: el trabajo `lighthouse` instala Chromium. |
 | 2026-10-13 | 1.7 | Durante M7, por delegación del autor. TST-R26: opción `bootSeen` de la prueba base, comprobación manual de una navegación de Firefox que Playwright no ve terminar y, en las pruebas de la redirección de `/`, consulta a la propia página. TST-R23: aviso de Firefox por scripts cancelados. TST-R22: los límites de tiempo del arranque se miden solo en Chromium; en WebKit dentro del contenedor las animaciones avanzan a saltos y no dan una medida fiable. |
 | 2026-10-13 | 1.6 | Durante M5, por delegación del autor. TST-R23: una petición cancelada por el navegador no es fallida; con la escena, cada navegación interrumpe precargas en curso y Firefox las notificaba como fallos. TST-R26: en Firefox, la prueba base navega a `about:blank` antes de cada prueba. |
 | 2026-10-13 | 1.5 | Durante M4, por delegación del autor. TST-R23: se precisa qué es una petición fallida. |

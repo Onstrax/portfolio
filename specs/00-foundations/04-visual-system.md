@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 2.6 |
+| Versión | 2.7 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
 
@@ -287,8 +287,8 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | M-08 | Apertura y cierre del menú de ajustes | Opacidad 0 ↔ 1 y escala 0,98 ↔ 1 | `duration-fast`, `ease-out` | Solo opacidad |
 | M-09 | Cambio de valor del display de diagnóstico | Opacidad del dígito 0,4 → 1 | `duration-fast`, `ease-out` | Cambio instantáneo |
 | M-10 | Pulsación de un botón | Escala 1 → 0,98 → 1 | `duration-instant`, `ease-out` | Sin animación |
-| M-11 | Aparición de la imagen de la escena al terminar de decodificarse | Opacidad 0 → 1 | `duration-base`, `ease-out` | Igual |
-| M-12 | Aparición y retirada de la pista de la escena | Opacidad 0 ↔ 1 | `duration-base`, `ease-out` | Igual |
+| M-11 | Aparición de la imagen de la escena al terminar de decodificarse | Opacidad 0 → 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
+| M-12 | Aparición y retirada de la pista de la escena | Opacidad 0 ↔ 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
 
 ### 4.8 Iconografía
 
@@ -306,13 +306,14 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | --- | --- |
 | VIS-R42 | Todos los tokens de esta spec se declaran una sola vez en `src/styles/tokens.css`, con el mismo nombre que en las tablas. Los que corresponden a un espacio de nombres de Tailwind (color, familia tipográfica, radio, sombra, curva) se declaran dentro de `@theme` para que generen clases de utilidad; el resto (duraciones, capas, opacidades y medidas del aura) se declaran como propiedades personalizadas en `:root`. |
 | VIS-R43 | Los componentes referencian tokens, nunca valores literales (ver STR-R22). Un valor que no tenga token y se use en dos o más lugares DEBE convertirse en token y añadirse a esta spec. |
-| VIS-R44 | `src/styles/tokens.css` declara tres propiedades personalizadas cuyo valor depende del atributo `data-scene` de `<html>` (SYS-R51), según la tabla siguiente. Los componentes de la escena usan estas propiedades y nunca eligen el color por su cuenta. Sin el atributo, valen lo que en `photo`. |
+| VIS-R44 | `src/styles/tokens.css` declara cuatro propiedades personalizadas cuyo valor depende del atributo `data-scene` de `<html>` (SYS-R51), según la tabla siguiente. Los componentes de la escena usan estas propiedades y nunca eligen el color por su cuenta. Sin el atributo, valen lo que en `photo`. |
 
 | Propiedad | En `photo` | En `sketch` | Uso |
 | --- | --- | --- | --- |
 | `--scene-aura` | `aura` | `aura-sketch` | Halo y relleno del aura; rectángulo de foco de las zonas (SCN-R21) |
 | `--scene-backdrop` | `void` | `paper` | Fondo fuera del escenario y viñeteado (AST-R03, AST-R48) |
 | `--scene-display` | `boot-ok` | `ink` | Segmentos del display de diagnóstico (SCN-R29) |
+| `--scene-display-back` | `transparent` | `paper` | Fondo bajo los dígitos del display de diagnóstico (SCN-R29) |
 
 ## 5. Criterios de aceptación
 
@@ -355,6 +356,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.7 | Por indicación del autor al revisar las imágenes (D-76): en el boceto, el contador no se leía. VIS-R44: cuarta propiedad, `--scene-display-back`, con el fondo de los dígitos del display. Durante M8: M-11 y M-12 duran `duration-fast` con movimiento reducido, como exige VIS-R36; el inventario decía "Igual" y contradecía a VIS-AC05. |
 | 2026-10-13 | 2.6 | Por decisión del autor al revisar el halo (D-72): el relleno de la pieza pasa a estar en todos los estados, y el halo en reposo baja de intensidad para que el paso a hover se note más. VIS-R13, VIS-R14 y tabla de §4.4. Los valores de hover y activo no cambian. |
 | 2026-10-13 | 2.5 | Por decisión del autor al revisar M5 (D-71): el aura deja de tener línea de contorno y pasa a ser un halo que rodea la pieza. VIS-R13 y VIS-R14 reescritos, tabla de opacidades de §4.4 sustituida (sin columnas de trazo, valores más altos), M-03 y M-04 adaptados. El rectángulo de foco de teclado (SCN-R21) no cambia. |
 | 2026-10-13 | 2.4 | Durante M5, por delegación del autor. VIS-R21: ancho máximo de la etiqueta sin hover y color de su borde según la variante. VIS-R31: sobre la escena, el anillo de foco usa el color de aura de la variante. |
