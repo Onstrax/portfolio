@@ -29,7 +29,7 @@ const COLORS: Readonly<Record<string, string>> = {
   "boot-text": "#9BEFA9",
   "boot-dim": "#5FA36C",
   "boot-ok": "#4ADE80",
-  "aura-sketch": "#B3123A",
+  "aura-sketch": "#1F4FBF",
   paper: "#F2EBDF",
 };
 
@@ -113,7 +113,7 @@ describe("tokens.css", () => {
   it("matches the contrast figures recorded in the spec", () => {
     expect(contrastRatio(color("on-dark"), color("plate"))).toBeCloseTo(17.04, 1);
     expect(contrastRatio(color("ink"), color("screen"))).toBeCloseTo(14.36, 1);
-    expect(contrastRatio(color("aura-sketch"), color("paper"))).toBeCloseTo(5.78, 1);
+    expect(contrastRatio(color("aura-sketch"), color("paper"))).toBeCloseTo(6.05, 1);
     expect(contrastRatio(color("aura"), color("screen"))).toBeLessThan(3);
   });
 

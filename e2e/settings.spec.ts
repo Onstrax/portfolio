@@ -6,7 +6,7 @@ import { type ViewportName, VIEWPORTS } from "./support/viewports";
 
 const PREFS_KEY = "portfolio:v1:prefs";
 const SESSION_KEY = "portfolio:v1:session";
-const AURA_SKETCH = "rgb(179, 18, 58)";
+const AURA_SKETCH = "rgb(31, 79, 191)";
 
 const SCENE_VIEWPORTS: readonly ViewportName[] = [
   "desktop",
