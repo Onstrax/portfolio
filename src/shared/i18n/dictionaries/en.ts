@@ -62,6 +62,7 @@ export const en = {
       "Welcome to my portfolio. Explore the components on the board to learn about me and what I can do for you.",
     exploreLabel: "Explore",
     profileLinkLabel: "See my profile",
+    closeWelcomeAriaLabel: "Close welcome",
   },
   panel: {
     closeAriaLabel: "Close",

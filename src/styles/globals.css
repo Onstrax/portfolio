@@ -128,6 +128,26 @@
 }
 
 /*
+ * Opening and closing of the welcome terminal (M-12): the scale of the settings menu, at the pace
+ * of the panel. With reduced motion only the opacity changes, in 150 ms.
+ */
+@utility welcome-in {
+  animation: menu-in var(--duration-base) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in var(--duration-fast) var(--ease-out) both;
+  }
+}
+
+@utility welcome-out {
+  animation: menu-out var(--duration-fast) var(--ease-in) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-out var(--duration-fast) var(--ease-in) both;
+  }
+}
+
+/*
  * Opening and closing of the detail panel (M-06). With reduced motion only the opacity changes,
  * in 150 ms. Every animation keeps its last frame, so that nothing flashes between two phases.
  */

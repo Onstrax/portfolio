@@ -69,12 +69,40 @@ export const LABEL_CONTENT = "font-mono text-xs leading-4 text-on-dark-muted";
 export const PLATE = `${DARK_PLATE} pointer-events-none absolute top-4 left-4 z-(--z-bar) hidden max-h-28 max-w-[300px] flex-col overflow-hidden px-3 py-2 boot-done:flex`;
 export const PLATE_FOCUS_AREAS = "font-mono text-xs leading-4 text-on-dark";
 
-const WELCOME_BASE = `${DARK_PLATE} absolute bottom-4 left-1/2 z-(--z-labels) max-h-48 w-[min(380px,calc(100%-32px))] -translate-x-1/2 p-4 transition-[opacity,visibility] duration-(--duration-base) ease-out motion-reduce:duration-(--duration-fast)`;
+/**
+ * The welcome is a modal dialog that covers the viewport and is transparent: the veil and the
+ * terminal are its children, so that both can be animated and a click on the veil can be told
+ * from a click on the terminal (SCN-R49).
+ */
+export const WELCOME_DIALOG =
+  "fixed inset-0 z-(--z-panel) m-0 size-full max-h-none max-w-none overflow-clip border-0 bg-transparent p-0 backdrop:bg-transparent open:grid open:place-items-center";
 
-/** Appearance and removal of the welcome (M-12). Hidden, it leaves the tab order. */
-export const WELCOME_STATES = {
-  visible: `${WELCOME_BASE} visible opacity-100`,
-  hidden: `${WELCOME_BASE} invisible opacity-0`,
+/** Veil over the scene, with the appearance and removal of M-12. */
+export const WELCOME_VEIL = {
+  open: "absolute inset-0 bg-backdrop opacity-(--opacity-backdrop) veil-in",
+  closing: "absolute inset-0 bg-backdrop opacity-(--opacity-backdrop) veil-out",
 } as const;
 
-export const WELCOME_DESCRIPTION = "mt-1 text-sm leading-5 text-on-dark";
+const WELCOME_TERMINAL_BASE =
+  "relative w-[min(560px,calc(100%-32px))] rounded-plate border border-boot-dim bg-boot-bg p-6 font-mono shadow-panel";
+
+/** The terminal of the welcome, with the look of the boot screen (VIS-R46) and M-12. */
+export const WELCOME_TERMINAL = {
+  open: `${WELCOME_TERMINAL_BASE} welcome-in`,
+  closing: `${WELCOME_TERMINAL_BASE} welcome-out`,
+} as const;
+
+export const WELCOME_TITLE =
+  "text-sm leading-5 font-semibold tracking-[0.06em] text-boot-ok uppercase focus:outline-none";
+export const WELCOME_PROMPT = "mr-2 text-boot-dim";
+
+/** The text, with the role of the boot log (VIS-R46). */
+export const WELCOME_DESCRIPTION =
+  "mt-3 text-sm leading-[21px] text-boot-text min-[1440px]:text-base min-[1440px]:leading-6";
+
+/** "Botón de terminal" (VIS-R29). */
+export const WELCOME_BUTTON =
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-control border border-boot-dim px-4 text-sm leading-5 font-semibold tracking-[0.06em] text-boot-text uppercase transition-transform duration-(--duration-instant) ease-out hover:border-boot-text focus-visible:outline-boot-text active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100";
+
+export const WELCOME_CLOSE =
+  "-mt-3 -mr-3 inline-flex size-11 shrink-0 items-center justify-center rounded-control text-boot-text hover:text-boot-ok focus-visible:outline-boot-text";

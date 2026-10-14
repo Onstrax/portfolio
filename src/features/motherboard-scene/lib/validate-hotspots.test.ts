@@ -151,23 +151,6 @@ describe("validateHotspots", () => {
     ]);
   });
 
-  it("SCN-AC03: marks an interactive object inside the region reserved for the welcome", () => {
-    expect(validateHotspots(withPolygon("ssd", rectangle(702, 498, 187, 60)))).toEqual([
-      {
-        rule: "AST-R56",
-        ids: ["ssd"],
-        message: "ssd: occupies the bottom center reserved for the welcome",
-      },
-    ]);
-  });
-
-  it("lets the diagnostic display, which takes no focus, sit under the welcome", () => {
-    expect(
-      HOTSPOTS["post-display"].polygon.some(({ x, y }) => x > 500 && x < 1100 && y > 552),
-    ).toBe(true);
-    expect(rulesOf(HOTSPOTS)).not.toContain("AST-R56");
-  });
-
   it("SCN-AC03: marks two hit areas that overlap", () => {
     // The coin sits in the notch of the port panel: 13 units from its silhouette, but inside the
     // box that the panel uses as hit area.

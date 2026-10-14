@@ -71,15 +71,22 @@ const TITLES: Readonly<Record<string, readonly [string, string]>> = {
 };
 
 /**
- * Waits until the welcome has faded in: while it fades (M-12), its text has less contrast than its
- * colors give.
+ * Waits until the welcome and its veil have faded in: while they fade (M-12), the text has less
+ * contrast than its colors give.
  */
 async function waitForWelcome(page: Page): Promise<void> {
-  const welcome = page.getByTestId("scene-welcome");
-  await expect(welcome).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: /Sistema listo|System ready/ });
+  await expect(dialog).toBeVisible();
+  // Their animations keep their last frame, so they stay listed once finished.
   await expect
-    .poll(() => welcome.evaluate((element) => element.getAnimations({ subtree: true }).length))
-    .toBe(0);
+    .poll(() =>
+      dialog.evaluate((element) =>
+        element
+          .getAnimations({ subtree: true })
+          .every((animation) => animation.playState === "finished"),
+      ),
+    )
+    .toBe(true);
 }
 
 async function expectNoViolations(page: Page): Promise<void> {
@@ -146,7 +153,7 @@ test.describe("auditable states of the scene", () => {
     await expectNoViolations(page);
   });
 
-  test.describe("with the welcome on view", () => {
+  test.describe("with the welcome open", () => {
     test.use({ welcomeSeen: false });
 
     for (const locale of LOCALES) {

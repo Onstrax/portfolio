@@ -66,26 +66,22 @@ test.describe("keyboard", () => {
     ]);
   });
 
-  test.describe("with the welcome on view", () => {
+  test.describe("with the welcome open", () => {
     test.use({ welcomeSeen: false });
 
-    test("QLT-AC03: the two controls of the welcome come between the fixed bar and the pieces", async ({
+    test("QLT-AC03: while the welcome is open, Tab only walks its three controls", async ({
       page,
     }) => {
       await page.goto("/es/");
-      await expect(page.getByTestId("scene-welcome")).toBeVisible();
+      const dialog = page.getByRole("dialog", { name: "Sistema listo" });
+      await expect(dialog.getByRole("heading", { level: 2 })).toBeFocused();
 
-      expect(await tabOrder(page, 10)).toEqual([
-        ...BAR_ORDER,
-        "Explorar",
-        "Ver mi perfil",
-        "Procesador (CPU): Perfil",
-      ]);
+      expect(await tabOrder(page, 3)).toEqual(["Cerrar bienvenida", "Explorar", "Ver mi perfil"]);
     });
   });
 
   test.describe("from a first visit", () => {
-    test.use({ bootSeen: false });
+    test.use({ bootSeen: false, welcomeSeen: false });
 
     test("VSN-AC08: the whole site can be used with the keyboard alone", async ({ page }) => {
       // A whole tour of the site: in WebKit under load it takes over 20 seconds.
@@ -97,8 +93,14 @@ test.describe("keyboard", () => {
       await page.keyboard.press("Enter");
       await expect(html(page)).toHaveAttribute("data-boot", "done");
 
-      // The welcome waits after the fixed bar without taking the focus; the pieces come after it.
-      await expect(page.getByTestId("scene-welcome")).toBeVisible();
+      // The welcome opens with the focus on its title; Esc closes it and goes on to the first piece.
+      const welcomeTitle = page
+        .getByRole("dialog", { name: "Sistema listo" })
+        .getByRole("heading", { level: 2 });
+      await expect(welcomeTitle).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(page.getByTestId("scene-welcome")).toHaveCount(0);
+      await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
 
       // Open and close each of the seven panels from its piece.
       for (const [zone, title] of [
@@ -136,13 +138,13 @@ test.describe("keyboard", () => {
       await page.keyboard.press("Enter");
       await expect(html(page)).toHaveAttribute("data-boot", "done");
       await expect(page.getByTestId("post-display")).toHaveAttribute("data-value", "00");
-      // The control that asked for the replay is gone: the focus waits on the title of the scene.
-      await expect(page.getByRole("heading", { level: 1 })).toBeFocused();
-      // A new session greets again; "Explore" closes the welcome and goes on to the first piece.
+      // A new session greets again, with the focus on the welcome; "Explore" closes it and goes
+      // on to the first piece.
+      await expect(welcomeTitle).toBeFocused();
       const explore = page.getByRole("button", { name: "Explorar" });
       await tabTo(page, explore);
       await page.keyboard.press("Enter");
-      await expect(page.getByTestId("scene-welcome")).toBeHidden();
+      await expect(page.getByTestId("scene-welcome")).toHaveCount(0);
       await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
 
       // Change the language from the fixed bar.

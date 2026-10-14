@@ -1,71 +1,144 @@
 "use client";
 
 import Link from "next/link";
-import { type KeyboardEvent, useId, useRef } from "react";
+import { type MouseEvent, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 import { sectionPath } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n/use-locale";
 import { useUiDictionary } from "@/shared/i18n/use-ui-dictionary";
-import { cn } from "@/shared/lib/cn";
-import { BUTTON_BASE, BUTTON_VARIANTS } from "@/shared/ui/link.styles";
+import { settleAnimations } from "@/shared/lib/settle-animations";
+import { CloseIcon } from "@/shared/ui/icons/close";
 
-import { LABEL_NAME, WELCOME_DESCRIPTION, WELCOME_STATES } from "./scene.styles";
+import {
+  WELCOME_BUTTON,
+  WELCOME_CLOSE,
+  WELCOME_DESCRIPTION,
+  WELCOME_DIALOG,
+  WELCOME_PROMPT,
+  WELCOME_TERMINAL,
+  WELCOME_TITLE,
+  WELCOME_VEIL,
+} from "./scene.styles";
 
-const WELCOME_CONTROL = cn(BUTTON_BASE, BUTTON_VARIANTS.onDark);
+/** Prompt sign before the title: decorative, the same in every language (SCN-R49). */
+const PROMPT = "›";
 
 interface SceneWelcomeProps {
-  readonly isVisible: boolean;
-  /** Closes the welcome for the rest of the session; `hadFocus` tells if the focus was inside. */
-  readonly onDismiss: (hadFocus: boolean) => void;
+  readonly isOpen: boolean;
+  /** The visitor closed it: with its button, Esc, a click on the veil or "Explore" (SCN-R50). */
+  readonly onDismiss: () => void;
+  /** It finished closing after `onDismiss`, and the page is no longer inert. */
+  readonly onClosed: () => void;
 }
 
 /**
- * The card that greets a first visit once the boot sequence ends (SCN-R48, SCN-R49). It takes
- * neither the focus nor the scene: it waits after the fixed bar in the tab order, and closes with
- * "Explore" or Esc (SCN-R50, SCN-R51).
+ * The terminal that greets a first visit once the boot sequence ends (SCN-R48, SCN-R49). It is a
+ * modal dialog: the focus goes to its title, the rest of the page is inert while it is open, and
+ * it closes in five ways, never by itself (SCN-R50, SCN-R51).
  */
-export function SceneWelcome({ isVisible, onDismiss }: SceneWelcomeProps) {
+export function SceneWelcome({ isOpen, onDismiss, onClosed }: SceneWelcomeProps) {
   const { scene } = useUiDictionary();
   const locale = useLocale();
-  const root = useRef<HTMLElement>(null);
   const titleId = useId();
+  const dialog = useRef<HTMLDialogElement>(null);
+  const veil = useRef<HTMLDivElement>(null);
+  const title = useRef<HTMLHeadingElement>(null);
+  /** Set when the visitor closed it, to know where the focus goes afterwards. */
+  const wasDismissed = useRef(false);
+  /** The terminal stays drawn while its closing animation plays. */
+  const [isClosing, setClosing] = useState(false);
+  const [wasOpen, setWasOpen] = useState(isOpen);
+  if (wasOpen !== isOpen) {
+    setWasOpen(isOpen);
+    setClosing(!isOpen);
+  }
+  const isShown = isOpen || isClosing;
+
+  useLayoutEffect(() => {
+    const element = dialog.current;
+    if (element === null || !isOpen) return;
+    if (!element.open) element.showModal();
+    title.current?.focus();
+  }, [isOpen]);
+
+  // Closes once its animation has played. Only then is the page interactive again, so only then
+  // can the focus go back to the scene.
+  useEffect(() => {
+    if (!isClosing) return;
+    let isCurrent = true;
+    void settleAnimations(dialog.current).then(() => {
+      if (!isCurrent) return;
+      dialog.current?.close();
+      setClosing(false);
+      if (wasDismissed.current) {
+        wasDismissed.current = false;
+        onClosed();
+      }
+    });
+    return () => {
+      isCurrent = false;
+    };
+  }, [isClosing, onClosed]);
+
   const dismiss = (): void => {
-    onDismiss(root.current?.contains(document.activeElement) === true);
+    if (!isOpen) return;
+    wasDismissed.current = true;
+    onDismiss();
   };
-  // Its two controls are all that can hold the focus inside it.
-  const closeOnEscape = (event: KeyboardEvent): void => {
-    if (event.key === "Escape") dismiss();
+  // Runs before the handlers of the controls: a click on the veil, outside the terminal, closes it.
+  const handleClick = (event: MouseEvent<HTMLDialogElement>): void => {
+    if (event.target === veil.current) dismiss();
   };
 
   return (
-    <section
-      ref={root}
+    <dialog
+      ref={dialog}
       aria-labelledby={titleId}
-      data-testid="scene-welcome"
-      data-visible={isVisible}
-      className={WELCOME_STATES[isVisible ? "visible" : "hidden"]}
+      className={WELCOME_DIALOG}
+      onClickCapture={handleClick}
+      onCancel={(event) => {
+        event.preventDefault();
+        dismiss();
+      }}
+      // A browser can close a modal dialog on its own, for example on a second Esc.
+      onClose={dismiss}
     >
-      <h2 id={titleId} className={LABEL_NAME}>
-        {scene.welcomeTitle}
-      </h2>
-      <p className={WELCOME_DESCRIPTION}>{scene.welcomeDescription}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={WELCOME_CONTROL}
-          onClick={dismiss}
-          onKeyDown={closeOnEscape}
-        >
-          {scene.exploreLabel}
-        </button>
-        <Link
-          href={sectionPath(locale, "profile")}
-          className={WELCOME_CONTROL}
-          onKeyDown={closeOnEscape}
-        >
-          {scene.profileLinkLabel}
-        </Link>
-      </div>
-    </section>
+      {isShown && (
+        <>
+          <div ref={veil} className={WELCOME_VEIL[isOpen ? "open" : "closing"]} />
+          <div
+            data-testid="scene-welcome"
+            className={WELCOME_TERMINAL[isOpen ? "open" : "closing"]}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <h2 ref={title} id={titleId} tabIndex={-1} className={WELCOME_TITLE}>
+                <span aria-hidden="true" className={WELCOME_PROMPT}>
+                  {PROMPT}
+                </span>
+                {scene.welcomeTitle}
+              </h2>
+              <button
+                type="button"
+                aria-label={scene.closeWelcomeAriaLabel}
+                className={WELCOME_CLOSE}
+                onClick={dismiss}
+              >
+                <CloseIcon size={20} />
+              </button>
+            </div>
+            <p className={WELCOME_DESCRIPTION}>{scene.welcomeDescription}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button type="button" className={WELCOME_BUTTON} onClick={dismiss}>
+                {scene.exploreLabel}
+              </button>
+              {/* Opening the profile closes the welcome too, as any section does (SCN-R50). */}
+              <Link href={sectionPath(locale, "profile")} className={WELCOME_BUTTON}>
+                {scene.profileLinkLabel}
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+    </dialog>
   );
 }

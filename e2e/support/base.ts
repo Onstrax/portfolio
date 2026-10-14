@@ -20,8 +20,9 @@ interface BaseOptions {
    */
   readonly bootSeen: boolean;
   /**
-   * `true` to start with the welcome of the scene already closed, written together with
-   * `bootSeen`; the tests of the welcome turn it off (TST-R26).
+   * `true` to start with the welcome of the scene already closed. It is modal and takes the focus,
+   * so only the tests of the welcome turn it off; the tests of the boot sequence keep it on too
+   * (TST-R26).
    */
   readonly welcomeSeen: boolean;
 }
@@ -97,9 +98,9 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
         if (new URL(url).origin !== ORIGIN) record("foreign-request", url);
       });
 
-      if (bootSeen) {
+      if (bootSeen || welcomeSeen) {
         // Only when the session is new: a reload must find what the page stored.
-        const session = { bootSeen: true, visited: [], welcomeSeen };
+        const session = { bootSeen, visited: [], welcomeSeen };
         await page.addInitScript(
           ({ key, value }) => {
             try {

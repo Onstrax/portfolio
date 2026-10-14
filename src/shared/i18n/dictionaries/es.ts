@@ -52,6 +52,7 @@ export const es: UiDictionary = {
       "Te doy la bienvenida a mi portfolio. Navega por los componentes de la placa para conocer sobre mí y lo que puedo hacer por ti.",
     exploreLabel: "Explorar",
     profileLinkLabel: "Ver mi perfil",
+    closeWelcomeAriaLabel: "Cerrar bienvenida",
   },
   panel: {
     closeAriaLabel: "Cerrar",

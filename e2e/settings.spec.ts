@@ -424,7 +424,7 @@ test.describe("session reset", () => {
     await page.goto("/es/");
     await visit(page, "Procesador (CPU): Perfil");
     await visit(page, "SSD NVMe: Proyectos");
-    await expect(page.getByTestId("scene-welcome")).toBeHidden();
+    await expect(page.getByTestId("scene-welcome")).toHaveCount(0);
 
     const dialog = await openMenu(page);
     await expect(dialog.getByText("2 de 6 secciones visitadas")).toBeVisible();

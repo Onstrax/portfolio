@@ -14,12 +14,10 @@ export const RESERVED_AREAS = {
   "AST-R47": { left: 0, top: 0, right: SCENE_WIDTH, bottom: 100 },
   /** The top left corner, under the identity plate (AST-R55). */
   "AST-R55": { left: 0, top: 0, right: 500, bottom: 200 },
-  /** The bottom center, under the welcome; the diagnostic display may sit there (AST-R56). */
-  "AST-R56": { left: 500, top: 552, right: 1100, bottom: SCENE_HEIGHT },
 } as const satisfies Readonly<Record<string, SceneBox>>;
 
 export type ReservedAreaRule = keyof typeof RESERVED_AREAS;
-export const RESERVED_AREA_RULES: readonly ReservedAreaRule[] = ["AST-R47", "AST-R55", "AST-R56"];
+export const RESERVED_AREA_RULES: readonly ReservedAreaRule[] = ["AST-R47", "AST-R55"];
 
 /** Width of the vignette on each edge of the stage, in units (AST-R48). */
 export const VIGNETTE_SIZE = 64;

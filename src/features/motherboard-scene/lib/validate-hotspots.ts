@@ -59,20 +59,15 @@ function isInSafeArea(point: ScenePoint): boolean {
 const RESERVED_FOR: Readonly<Record<ReservedAreaRule, string>> = {
   "AST-R47": "the top band reserved for the fixed bar and the identity plate",
   "AST-R55": "the corner reserved for the identity plate",
-  "AST-R56": "the bottom center reserved for the welcome",
 };
 
 function isInBox(point: ScenePoint, box: SceneBox): boolean {
   return point.x >= box.left && point.x <= box.right && point.y >= box.top && point.y <= box.bottom;
 }
 
-/**
- * The reserved regions that an object occupies. The diagnostic display takes no focus, so the
- * welcome may cover it (AST-R56).
- */
-function reservedAreasOccupied({ id, polygon }: Hotspot): readonly ReservedAreaRule[] {
+/** The reserved regions that an object occupies. */
+function reservedAreasOccupied({ polygon }: Hotspot): readonly ReservedAreaRule[] {
   return RESERVED_AREA_RULES.filter((rule) => {
-    if (rule === "AST-R56" && id === "post-display") return false;
     const box = RESERVED_AREAS[rule];
     return (
       polygon.some((point) => isInBox(point, box)) || polygonsOverlap(polygon, boxToPolygon(box))
@@ -115,9 +110,9 @@ function findShapeIssues(hotspot: Hotspot): readonly HotspotIssue[] {
 
 /**
  * Checks the calibration data and returns everything that breaks a rule: the shape of each
- * silhouette (SCN-R08), its minimum size (AST §4.4), the regions reserved for the fixed bar, the
- * identity plate and the welcome (AST-R47, AST-R55, AST-R56), the gap between silhouettes
- * (AST-R11) and the overlap of hit areas (SCN-R13).
+ * silhouette (SCN-R08), its minimum size (AST §4.4), the regions reserved for the fixed bar and
+ * the identity plate (AST-R47, AST-R55), the gap between silhouettes (AST-R11) and the overlap of
+ * hit areas (SCN-R13).
  * An empty list means that the calibration is valid (SCN-R10).
  */
 export function validateHotspots(

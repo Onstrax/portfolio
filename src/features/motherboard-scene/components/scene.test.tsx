@@ -69,14 +69,14 @@ function images(): readonly HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>("img[data-variant]")];
 }
 
-// jsdom loads no stylesheet. The welcome, while closed, stays in the page to fade out (M-12) and
-// is hidden with the `invisible` class: this rule gives the class its meaning, so that the queries
-// by role leave the closed welcome out, as a browser does.
-const INVISIBLE_RULE = document.createElement("style");
-INVISIBLE_RULE.textContent = ".invisible { visibility: hidden; }";
-document.head.append(INVISIBLE_RULE);
-
 beforeEach(() => {
+  // jsdom does not implement the methods of `<dialog>`: these do what the tests need of them.
+  HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement): void {
+    this.setAttribute("open", "");
+  };
+  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement): void {
+    this.removeAttribute("open");
+  };
   vi.stubGlobal(
     "ResizeObserver",
     class {
@@ -411,15 +411,22 @@ describe("Scene: diagnostic display", () => {
 });
 
 describe("Scene: identity plate and welcome", () => {
-  function welcome(): HTMLElement {
-    return screen.getByTestId("scene-welcome");
+  function terminal(): HTMLElement | null {
+    return screen.queryByTestId("scene-welcome");
+  }
+  function expectClosedTo(target: HTMLElement) {
+    return vi.waitFor(() => {
+      expect(terminal()).toBeNull();
+      expect(target).toHaveFocus();
+    });
   }
 
   beforeEach(() => {
-    useSessionStore.setState({ welcomeSeen: false });
+    useSessionStore.setState({ bootSeen: true, welcomeSeen: false });
   });
 
   it("SCN-AC21: the plate shows the name, the degree and the focus areas, with nothing to focus", () => {
+    useSessionStore.setState({ welcomeSeen: true });
     renderScene();
     const plate = screen.getByTestId("scene-plate");
     expect([...plate.children].map((line) => line.textContent)).toEqual([
@@ -438,125 +445,140 @@ describe("Scene: identity plate and welcome", () => {
     expect(stage.firstElementChild).toBe(screen.getByTestId("scene-plate"));
   });
 
-  it("SCN-AC22: shows the welcome once the session is known, without taking the focus", () => {
+  it("SCN-AC22: opens as a modal dialog once the session is known, with the focus on its title", () => {
     useSessionStore.setState({ hasHydrated: false });
     renderScene();
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(terminal()).toBeNull();
 
     act(() => {
       useSessionStore.setState({ hasHydrated: true });
     });
-    expect(welcome()).toHaveAttribute("data-visible", "true");
-    expect(welcome()).not.toContainElement(document.activeElement as HTMLElement | null);
-    expect(within(welcome()).getByRole("heading", { level: 2 })).toHaveTextContent("Sistema listo");
-    expect(screen.getByRole("region", { name: "Sistema listo" })).toBe(welcome());
-    expect(welcome()).toHaveTextContent("Te doy la bienvenida a mi portfolio.");
-    expect(within(welcome()).getByRole("link", { name: "Ver mi perfil" })).toHaveAttribute(
+    const dialog = screen.getByRole("dialog", { name: "Sistema listo" });
+    expect(dialog).toHaveAttribute("open");
+    expect(dialog).toContainElement(terminal());
+    const title = within(dialog).getByRole("heading", { level: 2 });
+    expect(title).toHaveFocus();
+    expect(title.querySelector('[aria-hidden="true"]')).toHaveTextContent("›");
+    expect(dialog).toHaveTextContent("Te doy la bienvenida a mi portfolio.");
+  });
+
+  it("SCN-AC22: has the close button, Explore and the link to the profile, in that order", () => {
+    renderScene();
+    const dialog = screen.getByRole("dialog", { name: "Sistema listo" });
+    const controls = [...dialog.querySelectorAll("button, a")];
+    expect(
+      controls.map((control) => control.getAttribute("aria-label") ?? control.textContent),
+    ).toEqual(["Cerrar bienvenida", "Explorar", "Ver mi perfil"]);
+    expect(within(dialog).getByRole("link", { name: "Ver mi perfil" })).toHaveAttribute(
       "href",
       "/es/profile/",
     );
   });
 
-  it("SCN-AC22: comes before the zones in the tab order", () => {
-    renderScene();
-    const explore = within(welcome()).getByRole("button", { name: "Explorar" });
-    expect(
-      explore.compareDocumentPosition(zone("cpu")) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-  });
-
-  it("shows no welcome while the boot sequence plays, nor once it has been closed", () => {
+  it("does not open while the boot sequence plays, nor once it has been closed", () => {
     root.dataset["boot"] = "play";
     renderScene();
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(terminal()).toBeNull();
 
     act(() => {
       useSessionStore.setState({ welcomeSeen: true });
       root.dataset["boot"] = "done";
     });
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(terminal()).toBeNull();
   });
 
   it("SCN-AC23: Explore closes it for the session and moves the focus to the cpu zone", async () => {
     renderScene();
-    const explore = within(welcome()).getByRole("button", { name: "Explorar" });
-    explore.focus();
-    await userEvent.keyboard("{Enter}");
+    await userEvent.click(
+      within(terminal() ?? document.body).getByRole("button", { name: "Explorar" }),
+    );
 
-    expect(welcome()).toHaveAttribute("data-visible", "false");
-    expect(zone("cpu")).toHaveFocus();
+    await expectClosedTo(zone("cpu"));
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+    expect(screen.getByRole("dialog", { hidden: true })).not.toHaveAttribute("open");
+  });
+
+  it("SCN-AC23: the close button closes it and moves the focus to the cpu zone", async () => {
+    renderScene();
+    await userEvent.click(screen.getByRole("button", { name: "Cerrar bienvenida" }));
+
+    await expectClosedTo(zone("cpu"));
     expect(useSessionStore.getState().welcomeSeen).toBe(true);
   });
 
-  it("SCN-AC23: Esc inside it closes it and moves the focus to the cpu zone", async () => {
+  it("SCN-AC23: Esc closes it and moves the focus to the cpu zone", async () => {
     renderScene();
-    within(welcome()).getByRole("link", { name: "Ver mi perfil" }).focus();
-    await userEvent.keyboard("{Escape}");
+    // What a browser does with Esc in a modal dialog: it fires `cancel`.
+    fireEvent(screen.getByRole("dialog"), new Event("cancel", { cancelable: true }));
 
-    expect(welcome()).toHaveAttribute("data-visible", "false");
-    expect(zone("cpu")).toHaveFocus();
+    await expectClosedTo(zone("cpu"));
     expect(useSessionStore.getState().welcomeSeen).toBe(true);
   });
 
-  it("closed with the pointer while the focus is elsewhere, it leaves the focus where it was", () => {
+  it("SCN-AC23: a click on the veil closes it, and a click on the terminal does not", async () => {
     renderScene();
-    const heading = screen.getByRole("heading", { level: 1 });
-    heading.focus();
-    fireEvent.click(within(welcome()).getByRole("button", { name: "Explorar" }));
+    const content = terminal();
+    if (content === null) throw new Error("The welcome is not open");
+    fireEvent.click(content);
+    expect(terminal()).not.toBeNull();
 
-    expect(welcome()).toHaveAttribute("data-visible", "false");
-    expect(heading).toHaveFocus();
+    const veil = content.previousElementSibling;
+    if (veil === null) throw new Error("The welcome has no veil");
+    fireEvent.click(veil);
+    await expectClosedTo(zone("cpu"));
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
   });
 
-  it("SCN-AC23: a section opened while it shows closes it, and it does not come back", () => {
+  it("SCN-AC23: a section opened while it is open closes it for good, without taking the focus", async () => {
     const { navigate } = renderScene();
-    navigate("/es/about/");
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    navigate("/es/profile/");
+    await vi.waitFor(() => {
+      expect(terminal()).toBeNull();
+    });
     expect(useSessionStore.getState().welcomeSeen).toBe(true);
+    expect(zone("cpu")).not.toHaveFocus();
 
     navigate("/es/");
-    expect(welcome()).toHaveAttribute("data-visible", "false");
-  });
-
-  it("SCN-AC23: opening the settings menu while it shows closes it", () => {
-    renderScene();
-    act(() => {
-      useUiStore.setState({ settingsOpen: true });
-    });
-    expect(useSessionStore.getState().welcomeSeen).toBe(true);
-
-    act(() => {
-      useUiStore.setState({ settingsOpen: false });
-    });
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(terminal()).toBeNull();
   });
 
   it("SCN-AC23: a section open from the start puts it off until the section closes", () => {
     const { navigate } = renderScene("es", "/es/projects/");
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(terminal()).toBeNull();
     expect(useSessionStore.getState().welcomeSeen).toBe(false);
 
     navigate("/es/");
-    expect(welcome()).toHaveAttribute("data-visible", "true");
+    expect(terminal()).not.toBeNull();
   });
 
-  it("SCN-AC23: comes back after a session reset", async () => {
+  it("SCN-AC23: comes back after a session reset, once the boot has been replayed", async () => {
     renderScene();
-    await userEvent.click(within(welcome()).getByRole("button", { name: "Explorar" }));
-    expect(welcome()).toHaveAttribute("data-visible", "false");
+    await userEvent.click(screen.getByRole("button", { name: "Explorar" }));
+    await expectClosedTo(zone("cpu"));
 
+    // The reset clears the session an instant before the replay starts: no welcome yet.
     act(() => {
       useSessionStore.getState().reset();
     });
-    expect(welcome()).toHaveAttribute("data-visible", "true");
+    expect(terminal()).toBeNull();
+
+    act(() => {
+      root.dataset["boot"] = "play";
+    });
+    expect(terminal()).toBeNull();
+    act(() => {
+      useSessionStore.getState().markBootSeen();
+      root.dataset["boot"] = "done";
+    });
+    expect(terminal()).not.toBeNull();
   });
 
   it("speaks the language of the page", () => {
     renderScene("en");
-    expect(screen.getByRole("region", { name: "System ready" })).toHaveTextContent(
-      "Welcome to my portfolio.",
-    );
-    expect(within(welcome()).getByRole("link", { name: "See my profile" })).toHaveAttribute(
+    const dialog = screen.getByRole("dialog", { name: "System ready" });
+    expect(dialog).toHaveTextContent("Welcome to my portfolio.");
+    expect(within(dialog).getByRole("button", { name: "Close welcome" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: "See my profile" })).toHaveAttribute(
       "href",
       "/en/profile/",
     );

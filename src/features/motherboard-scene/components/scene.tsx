@@ -7,6 +7,7 @@ import {
   type KeyboardEvent,
   lazy,
   Suspense,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -120,11 +121,19 @@ export function Scene({ sections, identity }: SceneProps) {
 
   const [isCalibrating] = useState(() => CalibrationOverlay !== null && isCalibrationRequested());
   const [decoded, setDecoded] = useState<readonly SceneVariant[]>([]);
+  const isBootSeen = useSessionStore((state) => state.bootSeen);
   const isWelcomeSeen = useSessionStore((state) => state.welcomeSeen);
   const markWelcomeSeen = useSessionStore((state) => state.markWelcomeSeen);
-  // A session reset clears `welcomeSeen`, so the welcome comes back after the boot (SCN-R48).
-  const isWelcomeVisible =
-    hasSession && !isWelcomeSeen && isBootDone && openSlug === null && !isSettingsOpen;
+  // A session reset clears `welcomeSeen`, so the welcome comes back after the boot. It also clears
+  // `bootSeen` an instant before the replay starts, while `data-boot` is still `done`: waiting for
+  // `bootSeen` keeps the welcome from opening in that instant (SCN-R48).
+  const isWelcomeOpen =
+    hasSession &&
+    isBootSeen &&
+    !isWelcomeSeen &&
+    isBootDone &&
+    openSlug === null &&
+    !isSettingsOpen;
 
   const primaryTotal = sections.filter((section) => section.isPrimary).length;
   const visitedLabel = common.visitedSectionsLabel({ count: visitedCount, total: primaryTotal });
@@ -161,14 +170,19 @@ export function Scene({ sections, identity }: SceneProps) {
     performance.mark("scene:ready");
   }, [isImageReady, isBootDone]);
 
-  // Opening a section or the settings menu while the welcome shows closes it for good. A section
-  // opened before it showed only puts it off until the section closes (SCN-R48, SCN-R50).
-  const wasWelcomeVisible = useRef(false);
+  // A section opened while the welcome is open, from "See my profile" or the history buttons,
+  // closes it for good. A section opened before it showed only puts it off until the section
+  // closes (SCN-R48, SCN-R50).
+  const wasWelcomeOpen = useRef(false);
   useEffect(() => {
-    const wasVisible = wasWelcomeVisible.current;
-    wasWelcomeVisible.current = isWelcomeVisible;
-    if (wasVisible && (openSlug !== null || isSettingsOpen)) markWelcomeSeen();
-  }, [isWelcomeVisible, openSlug, isSettingsOpen, markWelcomeSeen]);
+    const wasOpen = wasWelcomeOpen.current;
+    wasWelcomeOpen.current = isWelcomeOpen;
+    if (wasOpen && (openSlug !== null || isSettingsOpen)) markWelcomeSeen();
+  }, [isWelcomeOpen, openSlug, isSettingsOpen, markWelcomeSeen]);
+  // Once the visitor closed it, the focus goes on to the first piece of the scene (SCN-R50).
+  const focusFirstZone = useCallback(() => {
+    stage.current?.querySelector<HTMLElement>('[data-zone="cpu"]')?.focus();
+  }, []);
 
   // When a section closes and the focus is nowhere in the scene, it goes to the piece that had
   // opened that section (SCN-R38).
@@ -231,16 +245,12 @@ export function Scene({ sections, identity }: SceneProps) {
         {scene.pageTitle}
       </h1>
       <div ref={stage} data-testid="scene-root" className={STAGE_BOX}>
-        {/* Right after the heading, and the welcome before the zones, for the reading and tab
-            order (SCN-R47, SCN-R51). */}
+        {/* Right after the heading, for the reading order (SCN-R47). */}
         <IdentityPlate identity={identity} />
         <SceneWelcome
-          isVisible={isWelcomeVisible}
-          onDismiss={(hadFocus) => {
-            // The focus goes on to the first piece of the scene (QLT-R08).
-            if (hadFocus) stage.current?.querySelector<HTMLElement>('[data-zone="cpu"]')?.focus();
-            markWelcomeSeen();
-          }}
+          isOpen={isWelcomeOpen}
+          onDismiss={markWelcomeSeen}
+          onClosed={focusFirstZone}
         />
         <SceneImages
           variant={variant}

@@ -13,6 +13,7 @@ import { type ViewportName, VIEWPORTS } from "./support/viewports";
 const PREFS_KEY = "portfolio:v1:prefs";
 const SESSION_KEY = "portfolio:v1:session";
 const AURA = "rgb(255, 197, 61)";
+const BOOT_TEXT = "rgb(155, 239, 169)";
 const VOID = "rgb(10, 9, 7)";
 const SCENE_TITLE = "Juan Esteban Álvarez García: portfolio interactivo";
 
@@ -337,41 +338,13 @@ test.describe("scene on a desktop", () => {
     });
   }
 
-  test("VIS-AC13: the breath of the aura ends within 5 seconds and leaves the glow at its maximum", async ({
-    page,
-  }) => {
-    await page.goto("/es/");
-    const glow = page.locator('[data-aura="psu"] [data-part="glow"]');
-    await expect(glow).toHaveCount(1);
-
-    // The animation starts when the scene appears; its own timeline says when it will end.
-    const duration = await glow.evaluate((element) =>
-      Number(element.getAnimations()[0]?.effect?.getComputedTiming().endTime),
-    );
-    expect(duration).toBe(4800);
-    expect(duration).toBeLessThan(5000);
-
-    await expect
-      .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
-      .toBe(0);
-    expect(await auraOpacity(page, "psu", "glow")).toBe("0.5");
-    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.42");
-    expect(await auraOpacity(page, "psu", "fill")).toBe("0.08");
-  });
-});
-
-test.describe("scene with the welcome on view", () => {
-  test.use({ welcomeSeen: false });
-
   test("VIS-AC04: every focusable element of the scene shows a focus indicator in the aura color", async ({
     page,
   }) => {
     await page.goto("/es/");
     await expect(stage(page)).toBeVisible();
-    await expect(welcome(page)).toBeVisible();
 
-    // First the skip link, the controls of the fixed bar and those of the welcome, which sit on
-    // dark plates.
+    // First the skip link and the controls of the fixed bar, which sit on dark plates.
     for (const [role, name] of [
       ["link", "Saltar al contenido"],
       ["link", "English"],
@@ -380,8 +353,6 @@ test.describe("scene with the welcome on view", () => {
       ["link", "Escribir un correo"],
       ["link", "LinkedIn (se abre en una pestaña nueva)"],
       ["link", "GitHub (se abre en una pestaña nueva)"],
-      ["button", "Explorar"],
-      ["link", "Ver mi perfil"],
     ] as const) {
       await page.keyboard.press("Tab");
       const control = page.getByRole(role, { name, exact: true });
@@ -411,69 +382,160 @@ test.describe("scene with the welcome on view", () => {
     }
   });
 
-  test("SCN-AC22: the welcome shows without the focus, and Tab reaches it after the bar", async ({
+  test("VIS-AC13: the breath of the aura ends within 5 seconds and leaves the glow at its maximum", async ({
     page,
   }) => {
     await page.goto("/es/");
-    await expect(welcome(page)).toBeVisible();
-    await expect(welcome(page).getByRole("heading", { level: 2 })).toHaveText("Sistema listo");
-    await expect(welcome(page)).toContainText(
+    const glow = page.locator('[data-aura="psu"] [data-part="glow"]');
+    await expect(glow).toHaveCount(1);
+
+    // The animation starts when the scene appears; its own timeline says when it will end.
+    const duration = await glow.evaluate((element) =>
+      Number(element.getAnimations()[0]?.effect?.getComputedTiming().endTime),
+    );
+    expect(duration).toBe(4800);
+    expect(duration).toBeLessThan(5000);
+
+    await expect
+      .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
+      .toBe(0);
+    expect(await auraOpacity(page, "psu", "glow")).toBe("0.5");
+    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.42");
+    expect(await auraOpacity(page, "psu", "fill")).toBe("0.08");
+  });
+});
+
+test.describe("scene with the welcome open", () => {
+  test.use({ welcomeSeen: false });
+
+  /** Waits until the welcome is open, with the focus on its title. */
+  async function openWelcome(page: Page): Promise<Locator> {
+    await page.goto("/es/");
+    const dialog = page.getByRole("dialog", { name: "Sistema listo" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("heading", { level: 2 })).toBeFocused();
+    // Its entrance scales it: sizes are measured once it has ended.
+    await expect
+      .poll(() =>
+        dialog.evaluate((element) =>
+          element
+            .getAnimations({ subtree: true })
+            .every((animation) => animation.playState === "finished"),
+        ),
+      )
+      .toBe(true);
+    return dialog;
+  }
+
+  /** The welcome is closed and remembered, and the focus is on the processor. */
+  async function expectDismissed(page: Page): Promise<void> {
+    await expect(welcome(page)).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
+    await expect(page).toHaveURL("/es/");
+    expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
+  }
+
+  test("SCN-AC22: the welcome opens as a modal terminal and Tab only walks its three controls", async ({
+    page,
+  }) => {
+    const dialog = await openWelcome(page);
+    await expect(dialog).toContainText(
       "Te doy la bienvenida a mi portfolio. Navega por los componentes de la placa para conocer sobre mí y lo que puedo hacer por ti.",
     );
-    expect(
-      await welcome(page).evaluate((element) => element.contains(document.activeElement)),
-    ).toBe(false);
 
-    await page.getByRole("link", { name: "GitHub (se abre en una pestaña nueva)" }).focus();
-    for (const target of [
-      page.getByRole("button", { name: "Explorar" }),
-      page.getByRole("link", { name: "Ver mi perfil" }),
-      page.getByRole("link", { name: "Procesador (CPU): Perfil" }),
+    const controls = [
+      dialog.getByRole("button", { name: "Cerrar bienvenida" }),
+      dialog.getByRole("button", { name: "Explorar" }),
+      dialog.getByRole("link", { name: "Ver mi perfil" }),
+    ];
+    for (const control of controls) {
+      await page.keyboard.press("Tab");
+      await expect(control).toBeFocused();
+      const box = await boxOf(control);
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    // The rest of the page is inert: the focus never leaves the welcome.
+    for (let presses = 0; presses < 8; presses += 1) {
+      await page.keyboard.press("Tab");
+      const isOutside = await dialog.evaluate((element) => {
+        const active = document.activeElement;
+        return active !== null && active !== document.body && !element.contains(active);
+      });
+      expect(isOutside, `after ${String(presses + 1)} more presses of Tab`).toBe(false);
+    }
+  });
+
+  test("VIS-AC04: the controls of the welcome show a focus ring in the color of the boot text", async ({
+    page,
+  }) => {
+    const dialog = await openWelcome(page);
+    for (const control of [
+      dialog.getByRole("button", { name: "Cerrar bienvenida" }),
+      dialog.getByRole("button", { name: "Explorar" }),
+      dialog.getByRole("link", { name: "Ver mi perfil" }),
     ]) {
       await page.keyboard.press("Tab");
-      await expect(target).toBeFocused();
+      await expect(control).toBeFocused();
+      const outline = await control.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return { width: Number.parseFloat(style.outlineWidth), color: style.outlineColor };
+      });
+      expect(outline.width).toBeGreaterThanOrEqual(2);
+      expect(outline.color).toBe(BOOT_TEXT);
     }
   });
 
   test("SCN-AC23: Explore closes the welcome, moves the focus to the processor and is remembered", async ({
     page,
   }) => {
-    await page.goto("/es/");
-    await page.getByRole("button", { name: "Explorar" }).focus();
-    await page.keyboard.press("Enter");
-
-    await expect(welcome(page)).toBeHidden();
-    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
-    expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
+    const dialog = await openWelcome(page);
+    await dialog.getByRole("button", { name: "Explorar" }).click();
+    await expectDismissed(page);
 
     await page.reload();
     await expect(stage(page)).toBeVisible();
     await expect(html(page)).toHaveAttribute("data-app", "ready");
-    await expect(welcome(page)).toBeHidden();
+    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeVisible();
+    await expect(welcome(page)).toHaveCount(0);
   });
 
-  test("SCN-AC23: Esc closes the welcome while the focus is in it", async ({ page }) => {
-    await page.goto("/es/");
-    await page.getByRole("button", { name: "Explorar" }).focus();
+  test("SCN-AC23: the close button closes the welcome", async ({ page }) => {
+    const dialog = await openWelcome(page);
+    await dialog.getByRole("button", { name: "Cerrar bienvenida" }).click();
+    await expectDismissed(page);
+  });
+
+  test("SCN-AC23: Esc closes the welcome", async ({ page }) => {
+    await openWelcome(page);
     await page.keyboard.press("Escape");
-
-    await expect(welcome(page)).toBeHidden();
-    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
+    await expectDismissed(page);
   });
 
-  test("SCN-AC23: opening a section while the welcome shows closes it for the session", async ({
+  test("SCN-AC23: a click on the veil, over the fan, closes the welcome without opening a section", async ({
     page,
   }) => {
-    await page.goto("/es/");
-    await expect(welcome(page)).toBeVisible();
-    await page.getByRole("link", { name: "Pila CMOS: Acerca de este sitio" }).click();
-    await expect(page.getByRole("dialog", { name: "Acerca de este sitio" })).toBeVisible();
-    await expect(welcome(page)).toBeHidden();
+    await openWelcome(page);
+    const fan = await boxOf(page.locator('[data-zone="fan"]'));
+    await page.mouse.click(fan.x + fan.width / 2, fan.y + fan.height / 2);
+    await expectDismissed(page);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+  });
+
+  test("SCN-AC23: See my profile closes the welcome and opens the profile", async ({ page }) => {
+    const dialog = await openWelcome(page);
+    await dialog.getByRole("link", { name: "Ver mi perfil" }).click();
+
+    const panel = page.getByRole("dialog", { name: "Perfil" });
+    await expect(panel).toBeVisible();
+    await expect(panel.getByRole("heading", { level: 2 })).toBeFocused();
+    await expect(welcome(page)).toHaveCount(0);
+    expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
 
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL("/es/");
     await expect(page.getByRole("dialog")).toHaveCount(0);
-    await expect(welcome(page)).toBeHidden();
+    await expect(welcome(page)).toHaveCount(0);
   });
 
   test("SCN-AC23: a section opened at once puts the welcome off until it closes", async ({
@@ -481,16 +543,16 @@ test.describe("scene with the welcome on view", () => {
   }) => {
     await page.goto("/es/projects/");
     await expect(page.getByRole("dialog", { name: "Proyectos" })).toBeVisible();
-    await expect(welcome(page)).toBeHidden();
+    await expect(welcome(page)).toHaveCount(0);
 
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL("/es/");
-    await expect(welcome(page)).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "Sistema listo" })).toBeVisible();
   });
 });
 
 test.describe("scene after the boot sequence of a first visit", () => {
-  test.use({ bootSeen: false });
+  test.use({ bootSeen: false, welcomeSeen: false });
 
   test("SCN-AC21: the identity plate stays hidden while the boot plays and shows when it ends", async ({
     page,
@@ -507,11 +569,10 @@ test.describe("scene after the boot sequence of a first visit", () => {
 
     await expect(html(page)).toHaveAttribute("data-boot", "done");
     await expect(plate(page)).toBeVisible();
-    // The welcome greets a first visit at the end of the boot, without taking the focus.
-    await expect(welcome(page)).toBeVisible();
-    expect(
-      await welcome(page).evaluate((element) => element.contains(document.activeElement)),
-    ).toBe(false);
+    // The welcome opens at the end of the boot of a first visit, never during it (SCN-R48).
+    const dialog = page.getByRole("dialog", { name: "Sistema listo" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("heading", { level: 2 })).toBeFocused();
   });
 });
 
@@ -533,6 +594,9 @@ test.describe("scene without browser storage", () => {
     await expect(html(page)).toHaveAttribute("data-mode", "scene");
     await expect(html(page)).toHaveAttribute("data-scene", "photo");
     await expect(page.locator("img[data-state=shown]")).toBeVisible();
+    // Without storage every session is new, so the welcome greets; it closes all the same.
+    await page.getByRole("button", { name: "Explorar" }).click();
+    await expect(welcome(page)).toHaveCount(0);
 
     await page.getByRole("link", { name: "Memoria RAM: Stack tecnológico" }).click();
     await expect(page).toHaveURL("/es/stack/");
@@ -695,22 +759,32 @@ test.describe("scene in every viewport", () => {
     });
   }
 
-  test.describe("with the welcome on view", () => {
+  test.describe("with the welcome open", () => {
     test.use({ welcomeSeen: false });
 
     for (const name of SCENE_VIEWPORTS) {
-      test(`SCN-AC24: on ${name} the welcome covers no piece and is at most 192 px high`, async ({
+      test(`SCN-AC24: on ${name} the welcome terminal is centered, ${String(Math.min(560, VIEWPORTS[name].width - 32))} px wide and whole`, async ({
         page,
       }) => {
-        await page.setViewportSize(VIEWPORTS[name]);
+        const viewport = VIEWPORTS[name];
+        await page.setViewportSize(viewport);
         await page.goto("/es/");
         await expect(welcome(page)).toBeVisible();
+        // Measured once its entrance, which scales it, has ended.
+        await expect
+          .poll(() =>
+            welcome(page).evaluate((element) =>
+              element.getAnimations().every((animation) => animation.playState === "finished"),
+            ),
+          )
+          .toBe(true);
 
         const box = await boxOf(welcome(page));
-        expect(box.height).toBeLessThanOrEqual(192);
-        for (const [zone, zoneBox] of await interactiveZoneBoxes(page)) {
-          expect(boxesOverlap(box, zoneBox), zone).toBe(false);
-        }
+        expect(Math.abs(box.width - Math.min(560, viewport.width - 32))).toBeLessThan(1);
+        expect(Math.abs(box.x + box.width / 2 - viewport.width / 2)).toBeLessThan(1);
+        expect(Math.abs(box.y + box.height / 2 - viewport.height / 2)).toBeLessThan(1);
+        expect(box.y).toBeGreaterThanOrEqual(0);
+        expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
       });
     }
   });
