@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { gzipSync } from "node:zlib";
 
 import { SECTION_SLUGS } from "../../src/shared/contracts/ids";
 import { LOCALES } from "../../src/shared/contracts/locale";
@@ -208,4 +209,11 @@ test("SYS-AC14: every link to another origin opens in a new tab without leaking 
     }
   }
   expect(count).toBeGreaterThan(100);
+});
+
+test("QLT-AC15: every exported document weighs 45 kB at most when compressed", () => {
+  for (const file of listHtmlDocuments()) {
+    const bytes = gzipSync(readExportedFile(file), { level: 9 }).length;
+    expect(bytes, file).toBeLessThanOrEqual(45_000);
+  }
 });

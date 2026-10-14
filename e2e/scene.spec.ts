@@ -147,7 +147,9 @@ test.describe("scene on a desktop", () => {
     expect(sceneRequests).toHaveLength(1);
   });
 
-  test("SYS-AC11: a tour of the site only requests its own origin", async ({ page }) => {
+  test("SYS-AC11, QLT-AC21: a tour of the site only requests its own origin, without errors or warnings", async ({
+    page,
+  }) => {
     const origins = new Set<string>();
     page.on("request", (request) => {
       if (/^https?:/.test(request.url())) origins.add(new URL(request.url()).origin);
@@ -226,7 +228,7 @@ test.describe("scene on a desktop", () => {
     });
   }
 
-  test("SCN-AC08: a label follows the pointer, stays under it and is dismissed with Esc", async ({
+  test("SCN-AC08, QLT-AC06: a label follows the pointer, stays under it and is dismissed with Esc", async ({
     page,
   }) => {
     await page.goto("/es/");
