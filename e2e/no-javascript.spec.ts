@@ -82,6 +82,22 @@ test("SMP-AC06: language and navigation links work without JavaScript", async ({
   await expect(page.getByRole("region", { name: "Contact" })).toBeInViewport();
 });
 
+for (const locale of ["es", "en"] as const) {
+  test(`VSN-AC12: without JavaScript every case study opens with its four blocks (${locale})`, async ({
+    page,
+  }) => {
+    const titles =
+      locale === "es"
+        ? ["El problema", "Mi rol", "El proceso", "Resultado"]
+        : ["The problem", "My role", "The process", "Outcome"];
+    for (const caseStudy of ["thesis", "andespace", "dental-site"]) {
+      await page.goto(`/${locale}/projects/${caseStudy}/`);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 2 })).toHaveText(titles);
+    }
+  });
+}
+
 test("SYS-AC04: without JavaScript the entry page offers a link to each language", async ({
   page,
 }) => {

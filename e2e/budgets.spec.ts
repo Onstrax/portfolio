@@ -61,7 +61,7 @@ test.describe("weight budgets", () => {
   );
   test.use({ bootSeen: false });
 
-  for (const path of ["/es/", "/es/cv/", "/en/cv/"]) {
+  for (const path of ["/es/", "/es/cv/", "/en/cv/", "/es/projects/thesis/"]) {
     test(`QLT-AC15: ${path} in simple mode stays within the budgets of JavaScript, CSS and document`, async ({
       page,
     }) => {

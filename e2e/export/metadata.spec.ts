@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 
-import { SECTION_SLUGS } from "../../src/shared/contracts/ids";
+import { CASE_STUDY_IDS, SECTION_SLUGS } from "../../src/shared/contracts/ids";
 import { LOCALES } from "../../src/shared/contracts/locale";
 import { listHtmlDocuments, NEXT_INTERNAL_DOCUMENTS, readExportedFile } from "../support/export";
 
@@ -17,13 +17,22 @@ interface LocalePage {
 }
 
 const LOCALE_PAGES: readonly LocalePage[] = LOCALES.flatMap((locale) =>
-  ["", "cv/", ...SECTION_SLUGS.map((section) => `${section}/`)].map((rest) => ({
+  [
+    "",
+    "cv/",
+    ...SECTION_SLUGS.map((section) => `${section}/`),
+    ...CASE_STUDY_IDS.map((caseStudy) => `projects/${caseStudy}/`),
+  ].map((rest) => ({
     locale,
     file: `${locale}/${rest}index.html`,
     path: `/${locale}/${rest}`,
     inLocale: (other: string) => `/${other}/${rest}`,
   })),
 );
+
+function isCasePage(page: LocalePage): boolean {
+  return /\/projects\/[^/]+\/$/.test(page.path);
+}
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`\\s${name}="([^"]*)"`, "i").exec(tag)?.[1]?.replaceAll("&amp;", "&");
@@ -137,9 +146,9 @@ test("QLT-AC19: titles and descriptions are within their limits and unique", () 
   const descriptions = LOCALE_PAGES.map(
     (page) => meta(readExportedFile(page.file), "description")[0] ?? "",
   );
-  expect(LOCALE_PAGES).toHaveLength(18);
-  expect(new Set(titles).size).toBe(18);
-  expect(new Set(descriptions).size).toBe(18);
+  expect(LOCALE_PAGES).toHaveLength(24);
+  expect(new Set(titles).size).toBe(24);
+  expect(new Set(descriptions).size).toBe(24);
   for (const text of titles) {
     expect(text.length, text).toBeGreaterThan(0);
     expect(text.length, text).toBeLessThanOrEqual(60);
@@ -153,7 +162,8 @@ test("QLT-AC19: titles and descriptions are within their limits and unique", () 
 test("SMP-AC11, QLT-AC20: the pages of the scene group carry one valid Person block", () => {
   for (const page of LOCALE_PAGES) {
     const blocks = jsonLdBlocks(readExportedFile(page.file));
-    if (page.path.endsWith("/cv/")) {
+    // The plain pages, the simple view and the case studies, carry no structured data.
+    if (page.path.endsWith("/cv/") || isCasePage(page)) {
       expect(blocks, page.file).toEqual([]);
       continue;
     }
@@ -180,12 +190,12 @@ test("SMP-AC11, QLT-AC20: the pages of the scene group carry one valid Person bl
   }
 });
 
-test("SMP-AC12, QLT-AC20: the sitemap lists the 18 pages and robots.txt points to it", () => {
+test("SMP-AC12, QLT-AC20: the sitemap lists the 24 pages and robots.txt points to it", () => {
   const sitemap = readExportedFile("sitemap.xml");
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   expect([...urls].sort()).toEqual(LOCALE_PAGES.map((page) => `${ORIGIN}${page.path}`).sort());
-  expect(sitemap.match(/hreflang="x-default"/g)).toHaveLength(18);
-  expect(sitemap.match(/hreflang="es"/g)).toHaveLength(18);
+  expect(sitemap.match(/hreflang="x-default"/g)).toHaveLength(24);
+  expect(sitemap.match(/hreflang="es"/g)).toHaveLength(24);
 
   const robots = readExportedFile("robots.txt");
   expect(robots).toContain(`Sitemap: ${ORIGIN}/sitemap.xml`);
@@ -231,5 +241,63 @@ test("QLT-AC15: every exported document weighs 45 kB at most when compressed", (
   for (const file of listHtmlDocuments()) {
     const bytes = gzipSync(readExportedFile(file), { level: 9 }).length;
     expect(bytes, file).toBeLessThanOrEqual(45_000);
+  }
+});
+
+/** Fragments that each case study shows, in Spanish and in English (SSD §4.6). */
+const CASE_FRAGMENTS: Readonly<Record<string, readonly string[]>> = {
+  "es/projects/thesis": [
+    "Se estima que, entre 2028 y 2035",
+    "Lidero el componente matemático",
+    "Un protocolo no interactivo basado en Module-LWE.",
+  ],
+  "en/projects/thesis": [
+    "Quantum computing is expected to break",
+    "Lead the Learning with Errors",
+    "A non-interactive protocol based on Module-LWE.",
+  ],
+  "es/projects/andespace": [
+    "En la universidad había espacios desaprovechados",
+    "Diseñé y construí la pantalla de inicio",
+    "Un inicio sencillo y un diseño sobrio.",
+  ],
+  "en/projects/andespace": [
+    "University spaces went unused",
+    "Designed and built the home screen",
+    "A simple home screen and a restrained design.",
+  ],
+  "es/projects/dental-site": [
+    "El consultorio no tenía presencia en línea.",
+    "Identifiqué el problema",
+    "Reescribir los textos con un lenguaje cercano al paciente.",
+  ],
+  "en/projects/dental-site": [
+    "The practice had no online presence.",
+    "Identified the problem",
+    "Rewriting the copy in plain, patient-friendly language.",
+  ],
+};
+
+test("SMP-AC20: every case study page has its title, its four blocks and no scene", () => {
+  const names: Readonly<Record<string, string>> = {
+    "es/projects/thesis": "Tesis: autenticación poscuántica de conocimiento cero",
+    "en/projects/thesis": "Thesis: post-quantum zero-knowledge authentication",
+    "es/projects/andespace": "AndeSpace",
+    "en/projects/andespace": "AndeSpace",
+    "es/projects/dental-site": "Web para un consultorio odontológico",
+    "en/projects/dental-site": "Dental practice website",
+  };
+  for (const [page, fragments] of Object.entries(CASE_FRAGMENTS)) {
+    const html = readExportedFile(`${page}/index.html`);
+    const main = /<main[^>]*id="content"[^>]*>([\s\S]*)<\/main>/.exec(html)?.[1] ?? "";
+    const headings = [...main.matchAll(/<h1[^>]*>([^<]*)<\/h1>/g)].map((match) => match[1]);
+    expect(headings, page).toEqual([names[page]]);
+    const ids = [...main.matchAll(/<h2[^>]*\sid="([^"]+)"/g)].map((match) => match[1]);
+    expect(ids, page).toEqual(["case-problem", "case-role", "case-process", "case-outcome"]);
+    for (const fragment of fragments) {
+      expect(main, `${page}: ${fragment}`).toContain(fragment);
+    }
+    expect(html, page).not.toContain('data-layer="scene"');
+    expect(jsonLdBlocks(html), page).toEqual([]);
   }
 });

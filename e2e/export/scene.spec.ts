@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-import { SECTION_SLUGS } from "../../src/shared/contracts/ids";
+import { CASE_STUDY_IDS, SECTION_SLUGS } from "../../src/shared/contracts/ids";
 import { LOCALES } from "../../src/shared/contracts/locale";
 import { OUT_DIR, readExportedFile } from "../support/export";
 
@@ -25,7 +25,7 @@ function listTextFiles(directory = OUT_DIR): readonly string[] {
   });
 }
 
-test("SYS-AC06: the pre-paint script is a plain script inside head, and the cv page has none", () => {
+test("SYS-AC06: the pre-paint script is a plain script inside head, and the plain pages have none", () => {
   expect(SCENE_DOCUMENTS).toHaveLength(16);
   for (const file of SCENE_DOCUMENTS) {
     const head = headOf(readExportedFile(file));
@@ -34,7 +34,12 @@ test("SYS-AC06: the pre-paint script is a plain script inside head, and the cv p
     expect(tag?.[1], file).toBe("");
   }
   for (const locale of LOCALES) {
-    expect(readExportedFile(`${locale}/cv/index.html`)).not.toContain(PRE_PAINT_START);
+    for (const file of [
+      `${locale}/cv/index.html`,
+      ...CASE_STUDY_IDS.map((caseStudy) => `${locale}/projects/${caseStudy}/index.html`),
+    ]) {
+      expect(readExportedFile(file), file).not.toContain(PRE_PAINT_START);
+    }
   }
 });
 

@@ -1,4 +1,4 @@
-import { SECTION_SLUGS } from "../src/shared/contracts/ids";
+import { CASE_STUDY_IDS, SECTION_SLUGS } from "../src/shared/contracts/ids";
 import { LOCALES } from "../src/shared/contracts/locale";
 import type { Page } from "@playwright/test";
 
@@ -213,6 +213,19 @@ for (const [name, viewport] of [
         await page.goto(`/${locale}/cv/`);
         await expectNoViolations(page);
       });
+    }
+
+    // On a desktop every case study in both languages; on a phone one of them (QLT-R26).
+    for (const caseStudy of name === "desktop" ? CASE_STUDY_IDS : (["thesis"] as const)) {
+      for (const locale of name === "desktop" ? LOCALES : (["es"] as const)) {
+        test(`QLT-AC01, VIS-AC03: the case study ${caseStudy} has no accessibility violations (${locale})`, async ({
+          page,
+        }) => {
+          await page.goto(`/${locale}/projects/${caseStudy}/`);
+          await expect(page.getByRole("heading", { level: 2 })).toHaveCount(4);
+          await expectNoViolations(page);
+        });
+      }
     }
   });
 }
