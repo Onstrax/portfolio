@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 3.3 |
+| Versión | 4.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS |
 
@@ -71,7 +71,7 @@ Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1
 | AST-R18 | **Atrezo:** los objetos no interactivos son propios de un banco de montaje (destornilladores, tornillos, organizadores, estaño, cables, pulsera antiestática). No hay límite de cantidad, pero ninguno toca ni tapa un objeto interactivo y ninguno se parece a un objeto interactivo. |
 | AST-R47 | **Reserva de la franja superior:** ningún objeto interactivo ocupa la región del espacio de escena con `y` menor o igual que 100, en todo su ancho. Sobre ella se dibujan la barra fija, a la derecha (ver SET), y la parte alta de la placa de identidad, a la izquierda (ver SCN): con el escenario más pequeño admitido, la barra y su margen ocupan 94 unidades de alto. |
 | AST-R55 | **Reserva de la placa de identidad:** ningún objeto interactivo ocupa la región con `x` menor o igual que 500 e `y` menor o igual que 200, donde se dibuja la placa de identidad (SCN-R46). Con el escenario más pequeño admitido (1024×576 px, escala 0,64), la placa y sus márgenes de 16 px ocupan como máximo 316×128 px, es decir 494×200 unidades. |
-| AST-R56 | **Reserva de la bienvenida:** ningún objeto interactivo, salvo el display de diagnóstico, que no es enfocable, ocupa la región con `x` entre 500 y 1100 e `y` mayor o igual que 552, donde se dibuja la bienvenida (SCN-R49). Con el escenario más pequeño admitido, la bienvenida mide como máximo 380×192 px y queda a 16 px del borde inferior, es decir dentro de esa región. |
+| AST-R56 | Retirado el 2026-10-14 (D-92): la bienvenida es una terminal centrada en un diálogo modal y ya no ocupa una región fija de la escena. |
 | AST-R19 | **Nitidez:** toda la imagen está enfocada; no hay desenfoque de profundidad de campo. |
 
 | Zona | Rango en el máster aceptado (unidades, aproximado) | Contenido |
@@ -350,7 +350,7 @@ Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la
 | AST-AC07 | Ningún objeto de atrezo toca, tapa ni se confunde con un objeto interactivo, y la imagen está enfocada en toda su extensión. | Revisión manual |
 | AST-AC08 | El brillo medio de cada esquina de cada máster cumple el requisito de su variante (AST-R14 o AST-R51). | Ejecución de `pnpm assets:check` |
 | AST-AC09 | El máster cumple AST-R32. | Ejecución de `pnpm assets:check` |
-| AST-AC10 | En la superposición de calibración, cada objeto interactivo queda completo dentro de la zona segura, cumple su tamaño mínimo de la tabla de §4.4, la placa madre cumple AST-R23 y ningún polígono invade las regiones reservadas de AST-R47, AST-R55 y AST-R56. | Revisión manual con la superposición |
+| AST-AC10 | En la superposición de calibración, cada objeto interactivo queda completo dentro de la zona segura, cumple su tamaño mínimo de la tabla de §4.4, la placa madre cumple AST-R23 y ningún polígono invade las regiones reservadas de AST-R47 y AST-R55. | Revisión manual con la superposición |
 | AST-AC11 | En la superposición, ningún vértice de un polígono se separa de la silueta visible de su objeto más de 8 unidades, y la separación entre polígonos de objetos distintos es de 24 unidades o más. | Revisión manual con la superposición al 200 % de zoom |
 | AST-AC12 | A 1024×600, 1280×720, 1920×1080, 2560×1080 y 1024×768 px, la imagen se ve completa, sin recortes, con franjas del color de fondo de la variante donde el viewport no es 16:9, y el aura de cada zona se distingue en todo su perímetro. | Prueba E2E para el encuadre; revisión manual del autor para el aura |
 | AST-AC13 | Tras `pnpm assets:build`, `public/scene/` contiene exactamente dieciocho archivos, nueve por variante, con los nombres de AST-R33 y cada uno respeta su peso máximo y ninguno contiene metadatos (AST-R46). | Ejecución de `pnpm assets:check` |
@@ -392,6 +392,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 4.0 | Por decisión del autor (D-92): se retira AST-R56, la reserva del centro inferior, porque la bienvenida ya no se dibuja ahí. AST-AC10 comprueba las dos reservas que quedan. |
 | 2026-10-14 | 3.3 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38). AST-AC10: con la calibración real, `validateHotspots` no encuentra ningún polígono en las tres regiones reservadas (SCN-AC02) y la superposición las dibuja; es la misma calibración que el autor revisó (SCN-AC17), que ya cumplía las nuevas reservas, como anotó la versión 3.3. Sin cambio de requisitos. |
 | 2026-10-14 | 3.3 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 3.3 | Versión 2, pendiente de aprobación del autor (D-83, D-84, D-89). AST-R47: la reserva pasa de la esquina de la barra fija a toda la franja superior, porque la barra crece con los contactos y la placa de identidad ocupa la izquierda. Nuevos AST-R55 (esquina superior izquierda, placa de identidad) y AST-R56 (centro inferior, bienvenida). AST-AC10 comprueba las tres. Los dos másteres actuales cumplen las tres reservas con su calibración: ninguna zona baja de `y` = 119, la fuente de poder empieza en `y` = 312 y el SSD termina en `y` = 551. |

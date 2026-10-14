@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.4 |
+| Versión | 3.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | — |
 
@@ -112,7 +112,7 @@ La versión 2 nace de lo que piden los procesos de selección y de las primeras 
 | ID | Requisito de alcance |
 | --- | --- |
 | VSN-R21 | Tres proyectos destacados, la tesis, AndeSpace y la web odontológica, DEBEN tener un **caso de estudio**: una página propia, que se abre sin iniciar sesión y sin JavaScript, con el problema, el rol del autor (qué hizo él y, si fue en equipo, qué hizo el resto), el proceso (decisiones con sus alternativas y cambios de rumbo) y el resultado con lo aprendido. Desde la tarjeta de cada uno de esos proyectos se llega a su caso (ver SSD y SMP). |
-| VSN-R22 | La escena DEBE mostrar siempre una **placa de identidad** con el nombre del autor, su carrera y sus áreas de enfoque, y DEBE dar la **bienvenida** al terminar el arranque, una vez por sesión y sin bloquear la escena (ver SCN). |
+| VSN-R22 | La escena DEBE mostrar siempre una **placa de identidad** con el nombre del autor, su carrera y sus áreas de enfoque, y DEBE dar la **bienvenida** al terminar el arranque, una vez por sesión, en un diálogo que se cierra con un clic en cualquier parte, con Esc o con su botón de cerrar (ver SCN). |
 | VSN-R23 | Desde la escena, el CV, el correo, LinkedIn y GitHub DEBEN estar a una sola interacción (ver SET). |
 | VSN-R24 | Los resultados y las cifras más relevantes del contenido DEBEN destacarse con peso tipográfico, nunca con color, y como mucho uno por elemento de lista (ver TSC y VIS). |
 | VSN-R25 | El contenido DEBE incluir la opción académica en Machine Learning, sus cursos y sus proyectos (F-22 a F-24), y los enlaces a los repositorios que pasaron a ser públicos (F-25). |
@@ -183,7 +183,7 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | **Secuencia de arranque** (boot sequence) | La animación inicial con un registro de arranque al estilo del kernel de Linux. |
 | **Barra fija** (fixed bar) | La barra de controles siempre visible en una esquina de la escena (idioma, vista simple y contactos). |
 | **Placa de identidad** (identity plate) | La placa siempre visible en la esquina superior izquierda de la escena con el nombre, la carrera y las áreas del autor (ver SCN). |
-| **Bienvenida** (welcome) | La placa no modal que saluda al visitante al terminar el arranque, una vez por sesión (ver SCN). |
+| **Bienvenida** (welcome) | El diálogo con estética de terminal que saluda al visitante al terminar el arranque, una vez por sesión (ver SCN). |
 | **Caso de estudio** (case study) | La página de un proyecto destacado con su problema, el rol del autor, el proceso y el resultado (ver SSD y SMP). |
 | **Texto destacado** (emphasized text) | Una cadena de contenido con un fragmento que se muestra con más peso (ver TSC §4.4). |
 | **Panel frontal** (front panel) | La pieza de hardware sobre el workbench que abre los ajustes. |
@@ -203,7 +203,7 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | Slugs de sección en inglés para ambos idiomas (§4, D-13). | Un único identificador estable por sección: cambiar de idioma es cambiar el prefijo de la URL, y no hay tabla de traducción de rutas que mantener. |
 | La sección `about` no cuenta en el display de diagnóstico (§4.2). | El contador comunica el progreso sobre el perfil profesional, que son las seis secciones primarias. |
 | Casos de estudio en páginas propias (VSN-R21, D-82). | Un reclutador técnico necesita el porqué de las decisiones, no solo el resultado; y un proceso de selección pide un enlace que lleve directamente al proyecto. Una página por caso se puede enviar, se lee en un teléfono y no alarga el panel de Proyectos (P7). |
-| Bienvenida en lugar de pista (VSN-R22, D-83). | Quien llega no sabía de quién era el portfolio ni qué hacer: el nombre solo existía para lectores de pantalla. La placa responde a quién; la bienvenida, a qué hacer, sin interponerse (P1, P2). |
+| Bienvenida en lugar de pista (VSN-R22, D-83, D-92). | Quien llega no sabía de quién era el portfolio ni qué hacer: el nombre solo existía para lectores de pantalla. La placa responde a quién; la bienvenida, a qué hacer. Por decisión del autor (D-92) es una terminal centrada en un diálogo: se ve sin falta y se cierra con un clic en cualquier parte, así que no retiene a nadie (P1, P2). |
 
 ## 11. Preguntas abiertas
 
@@ -213,6 +213,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Por decisión del autor (D-92): la bienvenida es un diálogo con estética de terminal que se cierra con un clic en cualquier parte, con Esc o con su botón. VSN-R22, glosario y decisión reescritos. |
 | 2026-10-14 | 2.4 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38), VSN-AC11 y VSN-AC12 incluidos. VSN-AC09 sigue siendo la revisión del autor antes de cada publicación de contenido; para v2 la hizo con A11 y A12. Sin cambio de requisitos. |
 | 2026-10-14 | 2.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82 a D-87, D-90). §6 reescrito con el alcance de v2: VSN-R21 a VSN-R25. Las antiguas V2-01 y V2-02 pasan a §6.1, sin fecha. §7: capturas y demos tampoco en los casos; chatbot, testimonios y animaciones gratuitas, fuera. Nuevos VSN-AC11 y VSN-AC12. Glosario: placa de identidad, bienvenida, caso de estudio y texto destacado. |

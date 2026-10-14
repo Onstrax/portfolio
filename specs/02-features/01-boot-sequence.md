@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.1 |
-| Última actualización | 2026-10-13 |
+| Versión | 1.2 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -76,7 +76,7 @@ Feature: `src/features/boot-sequence/`. Tiene las dos entradas de STR-R33: `serv
 | BOOT-R18 | **Salto.** El arranque termina de inmediato cuando el visitante pulsa cualquier tecla que no sea solo un modificador (Mayús, Control, Alt, Meta) ni el tabulador, pulsa o toca cualquier punto de la pantalla, o activa el botón de saltar. El tabulador no salta, para que con teclado se pueda llegar al botón (BOOT-R15). Una pulsación anterior a la carga del código también cuenta: mientras `data-boot` es `play`, el script previo al pintado anota la primera en el atributo `data-boot-skip` de `<html>`, y `BootController` la atiende al iniciarse. |
 | BOOT-R19 | **Transición.** Al terminar, `BootController` escribe `data-boot="exit"` y se ejecuta la animación M-02 de VIS: la pantalla de arranque se desvanece y la escena aparece. Tras un salto, el desvanecimiento del arranque dura `duration-fast` en lugar de `duration-slow`. Al acabar la animación escribe `data-boot="done"`, la pantalla deja de mostrarse (`display: none`) y se llama a `markBootSeen()`. Solo se espera al desvanecimiento de la pantalla, no a las líneas que aún no habían aparecido. |
 | BOOT-R20 | Mientras `data-boot` es `play` o `exit`, la escena está montada debajo y carga su imagen, pero es inerte: no recibe foco ni eventos de puntero. |
-| BOOT-R21 | Si al terminar el arranque el foco estaba en el botón de saltar, pasa al `<h1>` de la escena. Tras una repetición pasa siempre al `<h1>`, porque el control que la pidió, en el menú de ajustes, ya no existe; si el foco quedara en ningún sitio, WebKit no volvería a avanzarlo con el tabulador. En otro caso no se mueve. |
+| BOOT-R21 | Si al terminar el arranque el foco estaba en el botón de saltar, pasa al `<h1>` de la escena. Tras una repetición pasa siempre al `<h1>`, porque el control que la pidió, en el menú de ajustes, ya no existe; si el foco quedara en ningún sitio, WebKit no volvería a avanzarlo con el tabulador. En otro caso no se mueve. Si al terminar el arranque se abre la bienvenida de la escena, que es modal, el foco pasa después a su título (SCN-R51). |
 | BOOT-R22 | El arranque nunca bloquea la página: si el código de la aplicación no llega a iniciarse, el temporizador de respaldo del script previo al pintado pasa a la vista simple (QLT-R43), en la que la pantalla de arranque no se muestra. |
 | BOOT-R23 | En una repetición con el sonido activado, al empezar se reproduce el efecto `boot` (ver SET). En la primera visita no suena nada, porque el sonido está desactivado por defecto. |
 
@@ -131,6 +131,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.2 | Por decisión del autor (D-92). BOOT-R21: cuando al terminar el arranque se abre la bienvenida, el foco termina en su título. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Durante M7, por delegación del autor (D-74). BOOT-R18: el tabulador no salta el arranque, porque BOOT-AC09 exige poder llegar con él al botón; y una pulsación anterior a la carga del código cuenta, anotada por el script previo al pintado. BOOT-R15: el enlace de salto de la escena se oculta durante el arranque. BOOT-R19 precisado. §4.5: atributos de prueba y funciones de `lib/`. BOOT-AC05: los 2600 ms cuentan desde el primer pintado, como BOOT-R17, y se miden con el reloj de la página. BOOT-R17: reloj del primer pintado. BOOT-R21: tras una repetición el foco va al título de la escena. BOOT-AC05, AC06 y AC11: sus límites de tiempo se miden solo en Chromium (TST-R22). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

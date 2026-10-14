@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
+| Versión | 3.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
@@ -35,7 +35,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
 | SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`; un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma, la vista simple y los contactos sigan al alcance (PNL-R25). |
-| SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a la bienvenida y a las zonas de la escena (QLT-R07). |
+| SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a las zonas de la escena (QLT-R07). Mientras la bienvenida está abierta, la barra es inerte, como el resto de la escena (SCN-R51). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
 ### 4.2 Selector de idioma
@@ -183,6 +183,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Por decisión del autor (D-92). SET-R03: la bienvenida ya no está en el orden de tabulación de la escena; mientras está abierta, la barra es inerte. |
 | 2026-10-14 | 2.0 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): los contactos directos de la barra fija, también dentro del panel abierto (SET-AC01, SET-AC14), y la bienvenida tras el reinicio (SET-AC09). Sin cambio de requisitos. |
 | 2026-10-14 | 2.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-84). SET-R02: la barra fija añade un separador y los contactos directos; nuevo §4.9 (SET-R30 y SET-R31). SET-R03: los contactos van antes de la bienvenida y de las zonas. SET-R24 y SET-R25: el reinicio borra también `welcomeSeen` y la bienvenida reemplaza a la pista. §4.7: cuatro textos nuevos. SET-AC01 y SET-AC09 actualizados; nuevo SET-AC14. |

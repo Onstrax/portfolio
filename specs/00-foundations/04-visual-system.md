@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 3.0 |
+| Versión | 4.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR |
 
@@ -47,7 +47,7 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 | `on-dark` | `#F3F1E7` | Texto principal sobre superficies oscuras |
 | `on-dark-muted` | `#B5B1A3` | Texto secundario sobre superficies oscuras |
 | `aura` | `#FFC53D` | Aura de las zonas interactivas en la variante fotografía; borde, texto y foco de controles interactivos sobre superficies oscuras, en ambas variantes |
-| `backdrop` | `#050504` | Velo sobre la escena cuando hay un panel abierto; se aplica con opacidad 60 % |
+| `backdrop` | `#050504` | Velo sobre la escena cuando hay un panel o la bienvenida abiertos; se aplica con opacidad 60 % |
 
 #### 4.1.2 Superficies claras (panel de detalle, vista simple)
 
@@ -66,10 +66,10 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 
 | Token | Valor | Uso |
 | --- | --- | --- |
-| `boot-bg` | `#040604` | Fondo de la pantalla de arranque |
-| `boot-text` | `#9BEFA9` | Texto de las líneas del registro |
-| `boot-dim` | `#5FA36C` | Marcas de tiempo |
-| `boot-ok` | `#4ADE80` | Indicador `OK`; segmentos encendidos del display de diagnóstico |
+| `boot-bg` | `#040604` | Fondo de la pantalla de arranque y de la terminal de la bienvenida |
+| `boot-text` | `#9BEFA9` | Texto de las líneas del registro y de la bienvenida; texto y anillo de foco de los controles de la bienvenida |
+| `boot-dim` | `#5FA36C` | Marcas de tiempo; borde de la terminal de la bienvenida y de sus botones, y su signo `›` |
+| `boot-ok` | `#4ADE80` | Indicador `OK`; segmentos encendidos del display de diagnóstico; título de la bienvenida |
 
 #### 4.1.4 Contraste verificado
 
@@ -107,7 +107,7 @@ La variante boceto (AST §4.10) es un dibujo sobre papel claro, donde el ámbar 
 | `aura-sketch` | `#1F4FBF` | Aura y rectángulo de foco de las zonas interactivas en la variante boceto. Azul de bolígrafo (D-86) |
 | `paper` | `#F2EBDF` | Franjas fuera del escenario y viñeteado en la variante boceto. Es el color mediano del máster del boceto |
 
-Las placas oscuras (barra fija, placa de identidad, etiquetas, ajustes y bienvenida) no cambian con la variante: su fondo es propio y sus acentos siguen en `aura`.
+Las placas oscuras (barra fija, placa de identidad, etiquetas y ajustes) y la terminal de la bienvenida no cambian con la variante: su fondo es propio, y sus acentos siguen en `aura` en las placas y en los colores del arranque en la terminal.
 
 #### 4.1.6 Impresión
 
@@ -167,7 +167,7 @@ La hoja de impresión de la vista simple (SMP-R12) usa negro sobre blanco.
 | `z-labels` | 20 | Etiquetas |
 | `z-bar` | 30 | Barra fija |
 | `z-settings` | 40 | Menú de ajustes |
-| `z-panel` | 50 | Velo y panel de detalle |
+| `z-panel` | 50 | Velo y panel de detalle; velo y terminal de la bienvenida, que nunca está abierta a la vez que el panel |
 | `z-boot` | 60 | Secuencia de arranque |
 | `z-skip-link` | 70 | Enlace "saltar al contenido" |
 
@@ -195,7 +195,7 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 #### 4.5.1 Placa oscura
 
-Superficie de la barra fija, la placa de identidad, las etiquetas de la escena, la bienvenida y el menú de ajustes.
+Superficie de la barra fija, la placa de identidad, las etiquetas de la escena y el menú de ajustes.
 
 | ID | Requisito |
 | --- | --- |
@@ -235,13 +235,21 @@ Superficie del panel de detalle. Reproduce la referencia `DetailIdea1Component`:
 | --- | --- |
 | VIS-R28 | La vista simple usa fondo `screen` y texto `ink` en toda la página, con los mismos roles tipográficos, controles y estilos de contenido que la pantalla del panel. Su disposición se define en SMP. |
 
+#### 4.5.4 Terminal de la bienvenida
+
+Superficie de la bienvenida de la escena (SCN §4.7), con la estética de la pantalla de arranque (BOOT).
+
+| ID | Requisito |
+| --- | --- |
+| VIS-R46 | Fondo `boot-bg` opaco, borde de 1 px en `boot-dim`, radio `radius-plate`, sombra `shadow-panel` y relleno interior de 24 px. El título usa el rol "Etiqueta de escena, línea de nombre" en `boot-ok`, precedido del signo `›` en `boot-dim`; el texto, el rol "Registro de arranque" en `boot-text`. "Explorar" y "Ver mi perfil" tienen el estilo "Botón de terminal" (VIS-R29). El botón de cerrar muestra el icono `close` a 20 px en `boot-text`, que pasa a `boot-ok` con hover, sobre un área de 44×44 px. |
+
 ### 4.6 Controles y foco
 
 | ID | Requisito |
 | --- | --- |
 | VIS-R29 | Los controles tienen exactamente los estilos de la tabla siguiente. |
 | VIS-R30 | Todo control con el que se interactúa mediante puntero mide al menos 44×44 px de área pulsable. Quedan exentos los enlaces dentro de una línea de texto. |
-| VIS-R31 | Todo elemento enfocable DEBE mostrar un anillo de foco con `:focus-visible`: contorno de 2 px con separación de 2 px, en `aura` sobre superficies oscuras y en `ink` sobre superficies claras. Sobre la escena, el color es el de aura de la variante activa (VIS-R44). El anillo NO DEBE eliminarse ni sustituirse por un cambio de color. |
+| VIS-R31 | Todo elemento enfocable DEBE mostrar un anillo de foco con `:focus-visible`: contorno de 2 px con separación de 2 px, en `aura` sobre superficies oscuras y en `ink` sobre superficies claras. Sobre la escena, el color es el de aura de la variante activa (VIS-R44); sobre la terminal de la bienvenida, es `boot-text`. El anillo NO DEBE eliminarse ni sustituirse por un cambio de color. |
 | VIS-R32 | Un control deshabilitado se muestra con opacidad 0,45 y cursor por defecto, y no reacciona a hover. |
 
 | Control | Reposo | Hover | Pulsado |
@@ -249,6 +257,7 @@ Superficie del panel de detalle. Reproduce la referencia `DetailIdea1Component`:
 | Botón primario (superficie clara) | Fondo `ink`, texto `screen` | Fondo `accent` | Escala 0,98 |
 | Botón secundario (superficie clara) | Fondo `control`, borde 1 px `ink`, texto `ink` | Fondo `ink`, texto `screen` | Escala 0,98 |
 | Botón sobre superficie oscura | Fondo transparente, borde 1 px `on-dark-muted` al 40 %, texto `on-dark` | Borde y texto `aura` | Escala 0,98 |
+| Botón de terminal | Fondo transparente, borde 1 px `boot-dim`, texto `boot-text` | Borde `boot-text` | Escala 0,98 |
 | Enlace (superficie clara) | Texto `ink`, subrayado de 1 px con separación de 3 px | Texto `accent` | — |
 | Enlace (superficie oscura) | Texto `on-dark`, subrayado de 1 px con separación de 3 px | Texto `aura` | — |
 | Chip neutro | Fondo `control`, borde 1 px `ink-muted`, texto `ink` | No interactivo | — |
@@ -289,7 +298,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | M-09 | Cambio de valor del display de diagnóstico | Opacidad del dígito 0,4 → 1 | `duration-fast`, `ease-out` | Cambio instantáneo |
 | M-10 | Pulsación de un botón | Escala 1 → 0,98 → 1 | `duration-instant`, `ease-out` | Sin animación |
 | M-11 | Aparición de la imagen de la escena al terminar de decodificarse | Opacidad 0 → 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
-| M-12 | Aparición y retirada de la bienvenida de la escena (SCN §4.7) | Opacidad 0 ↔ 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
+| M-12 | Aparición y retirada de la bienvenida de la escena (SCN §4.7) | Velo: opacidad 0 ↔ 0,6. Terminal: opacidad 0 ↔ 1 y escala 0,98 ↔ 1 | Aparición: `duration-base`, `ease-out`. Retirada: `duration-fast`, `ease-in` | Solo opacidad, 150 ms |
 
 ### 4.8 Iconografía
 
@@ -323,7 +332,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | VIS-AC01 | `src/styles/tokens.css` define cada token de §4.1, §4.3 y §4.7 con el valor exacto de esta spec. | Prueba unitaria que lee el archivo y lo compara con la lista esperada |
 | VIS-AC02 | Cada par de la tabla de §4.1.4, calculado a partir de los valores de `tokens.css`, alcanza su mínimo exigido. | Prueba unitaria con una función de contraste WCAG |
 | VIS-AC03 | El análisis automático de accesibilidad no encuentra infracciones de contraste en la escena, en cada uno de los siete paneles, en el menú de ajustes ni en la vista simple, en ambos idiomas. | Prueba E2E con axe |
-| VIS-AC04 | Al recorrer con el tabulador todos los elementos enfocables de la escena, de un panel y de la vista simple, cada uno muestra un contorno de al menos 2 px cuyo color es `aura` o `ink` según la superficie. | Prueba E2E que lee el estilo calculado |
+| VIS-AC04 | Al recorrer con el tabulador todos los elementos enfocables de la escena, de un panel y de la vista simple, cada uno muestra un contorno de al menos 2 px cuyo color es `aura`, `ink` o `boot-text` según la superficie. | Prueba E2E que lee el estilo calculado |
 | VIS-AC05 | Con la emulación de movimiento reducido activa, ningún elemento tiene una animación en bucle en ejecución y ninguna transición calculada supera 150 ms. | Prueba E2E |
 | VIS-AC06 | No aparece `transition-all` ni `transition: all` en `src/`. | Prueba de arquitectura |
 | VIS-AC07 | El texto de cuerpo de los paneles y de la vista simple tiene un tamaño calculado de 16 px o más; ningún texto visible mide menos de 12 px. | Prueba E2E que lee el estilo calculado |
@@ -357,6 +366,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 4.0 | Por decisión del autor (D-92): la bienvenida deja de ser una placa oscura y pasa a ser una terminal con los colores del arranque. Nuevo §4.5.4 (VIS-R46) y nuevo control "Botón de terminal" en VIS-R29. VIS-R31 y VIS-AC04: en la terminal, el anillo de foco es `boot-text`. M-12: velo y terminal, con escala. Usos de `backdrop`, de los colores del arranque y de `z-panel` ampliados. |
 | 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38). La auditoría con axe recorre ya la bienvenida en las dos variantes (VIS-AC03) y la prueba de movimiento reducido mide su transición (VIS-AC05). VIS-AC12 queda para la revisión del autor de la placa, la bienvenida y la barra fija (A13). Sin cambio de requisitos. |
 | 2026-10-14 | 3.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 3.0 | Versión 2, pendiente de aprobación del autor. Por decisión del autor (D-86): `aura-sketch` pasa de `#B3123A` a `#1F4FBF` (6,05:1 sobre `paper`); principio V2, §4.1.4, §4.1.5 y decisión reescritos. Nuevo VIS-R45: el texto destacado solo cambia el peso (D-85). VIS-R39: excepción para los iconos de la barra fija (D-84). VIS-R20 y §4.1.5: la placa de identidad y la bienvenida son placas oscuras. M-12 pasa a ser la animación de la bienvenida, que sustituye a la pista (D-83). |

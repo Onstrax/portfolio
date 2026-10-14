@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.6 |
+| Versión | 1.7 |
 | Última actualización | 2026-10-14 |
 | Depende de | Todas las demás specs |
 
@@ -209,6 +209,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | A12 | Leer los tres casos de estudio en su página, en ambos idiomas | Al cerrar M11 | SSD-AC14 |
 | A13 | Revisar la placa, la bienvenida y la barra fija en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px | Al cerrar M12 | VIS-AC12 |
 | A14 | Repetir la auditoría manual de QLT §4.8 sobre lo nuevo: la bienvenida y los contactos con teclado y con lector de pantalla, y una página de caso en el teléfono | Durante M13 | QLT-AC27 |
+| A15 | Revisar la nueva bienvenida (D-92) en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px, y recorrerla con teclado y con lector de pantalla | Tras publicar D-92 | VIS-AC12 y QLT-AC27 |
 
 ## 5. Criterios de aceptación
 
@@ -240,6 +241,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.7 | A13 y A14 hechas: el autor revisó la placa, la bienvenida y la barra fija, y auditó lo nuevo en escritorio y en teléfono. Por su decisión (D-92), la bienvenida pasa a ser una terminal modal centrada; el cambio llega después de cerrar v2, en un solo `push` (PLAN-R15), y añade la tarea A15. Pendientes del autor: A15 y A7. |
 | 2026-10-14 | 1.6 | Cierre de M12 y M13. Estado: pasa a "Implementada": todas las specs del índice están en ese estado y la prueba de trazabilidad pasa, lo que PLAN-AC04 deja a la revisión del autor. Pendientes del autor: A13 y A14, y A7 (AST-AC06) desde la versión 1. |
 | 2026-10-14 | 1.6 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.6 | Versión 2, pendiente de aprobación del autor. Nuevo §4.6 con las reglas de v2 (PLAN-R14 a PLAN-R16), los hitos M10 a M13 y las tareas del autor A11 a A14. A10 hecha. §4.4: filas de los hitos nuevos. Nuevo PLAN-AC04. |
