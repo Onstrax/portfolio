@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type FocusEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import {
+  type FocusEvent,
+  type KeyboardEvent,
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { parsePath } from "@/shared/config/routes";
 import type { SceneVariant } from "@/shared/contracts/assets";
@@ -18,6 +26,12 @@ import { useElementSize } from "../hooks/use-element-size";
 import { useLabels } from "../hooks/use-labels";
 import { useSceneVariant } from "../hooks/use-scene-variant";
 import { HOTSPOTS } from "../hotspots";
+import {
+  arrowDirection,
+  type PlacedZone,
+  zoneCenter,
+  zoneInDirection,
+} from "../lib/arrow-navigation";
 import { type AuraState, auraState } from "../lib/aura";
 import { computeHitArea } from "../lib/compute-hit-area";
 import { boundingBox } from "../lib/geometry";
@@ -37,6 +51,10 @@ const HIT_AREAS = new Map(
   HOTSPOT_LIST.map((hotspot) => [hotspot.id, computeHitArea(hotspot, HOTSPOT_LIST)]),
 );
 const DISPLAY_BOX = boundingBox(HOTSPOTS["post-display"].polygon);
+/** The eight interactive zones, which the arrow keys move between (SCN-R45). */
+const NAVIGABLE_ZONES: readonly PlacedZone[] = HOTSPOT_LIST.filter(
+  (hotspot) => hotspot.id !== "post-display",
+).map((hotspot) => ({ id: hotspot.id, center: zoneCenter(hotspot) }));
 
 // The calibration overlay only exists in the development server (SCN-R41): in a production build
 // this condition is false and the bundler drops the import.
@@ -165,6 +183,20 @@ export function Scene({ sections }: SceneProps) {
       if (hasKeyboardFocus(event.currentTarget)) labels.focus(id);
     },
     onBlur: labels.blur,
+    // The arrows move the focus to the nearest piece in their direction (SCN-R45).
+    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
+      const direction = arrowDirection(event.key);
+      if (direction === null || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+      event.preventDefault();
+      const next = zoneInDirection(zoneCenter(HOTSPOTS[id]), direction, NAVIGABLE_ZONES);
+      if (next === null) return;
+      // The zones are siblings, children of the stage.
+      event.currentTarget.parentElement
+        ?.querySelector<HTMLElement>(`[data-zone="${next}"]`)
+        ?.focus();
+    },
   });
   const labelOf = (id: SceneObjectId, name: string, content: string) => (
     <SceneLabel

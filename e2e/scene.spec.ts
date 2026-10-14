@@ -255,6 +255,30 @@ test.describe("scene on a desktop", () => {
     await expect(plate).toBeHidden();
   });
 
+  test("SCN-AC20: the arrow keys move the focus to the nearest piece in their direction", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    const cpu = page.locator('[data-zone="cpu"]');
+    await tabTo(page, cpu);
+    await expect(label(page, "Procesador (CPU)")).toBeVisible();
+
+    const moves: readonly (readonly [string, string, string])[] = [
+      ["ArrowRight", "ram", "Memoria RAM"],
+      ["ArrowLeft", "cpu", "Procesador (CPU)"],
+      ["ArrowDown", "ssd", "SSD NVMe"],
+    ];
+    for (const [key, id, name] of moves) {
+      await page.keyboard.press(key);
+      await expect(page.locator(`[data-zone="${id}"]`), key).toBeFocused();
+      await expect(label(page, name), key).toBeVisible();
+    }
+    await page.locator('[data-zone="fan"]').focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.locator('[data-zone="settings"]')).toBeFocused();
+    expect(await page.evaluate(() => [window.scrollX, window.scrollY])).toEqual([0, 0]);
+  });
+
   test("VIS-AC04: every focusable element of the scene shows a focus indicator in the aura color", async ({
     page,
   }) => {
