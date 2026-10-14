@@ -100,10 +100,12 @@
   --scene-aura: var(--color-aura);
   --scene-backdrop: var(--color-void);
   --scene-display: var(--color-boot-ok);
+  --scene-display-back: transparent;
 }
 
 :root[data-scene="sketch"] {
   --scene-aura: var(--color-aura-sketch);
   --scene-backdrop: var(--color-paper);
   --scene-display: var(--color-ink);
+  --scene-display-back: var(--color-paper);
 }

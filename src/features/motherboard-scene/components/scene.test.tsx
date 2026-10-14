@@ -386,8 +386,11 @@ describe("Scene: diagnostic display and hint", () => {
 
   it("draws unlit segments at a fraction of the opacity of the lit ones", () => {
     renderScene();
-    const segments = [...screen.getByTestId("post-display").querySelectorAll("rect")];
+    const display = screen.getByTestId("post-display");
+    const segments = [...display.querySelectorAll("rect[data-segment]")];
     expect(segments).toHaveLength(14);
+    // Under them, the background that hides the segments drawn in the sketch.
+    expect(display.querySelector('[data-part="backing"]')).toBe(display.firstElementChild);
     expect(new Set(segments.map((segment) => segment.getAttribute("opacity")))).toEqual(
       new Set(["1", "0.08"]),
     );

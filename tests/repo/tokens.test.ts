@@ -122,8 +122,10 @@ describe("tokens.css", () => {
     expect(photo).toContain("--scene-aura: var(--color-aura);");
     expect(photo).toContain("--scene-backdrop: var(--color-void);");
     expect(photo).toContain("--scene-display: var(--color-boot-ok);");
+    expect(photo).toContain("--scene-display-back: transparent;");
     expect(sketch).toContain("--scene-aura: var(--color-aura-sketch);");
     expect(sketch).toContain("--scene-backdrop: var(--color-paper);");
     expect(sketch).toContain("--scene-display: var(--color-ink);");
+    expect(sketch).toContain("--scene-display-back: var(--color-paper);");
   });
 });

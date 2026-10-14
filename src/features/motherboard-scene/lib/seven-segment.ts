@@ -32,6 +32,22 @@ export function twoDigits(value: number): readonly [number, number] {
   return [Math.floor(count / 10), count % 10];
 }
 
+/** Space between the border of the display and the background drawn under its digits, in units. */
+const BACKING_INSET = 1.5;
+
+/**
+ * Rectangle that the background of the digits covers: the inside of the display, leaving its
+ * drawn frame in sight (SCN-R29).
+ */
+export function displayBacking(box: SceneBox): SceneBox {
+  return {
+    left: box.left + BACKING_INSET,
+    top: box.top + BACKING_INSET,
+    right: box.right - BACKING_INSET,
+    bottom: box.bottom - BACKING_INSET,
+  };
+}
+
 /** Opacity of a segment that is not lit (SCN-R29). */
 export const DISPLAY_OFF_OPACITY = 0.08;
 

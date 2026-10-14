@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   DISPLAY_OFF_OPACITY,
+  displayBacking,
   displayLayout,
   litSegments,
   SEGMENT_NAMES,
@@ -34,6 +35,26 @@ describe("litSegments", () => {
 describe("unlit segments", () => {
   it("stay barely visible, like the segments of a display that is switched off", () => {
     expect(DISPLAY_OFF_OPACITY).toBe(0.08);
+  });
+});
+
+describe("displayBacking", () => {
+  it("covers the inside of the display and leaves its frame in sight", () => {
+    const box = { left: 920, top: 795, right: 969, bottom: 829 };
+    expect(displayBacking(box)).toEqual({ left: 921.5, top: 796.5, right: 967.5, bottom: 827.5 });
+  });
+
+  it("holds every segment of both digits", () => {
+    const box = { left: 920, top: 795, right: 969, bottom: 829 };
+    const backing = displayBacking(box);
+    for (const digit of displayLayout(box)) {
+      for (const segment of Object.values(digit)) {
+        expect(segment.left).toBeGreaterThanOrEqual(backing.left);
+        expect(segment.right).toBeLessThanOrEqual(backing.right);
+        expect(segment.top).toBeGreaterThanOrEqual(backing.top);
+        expect(segment.bottom).toBeLessThanOrEqual(backing.bottom);
+      }
+    }
   });
 });
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import {
   DISPLAY_OFF_OPACITY,
+  displayBacking,
   displayLayout,
   litSegments,
   SEGMENT_NAMES,
@@ -17,8 +18,9 @@ interface PostDisplayProps {
 }
 
 /**
- * The two seven-segment digits drawn over the diagnostic display of the board (SCN-R29). The
- * digits brighten up when the value changes, not when they are first drawn (M-09).
+ * The two seven-segment digits drawn over the diagnostic display of the board (SCN-R29), on a
+ * background that only the sketch variant paints. The digits brighten up when the value changes,
+ * not when they are first drawn (M-09).
  */
 export function PostDisplay({ box, count }: PostDisplayProps) {
   const [shown, setShown] = useState(count);
@@ -28,9 +30,19 @@ export function PostDisplay({ box, count }: PostDisplayProps) {
     setChanges(changes + 1);
   }
   const digits = twoDigits(count);
+  const backing = displayBacking(box);
 
   return (
     <g data-testid="post-display" data-value={digits.join("")}>
+      {/* The sketch draws the outline of the segments: there, a background hides them. */}
+      <rect
+        data-part="backing"
+        x={backing.left}
+        y={backing.top}
+        width={backing.right - backing.left}
+        height={backing.bottom - backing.top}
+        className="fill-(--scene-display-back)"
+      />
       {displayLayout(box).map((segments, position) => {
         const lit = litSegments(digits[position] ?? 0);
         return (
