@@ -1,0 +1,74 @@
+# Publishes the site to Cloudflare Pages (DEP §4.4). It runs when the CI workflow ends well on a
+# commit of main, or by hand, and in both cases only for a commit whose `ci-ok` job succeeded.
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: read
+
+# One publication at a time: a new one waits for the one in course (DEP-R15).
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://juan-esteban-alvarez.pages.dev
+  PAGES_PROJECT: juan-esteban-alvarez
+  WRANGLER_VERSION: 4.147.0
+
+jobs:
+  deploy:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.COMMIT }}
+      # A run started by hand has no CI run behind it: the commit itself is asked (DEP-R12).
+      - name: Refuse a commit whose CI did not end well
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${COMMIT}/check-runs?check_name=ci-ok" --jq '[.check_runs[].conclusion] | unique | join(",")')"
+          echo "ci-ok on ${COMMIT}: ${conclusion:-not found}"
+          test "${conclusion}" = "success"
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm assets:check --release
+      - run: pnpm build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ env.SITE_URL }}
+      # wrangler is not a dependency of the site: it is installed outside the project, at an exact
+      # version and without install scripts, and only the next step sees the two secrets.
+      - name: Install wrangler
+        run: npm install --prefix "${RUNNER_TEMP}/wrangler" --ignore-scripts --no-audit --no-fund "wrangler@${WRANGLER_VERSION}"
+      - name: Publish out/ to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: "false"
+        run: >-
+          "${RUNNER_TEMP}/wrangler/node_modules/.bin/wrangler" pages deploy out
+          --project-name="${PAGES_PROJECT}" --branch=main
+          --commit-hash="${COMMIT}" --commit-message="Deploy ${COMMIT}"
+      - name: Check the published site
+        run: node scripts/smoke-test.mjs "${SITE_URL}" --wait 120
