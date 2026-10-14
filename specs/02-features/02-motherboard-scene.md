@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.6 |
+| Versión | 1.7 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -121,6 +121,7 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 | SCN-R15 | El nombre accesible de cada zona de sección es el texto `scene.hotspotName({ hardwareName, title })`, renderizado dentro del enlace como texto visible solo para lectores de pantalla (QLT-R23). El de `settings` es `scene.hotspotName` con `scene.settingsHardwareName` y `scene.settingsTitle`. |
 | SCN-R16 | La zona cuya sección está abierta lleva `aria-current="page"`. Qué sección está abierta se obtiene de la URL con `parsePath` (TSC §4.10). |
 | SCN-R17 | Pulsar fuera de toda zona no hace nada. |
+| SCN-R45 | Con el foco en una de las ocho zonas interactivas, las flechas del teclado lo llevan a la zona interactiva más cercana en esa dirección, medida entre los centros de las cajas de sus siluetas. Para cada zona se calcula el **avance** (distancia en la dirección de la flecha) y el **desvío** (distancia perpendicular). Se descartan las zonas con avance nulo o negativo; entre las que quedan a 45° o menos de la dirección (desvío no mayor que el avance) se elige la de menor `avance + 2 × desvío`, y si no hay ninguna, la de menor valor entre todas las demás. Si no queda ninguna, el foco no se mueve. Con una tecla modificadora pulsada las flechas no actúan, y la página no se desplaza al usarlas. El orden de tabulación no cambia (SCN-R12). |
 
 ### 4.4 Aura y foco
 
@@ -228,11 +229,14 @@ Además, estos atributos exponen a las pruebas el estado que de otro modo solo e
 | SCN-AC16 | La imagen tiene `alt=""`; el SVG decorativo y las etiquetas tienen `aria-hidden="true"`. | Prueba de componente |
 | SCN-AC17 | El autor completa la calibración con la superposición, sobre las dos variantes, y confirma AST-AC10 a AST-AC12, AST-AC20 y SCN-R28. | Revisión manual del autor, registrada en `PROVENANCE.md` y en el historial de esta spec |
 | SCN-AC18 | En `desktop`, tras elegir "Boceto" en los ajustes: `<html>` tiene `data-scene="sketch"`, la imagen visible es un derivado de la variante `sketch`, el halo del aura de `cpu` tiene el color `aura-sketch`, y el enlace de la zona `cpu` conserva su posición, su tamaño y su nombre accesible. Tras recargar la página, todo ello se mantiene. | Prueba E2E |
+| SCN-AC19 | La función de navegación con flechas, sobre zonas de ejemplo, elige la más cercana dentro de los 45°, recurre al semiplano cuando no hay ninguna en ese ángulo y devuelve nada cuando no hay zona en esa dirección. | Prueba unitaria |
+| SCN-AC20 | En `desktop`, con el foco en `cpu`, la flecha derecha lleva el foco a `ram`, la izquierda desde `ram` lo devuelve a `cpu`, la flecha abajo desde `cpu` lo lleva a `ssd` y la flecha abajo desde `fan` a `settings`; cada pieza enfocada muestra su etiqueta, y la página no se desplaza. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
 | Decisión | Justificación |
 | --- | --- |
+| **Flechas espaciales además del tabulador** (SCN-R45, D-81). | El tabulador sigue el orden canónico, que es predecible y coincide con la vista simple (QLT-R07). Las flechas responden a la posición de las piezas en la imagen, que es lo que el visitante ve: pedirlas fue una decisión del autor tras probar el sitio con teclado. La preferencia por el cono de 45° evita que una flecha salte a una pieza casi lateral. |
 | **Zonas como enlaces HTML recortados, y auras en un SVG aparte** (SCN-R11, SCN-R14). | Un enlace nativo da gratis el foco, la activación con teclado, el nombre accesible, "abrir en pestaña nueva" y la navegación del lado del cliente. El SVG queda como dibujo puro, sin semántica. Recortar el enlace a la silueta hace que el puntero responda a la forma real de la pieza. |
 | **Área pulsable mínima de 44 px con la escala más pequeña** (SCN-R13). | La pila CMOS y el panel I/O son estrechos. Ampliar solo el área que responde, no el aura, cumple el tamaño mínimo sin falsear la silueta. |
 | **Etiqueta con nombre de pieza y de sección** (D-25, SCN-R22). | Quien no sabe de hardware lee "SSD NVMe" y debajo "Proyectos": aprende qué es la pieza y qué va a encontrar. |
@@ -251,6 +255,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.7 | Por decisión del autor (D-81), tras probar la escena con teclado: las flechas mueven el foco entre las piezas según su posición en la imagen. Nuevo SCN-R45 y criterios SCN-AC19 y SCN-AC20. |
 | 2026-10-13 | 1.6 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SCN-AC17 quedó confirmado por el autor en la versión 1.4. Sin cambio de requisitos respecto a la fila anterior. |
 | 2026-10-13 | 1.6 | Por indicación del autor al revisar las imágenes (D-76). SCN-R29: fondo bajo los dígitos del display, visible en el boceto. |
 | 2026-10-13 | 1.5 | Durante M7, por delegación del autor. SCN-R03: el `<h1>` es enfocable por programa. SCN-R33: cómo se detecta el reinicio de sesión. §4.11: `data-label-placement` en la zona `settings`. La geometría del escenario pasa a `src/shared/ui/stage.styles.ts`, porque la usan también la barra fija y el póster. |
