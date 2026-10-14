@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
@@ -159,6 +159,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SET-AC12: el autor escuchó los cinco efectos con el sonido activado y los dio por buenos (A5) el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73 y D-75). SET-R10: el menú elige un lado con sitio en lugar de tapar la pieza que lo abre. SET-R02: la barra fija se dibuja también dentro del panel abierto. SET-R12 y SET-R13 precisados. SET-R24 y SET-AC09: el reinicio no puede ocurrir con una sección abierta, porque los dos diálogos son modales. §4.7: identificador de prueba. |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.8 (SET-R27 a SET-R29): selector de imagen de la escena en el menú de ajustes. SET-R11: nuevo orden del contenido. SET-R25 y SET-AC10: el reinicio conserva la variante. Tres textos nuevos y nuevo SET-AC13. El efecto `toggle` suena también al cambiar de imagen. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

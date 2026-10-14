@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.8 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS |
@@ -314,7 +314,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
-| 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). Árbol del repositorio: tercer archivo de configuración de Lighthouse, `lighthouserc.mobile-lcp.json`. |
+| 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). Árbol del repositorio: tercer archivo de configuración de Lighthouse, `lighthouserc.mobile-lcp.json`. Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 1.7 | Durante M2, por delegación del autor. Árbol: se añade `scripts/assets-shared.mjs`, para que la lista de derivados, sus pesos máximos y la medición del brillo estén escritos una sola vez. |
 | 2026-10-13 | 1.6 | Por decisión del autor (D-66 y D-67). Árbol: se añaden `design/scene/master-sketch.png`, `Dockerfile`, `compose.yaml` y `.dockerignore`. |
 | 2026-10-13 | 1.5 | Decidido por delegación del autor durante M0. STR-R02: `.gitignore` excluye también `next-env.d.ts` y `*.tsbuildinfo`, que se regeneran en cada compilación; `pnpm typecheck` pasa en una copia limpia sin ellos. |

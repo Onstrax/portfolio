@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
@@ -601,6 +601,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Durante M4. TSC-R57: `assets.ts` contiene también `OgAsset` y `SiteTheme`. |
 | 2026-10-13 | 2.2 | Aclaraciones surgidas al implementar M1, por delegación del autor. TSC-R50: `serializePrefs` y `serializeSession`. TSC-R53, TSC-R55 y TSC-AC15: los archivos de prueba quedan exentos de las dos restricciones. |
 | 2026-10-13 | 2.1 | Por decisión del autor (D-66). §4.9: `PersistedPrefs` gana `sceneVariant`, con su valor por defecto y la acción `setSceneVariant`. §4.11: `SCENE_VARIANTS`, `SceneVariant`, `DEFAULT_SCENE_VARIANT`, `isSceneVariant` y `SceneAssets`. TSC-AC11 ampliado. |

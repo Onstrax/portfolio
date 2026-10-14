@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST, SCN |
@@ -134,6 +134,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). El autor revisó el panel y leyó en él las siete secciones (A4) el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73). Nuevo PNL-R25: la propiedad `toolbar`, con la que la barra fija sigue operable con el panel abierto; sin ella no había forma de cambiar de idioma con una sección abierta (VSN-AC06, I18N-AC11). |
 | 2026-10-13 | 1.1 | Durante M6, por delegación del autor. PNL-R02: el `<dialog>` cubre el viewport y el velo es un hijo suyo. PNL-R11: al cerrar con "Atrás", el diálogo deja de ser modal durante la animación para que el foco vuelva a la escena. PNL-R12: cierre forzado por el navegador. PNL-R20: el fragmento se aplica también al cambiar de sección. §4.6: atributos de prueba y funciones de `lib/`. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
@@ -282,7 +282,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
-| 2026-10-13 | 2.3 | Durante M8, por delegación del autor (D-77). QLT-R30 y glosario: el Largest Contentful Paint del preajuste `mobile` se mide con la limitación aplicada de verdad, no estimada; el límite de 2,5 s no cambia. Medido el 2026-10-13 en `/es/` y `/en/cv/`: 1,6 s con limitación aplicada y 2,7 s con la estimación por defecto de Lighthouse. |
+| 2026-10-13 | 2.3 | Durante M8, por delegación del autor (D-77). QLT-R30 y glosario: el Largest Contentful Paint del preajuste `mobile` se mide con la limitación aplicada de verdad, no estimada; el límite de 2,5 s no cambia. Medido el 2026-10-13 en `/es/` y `/en/cv/`: 1,6 s con limitación aplicada y 2,7 s con la estimación por defecto de Lighthouse. Estado: pasa a "Implementada" al cerrar M8. QLT-AC27: el autor completó el 2026-10-13, en su equipo y antes de la primera publicación, los pasos de teclado, zoom, movimiento reducido, sin JavaScript y herramientas de desarrollo de §4.8, sin incidencias. Quedan dos pasos: el del lector de pantalla, aplazado con su visto bueno (PLAN-R10), y el del teléfono real, que necesita el sitio desplegado (M9). |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). §4.1.7: nuevo estado auditable con la variante boceto. QLT-R14: el aura se distingue en las dos variantes. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. §4.6: filas `ultrawide` y `classic` adaptadas al escenario 16:9 sin recortes (D-48). |

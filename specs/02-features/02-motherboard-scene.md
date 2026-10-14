@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
@@ -251,6 +251,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.6 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SCN-AC17 quedó confirmado por el autor en la versión 1.4. Sin cambio de requisitos respecto a la fila anterior. |
 | 2026-10-13 | 1.6 | Por indicación del autor al revisar las imágenes (D-76). SCN-R29: fondo bajo los dígitos del display, visible en el boceto. |
 | 2026-10-13 | 1.5 | Durante M7, por delegación del autor. SCN-R03: el `<h1>` es enfocable por programa. SCN-R33: cómo se detecta el reinicio de sesión. §4.11: `data-label-placement` en la zona `settings`. La geometría del escenario pasa a `src/shared/ui/stage.styles.ts`, porque la usan también la barra fija y el póster. |
 | 2026-10-13 | 1.4 | SCN-AC17: el autor revisó la calibración con la superposición, sobre las dos variantes, y la posición de las etiquetas, dentro de su revisión conjunta de M2 a M5, y la aprobó. Sin cambios en los requisitos. |

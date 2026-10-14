@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
@@ -190,6 +190,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SMP-AC17 necesita la URL desplegada: se verifica en M9 (A9). Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor. SMP-R18 y SMP-AC11: los datos estructurados van en la capa base del grupo `(scene)`, es decir, en inicio y secciones. SMP-R15: `theme-color` sale del manifiesto. SMP-R12: se aclara qué cuenta como botón al imprimir. |
 | 2026-10-13 | 1.1 | SMP-R21: la imagen para compartir sale del máster de la variante `photo` (D-66). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

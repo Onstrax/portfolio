@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.8 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
@@ -225,7 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
-| 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). TST-R31, TST-R32 y TST-AC10: Lighthouse se ejecuta en tres pasadas; la tercera mide el Largest Contentful Paint del preajuste `mobile` con la limitación aplicada de verdad. §4.8: el trabajo `lighthouse` instala Chromium. TST-R26: sin JavaScript, la prueba base repite la navegación de Firefox que no ve terminar, en lugar de darla por buena; en la puerta local, bajo carga, dos pruebas sin JavaScript agotaron su tiempo en Firefox, una vez cada una, y esa situación es su causa más probable: no se pudo reproducir de forma aislada. |
+| 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). TST-R31, TST-R32 y TST-AC10: Lighthouse se ejecuta en tres pasadas; la tercera mide el Largest Contentful Paint del preajuste `mobile` con la limitación aplicada de verdad. §4.8: el trabajo `lighthouse` instala Chromium. TST-R26: sin JavaScript, la prueba base repite la navegación de Firefox que no ve terminar, en lugar de darla por buena; en la puerta local, bajo carga, dos pruebas sin JavaScript agotaron su tiempo en Firefox, una vez cada una, y esa situación es su causa más probable: no se pudo reproducir de forma aislada. Estado: pasa a "Implementada" al cerrar M8, con la prueba de trazabilidad en verde (TST-R38); TST-AC15 se verifica en M9, sobre el flujo de publicación. |
 | 2026-10-13 | 1.7 | Durante M7, por delegación del autor. TST-R26: opción `bootSeen` de la prueba base, comprobación manual de una navegación de Firefox que Playwright no ve terminar y, en las pruebas de la redirección de `/`, consulta a la propia página. TST-R23: aviso de Firefox por scripts cancelados. TST-R22: los límites de tiempo del arranque se miden solo en Chromium; en WebKit dentro del contenedor las animaciones avanzan a saltos y no dan una medida fiable. |
 | 2026-10-13 | 1.6 | Durante M5, por delegación del autor. TST-R23: una petición cancelada por el navegador no es fallida; con la escena, cada navegación interrumpe precargas en curso y Firefox las notificaba como fallos. TST-R26: en Firefox, la prueba base navega a `about:blank` antes de cada prueba. |
 | 2026-10-13 | 1.5 | Durante M4, por delegación del autor. TST-R23: se precisa qué es una petición fallida. |

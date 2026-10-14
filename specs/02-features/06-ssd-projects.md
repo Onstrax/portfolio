@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.0 |
 | Última actualización | 2026-10-12 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -285,4 +285,5 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SSD-AC09 y SSD-AC10: el autor revisó el contenido en ambos idiomas, en la vista simple y en el panel (A4), y lo dio por bueno el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-04 a F-07 y F-10 a F-12. |

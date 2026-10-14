@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | — |
@@ -192,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VSN-AC09 se comprueba antes de la primera publicación, en M9. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Por decisión del autor (D-66): nuevo VSN-R20, la escena tiene dos variantes de imagen que el visitante intercambia desde los ajustes. Glosario: variante de escena. §7: se aclara que no es un selector de tema. |
 | 2026-10-13 | 2.2 | §4.2: los slugs se enumeran en el orden canónico de D-46. Sin cambio de requisitos. |
 | 2026-10-12 | 2.1 | Confirmada por el autor el 2026-10-12. VSN-R17: se aclara que la excepción cubre los identificadores que forman parte de URLs públicas enlazadas, como los nombres de usuario en direcciones de repositorios. |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -131,5 +131,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Durante M7, por delegación del autor (D-74). BOOT-R18: el tabulador no salta el arranque, porque BOOT-AC09 exige poder llegar con él al botón; y una pulsación anterior a la carga del código cuenta, anotada por el script previo al pintado. BOOT-R15: el enlace de salto de la escena se oculta durante el arranque. BOOT-R19 precisado. §4.5: atributos de prueba y funciones de `lib/`. BOOT-AC05: los 2600 ms cuentan desde el primer pintado, como BOOT-R17, y se miden con el reloj de la página. BOOT-R17: reloj del primer pintado. BOOT-R21: tras una repetición el foco va al título de la escena. BOOT-AC05, AC06 y AC11: sus límites de tiempo se miden solo en Chromium (TST-R22). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

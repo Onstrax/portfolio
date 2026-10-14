@@ -25,27 +25,27 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 
 | Código | Archivo | Contenido | Estado |
 | --- | --- | --- | --- |
-| VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Aprobada |
-| SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Aprobada |
-| STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Aprobada |
-| VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Aprobada |
-| AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Aprobada |
-| TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Aprobada |
-| I18N | [01-standards/02-i18n-guidelines.md](01-standards/02-i18n-guidelines.md) | Diccionarios, formateadores, cambio de idioma, reglas de traducción | Aprobada |
-| QLT | [01-standards/03-quality-bar.md](01-standards/03-quality-bar.md) | Accesibilidad, rendimiento, presupuestos de peso, robustez, definición de terminado | Aprobada |
-| TST | [01-standards/04-testing-and-ci.md](01-standards/04-testing-and-ci.md) | Niveles de prueba, TDD, E2E, Lighthouse, trazabilidad, pipeline de CI | Aprobada |
-| BOOT | [02-features/01-boot-sequence.md](02-features/01-boot-sequence.md) | Secuencia de arranque | Aprobada |
-| SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Aprobada |
-| PNL | [02-features/03-detail-panel.md](02-features/03-detail-panel.md) | Modal, anterior/siguiente, historial, fragmentos | Aprobada |
-| CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Aprobada |
-| PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Aprobada |
-| SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Aprobada |
-| RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Aprobada |
-| IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Aprobada |
-| FAN | [02-features/09-fan-ecosystem.md](02-features/09-fan-ecosystem.md) | Sección Ecosistema personal | Aprobada |
-| CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Aprobada |
-| SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Aprobada |
-| SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Aprobada |
+| VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Implementada |
+| SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Implementada |
+| STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Implementada |
+| VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Implementada |
+| AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Implementada |
+| TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Implementada |
+| I18N | [01-standards/02-i18n-guidelines.md](01-standards/02-i18n-guidelines.md) | Diccionarios, formateadores, cambio de idioma, reglas de traducción | Implementada |
+| QLT | [01-standards/03-quality-bar.md](01-standards/03-quality-bar.md) | Accesibilidad, rendimiento, presupuestos de peso, robustez, definición de terminado | Implementada |
+| TST | [01-standards/04-testing-and-ci.md](01-standards/04-testing-and-ci.md) | Niveles de prueba, TDD, E2E, Lighthouse, trazabilidad, pipeline de CI | Implementada |
+| BOOT | [02-features/01-boot-sequence.md](02-features/01-boot-sequence.md) | Secuencia de arranque | Implementada |
+| SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Implementada |
+| PNL | [02-features/03-detail-panel.md](02-features/03-detail-panel.md) | Modal, anterior/siguiente, historial, fragmentos | Implementada |
+| CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Implementada |
+| PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Implementada |
+| SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Implementada |
+| RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Implementada |
+| IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Implementada |
+| FAN | [02-features/09-fan-ecosystem.md](02-features/09-fan-ecosystem.md) | Sección Ecosistema personal | Implementada |
+| CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Implementada |
+| SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Implementada |
+| SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Implementada |
 | DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Aprobada |
 | PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Aprobada |
 
@@ -275,3 +275,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | El autor revisa y aprueba M2 a M5 en conjunto, incluidos el contenido (A4) y la calibración (A3): SCN 1.4. Durante M6, por delegación del autor: PNL 1.1 (detalles del diálogo y del cierre) y PLAN 1.5 (tres criterios de cambio de idioma pasan a M7). |
 | 2026-10-13 | Durante M7, por delegación del autor: decisiones D-73 a D-75. BOOT 1.1, SET 1.2, PNL 1.2, SYS 2.4, SCN 1.5 y TST 1.7. |
 | 2026-10-13 | Durante M8. Por decisión del autor al revisar las imágenes, D-76 (fondo del display de diagnóstico en el boceto): VIS 2.7 y SCN 1.6. Por delegación del autor, D-77 (Lighthouse en tres pasadas y `preview` con compresión): QLT 2.3, TST 1.8, SYS 2.5, STR 1.8 y DEP 1.3. |
+| 2026-10-13 | Cierre de M8. El autor confirma la lectura del contenido en el panel (A4), los sonidos (A5), la auditoría manual salvo el lector de pantalla y el teléfono real (A6) y las dos imágenes al 100 %; aplaza A7, la medición de AST-AC01 y el lector de pantalla (PLAN-R10). Todas las specs salvo DEP y PLAN pasan a "Implementada"; los criterios manuales que necesitan el sitio desplegado se verifican en M9. |

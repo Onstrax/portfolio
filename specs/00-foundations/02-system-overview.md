@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN |
@@ -381,7 +381,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
-| 2026-10-13 | 2.5 | Durante M8, por delegación del autor (D-77). §4.9: `preview` comprime con gzip las respuestas de texto (DEP-R20). |
+| 2026-10-13 | 2.5 | Durante M8, por delegación del autor (D-77). §4.9: `preview` comprime con gzip las respuestas de texto (DEP-R20). Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 2.4 | Durante M7, por delegación del autor. SYS-R20: el script previo al pintado anota una pulsación temprana que salta el arranque (D-74). SYS-R47: orden de montaje de los armazones y barra dentro del panel (D-73); `data-mode` no pasa por `simple` durante la hidratación, defecto de M5 corregido con una prueba que lo reproduce. |
 | 2026-10-13 | 2.3 | Durante M5, por delegación del autor (D-68). Nuevo SYS-R52 y árbol de `src/app/`: el elemento `<html>` pasa a los layouts de grupo, con un layout nuevo en `(plain)`, porque es la única forma de que el script previo al pintado quede en `<head>` solo en las páginas de la escena. SYS-R46: dos enlaces de salto, uno por modo. SYS-R47: `SceneLayer` restablece `data-boot` tras una navegación del cliente. SYS-R50: variante `no-hover`. SYS-R05: `agentRules: false`. SYS-R44 precisado. |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66 y D-67). §4.6: nueva preferencia `sceneVariant`. SYS-R20 y nuevo SYS-R51: el script previo al pintado fija `data-scene` e inserta la precarga de la variante. SYS-R50: variantes `scene-photo` y `scene-sketch`. §4.9: nuevo script `check:docker`. Nuevo SYS-AC20. |

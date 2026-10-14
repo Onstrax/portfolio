@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.7 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR |
@@ -356,6 +356,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.7 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VIS-AC12: el autor revisó la escena, las etiquetas, la barra fija y el panel sobre las dos imágenes definitivas al aprobar M5, M6 y M7 y en la auditoría A6, el 2026-10-13; el aura es la que él mismo pidió en D-71 y D-72. Sin cambio de requisitos respecto a la fila anterior. |
 | 2026-10-13 | 2.7 | Por indicación del autor al revisar las imágenes (D-76): en el boceto, el contador no se leía. VIS-R44: cuarta propiedad, `--scene-display-back`, con el fondo de los dígitos del display. Durante M8: M-11 y M-12 duran `duration-fast` con movimiento reducido, como exige VIS-R36; el inventario decía "Igual" y contradecía a VIS-AC05. |
 | 2026-10-13 | 2.6 | Por decisión del autor al revisar el halo (D-72): el relleno de la pieza pasa a estar en todos los estados, y el halo en reposo baja de intensidad para que el paso a hover se note más. VIS-R13, VIS-R14 y tabla de §4.4. Los valores de hover y activo no cambian. |
 | 2026-10-13 | 2.5 | Por decisión del autor al revisar M5 (D-71): el aura deja de tener línea de contorno y pasa a ser un halo que rodea la pieza. VIS-R13 y VIS-R14 reescritos, tabla de opacidades de §4.4 sustituida (sin columnas de trazo, valores más altos), M-03 y M-04 adaptados. El rectángulo de foco de teclado (SCN-R21) no cambia. |

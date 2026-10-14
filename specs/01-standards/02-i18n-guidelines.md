@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, TSC |
@@ -321,6 +321,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). I18N-AC18: el autor leyó las siete secciones en ambos idiomas, en la vista simple y de nuevo dentro del panel (A4), y las dio por buenas el 2026-10-13; queda anotado en la spec de cada sección. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 1.2 | Confirmada por el autor el 2026-10-12. `common` gana `downloadCvLabel`, `copyLabel` y `copiedAnnouncement`, que usan varias secciones y la vista simple. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |
