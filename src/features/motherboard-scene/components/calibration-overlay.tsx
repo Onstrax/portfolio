@@ -8,7 +8,7 @@ import { HOTSPOTS } from "../hotspots";
 import { computeHitArea } from "../lib/compute-hit-area";
 import { boundingBox, boxHeight, boxWidth } from "../lib/geometry";
 import {
-  RESERVED_AREA,
+  RESERVED_AREAS,
   SAFE_AREA,
   SCENE_HEIGHT,
   SCENE_WIDTH,
@@ -48,7 +48,7 @@ function Box({ box, className }: { readonly box: SceneBox; readonly className: s
 
 /**
  * Development aid to trace and check the hotspots over the image (SCN-R41): silhouettes with
- * their identifiers, hit area boxes, safe area, reserved corner, a grid every 100 units and the
+ * their identifiers, hit area boxes, safe area, reserved regions, a grid every 100 units and the
  * position of the pointer in scene units. It is never part of the production build.
  */
 export function CalibrationOverlay() {
@@ -110,7 +110,9 @@ export function CalibrationOverlay() {
           ))}
         </g>
         <Box box={SAFE_AREA} className="fill-none stroke-(--scene-display)" />
-        <Box box={RESERVED_AREA} className="fill-aura-sketch/20 stroke-aura-sketch" />
+        {Object.entries(RESERVED_AREAS).map(([rule, box]) => (
+          <Box key={rule} box={box} className="fill-aura-sketch/20 stroke-aura-sketch" />
+        ))}
         {HOTSPOT_LIST.map((hotspot) => {
           const box = boundingBox(hotspot.polygon);
           return (

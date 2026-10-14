@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { COMPONENT_IDS, SECTION_BY_COMPONENT } from "@/shared/contracts/ids";
+import type { LinkFact } from "@/shared/contracts/content";
 import type { AnySectionDefinition } from "@/shared/contracts/section";
 
-import { buildSectionNav } from "./section-nav";
+import { buildQuickContacts, buildSceneIdentity, buildSectionNav } from "./section-nav";
 
 const SECTIONS: readonly AnySectionDefinition[] = COMPONENT_IDS.map((componentId) => ({
   componentId,
@@ -84,5 +85,57 @@ describe("buildSectionNav", () => {
   it("keeps the order it receives", () => {
     const reversed = [...SECTIONS].reverse();
     expect(buildSectionNav(reversed, "en")[0]?.slug).toBe("about");
+  });
+});
+
+describe("buildSceneIdentity", () => {
+  it("SCN-AC21: builds the plate from the name and the degree and focus areas of the profile", () => {
+    expect(
+      buildSceneIdentity("Ada Lovelace", {
+        degree: "Matemáticas",
+        focusAreas: ["Análisis", "Máquinas"],
+      }),
+    ).toEqual({
+      name: "Ada Lovelace",
+      degree: "Matemáticas",
+      focusAreas: ["Análisis", "Máquinas"],
+    });
+  });
+
+  it("keeps only the fields of the plate", () => {
+    const profile = { degree: "Maths", focusAreas: ["Engines"], intro: "Not on the plate" };
+    expect(Object.keys(buildSceneIdentity("Ada", profile))).toEqual([
+      "name",
+      "degree",
+      "focusAreas",
+    ]);
+  });
+});
+
+describe("buildQuickContacts", () => {
+  const CHANNELS: readonly LinkFact[] = [
+    { id: "email", href: "mailto:ada@example.com" },
+    { id: "whatsapp", href: "https://wa.me/1" },
+    { id: "linkedin", href: "https://www.linkedin.com/in/ada/" },
+    { id: "github", href: "https://github.com/ada" },
+  ];
+
+  it("SET-AC14: puts the résumé first and then the mail, LinkedIn and GitHub channels", () => {
+    expect(buildQuickContacts(CHANNELS, "/cv/ada.pdf")).toEqual([
+      { id: "cv", href: "/cv/ada.pdf" },
+      { id: "email", href: "mailto:ada@example.com" },
+      { id: "linkedin", href: "https://www.linkedin.com/in/ada/" },
+      { id: "github", href: "https://github.com/ada" },
+    ]);
+  });
+
+  it("SET-AC14: keeps that order whatever the order of the channels", () => {
+    const ids = buildQuickContacts([...CHANNELS].reverse(), "/cv/ada.pdf").map(({ id }) => id);
+    expect(ids).toEqual(["cv", "email", "linkedin", "github"]);
+  });
+
+  it("SET-AC14: throws when a channel is missing", () => {
+    const withoutGithub = CHANNELS.filter(({ id }) => id !== "github");
+    expect(() => buildQuickContacts(withoutGithub, "/cv/ada.pdf")).toThrow(/github/);
   });
 });

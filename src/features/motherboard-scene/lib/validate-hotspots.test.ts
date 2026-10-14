@@ -113,16 +113,59 @@ describe("validateHotspots", () => {
     ]);
   });
 
-  it("SCN-AC03: marks an object inside the corner reserved for the fixed bar", () => {
+  it("SCN-AC03: marks an object inside the top band reserved for the bar and the plate", () => {
     expect(validateHotspots(withPolygon("fan", rectangle(1206, 60, 278, 273)))).toEqual([
       {
         rule: "AST-R47",
         ids: ["fan"],
-        message: "fan: occupies the corner reserved for the fixed bar",
+        message: "fan: occupies the top band reserved for the fixed bar and the identity plate",
       },
     ]);
-    // No vertex inside the corner, but the silhouette runs across it.
+    // The band spans the whole width, not only the corner of the bar.
+    expect(rulesOf(withPolygon("ram", rectangle(930, 90, 84, 442)))).toEqual(["AST-R47"]);
+  });
+
+  it("SCN-AC03: marks an object that runs across a reserved region with no vertex inside it", () => {
+    // The fan rises above the band at both sides of a notch, so no vertex lies inside the band.
+    const notched = [
+      { x: 1206, y: 300 },
+      { x: 1206, y: 119 },
+      { x: 1300, y: 119 },
+      { x: 1300, y: 30 },
+      { x: 1400, y: 30 },
+      { x: 1400, y: 119 },
+      { x: 1484, y: 119 },
+      { x: 1484, y: 300 },
+    ];
+    expect(rulesOf(withPolygon("fan", notched))).toContain("AST-R47");
     expect(rulesOf(withPolygon("fan", rectangle(1100, 50, 480, 300)))).toContain("AST-R47");
+  });
+
+  it("SCN-AC03: marks an object inside the corner reserved for the identity plate", () => {
+    expect(validateHotspots(withPolygon("psu", rectangle(46, 190, 446, 336)))).toEqual([
+      {
+        rule: "AST-R55",
+        ids: ["psu"],
+        message: "psu: occupies the corner reserved for the identity plate",
+      },
+    ]);
+  });
+
+  it("SCN-AC03: marks an interactive object inside the region reserved for the welcome", () => {
+    expect(validateHotspots(withPolygon("ssd", rectangle(702, 498, 187, 60)))).toEqual([
+      {
+        rule: "AST-R56",
+        ids: ["ssd"],
+        message: "ssd: occupies the bottom center reserved for the welcome",
+      },
+    ]);
+  });
+
+  it("lets the diagnostic display, which takes no focus, sit under the welcome", () => {
+    expect(
+      HOTSPOTS["post-display"].polygon.some(({ x, y }) => x > 500 && x < 1100 && y > 552),
+    ).toBe(true);
+    expect(rulesOf(HOTSPOTS)).not.toContain("AST-R56");
   });
 
   it("SCN-AC03: marks two hit areas that overlap", () => {

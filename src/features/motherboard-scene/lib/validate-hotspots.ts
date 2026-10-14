@@ -1,6 +1,6 @@
 import { SCENE_OBJECT_IDS, type SceneObjectId } from "@/shared/contracts/ids";
 
-import type { Hotspot, ScenePoint } from "../types";
+import type { Hotspot, SceneBox, ScenePoint } from "../types";
 import { computeHitArea } from "./compute-hit-area";
 import {
   boundingBox,
@@ -11,10 +11,15 @@ import {
   isSelfIntersecting,
   polygonsOverlap,
 } from "./geometry";
-import { RESERVED_AREA, SAFE_AREA } from "./scene-space";
+import {
+  RESERVED_AREA_RULES,
+  RESERVED_AREAS,
+  type ReservedAreaRule,
+  SAFE_AREA,
+} from "./scene-space";
 
 /** Requirement that a calibration issue breaks. */
-export type HotspotRule = "SCN-R08" | "AST-R20" | "AST-R11" | "AST-R47" | "SCN-R13";
+export type HotspotRule = "SCN-R08" | "AST-R20" | "AST-R11" | ReservedAreaRule | "SCN-R13";
 
 export interface HotspotIssue {
   readonly rule: HotspotRule;
@@ -50,11 +55,33 @@ function isInSafeArea(point: ScenePoint): boolean {
   );
 }
 
-function isInReservedArea(point: ScenePoint): boolean {
-  return point.x >= RESERVED_AREA.left && point.y <= RESERVED_AREA.bottom;
+/** What each reserved region keeps free, for the messages. */
+const RESERVED_FOR: Readonly<Record<ReservedAreaRule, string>> = {
+  "AST-R47": "the top band reserved for the fixed bar and the identity plate",
+  "AST-R55": "the corner reserved for the identity plate",
+  "AST-R56": "the bottom center reserved for the welcome",
+};
+
+function isInBox(point: ScenePoint, box: SceneBox): boolean {
+  return point.x >= box.left && point.x <= box.right && point.y >= box.top && point.y <= box.bottom;
 }
 
-function findShapeIssues({ id, polygon }: Hotspot): readonly HotspotIssue[] {
+/**
+ * The reserved regions that an object occupies. The diagnostic display takes no focus, so the
+ * welcome may cover it (AST-R56).
+ */
+function reservedAreasOccupied({ id, polygon }: Hotspot): readonly ReservedAreaRule[] {
+  return RESERVED_AREA_RULES.filter((rule) => {
+    if (rule === "AST-R56" && id === "post-display") return false;
+    const box = RESERVED_AREAS[rule];
+    return (
+      polygon.some((point) => isInBox(point, box)) || polygonsOverlap(polygon, boxToPolygon(box))
+    );
+  });
+}
+
+function findShapeIssues(hotspot: Hotspot): readonly HotspotIssue[] {
+  const { id, polygon } = hotspot;
   const issues: HotspotIssue[] = [];
   const report = (rule: HotspotRule, message: string): void => {
     issues.push({ rule, ids: [id], message: `${id}: ${message}` });
@@ -80,16 +107,17 @@ function findShapeIssues({ id, polygon }: Hotspot): readonly HotspotIssue[] {
     );
   }
 
-  if (polygon.some(isInReservedArea) || polygonsOverlap(polygon, boxToPolygon(RESERVED_AREA))) {
-    report("AST-R47", "occupies the corner reserved for the fixed bar");
+  for (const rule of reservedAreasOccupied(hotspot)) {
+    report(rule, `occupies ${RESERVED_FOR[rule]}`);
   }
   return issues;
 }
 
 /**
  * Checks the calibration data and returns everything that breaks a rule: the shape of each
- * silhouette (SCN-R08), its minimum size (AST §4.4), the corner reserved for the fixed bar
- * (AST-R47), the gap between silhouettes (AST-R11) and the overlap of hit areas (SCN-R13).
+ * silhouette (SCN-R08), its minimum size (AST §4.4), the regions reserved for the fixed bar, the
+ * identity plate and the welcome (AST-R47, AST-R55, AST-R56), the gap between silhouettes
+ * (AST-R11) and the overlap of hit areas (SCN-R13).
  * An empty list means that the calibration is valid (SCN-R10).
  */
 export function validateHotspots(

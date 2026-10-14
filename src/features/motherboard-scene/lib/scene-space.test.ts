@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { SCENE_ASSETS } from "@/shared/assets/manifest.generated";
 
 import {
-  RESERVED_AREA,
+  RESERVED_AREAS,
   SAFE_AREA,
   SCENE_HEIGHT,
   SCENE_WIDTH,
@@ -26,8 +26,12 @@ describe("scene space", () => {
     }
   });
 
-  it("reserves the top right corner for the fixed bar and 64 units for the vignette", () => {
-    expect(RESERVED_AREA).toEqual({ left: 1240, top: 0, right: 1600, bottom: 100 });
+  it("reserves the top band, the plate corner and the welcome, and 64 units for the vignette", () => {
+    expect(RESERVED_AREAS).toEqual({
+      "AST-R47": { left: 0, top: 0, right: 1600, bottom: 100 },
+      "AST-R55": { left: 0, top: 0, right: 500, bottom: 200 },
+      "AST-R56": { left: 500, top: 552, right: 1100, bottom: 900 },
+    });
     expect(VIGNETTE_SIZE).toBe(64);
   });
 });
