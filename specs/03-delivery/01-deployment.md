@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.6 | Verificación manual tras la primera publicación. DEP-AC09: la comprobación posterior pasa contra la URL de producción, y el Observatorio HTTP de Mozilla da A+ (125/100, 11 de 12 pruebas); la única que no pasa es la integridad de subrecursos (SRI) del script de analítica, que inserta Cloudflare y se sirve por HTTPS. DEP-AC10: el autor ve visitas en Web Analytics, y en producción no se crea ninguna cookie (comprobado con un navegador). DEP-AC11: el autor revisó el README y pidió que hablara en primera persona, cambio ya hecho; el repositorio, ya público (A2), no contiene `docs/` ni archivos `.env` en ningún commit. Sin cambio de requisitos. |
 | 2026-10-13 | 1.6 | Por decisión del autor (D-80). §4.6: se retira la mención de la librería de animación, que ya no existe. |
 | 2026-10-13 | 1.5 | §4.9: fecha de la primera publicación (DEP-R29). El flujo de publicación se ejecutó solo tras el CI en verde de ese commit y la comprobación posterior pasó contra la URL de producción. Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Tras la primera publicación, por delegación del autor (D-79). DEP-R25 era erróneo: el script de analítica no envía sus datos al propio dominio, sino a `https://cloudflareinsights.com`, y la política lo bloqueaba, con un error en la consola en cada página y sin registrar visitas. §4.6: `connect-src` admite ese origen. |

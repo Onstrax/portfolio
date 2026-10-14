@@ -122,7 +122,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 | ID | Tarea | Cuándo | Criterio que cierra |
 | --- | --- | --- | --- |
 | A1 | Hecha el 2026-10-13: modelos anotados en `design/scene/PROVENANCE.md` | — | AST-AC19 |
-| A2 | Hacer público el repositorio `Onstrax/portfolio`, ya creado como privado el 2026-10-13 | Al cerrar M9 | DEP-AC11 |
+| A2 | Hecha el 2026-10-13: el repositorio `Onstrax/portfolio` es público, tras comprobar que su historial no contiene `docs/` ni archivos `.env` | — | DEP-AC11 |
 | A3 | Revisar la calibración de las zonas con la superposición de depuración, sobre las dos variantes de la escena, y la posición de las etiquetas | Durante M5 | SCN-AC17 |
 | A4 | Leer el contenido de las siete secciones en ambos idiomas | Al cerrar M3 y de nuevo, ya en el panel, en M6 | I18N-AC18 y el criterio de revisión manual de cada sección |
 | A5 | Escuchar los cinco efectos de sonido | Durante M7 | SET-AC12 |
@@ -185,6 +185,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | Tareas del autor tras la primera publicación: A2 hecha; A9 hecha para el Observatorio (A+), y para LinkedIn se repite tras corregir la vista previa de `/` (SMP 1.3); la medición de AST-AC01, aplazada en M8, ya está hecha. A7 y el lector de pantalla siguen aplazados (PLAN-R10). Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Durante M6, por delegación del autor. VSN-AC06, I18N-AC11 e I18N-AC12 pasan de M6 a M7: necesitan el selector de idioma de la barra fija. Se anota en §4.4 la revisión del autor de M2 a M5. |
 | 2026-10-13 | 1.4 | Durante M5, por delegación del autor. M5 a M7: las pruebas E2E de SCN-AC10, AC11 y AC14 pasan a M6 y la de SCN-AC18 a M7, porque recorren el panel y el menú de ajustes; M5 las comprueba en su forma parcial. M5 añade AST-AC12. |
 | 2026-10-13 | 1.3 | Por decisión del autor (D-66 y D-67). M2 genera los derivados de las dos variantes (AST-AC21); M5 añade SYS-AC20; M8, AST-AC20 y AC22; A3 revisa la calibración sobre las dos variantes. `check:docker` (TST-AC16) se añade como complemento de M0. |

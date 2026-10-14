@@ -12,7 +12,7 @@ Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`
 | Archivo | `design/scene/master.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 11,1 MB |
 | Imagen de origen | `docs/Generations/Tenth generation.jpg`, 1376×768 px |
 
-El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes, y la calibración ya estaba revisada (SCN-AC17). Quedan aplazadas con su visto bueno (PLAN-R10), para los días siguientes a la publicación, la medición con herramienta de AST-AC01 y la prueba con una persona ajena de AST-AC06.
+El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes, y la calibración ya estaba revisada (SCN-AC17). Queda aplazada con su visto bueno (PLAN-R10), para los días siguientes a la publicación, la prueba con una persona ajena de AST-AC06. La medición con herramienta de AST-AC01 la hizo el autor tras la publicación, con resultado conforme.
 
 Calibración: las nueve zonas se trazaron el 2026-10-13 sobre este máster (`src/features/motherboard-scene/hotspots.ts`, versión `dc169b385cc7`).
 
@@ -58,7 +58,7 @@ Cajas estimadas a ojo en el espacio de escena (1600×900 unidades). Sirven como 
 
 | Criterio | Resultado | Fecha |
 | --- | --- | --- |
-| AST-AC01 (cámara cenital) | Conforme a la vista. La medición con herramienta queda aplazada con el visto bueno del autor (PLAN-R10) | 2026-10-13 |
+| AST-AC01 (cámara cenital) | Conforme. Medido por el autor con herramienta: los bordes de la placa son paralelos a los de la imagen dentro de 1° | 2026-10-13 |
 | AST-AC02 (sin texto) | Conforme. Revisada al 100 % por el autor, que la dio por buena sin ajustes. Hay marcas diminutas en dos puertos USB y en los botones del panel frontal, que no se leen como texto | 2026-10-13 |
 | AST-AC03 (nada brilla, sin personas ni objetos ajenos) | Conforme | 2026-10-12 |
 | AST-AC04 (nueve objetos, sin duplicados) | Conforme. Hay dos disipadores junto al procesador que no son el SSD | 2026-10-12 |

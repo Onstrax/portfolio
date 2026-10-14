@@ -192,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.3 | VSN-AC09: el autor revisó el sitio desplegado y no contiene nombres de terceros ni datos de las imágenes de referencia. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VSN-AC09 se comprueba antes de la primera publicación, en M9. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Por decisión del autor (D-66): nuevo VSN-R20, la escena tiene dos variantes de imagen que el visitante intercambia desde los ajustes. Glosario: variante de escena. §7: se aclara que no es un selector de tema. |
 | 2026-10-13 | 2.2 | §4.2: los slugs se enumeran en el orden canónico de D-46. Sin cambio de requisitos. |

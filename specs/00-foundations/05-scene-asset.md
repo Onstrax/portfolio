@@ -390,6 +390,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 3.2 | AST-AC01: el autor midió con herramienta que los bordes de la placa son paralelos a los de la imagen dentro de 1°; resultado anotado en `PROVENANCE.md`. Sigue aplazada AST-AC06 (A7). Sin cambio de requisitos. |
 | 2026-10-13 | 3.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). El autor revisó los dos másteres al 100 % el 2026-10-13 y los dio por buenos sin ajustes: AST-AC02 a AC05 y AC07 en la fotografía y AST-AC22 en el boceto. Lo único que señaló, el contraste del display de diagnóstico sobre el boceto, se resolvió en código (D-76). Con AST-AC10, AC11 y AC20 ya confirmados en la calibración y AST-AC19 hecho (A1), las dos secciones de `PROVENANCE.md` pasan a `accepted`. Aplazadas con su visto bueno (PLAN-R10): la medición con herramienta de AST-AC01 y la prueba con una persona ajena de AST-AC06. Sin cambio de requisitos. |
 | 2026-10-13 | 3.2 | Durante M4, por delegación del autor. AST-R36: el manifiesto exporta además `SITE_THEME`, y `assets:check` comprueba que coincide con `tokens.css`. |
 | 2026-10-13 | 3.1 | Durante M2, por delegación del autor. Nuevo AST-R54: opción `--root`, origen del estado provisional y formato del manifiesto. |

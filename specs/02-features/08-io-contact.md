@@ -164,6 +164,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.1 | IO-AC10: el autor abrió cada canal desde el sitio desplegado, en escritorio y en su teléfono, y todos funcionan. Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). IO-AC10, en la parte que no necesita el sitio desplegado: el autor revisó ambos idiomas (A4) y aceptó las propiedades de los dos PDF, que conservan un objeto interno de ONLYOFFICE, el 2026-10-13. La comprobación de cada canal desde el sitio desplegado, en escritorio y en un teléfono, se hace en M9. Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Por indicación del autor ("solo nombre y título"). IO-R01 e IO-R04: las copias publicadas de los CVs no llevan `Creator`, `Producer` ni fechas en sus propiedades, y una prueba lo comprueba. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-13 y la parte de F-12 relativa al contacto. |
