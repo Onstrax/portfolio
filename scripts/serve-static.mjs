@@ -1,10 +1,13 @@
 // Serves `out/` as static files on port 4173, the way a static host does (SYS §4.9):
-// folder URLs resolve to their index.html, unknown URLs get 404.html with status 404, and every
-// response carries the headers of `out/_headers`, so tests run under the production policy (DEP-R20).
+// folder URLs resolve to their index.html, unknown URLs get 404.html with status 404, every
+// response carries the headers of `out/_headers`, so tests run under the production policy, and
+// text is compressed, as the production host does (DEP-R20).
 import { createReadStream } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
+import { promisify } from "node:util";
+import { gzip } from "node:zlib";
 
 const ROOT = path.resolve("out");
 const PORT = 4173;
@@ -26,6 +29,25 @@ const CONTENT_TYPES = {
   ".woff2": "font/woff2",
   ".xml": "application/xml; charset=utf-8",
 };
+
+/** Extensions whose content is text and shrinks when compressed. Images and fonts already are. */
+const COMPRESSIBLE = [".css", ".html", ".js", ".json", ".map", ".svg", ".txt", ".xml"];
+const compress = promisify(gzip);
+/** Compressed files, by path, with the modification time they were compressed at. */
+const compressed = new Map();
+
+/** The file compressed with gzip, computed once and kept until the file changes. */
+async function readCompressed(file, modifiedAt) {
+  const cached = compressed.get(file);
+  if (cached?.modifiedAt === modifiedAt) return cached.body;
+  const body = await compress(await readFile(file), { level: 9 });
+  compressed.set(file, { modifiedAt, body });
+  return body;
+}
+
+function acceptsGzip(request) {
+  return /\bgzip\b/.test(String(request.headers["accept-encoding"] ?? ""));
+}
 
 /** Parses a `_headers` file into a list of `{ route, headers }` rules. */
 function parseHeaderRules(text) {
@@ -122,10 +144,19 @@ const server = createServer(async (request, response) => {
   }
   // A static host states the size of every file, also in answer to HEAD, which the Next.js
   // router uses to probe a page before prefetching it.
-  response.setHeader("Content-Length", (await stat(file)).size);
+  const { size, mtimeMs } = await stat(file);
+  const isCompressed = COMPRESSIBLE.includes(path.extname(file)) && acceptsGzip(request);
+  const body = isCompressed ? await readCompressed(file, mtimeMs) : null;
+  if (COMPRESSIBLE.includes(path.extname(file))) response.setHeader("Vary", "Accept-Encoding");
+  if (body !== null) response.setHeader("Content-Encoding", "gzip");
+  response.setHeader("Content-Length", body === null ? size : body.length);
   response.writeHead(status);
   if (request.method === "HEAD") {
     response.end();
+    return;
+  }
+  if (body !== null) {
+    response.end(body);
     return;
   }
   createReadStream(file).pipe(response);
