@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Estado | En revisión |
+| Versión | 1.1 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -76,10 +76,10 @@ export interface StackText extends SectionTextBase {
 | `gcp` | `Cloud Run`, `Compute Engine`, `Cloud SQL`, `Cloud Storage`, `IAM`, `Artifact Registry`, `BigQuery` |
 | `aws` | `EC2`, `ECS/Fargate`, `Elastic Beanstalk`, `S3`, `RDS/Aurora`, `ELB`, `Secrets Manager`, `CloudWatch`, `CodeBuild`, `CodePipeline` |
 | `devops` | `Git`, `GitHub Actions`, `CI/CD`, `Docker`, `Docker Compose`, `Linux`, `Nginx`, `Jenkins`, `SonarQube`, `SSH` |
-| `data` | `PostgreSQL`, `MySQL`, `MongoDB`, `Keras` |
+| `data` | `PostgreSQL`, `MySQL`, `MongoDB`, `pandas`, `scikit-learn`, `Keras` |
 | `security` | `AES`, `RSA`, `TLS`, `JWT`, `Argon2id`, `HMAC`, `ZKP/LWE`, `Kyber`, `ECDSA` |
 
-En total, 55 elementos.
+En total, 57 elementos. `pandas` y `scikit-learn` proceden de los proyectos públicos de Machine Learning (F-23).
 
 ### 4.3 Textos
 
@@ -100,7 +100,7 @@ En total, 55 elementos.
 | `groups.aws.title` | Cloud: AWS | Cloud: AWS |
 | `groups.devops.title` | DevOps y herramientas | DevOps and tooling |
 | `groups.data.title` | Datos e inteligencia artificial | Data and AI |
-| `groups.data.note` | Fundamentos de Machine Learning. | Machine Learning fundamentals. |
+| `groups.data.note` | Opción académica en Machine Learning. Además de los dos proyectos públicos de Proyectos, he construido un MLP que clasifica rayos gamma y hadrones, una CNN que diagnostica enfermedades de la yuca a partir de fotos y ejercicios de regresión lineal y K-Means, en repositorios privados. | Machine Learning minor. Besides the two public projects in Projects, built an MLP that classifies gamma rays and hadrons, a CNN that diagnoses cassava diseases from photos, and linear regression and K-Means exercises, in private repositories. |
 | `groups.security.title` | Seguridad y criptografía | Security and cryptography |
 | `methodsTitle` | Ingeniería y metodologías | Engineering and methods |
 | `methods[0]` | Arquitectura de software | Software architecture |
@@ -135,13 +135,13 @@ Iconos propios de esta sección: `code`, `layout`, `server`, `cloud`, `git-branc
 
 | `message` | `status` |
 | --- | --- |
-| `Memory: 8 banks, 55 modules online` | `ok` |
+| `Memory: 8 banks, 57 modules online` | `ok` |
 
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
-| RAM-AC01 | Los hechos contienen los ocho grupos de §4.2 en ese orden, con 5, 6, 4, 7, 10, 10, 4 y 9 elementos, y sus elementos son exactamente los de la tabla. | Prueba unitaria |
+| RAM-AC01 | Los hechos contienen los ocho grupos de §4.2 en ese orden, con 5, 6, 4, 7, 10, 10, 6 y 9 elementos, y sus elementos son exactamente los de la tabla. | Prueba unitaria |
 | RAM-AC02 | Ningún elemento se repite dentro de un grupo ni entre grupos. | Prueba unitaria |
 | RAM-AC03 | Cada idioma tiene un `title` por grupo, `note` solo en `backend` y `data`, y nueve `methods`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
 | RAM-AC04 | El componente renderiza nueve `<h3>` en el orden de RAM-R04, cada uno seguido de una lista con tantos elementos como indica RAM-AC01, y nueve en la de metodologías. | Prueba de componente |
@@ -168,5 +168,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-87, F-22 a F-24). Grupo `data`: añade `pandas` y `scikit-learn` (57 elementos, RAM-AC01 y línea de arranque actualizados). `groups.data.note`: la opción académica en Machine Learning y los proyectos privados de ese ámbito. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). RAM-AC08: el autor revisó ambos idiomas y la lista, en la vista simple y en el panel (A4), el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

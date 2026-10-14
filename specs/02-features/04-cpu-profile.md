@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.0 |
-| Última actualización | 2026-10-12 |
+| Estado | En revisión |
+| Versión | 1.1 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -111,6 +111,7 @@ export interface ProfileText extends SectionTextBase {
 | `focusAreas[0]` | Desarrollo de software | Software development |
 | `focusAreas[1]` | Cloud/DevOps | Cloud/DevOps |
 | `focusAreas[2]` | Seguridad aplicada | Applied security |
+| `focusAreas[3]` | Machine Learning | Machine Learning |
 | `availability` | Disponible desde enero de 2027 · Tiempo completo · Presencial o híbrido en Bogotá | Available from January 2027 · Full-time · On-site or hybrid in Bogotá |
 | `summaryTitle` | Resumen | Summary |
 | `summary[0]` | Estudiante trilingüe de Ingeniería de Sistemas y Computación en la Universidad de los Andes, en el último semestre de asignaturas y desarrollando la tesis. | Trilingual Systems and Computing Engineering student at Universidad de los Andes, completing final coursework and an undergraduate thesis. |
@@ -119,7 +120,7 @@ export interface ProfileText extends SectionTextBase {
 | `summary[3]` | He construido soluciones en equipos ágiles y multiculturales, aplicando arquitectura de software, pruebas, Design Thinking y un enfoque centrado en las personas. | Experienced in agile and multicultural teams, applying software architecture, testing, Design Thinking and user-centered problem-solving. |
 | `educationTitle` | Formación | Education |
 | `education.uniandes.program` | Ingeniería de Sistemas y Computación | B.Sc. in Systems and Computing Engineering |
-| `education.uniandes.detail` | Último semestre de asignaturas; tesis en desarrollo. | Final semester of coursework; thesis in progress. |
+| `education.uniandes.detail` | Último semestre de asignaturas; tesis en desarrollo; opción académica en Machine Learning, que se completa con el grado. | Final semester of coursework; thesis in progress; Machine Learning minor, completed with the degree. |
 | `education.hm.program` | Intercambio académico · Múnich, Alemania | Academic exchange · Munich, Germany |
 | `education.hm.detail` | Ingeniería de Software, Blockchain, Interacción Humano-Computadora y UX con seguimiento ocular; trabajo en equipos internacionales. | Software Engineering, Blockchain, Human-Computer Interaction and eye-tracking UX; international team collaboration. |
 | `gpaLabel` | Promedio | GPA |
@@ -147,10 +148,17 @@ Cursos (`courses`), en este orden:
 | 4 | Infraestructura Computacional | Computer Infrastructure |
 | 5 | Diseño y Análisis de Algoritmos | Design and Analysis of Algorithms |
 | 6 | Fundamentos de Machine Learning | Machine Learning Fundamentals |
-| 7 | Desarrollo de Software en Equipo | Team Software Development |
-| 8 | Construcción de Aplicaciones Móviles | Mobile Application Development |
-| 9 | Desarrollo de Software en la Nube | Cloud Software Development |
-| 10 | DevOps y Despliegue Continuo | DevOps and Continuous Deployment |
+| 7 | Inteligencia de Negocios | Business Intelligence |
+| 8 | Modelado, Simulación y Optimización | Modeling, Simulation and Optimization |
+| 9 | El Hombre Artificial | The Artificial Man |
+| 10 | Análisis con Deep Learning | Deep Learning Analysis |
+| 11 | Principios y Fundamentos del Deep Learning | Principles and Foundations of Deep Learning |
+| 12 | Desarrollo de Software en Equipo | Team Software Development |
+| 13 | Construcción de Aplicaciones Móviles | Mobile Application Development |
+| 14 | Desarrollo de Software en la Nube | Cloud Software Development |
+| 15 | DevOps y Despliegue Continuo | DevOps and Continuous Deployment |
+
+Los cursos 6 a 11 son los de la opción académica en Machine Learning (F-22).
 
 ### 4.4 Presentación
 
@@ -163,7 +171,7 @@ Cursos (`courses`), en este orden:
 
 | Bloque | Encabezado `<h3>` e icono | Contenido |
 | --- | --- | --- |
-| Identidad | Sin encabezado | La fotografía (CPU-R09); el nombre, con el rol tipográfico "Título de panel"; `degree`; los tres `focusAreas` como chips neutros; `location`; `availability`; y un enlace con aspecto de botón primario a `CV_FILES[locale]` (ver IO), con el texto `common.downloadCvLabel` y el icono `download` |
+| Identidad | Sin encabezado | La fotografía (CPU-R09); el nombre, con el rol tipográfico "Título de panel"; `degree`; los cuatro `focusAreas` como chips neutros; `location`; `availability`; y un enlace con aspecto de botón primario a `CV_FILES[locale]` (ver IO), con el texto `common.downloadCvLabel` y el icono `download` |
 | Resumen | `summaryTitle`, icono `file-text` | Los cuatro elementos de `summary`, como lista |
 | Formación | `educationTitle`, icono `graduation-cap` | Una entrada por elemento de `education`: institución como `<h4>`, `program`, periodo y `detail`. La entrada de Uniandes añade el promedio, `graduationLabel` con `graduationYear` y los cursos (CPU-R06). La de Múnich añade `exchangeCredits` como chip. Al final, `additionalTraining` |
 | Idiomas | `languagesTitle`, icono `languages` | Una lista con `name` y `level` de cada idioma, en el orden de `facts.languages` |
@@ -212,10 +220,10 @@ export interface PortraitAsset {
 | ID | Criterio | Verificación |
 | --- | --- | --- |
 | CPU-AC01 | Los hechos son los de §4.2: dos entradas de formación con sus periodos, promedio 4.2 sobre 5, graduación en 2027 y tres idiomas. | Prueba unitaria |
-| CPU-AC02 | Cada idioma tiene cuatro elementos en `summary`, diez cursos, tres `focusAreas` y un texto por cada `EducationId` y `LanguageId`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
+| CPU-AC02 | Cada idioma tiene cuatro elementos en `summary`, quince cursos, cuatro `focusAreas` y un texto por cada `EducationId` y `LanguageId`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
 | CPU-AC03 | El componente renderiza, en ambos idiomas, cuatro encabezados `<h3>` con los títulos de §4.4 en ese orden, la imagen con `alt` igual al nombre, y el promedio como "4,2/5,0" en español y "4.2/5.0" en inglés. | Prueba de componente |
 | CPU-AC04 | Los periodos se renderizan como "Ene. 2022 – actualidad" y "Feb. – jul. 2025" en español, y "Jan. 2022 – present" y "Feb. – Jul. 2025" en inglés, dentro de elementos `<time>`. | Prueba de componente |
-| CPU-AC05 | Los cursos están dentro de un `<details>` cerrado cuyo resumen es "Cursos relevantes (10)" o "Relevant coursework (10)". | Prueba de componente |
+| CPU-AC05 | Los cursos están dentro de un `<details>` cerrado cuyo resumen es "Cursos relevantes (15)" o "Relevant coursework (15)". | Prueba de componente |
 | CPU-AC06 | `bootLines` es exactamente la tabla de §4.6. | Prueba unitaria |
 | CPU-AC07 | En `desktop`, abrir la zona del procesador en `/es/` muestra el panel "Perfil" con el texto "Disponible desde enero de 2027" y el enlace "Descargar CV (PDF)"; en `/en/`, "Profile", "Available from January 2027" y "Download résumé (PDF)". | Prueba E2E |
 | CPU-AC08 | El enlace "Ver los proyectos" del panel de Perfil abre el panel de Proyectos. | Prueba E2E |
@@ -242,5 +250,6 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-87, F-22, F-29). `focusAreas` añade Machine Learning, que también muestra la placa de identidad de la escena (SCN-R46). `education.uniandes.detail` menciona la opción académica en Machine Learning, y los cursos pasan de diez a quince con los cinco restantes de esa opción. CPU-R04, CPU-AC02 y CPU-AC05 actualizados. Las traducciones al inglés de los cursos nuevos son propuestas y las revisa el autor. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). CPU-AC10: el autor revisó ambos idiomas y el encuadre de la fotografía, en la vista simple y en el panel (A4), el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-01, F-03, F-14, F-15 y la parte de F-18 relativa al Hall de la Fama. |

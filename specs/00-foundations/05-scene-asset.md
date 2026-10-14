@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 3.2 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 3.3 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS |
 
 ## 1. Propósito
@@ -69,7 +69,9 @@ Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1
 | AST-R16 | **Sin texto ni marcas:** la imagen NO DEBE contener texto, letras, números, logotipos, nombres de marca, adhesivos impresos, códigos de barras, códigos QR ni marcas de agua, legibles o ilegibles. |
 | AST-R17 | **Sin personas ni objetos ajenos:** sin manos ni personas; sin pantallas, papeles, libretas, multímetros, teléfonos ni portátiles. |
 | AST-R18 | **Atrezo:** los objetos no interactivos son propios de un banco de montaje (destornilladores, tornillos, organizadores, estaño, cables, pulsera antiestática). No hay límite de cantidad, pero ninguno toca ni tapa un objeto interactivo y ninguno se parece a un objeto interactivo. |
-| AST-R47 | **Reserva para la barra fija:** ningún objeto interactivo ocupa la región del espacio de escena con `x` mayor o igual que 1240 e `y` menor o igual que 100. Es la esquina sobre la que se dibuja la barra fija (ver SET): con el escenario más pequeño admitido, la barra y su margen ocupan 94 unidades de alto. |
+| AST-R47 | **Reserva de la franja superior:** ningún objeto interactivo ocupa la región del espacio de escena con `y` menor o igual que 100, en todo su ancho. Sobre ella se dibujan la barra fija, a la derecha (ver SET), y la parte alta de la placa de identidad, a la izquierda (ver SCN): con el escenario más pequeño admitido, la barra y su margen ocupan 94 unidades de alto. |
+| AST-R55 | **Reserva de la placa de identidad:** ningún objeto interactivo ocupa la región con `x` menor o igual que 500 e `y` menor o igual que 200, donde se dibuja la placa de identidad (SCN-R46). Con el escenario más pequeño admitido (1024×576 px, escala 0,64), la placa y sus márgenes de 16 px ocupan como máximo 316×128 px, es decir 494×200 unidades. |
+| AST-R56 | **Reserva de la bienvenida:** ningún objeto interactivo, salvo el display de diagnóstico, que no es enfocable, ocupa la región con `x` entre 500 y 1100 e `y` mayor o igual que 552, donde se dibuja la bienvenida (SCN-R49). Con el escenario más pequeño admitido, la bienvenida mide como máximo 380×192 px y queda a 16 px del borde inferior, es decir dentro de esa región. |
 | AST-R19 | **Nitidez:** toda la imagen está enfocada; no hay desenfoque de profundidad de campo. |
 
 | Zona | Rango en el máster aceptado (unidades, aproximado) | Contenido |
@@ -348,7 +350,7 @@ Los criterios AST-AC01 a AST-AC09 aceptan la **imagen**; AST-AC10 a AST-AC12, la
 | AST-AC07 | Ningún objeto de atrezo toca, tapa ni se confunde con un objeto interactivo, y la imagen está enfocada en toda su extensión. | Revisión manual |
 | AST-AC08 | El brillo medio de cada esquina de cada máster cumple el requisito de su variante (AST-R14 o AST-R51). | Ejecución de `pnpm assets:check` |
 | AST-AC09 | El máster cumple AST-R32. | Ejecución de `pnpm assets:check` |
-| AST-AC10 | En la superposición de calibración, cada objeto interactivo queda completo dentro de la zona segura, cumple su tamaño mínimo de la tabla de §4.4, la placa madre cumple AST-R23 y ningún polígono invade la región reservada de AST-R47. | Revisión manual con la superposición |
+| AST-AC10 | En la superposición de calibración, cada objeto interactivo queda completo dentro de la zona segura, cumple su tamaño mínimo de la tabla de §4.4, la placa madre cumple AST-R23 y ningún polígono invade las regiones reservadas de AST-R47, AST-R55 y AST-R56. | Revisión manual con la superposición |
 | AST-AC11 | En la superposición, ningún vértice de un polígono se separa de la silueta visible de su objeto más de 8 unidades, y la separación entre polígonos de objetos distintos es de 24 unidades o más. | Revisión manual con la superposición al 200 % de zoom |
 | AST-AC12 | A 1024×600, 1280×720, 1920×1080, 2560×1080 y 1024×768 px, la imagen se ve completa, sin recortes, con franjas del color de fondo de la variante donde el viewport no es 16:9, y el aura de cada zona se distingue en todo su perímetro. | Prueba E2E para el encuadre; revisión manual del autor para el aura |
 | AST-AC13 | Tras `pnpm assets:build`, `public/scene/` contiene exactamente dieciocho archivos, nueve por variante, con los nombres de AST-R33 y cada uno respeta su peso máximo y ninguno contiene metadatos (AST-R46). | Ejecución de `pnpm assets:check` |
@@ -390,6 +392,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.3 | Versión 2, pendiente de aprobación del autor (D-83, D-84, D-89). AST-R47: la reserva pasa de la esquina de la barra fija a toda la franja superior, porque la barra crece con los contactos y la placa de identidad ocupa la izquierda. Nuevos AST-R55 (esquina superior izquierda, placa de identidad) y AST-R56 (centro inferior, bienvenida). AST-AC10 comprueba las tres. Los dos másteres actuales cumplen las tres reservas con su calibración: ninguna zona baja de `y` = 119, la fuente de poder empieza en `y` = 312 y el SSD termina en `y` = 551. |
 | 2026-10-13 | 3.2 | AST-AC01: el autor midió con herramienta que los bordes de la placa son paralelos a los de la imagen dentro de 1°; resultado anotado en `PROVENANCE.md`. Sigue aplazada AST-AC06 (A7). Sin cambio de requisitos. |
 | 2026-10-13 | 3.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). El autor revisó los dos másteres al 100 % el 2026-10-13 y los dio por buenos sin ajustes: AST-AC02 a AC05 y AC07 en la fotografía y AST-AC22 en el boceto. Lo único que señaló, el contraste del display de diagnóstico sobre el boceto, se resolvió en código (D-76). Con AST-AC10, AC11 y AC20 ya confirmados en la calibración y AST-AC19 hecho (A1), las dos secciones de `PROVENANCE.md` pasan a `accepted`. Aplazadas con su visto bueno (PLAN-R10): la medición con herramienta de AST-AC01 y la prueba con una persona ajena de AST-AC06. Sin cambio de requisitos. |
 | 2026-10-13 | 3.2 | Durante M4, por delegación del autor. AST-R36: el manifiesto exporta además `SITE_THEME`, y `assets:check` comprueba que coincide con `tokens.css`. |

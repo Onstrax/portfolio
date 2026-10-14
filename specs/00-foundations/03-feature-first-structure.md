@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.8 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.9 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS |
 
 ## 1. Propósito
@@ -167,10 +167,10 @@ app ──► armazón ──► registry ──► secciones
 | `motherboard-scene` | Armazón | Imagen de la escena, zonas interactivas, auras, etiquetas, display de diagnóstico | SCN |
 | `detail-panel` | Armazón | Marco del modal, navegación anterior/siguiente, cierre | PNL |
 | `settings` | Armazón | Barra fija, menú de ajustes, sonido, reinicio de sesión, cambio de idioma | SET |
-| `simple-view` | Armazón | Página plana con todas las secciones; metadatos y SEO | SMP |
+| `simple-view` | Armazón | Páginas planas: la vista simple con todas las secciones y las páginas de caso de estudio; metadatos y SEO | SMP |
 | `cpu-profile` | Sección | Contenido y presentación de Perfil | CPU |
 | `psu-experience` | Sección | Contenido y presentación de Experiencia | PSU |
-| `ssd-projects` | Sección | Contenido y presentación de Proyectos | SSD |
+| `ssd-projects` | Sección | Contenido y presentación de Proyectos, incluido el contenido de los casos de estudio | SSD |
 | `ram-stack` | Sección | Contenido y presentación de Stack tecnológico | RAM |
 | `io-contact` | Sección | Contenido y presentación de Contacto | IO |
 | `fan-ecosystem` | Sección | Contenido y presentación de Ecosistema personal | FAN |
@@ -314,6 +314,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.9 | Versión 2, pendiente de aprobación del autor (D-88). Catálogo de features: `simple-view` compone también las páginas de caso de estudio, cuyo contenido vive en `ssd-projects`. No hay features nuevos. |
 | 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). Árbol del repositorio: tercer archivo de configuración de Lighthouse, `lighthouserc.mobile-lcp.json`. Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 1.7 | Durante M2, por delegación del autor. Árbol: se añade `scripts/assets-shared.mjs`, para que la lista de derivados, sus pesos máximos y la medición del brillo estén escritos una sola vez. |
 | 2026-10-13 | 1.6 | Por decisión del autor (D-66 y D-67). Árbol: se añaden `design/scene/master-sketch.png`, `Dockerfile`, `compose.yaml` y `.dockerignore`. |

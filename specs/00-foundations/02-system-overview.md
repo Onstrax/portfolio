@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 2.7 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 2.8 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN |
 
 ## 1. Propósito
@@ -126,7 +126,7 @@ Versiones verificadas contra el registro de npm el 2026-10-12. La combinación N
 
 ### 4.3 Rutas
 
-`{locale}` ∈ `es`, `en`. `{section}` ∈ `profile`, `experience`, `projects`, `stack`, `contact`, `ecosystem`, `about` (los `SectionSlug` de VSN §4).
+`{locale}` ∈ `es`, `en`. `{section}` ∈ `profile`, `experience`, `projects`, `stack`, `contact`, `ecosystem`, `about` (los `SectionSlug` de VSN §4). `{case}` ∈ `thesis`, `andespace`, `dental-site` (los `CaseStudyId` de TSC §4.3).
 
 | Ruta | Qué muestra |
 | --- | --- |
@@ -134,12 +134,13 @@ Versiones verificadas contra el registro de npm el 2026-10-12. La combinación N
 | `/{locale}/` | **Inicio.** En modo `scene`: la escena sin panel abierto. En modo `simple`: la vista simple. |
 | `/{locale}/{section}/` | En modo `scene`: la escena con el panel de esa sección abierto. En modo `simple`: la vista simple, desplazada hasta esa sección. |
 | `/{locale}/cv/` | La vista simple, siempre, sea cual sea el viewport. |
+| `/{locale}/projects/{case}/` | La página del caso de estudio de ese proyecto (SMP §4.9), siempre plana, sea cual sea el viewport. |
 | Cualquier otra | Página 404 estática. |
 
 | ID | Requisito |
 | --- | --- |
 | SYS-R08 | `/` DEBE redirigir en el cliente, con `location.replace`, a `/{locale}/` según esta prioridad: (1) el idioma guardado en preferencias (§4.6), si existe y es válido; (2) `es` si algún elemento de `navigator.languages` empieza por `es`; (3) `en` en cualquier otro caso. Sin JavaScript, la página DEBE mostrar un enlace a cada idioma. |
-| SYS-R09 | La compilación DEBE producir exactamente estos documentos HTML: `/`, `/es/`, `/en/`, las 14 combinaciones `/{locale}/{section}/`, `/es/cv/`, `/en/cv/` y la página 404. |
+| SYS-R09 | La compilación DEBE producir exactamente estos documentos HTML: `/`, `/es/`, `/en/`, las 14 combinaciones `/{locale}/{section}/`, `/es/cv/`, `/en/cv/`, las 6 combinaciones `/{locale}/projects/{case}/` y la página 404. |
 | SYS-R10 | `cv` es un segmento reservado y NO DEBE usarse nunca como `SectionSlug`. |
 | SYS-R11 | Una spec de sección PUEDE definir fragmentos (`#...`) para enlazar a un elemento dentro de la sección. El fragmento nunca cambia qué sección está abierta. |
 
@@ -156,7 +157,7 @@ El **modo de render** decide si el visitante ve la escena o la vista simple.
 | SYS-R16 | En modo `simple` NO DEBE solicitarse ningún archivo de la imagen de la escena, NO DEBE mostrarse la secuencia de arranque y NO DEBE reproducirse sonido. |
 | SYS-R17 | El modo DEBE actualizarse sin recargar la página cuando el viewport cruza el umbral (cambio de tamaño de ventana o rotación del dispositivo). |
 | SYS-R18 | En modo `simple`, al cargar `/{locale}/{section}/` con JavaScript activo, la página DEBE desplazarse hasta el ancla de esa sección. Sin JavaScript se muestra la vista simple desde el inicio; esta limitación es aceptada. |
-| SYS-R19 | `/{locale}/cv/` NO DEBE incluir el script previo al pintado ni la capa de la escena. |
+| SYS-R19 | `/{locale}/cv/` y las páginas de caso `/{locale}/projects/{case}/` NO DEBEN incluir el script previo al pintado ni la capa de la escena. |
 | SYS-R20 | El script previo al pintado es el único script en línea escrito por el proyecto en las páginas de locale. Sus responsabilidades son exactamente cuatro: fijar `data-mode` (SYS-R13), fijar `data-boot` (definido en BOOT), fijar `data-scene` con la precarga de su imagen (SYS-R51) y programar el temporizador de respaldo que pasa la página a `data-mode="simple"` si el código de la aplicación no se inicia (QLT-R43). Su código fuente vive en un único módulo (`src/shared/lib/pre-paint-script.ts`). Fijar `data-boot` incluye anotar en `data-boot-skip` la primera pulsación que salta el arranque, si llega antes de que cargue el código (BOOT-R18). |
 | SYS-R44 | El elemento `<html>` de las páginas de inicio y de sección lleva `suppressHydrationWarning`: el script previo al pintado le añade atributos antes de la hidratación y, sin esa propiedad, React emitiría una advertencia en consola (QLT-R40). |
 | SYS-R51 | El script previo al pintado escribe en `<html>` el atributo `data-scene` con la variante de escena guardada en preferencias (§4.6), si es válida, o con `photo` en otro caso. En modo `scene` inserta además en `<head>` la precarga de la imagen de esa variante (SCN-R36). Cuando el visitante cambia de variante, el código de la aplicación actualiza el atributo (SCN-R43). |
@@ -195,8 +196,11 @@ src/app/
     │                                                  que SceneLayer muestra en el panel.
     └── (plain)/
         ├── layout.tsx         <html lang={locale}> sin script previo al pintado (SYS-R19).
-        └── cv/
-            └── page.tsx       "/{locale}/cv/"         Vista simple.
+        ├── cv/
+        │   └── page.tsx       "/{locale}/cv/"         Vista simple.
+        └── projects/
+            └── [caseStudy]/
+                └── page.tsx   "/{locale}/projects/{case}/"  Caso de estudio (SMP §4.9).
 ```
 
 ### 4.6 Estado y persistencia
@@ -218,11 +222,12 @@ src/app/
 | Variante de escena | Store de preferencias | `localStorage`, clave `portfolio:v1:prefs`, campo `sceneVariant` | `photo` |
 | Arranque ya visto | Store de sesión | `sessionStorage`, clave `portfolio:v1:session`, campo `bootSeen` | `false` |
 | Secciones visitadas | Store de sesión | `sessionStorage`, clave `portfolio:v1:session`, campo `visited` (lista de `ComponentId` primarios) | Lista vacía |
+| Bienvenida ya vista | Store de sesión | `sessionStorage`, clave `portfolio:v1:session`, campo `welcomeSeen` | `false` |
 | Ajustes abiertos | Store de interfaz | Ninguna (memoria) | `false` |
 
 - El idioma preferido se escribe cada vez que el visitante cambia de idioma de forma explícita, y solo lo lee la redirección de `/` (SYS-R08).
 - Los tres stores viven en `src/shared/state/`: `prefs-store.ts`, `session-store.ts` y `ui-store.ts`. Su forma exacta se define en TSC.
-- El prefijo `v1` de las claves es la versión del esquema: si cambia la forma de los datos, se cambia el prefijo y los datos antiguos se ignoran.
+- El prefijo `v1` de las claves es la versión del esquema: si cambia la forma de los datos, se cambia el prefijo y los datos antiguos se ignoran. Añadir un campo con valor por defecto no cambia la forma de los datos ya guardados: cada campo se valida por separado y el que falta toma su valor por defecto (TSC-R50). Por eso `welcomeSeen` se añade sin cambiar el prefijo.
 
 ### 4.7 Flujo del contenido
 
@@ -305,7 +310,7 @@ src/app/
 | SYS-R46 | El layout del grupo `(scene)` renderiza, en este orden: el script previo al pintado; dos enlaces de salto, de los que el CSS muestra solo el del modo activo (el de modo `simple` lleva al contenido de la vista simple y el de modo `scene`, al `<main>` de la escena); la **capa base**, un `<div data-layer="base">` con la vista simple; y la **capa de escena**, un `<div data-layer="scene">`. La capa de escena tiene tres hijos: la pantalla de arranque y el póster de la escena, ambos renderizados en el servidor como HTML estático, y el componente de cliente `SceneLayer`, que recibe como hijos el contenido de la página. |
 | SYS-R47 | `SceneLayer` vive en `src/app/[locale]/(scene)/scene-layer.tsx` y es el único lugar donde se componen los features de armazón de la escena. Tiene exactamente estas responsabilidades: (1) mantener `data-mode` sincronizado con la consulta de SYS-R12 cuando cambia el viewport (SYS-R17); (2) escribir `data-app="ready"` en `<html>` al montarse, que es la señal que consulta el temporizador de respaldo (QLT-R43), y escribir `data-boot="done"` si el atributo no existe, lo que ocurre cuando una navegación del lado del cliente ha vuelto a montar `<html>` (SYS-R52): una navegación así nunca inicia el arranque; (3) cargar bajo demanda, y solo en modo `scene`, los componentes de cliente de `boot-sequence`, `motherboard-scene`, `settings` y `detail-panel` (QLT-R34); (4) capturar cualquier excepción de esos componentes y, en ese caso, escribir `data-mode="simple"` y dejar de renderizarlos (QLT-R44). Los monta en este orden: `BootController`, `FixedBar`, `Scene`, `SettingsMenu` y `DetailPanel`, de modo que los controles de la barra precedan a las zonas en el orden de tabulación (SET-R03); a `DetailPanel` le pasa una segunda barra como `toolbar` (PNL-R25). El atributo `data-mode` se escribe siempre con lo que dice el viewport en ese momento, nunca con el valor que React mantiene mientras hidrata, que es `simple` y haría parpadear la vista simple (SYS-R15). |
 | SYS-R48 | En el servidor y en modo `simple`, `SceneLayer` no renderiza nada, tampoco sus hijos. Por tanto el panel no forma parte del HTML exportado. |
-| SYS-R49 | Los componentes de cliente reciben por propiedades, desde el layout de servidor, los datos de las secciones que necesitan (nombres, rutas, textos), ya resueltos para el idioma de la página y serializables. NO DEBEN obtenerlos del registro (STR-R32). |
+| SYS-R49 | Los componentes de cliente reciben por propiedades, desde el layout de servidor, los datos de las secciones que necesitan (nombres, rutas, textos), ya resueltos para el idioma de la página y serializables. NO DEBEN obtenerlos del registro (STR-R32). Así reciben también la placa de identidad (`SceneIdentity`, SCN-R46) y los contactos de la barra fija (`QuickContact`, SET-R02). |
 | SYS-R50 | `src/styles/globals.css` declara las variantes de Tailwind `mode-scene`, `mode-simple`, `boot-play`, `boot-exit`, `boot-done`, `scene-photo` y `scene-sketch`, que se activan según los atributos `data-mode`, `data-boot` y `data-scene` de `<html>`, la variante `scene-capable`, cuya consulta de medios DEBE ser textualmente la de SYS-R12, y la variante `no-hover`, con la consulta `(hover: none)` (SCN-R25). Los componentes usan estas variantes y no escriben selectores de atributo propios. |
 
 ## 5. Criterios de aceptación
@@ -317,7 +322,7 @@ src/app/
 | SYS-AC03 | Ninguna dependencia de `package.json` usa rango (`^`, `~`, `*`, `>=`); existen los campos `packageManager` y `engines.node`. | Prueba unitaria que lee `package.json` |
 | SYS-AC04 | Con `navigator.languages = ["es-CO"]`, `/` lleva a `/es/`; con `["de-DE"]`, a `/en/`; con `["en-US"]` y preferencia guardada `es`, a `/es/`. Con JavaScript desactivado, `/` muestra dos enlaces visibles. | Prueba E2E |
 | SYS-AC05 | A 1280×720 px, `<html>` tiene `data-mode="scene"`; a 390×844 px y a 1280×500 px tiene `data-mode="simple"`. | Prueba E2E |
-| SYS-AC06 | En el HTML exportado de las páginas de inicio y de sección, el script previo al pintado está dentro de `<head>` y no tiene los atributos `async`, `defer` ni `type="module"`. En `/{locale}/cv/` no aparece. | Prueba de exportación |
+| SYS-AC06 | En el HTML exportado de las páginas de inicio y de sección, el script previo al pintado está dentro de `<head>` y no tiene los atributos `async`, `defer` ni `type="module"`. En `/{locale}/cv/` y en las páginas de caso no aparece. | Prueba de exportación |
 | SYS-AC07 | Al redimensionar de 1280×720 a 800×720 px, la página pasa a la vista simple sin recargar; al volver a 1280×720 px, vuelve la escena. | Prueba E2E |
 | SYS-AC08 | Al navegar de `/es/` a `/es/projects/` y de vuelta, el nodo raíz de la escena es el mismo nodo del DOM y no se emite ninguna petición nueva de la imagen de la escena. | Prueba E2E |
 | SYS-AC09 | Con una sección abierta, el botón Atrás del navegador cierra el panel y deja la URL en `/{locale}/`. | Prueba E2E |
@@ -380,6 +385,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.8 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-84, D-88). §4.3: nuevas rutas `/{locale}/projects/{case}/`; SYS-R09 pasa a 26 documentos, y SYS-R19 y SYS-AC06 incluyen las páginas de caso. §4.5: su ruta en el árbol del grupo `(plain)`. §4.6: campo `welcomeSeen` del store de sesión, sin cambiar el prefijo. SYS-R49: la placa y los contactos llegan por propiedades. |
 | 2026-10-13 | 2.7 | Por decisión del autor (D-80). §4.1: se retira `motion`, que ningún código usaba; todas las animaciones son CSS. |
 | 2026-10-13 | 2.6 | Durante M9, por delegación del autor. SYS-R36: se anota que los dos secretos de la publicación viven en GitHub y no son variables del proyecto. |
 | 2026-10-13 | 2.5 | Durante M8, por delegación del autor (D-77). §4.9: `preview` comprime con gzip las respuestas de texto (DEP-R20). Estado: pasa a "Implementada" al cerrar M8. |

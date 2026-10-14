@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.5 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.6 |
+| Última actualización | 2026-10-14 |
 | Depende de | Todas las demás specs |
 
 ## 1. Propósito
@@ -13,7 +13,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 
 ## 2. Alcance
 
-**Incluye:** reglas de ejecución, hitos con sus specs, entregables y criterios de salida, tareas que solo puede hacer el autor y registro de avance.
+**Incluye:** reglas de ejecución, hitos con sus specs, entregables y criterios de salida, tareas que solo puede hacer el autor y registro de avance, para la versión 1 (M0 a M9) y para la versión 2 (M10 a M13, §4.6).
 
 **No incluye:** un calendario por hito. El sitio debe estar publicado a más tardar al final del 2026-10-16, fecha dura confirmada por el autor el 2026-10-13; el plan fija el orden y las condiciones, y §4.5 dice qué se puede aplazar si el tiempo no alcanza.
 
@@ -130,7 +130,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 | A7 | Mostrar la escena a una persona ajena al hardware y comprobar que identifica las seis piezas con sus etiquetas | Durante M8 | AST-AC06 |
 | A8 | Crear la cuenta y el proyecto de Cloudflare Pages, generar el token, guardar los dos secretos en GitHub y activar Web Analytics | Al empezar M9 | DEP-AC09, DEP-AC10 |
 | A9 | Hecha el 2026-10-14: vista previa correcta en LinkedIn y WhatsApp tras SMP 1.3, y A+ en el Observatorio HTTP de Mozilla | — | SMP-AC17, DEP-AC09 |
-| A10 | Cuando el repositorio de la automatización hotelera sea público, indicarlo para actualizar PSU (PSU-R07) | Cuando ocurra | — |
+| A10 | Hecha el 2026-10-14: el autor comunicó que el repositorio de la automatización hotelera es público (F-25) | — | — |
 
 ### 4.4 Registro de avance
 
@@ -148,6 +148,10 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | M7 | 2026-10-13 | `c615413` | CI en verde en los tres motores y `pnpm check:docker` en local. 671 pruebas unitarias y de componente y 442 E2E. Arranque con registro real de las secciones, barra fija, menú de ajustes con sonido, imagen de la escena, idioma, progreso y reinicio; los doce features de STR ya existen. Defectos encontrados y corregidos por el camino: `data-mode` pasaba un instante por `simple` al hidratar (venía de M5, SYS-R15); el arranque ignoraba una pulsación anterior a la carga del código; el clic no lo saltaba en WebKit; y tras un reinicio, WebKit dejaba el foco sin poder avanzar con el tabulador. Decisiones por delegación: D-73 a D-75. En el CI, una prueba de Firefox de la redirección de `/` pasó solo al reintentar; se corrigió en el commit siguiente (TST-R26). Los límites de tiempo del arranque se miden solo en Chromium (TST-R22). Pendientes del autor: escuchar los cinco efectos de sonido (A5, SET-AC12) y leer el contenido dentro del panel (A4); después de su revisión de M6 y M7, las specs que estos hitos dejan implementadas cambian de estado. |
 | M8 | 2026-10-13 | `e108cad` | CI en verde en los tres motores y en Lighthouse, sin ninguna prueba que pase solo al reintentar, y `pnpm check:docker` en local. 684 pruebas unitarias y de componente y 556 E2E. Recorrido de axe por todos los estados auditables, presupuestos de peso y Lighthouse real en tres pasadas (D-77). Pesos medidos: JavaScript, 142 kB en modo `simple` y 169 kB en modo `scene`; CSS, 9 kB; fuentes, 89 kB; documentos, 38 kB como máximo. Lighthouse en local: rendimiento de 98 en escritorio y 96 en móvil. Defectos corregidos: en el boceto no se leía el display de diagnóstico (D-76) y, con movimiento reducido, dos transiciones duraban 250 ms. El autor confirmó la lectura del contenido en el panel (A4), los sonidos (A5), la auditoría manual (A6) y las dos imágenes al 100 %; los dos másteres pasan a `accepted`. Aplazado con su visto bueno (PLAN-R10): A7 (AST-AC06), la medición de AST-AC01 y el paso del lector de pantalla de A6; el paso del teléfono real de A6 necesita el sitio desplegado. En la puerta local, bajo carga, una prueba sin JavaScript agotó su tiempo en Firefox; se reforzó la prueba base (TST-R26) y la puerta siguiente pasó entera. Todas las specs salvo DEP y PLAN pasan a "Implementada". |
 | M9 | 2026-10-14 | `b42c3ee` | CI en verde en los tres motores y en Lighthouse, sin reintentos, y `pnpm check:docker` en local. 703 pruebas unitarias y de componente y 563 E2E. Sitio en producción en `https://juan-esteban-alvarez.pages.dev`, publicado por `deploy.yml` tras cada CI en verde; primera publicación desde `c56272f`, el 2026-10-13. Defectos que solo aparecieron en producción, corregidos: la política bloqueaba el envío de datos de la analítica (D-79) y la vista previa de `/` no tenía descripción ni imagen (SMP 1.3). Pruebas endurecidas frente a cuelgues de Firefox y lentitud de WebKit bajo carga (TST 1.8 y 1.9). A petición del autor, tras probar el sitio: se retira `motion` (D-80), flechas entre piezas (D-81) y README en primera persona. El autor completó A2, A6 (también el lector de pantalla), A8 y A9, y midió AST-AC01. Queda solo A7 (AST-AC06), aplazada con su visto bueno (PLAN-R10). Todas las specs pasan a "Implementada" en el commit siguiente (PLAN-AC02). |
+| M10 | — | — | — |
+| M11 | — | — | — |
+| M12 | — | — | — |
+| M13 | — | — | — |
 
 ### 4.5 Si el tiempo no alcanza
 
@@ -156,6 +160,56 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | PLAN-R10 | El orden de los hitos no cambia y ningún hito se cierra sin sus criterios automáticos. Lo que se puede aplazar, con el visto bueno del autor y anotándolo en §4.4, son revisiones manuales que no bloquean la publicación: A7 (prueba con una persona ajena), la medición con herramienta de AST-AC01 y la auditoría con lector de pantalla de QLT §4.8. Se hacen en los días siguientes a la publicación. |
 | PLAN-R11 | No se aplazan: la calibración de las zonas (A3), la revisión del contenido (A4), la auditoría de teclado y sin JavaScript, ni ningún criterio que compruebe una prueba automática. |
 
+### 4.6 Versión 2
+
+| ID | Requisito |
+| --- | --- |
+| PLAN-R14 | Los hitos de la versión 2 son M10 a M13, en ese orden, y siguen las reglas de §4.1. Ninguno empieza hasta que el autor aprueba las specs enmendadas para v2, que mientras tanto están "En revisión"; al aprobarlas pasan a "Aprobada", y cada hito pasa a "Implementada" las que deja completas (PLAN-R05). |
+| PLAN-R15 | El sitio ya está publicado y cada `push` a `main` con el CI en verde se publica solo (DEP-R12). Por eso cada `push` deja el sitio coherente para el visitante: un hito no publica nada a medias. En particular, el enlace "Leer el caso completo" no aparece antes que la página del caso, y la pista inicial no se retira antes de que exista la bienvenida. |
+| PLAN-R16 | El contenido nuevo queda aprobado cuando el autor aprueba la spec que lo contiene, porque los textos están escritos en ella. Sus revisiones en el sitio (A11 y A12) se hacen después de publicar; si encuentran algo, se corrige con un cambio de spec y un nuevo `push`. |
+
+| Hito | Nombre | Resultado visible | Specs principales |
+| --- | --- | --- | --- |
+| M10 | Contenido de v2 | Machine Learning en Perfil, Stack y Proyectos; repositorios públicos enlazados; resultados destacados; aura azul en el boceto | TSC §4.4, CPU, RAM, PSU, SSD §4.1 a SSD §4.5, VIS §4.1.5 y VIS-R45, I18N-R44 |
+| M11 | Casos de estudio | Las tres páginas de caso, enlazadas desde sus tarjetas | TSC §4.3, TSC §4.4.1 y TSC §4.10, SSD §4.6, SMP §4.9, SYS §4.3, DEP-R16 |
+| M12 | Placa, bienvenida y contactos | La escena dice de quién es, da la bienvenida y deja los contactos a un clic | SCN §4.7, SET §4.9, TSC §4.9, AST-R47, AST-R55 y AST-R56, QLT-R07, TST-R26 |
+| M13 | Cierre de v2 | Auditoría completa y todas las specs implementadas | QLT, VIS, PLAN |
+
+#### M10 — Contenido de v2
+
+- **Entregables:** `EmphasizedText` y `RichLine` (TSC-R58), el componente `RichText` (TSC-R59) y la regla C13; el contenido nuevo de Perfil, Stack, Experiencia y Proyectos, salvo los casos; los enlaces a los repositorios de la automatización hotelera y del microservicio de lista negra; el token `aura-sketch` en `#1F4FBF`.
+- **Criterios de salida:** TSC-AC09 para C13 y TSC-AC21; CPU-AC02 y AC05; RAM-AC01 y AC06; PSU-AC02, AC03, AC08 y AC09; SSD-AC01, AC03 a AC07 y AC13; VIS-AC01 y AC02; SCN-AC18 con el nuevo color.
+- **Tarea del autor:** A11.
+- **Specs que quedan implementadas:** CPU, RAM y PSU.
+
+#### M11 — Casos de estudio
+
+- **Entregables:** `CASE_STUDY_IDS` y su guarda; el contrato `case-study.ts` y la regla C14; las rutas de caso; el contenido de los tres casos y el enlace de sus tarjetas; `CaseStudyPage`, sus metadatos, su ruta de la app y el sitemap; la comprobación posterior con una página de caso.
+- **Criterios de salida:** TSC-AC09 para C14, TSC-AC14 y TSC-AC19; SYS-AC01 y AC06; SSD-AC11 y AC12; SMP-AC09 a AC12 y AC20 a AC22; VSN-AC12; QLT-AC01 en los estados de caso de estudio; DEP-AC07.
+- **Tarea del autor:** A12.
+- **Specs que quedan implementadas:** SSD, SMP, STR y DEP.
+
+#### M12 — Placa, bienvenida y contactos
+
+- **Entregables:** `welcomeSeen` y `markWelcomeSeen`; `SceneIdentity` y `buildSceneIdentity`; la placa de identidad; la bienvenida, que retira la pista inicial con su código y sus pruebas; `QuickContact`, `buildQuickContacts` y los contactos de la barra fija; las reservas de AST en `validateHotspots` y en la superposición de calibración; la opción `welcomeSeen` de la prueba base.
+- **Criterios de salida:** TSC-AC11, AC12 y AC20; SCN-AC02, AC03 y AC21 a AC24; SET-AC01, AC02, AC09 y AC14; QLT-AC01 en los estados de la bienvenida y QLT-AC03; VSN-AC11; VIS-AC04.
+- **Tarea del autor:** A13.
+- **Specs que quedan implementadas:** SCN, SET, IO, TSC, SYS, AST, I18N y TST.
+
+#### M13 — Cierre de v2
+
+- **Entregables:** el recorrido de axe con los estados nuevos, los presupuestos de peso con una página de caso, Lighthouse y las correcciones que resulten.
+- **Criterios de salida:** todos los criterios automáticos de QLT y de VIS; la prueba de trazabilidad pasa con todas las specs en "Implementada" (PLAN-AC04).
+- **Tarea del autor:** A14.
+- **Specs que quedan implementadas:** QLT, VIS, VSN y PLAN.
+
+| ID | Tarea | Cuándo | Criterio que cierra |
+| --- | --- | --- | --- |
+| A11 | Leer en el sitio el contenido nuevo de Perfil, Stack, Experiencia y Proyectos en ambos idiomas, y confirmar las traducciones al inglés de los cursos nuevos | Al cerrar M10 | CPU-AC10, RAM-AC08, PSU-AC07 y SSD-AC10 |
+| A12 | Leer los tres casos de estudio en su página, en ambos idiomas | Al cerrar M11 | SSD-AC14 |
+| A13 | Revisar la placa, la bienvenida y la barra fija en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px | Al cerrar M12 | VIS-AC12 |
+| A14 | Repetir la auditoría manual de QLT §4.8 sobre lo nuevo: la bienvenida y los contactos con teclado y con lector de pantalla, y una página de caso en el teléfono | Durante M13 | QLT-AC27 |
+
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
@@ -163,6 +217,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | PLAN-AC01 | Cada hito cerrado tiene su fila de §4.4 completa, y el commit anotado tiene el flujo de CI terminado bien. | Revisión manual del autor al cerrar cada hito |
 | PLAN-AC02 | Al cerrar M9, todas las specs del índice están en estado "Implementada" y la prueba de trazabilidad pasa. | Revisión manual del autor, registrada en el historial de esta spec |
 | PLAN-AC03 | Los mensajes de los commits de `main` cumplen PLAN-R07. | Revisión manual del autor al cerrar cada hito |
+| PLAN-AC04 | Al cerrar M13, todas las specs del índice están en estado "Implementada" y la prueba de trazabilidad pasa. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
 
@@ -185,6 +240,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.6 | Versión 2, pendiente de aprobación del autor. Nuevo §4.6 con las reglas de v2 (PLAN-R14 a PLAN-R16), los hitos M10 a M13 y las tareas del autor A11 a A14. A10 hecha. §4.4: filas de los hitos nuevos. Nuevo PLAN-AC04. |
 | 2026-10-14 | 1.5 | Cierre de M9. Estado: pasa a "Implementada" (PLAN-AC02: todas las specs del índice están en ese estado y la prueba de trazabilidad pasa). A9 hecha; el paso del lector de pantalla de A6 ya no está aplazado. Solo queda A7 (AST-AC06). |
 | 2026-10-13 | 1.5 | Tareas del autor tras la primera publicación: A2 hecha; A9 hecha para el Observatorio (A+), y para LinkedIn se repite tras corregir la vista previa de `/` (SMP 1.3); la medición de AST-AC01, aplazada en M8, ya está hecha. A7 y el lector de pantalla siguen aplazados (PLAN-R10). Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Durante M6, por delegación del autor. VSN-AC06, I18N-AC11 e I18N-AC12 pasan de M6 a M7: necesitan el selector de idioma de la barra fija. Se anota en §4.4 la revisión del autor de M2 a M5. |

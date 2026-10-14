@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 2.3 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 2.4 |
+| Última actualización | 2026-10-14 |
 | Depende de | — |
 
 ## 1. Propósito
@@ -105,14 +105,26 @@ El orden de esta tabla es el **orden canónico** de las secciones primarias en l
 | VSN-R18 | El contenido DEBE distinguir lo que el autor desarrolló de lo que configuró o integró, y lo individual de lo hecho en equipo. |
 | VSN-R19 | Los repositorios privados se mencionan con la etiqueta "Repositorio privado / Private repository" y sin enlace. |
 
-## 6. Versión 2 (planificado, no se implementa en v1)
+## 6. Versión 2
 
-Estas funcionalidades están previstas. La arquitectura de v1 NO DEBE impedirlas, pero v1 NO DEBE implementarlas ni dejar código muerto para ellas.
+La versión 2 nace de lo que piden los procesos de selección y de las primeras pruebas con personas reales (D-82 a D-87). No cambia el concepto: añade profundidad al contenido y hace más amable la llegada a la escena.
 
-| ID | Funcionalidad | Qué exige de v1 |
+| ID | Requisito de alcance |
+| --- | --- |
+| VSN-R21 | Tres proyectos destacados, la tesis, AndeSpace y la web odontológica, DEBEN tener un **caso de estudio**: una página propia, que se abre sin iniciar sesión y sin JavaScript, con el problema, el rol del autor (qué hizo él y, si fue en equipo, qué hizo el resto), el proceso (decisiones con sus alternativas y cambios de rumbo) y el resultado con lo aprendido. Desde la tarjeta de cada uno de esos proyectos se llega a su caso (ver SSD y SMP). |
+| VSN-R22 | La escena DEBE mostrar siempre una **placa de identidad** con el nombre del autor, su carrera y sus áreas de enfoque, y DEBE dar la **bienvenida** al terminar el arranque, una vez por sesión y sin bloquear la escena (ver SCN). |
+| VSN-R23 | Desde la escena, el CV, el correo, LinkedIn y GitHub DEBEN estar a una sola interacción (ver SET). |
+| VSN-R24 | Los resultados y las cifras más relevantes del contenido DEBEN destacarse con peso tipográfico, nunca con color, y como mucho uno por elemento de lista (ver TSC y VIS). |
+| VSN-R25 | El contenido DEBE incluir la opción académica en Machine Learning, sus cursos y sus proyectos (F-22 a F-24), y los enlaces a los repositorios que pasaron a ser públicos (F-25). |
+
+### 6.1 Previstas sin fecha
+
+No forman parte de v2 (D-90). La arquitectura NO DEBE impedirlas, pero no se implementan ni se deja código preparado para ellas.
+
+| ID | Funcionalidad | Qué exige de la arquitectura |
 | --- | --- | --- |
 | V2-01 | Escena interactiva en móvil con un encuadre vertical propio. | El modo de render se decide en un único punto (ver SYS-R12). |
-| V2-02 | Tercer idioma: alemán. | Añadir un idioma consiste en añadir un locale y sus diccionarios, sin tocar componentes (ver I18N). |
+| V2-02 | Un tercer idioma. | Añadir un idioma consiste en añadir un locale y sus diccionarios, sin tocar componentes (ver I18N §4.9). |
 
 ## 7. Fuera de alcance
 
@@ -125,7 +137,8 @@ No se construye en v1 ni está planificado. Añadir cualquiera de estos puntos e
 - Blog, noticias o cualquier contenido con fecha de publicación.
 - Selector de tema claro/oscuro. La variante de escena de VSN-R20 cambia la imagen y sus auras; los paneles y la vista simple no cambian.
 - Pantalla de "apagado" o cualquier acción que deje la pantalla sin contenido.
-- Capturas de pantalla o demos embebidas de los proyectos (no existen).
+- Capturas de pantalla o demos embebidas de los proyectos, también en los casos de estudio (no existen; D-90).
+- Chatbot, testimonios de terceros (VSN-R17) y animaciones nuevas que no sirvan al contenido (P1).
 - Cambio de color del aura según el estado de visita.
 - Banner de cookies (no se usan cookies; ver DEP).
 
@@ -145,6 +158,8 @@ Estos criterios validan el producto completo. Los criterios de cada funcionalida
 | VSN-AC08 | Recorrido completo solo con teclado: saltar el arranque, enfocar cada elemento interactivo, abrir y cerrar cada panel, cambiar idioma, activar sonido y reiniciar. | Prueba E2E |
 | VSN-AC09 | El sitio desplegado no contiene nombres de terceros (VSN-R17) ni datos de las imágenes de referencia (VSN-R16). | Revisión manual del autor antes de cada publicación de contenido |
 | VSN-AC10 | El resultado de la compilación es una carpeta de archivos estáticos que se sirve correctamente con cualquier servidor de archivos, sin proceso de Node en ejecución. | Prueba E2E contra la carpeta exportada servida de forma estática |
+| VSN-AC11 | En `desktop`, desde la escena en reposo, el CV, el correo, LinkedIn y GitHub se alcanzan con una sola activación cada uno, sin abrir ningún panel. | Prueba E2E |
+| VSN-AC12 | Con JavaScript desactivado, la página de caso de cada uno de los tres proyectos de VSN-R21 se abre en su URL, en ambos idiomas, y contiene los cuatro bloques: problema, rol, proceso y resultado. | Prueba E2E con JavaScript desactivado |
 
 ## 9. Glosario
 
@@ -166,7 +181,11 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | **Vista simple** (simple view) | La página plana, sin escena, con las siete secciones una tras otra. |
 | **Modo de render** (render mode) | `scene` o `simple`: cuál de las dos presentaciones ve el visitante (ver SYS §4.4). |
 | **Secuencia de arranque** (boot sequence) | La animación inicial con un registro de arranque al estilo del kernel de Linux. |
-| **Barra fija** (fixed bar) | La barra de controles siempre visible en una esquina de la escena (idioma, vista simple). |
+| **Barra fija** (fixed bar) | La barra de controles siempre visible en una esquina de la escena (idioma, vista simple y contactos). |
+| **Placa de identidad** (identity plate) | La placa siempre visible en la esquina superior izquierda de la escena con el nombre, la carrera y las áreas del autor (ver SCN). |
+| **Bienvenida** (welcome) | La placa no modal que saluda al visitante al terminar el arranque, una vez por sesión (ver SCN). |
+| **Caso de estudio** (case study) | La página de un proyecto destacado con su problema, el rol del autor, el proceso y el resultado (ver SSD y SMP). |
+| **Texto destacado** (emphasized text) | Una cadena de contenido con un fragmento que se muestra con más peso (ver TSC §4.4). |
 | **Panel frontal** (front panel) | La pieza de hardware sobre el workbench que abre los ajustes. |
 | **Ajustes** (settings) | El menú con sonido, reinicio de sesión e idioma. |
 | **Display de diagnóstico** (POST display) | El indicador de dos dígitos en la placa que muestra las secciones visitadas. |
@@ -183,6 +202,8 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | Móvil recibe la vista simple en v1 (VSN-R02, D-08). | El primer contacto llega a menudo desde un teléfono, así que bloquear el móvil pierde visitantes. La escena depende del hover, que no existe en táctil, y exigiría un segundo encuadre de la imagen; la vista simple cubre el caso con coste casi nulo porque debe existir de todos modos. |
 | Slugs de sección en inglés para ambos idiomas (§4, D-13). | Un único identificador estable por sección: cambiar de idioma es cambiar el prefijo de la URL, y no hay tabla de traducción de rutas que mantener. |
 | La sección `about` no cuenta en el display de diagnóstico (§4.2). | El contador comunica el progreso sobre el perfil profesional, que son las seis secciones primarias. |
+| Casos de estudio en páginas propias (VSN-R21, D-82). | Un reclutador técnico necesita el porqué de las decisiones, no solo el resultado; y un proceso de selección pide un enlace que lleve directamente al proyecto. Una página por caso se puede enviar, se lee en un teléfono y no alarga el panel de Proyectos (P7). |
+| Bienvenida en lugar de pista (VSN-R22, D-83). | Quien llega no sabía de quién era el portfolio ni qué hacer: el nombre solo existía para lectores de pantalla. La placa responde a quién; la bienvenida, a qué hacer, sin interponerse (P1, P2). |
 
 ## 11. Preguntas abiertas
 
@@ -192,6 +213,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82 a D-87, D-90). §6 reescrito con el alcance de v2: VSN-R21 a VSN-R25. Las antiguas V2-01 y V2-02 pasan a §6.1, sin fecha. §7: capturas y demos tampoco en los casos; chatbot, testimonios y animaciones gratuitas, fuera. Nuevos VSN-AC11 y VSN-AC12. Glosario: placa de identidad, bienvenida, caso de estudio y texto destacado. |
 | 2026-10-13 | 2.3 | VSN-AC09: el autor revisó el sitio desplegado y no contiene nombres de terceros ni datos de las imágenes de referencia. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VSN-AC09 se comprueba antes de la primera publicación, en M9. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Por decisión del autor (D-66): nuevo VSN-R20, la escena tiene dos variantes de imagen que el visitante intercambia desde los ajustes. Glosario: variante de escena. §7: se aclara que no es un selector de tema. |

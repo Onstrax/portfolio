@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.7 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 2.0 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -13,7 +13,7 @@ Especificar la vista interactiva: la imagen de la placa madre con sus zonas puls
 
 ## 2. Alcance
 
-**Incluye:** el escenario y sus capas, los datos de las zonas interactivas, el área pulsable, los estados del aura, las etiquetas, el orden de foco, el display de diagnóstico, la pista inicial, la carga de la imagen y la superposición de calibración.
+**Incluye:** el escenario y sus capas, los datos de las zonas interactivas, el área pulsable, los estados del aura, las etiquetas, el orden de foco, el display de diagnóstico, la placa de identidad, la bienvenida, la carga de la imagen y la superposición de calibración.
 
 **No incluye:** la imagen en sí y su encuadre (ver AST), el aspecto del aura y de las etiquetas (ver VIS §4.4 y VIS §4.5.1), el panel que se abre (ver PNL), la barra fija y el menú de ajustes (ver SET), ni la composición de la capa de escena (ver SYS §4.13).
 
@@ -39,7 +39,7 @@ Feature: `src/features/motherboard-scene/`. `index.ts` exporta el componente de 
 | SCN-R02 | El SVG decorativo usa `viewBox="0 0 1600 900"`, ocupa todo el escenario, lleva `aria-hidden="true"` y no recibe eventos de puntero. |
 | SCN-R03 | La capa de escena contiene un `<h1>` visible solo para lectores de pantalla con el texto `scene.pageTitle` (QLT-R03), y el contenido de la escena está dentro de un `<main>` con `id="scene"`, que es el destino del enlace de salto en modo `scene` (SYS-R46). El `<h1>` lleva `tabindex="-1"` para recibir el foco al terminar el arranque (BOOT-R21). |
 | SCN-R04 | `ScenePoster` es un componente de servidor que renderiza, para cada variante, un bloque con el tamaño del escenario que tiene como fondo el color medio y el marcador de posición desenfocado de su entrada en `SCENE_ASSETS`. Solo es visible el de la variante que indica `data-scene` (variantes `scene-photo` y `scene-sketch`, SYS-R50). Es lo que se ve bajo el arranque, o en su lugar cuando no hay arranque, hasta que `Scene` se monta. No solicita ningún archivo. |
-| SCN-R05 | `Scene` recibe por propiedades (SYS-R49) la lista `sections: readonly SectionNavItem[]`, el idioma y las cadenas de interfaz que necesita. NO DEBE importar el registro (STR-R32). |
+| SCN-R05 | `Scene` recibe por propiedades (SYS-R49) la lista `sections: readonly SectionNavItem[]`, los datos de la placa de identidad `identity: SceneIdentity` (SCN-R52), el idioma y las cadenas de interfaz que necesita. NO DEBE importar el registro (STR-R32). |
 
 ```ts
 // src/shared/contracts/navigation.ts
@@ -58,11 +58,19 @@ export interface SectionNavItem {
   /** `true` para las seis secciones primarias. */
   readonly isPrimary: boolean;
 }
+
+/** Datos de la placa de identidad de la escena, resueltos para el idioma de la página (SCN-R46). */
+export interface SceneIdentity {
+  readonly name: string;
+  readonly degree: string;
+  readonly focusAreas: readonly string[];
+}
 ```
 
 | ID | Requisito |
 | --- | --- |
 | SCN-R06 | `buildSectionNav(sections: readonly AnySectionDefinition[], locale: Locale): readonly SectionNavItem[]`, en `src/shared/lib/section-nav.ts`, es una función pura que construye esa lista en el orden recibido. El layout del grupo `(scene)` la llama con `SECTION_LIST` y pasa el resultado a `SceneLayer`. |
+| SCN-R52 | `buildSceneIdentity(name: string, profile: { readonly degree: string; readonly focusAreas: readonly string[] }): SceneIdentity`, en `src/shared/lib/section-nav.ts`, es una función pura que construye los datos de la placa. El layout del grupo `(scene)` la llama con `SITE.authorName` y los textos de Perfil del idioma de la página, y pasa el resultado a `SceneLayer`, que lo entrega a `Scene`. |
 
 ### 4.2 Datos de las zonas
 
@@ -71,7 +79,7 @@ export interface SectionNavItem {
 | SCN-R07 | Los datos de calibración (AST §4.8) viven en `src/features/motherboard-scene/hotspots.ts`, con la forma siguiente. |
 | SCN-R08 | Cada silueta tiene entre 4 y 24 vértices, todos dentro de la zona segura (AST-R05), y no se cruza a sí misma. |
 | SCN-R09 | `HOTSPOTS_CALIBRATED_FOR` registra, para cada variante, la versión del máster con el que se comprobaron los polígonos (AST-R41). |
-| SCN-R10 | `validateHotspots`, función pura de `src/features/motherboard-scene/lib/`, devuelve la lista de incumplimientos de SCN-R08, de los tamaños mínimos de AST §4.4, de la separación de AST-R11, de la región reservada de AST-R47 y del solapamiento entre áreas pulsables (SCN-R13). Una prueba afirma que, con los datos reales, la lista está vacía. |
+| SCN-R10 | `validateHotspots`, función pura de `src/features/motherboard-scene/lib/`, devuelve la lista de incumplimientos de SCN-R08, de los tamaños mínimos de AST §4.4, de la separación de AST-R11, de las regiones reservadas de AST-R47, AST-R55 y AST-R56 y del solapamiento entre áreas pulsables (SCN-R13). Una prueba afirma que, con los datos reales, la lista está vacía. |
 
 ```ts
 // src/features/motherboard-scene/types.ts
@@ -153,12 +161,18 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 | SCN-R31 | La capa de escena contiene una región con `role="status"`, visible solo para lectores de pantalla, con el texto `common.visitedSectionsLabel({ count, total: 6 })`. Se actualiza al cambiar el valor (QLT-R24). |
 | SCN-R32 | Al pasar el puntero sobre la zona `post-display` se muestra una etiqueta con `scene.postDisplayName` y `common.visitedSectionsLabel`, con las reglas de SCN-R23 a SCN-R27. La zona no es enfocable; el mismo dato está en el menú de ajustes (ver SET), alcanzable con teclado. |
 
-### 4.7 Pista inicial
+### 4.7 Placa de identidad y bienvenida
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R33 | Mientras `visited` está vacío y no hay ninguna sección abierta, se muestra en la parte inferior central del escenario, a 8 px del borde, una placa oscura (VIS §4.5.1) con el texto `scene.hintLabel`. Desaparece al abrir la primera sección y no vuelve a mostrarse hasta un reinicio de sesión. Usa la animación M-12. Un reinicio de sesión se detecta porque `bootSeen` deja de ser `true` en el store de sesión. |
-| SCN-R34 | La pista no es interactiva, no recibe eventos de puntero y forma parte del contenido legible por lectores de pantalla. |
+| SCN-R33 | Retirado el 2026-10-14 (D-83): la pista inicial se sustituye por la bienvenida (SCN-R48 a SCN-R51). |
+| SCN-R34 | Retirado el 2026-10-14 (D-83), junto con SCN-R33. |
+| SCN-R46 | **Placa de identidad.** `Scene` muestra siempre, en la esquina superior izquierda del escenario, a 16 px de sus bordes superior e izquierdo y en la capa `z-bar`, una placa oscura (VIS §4.5.1) con relleno de 8 px en vertical y 12 px en horizontal, de 300 px de ancho como máximo y 112 px de alto como máximo (AST-R55). Contiene tres líneas, en este orden: el nombre del autor, con el rol tipográfico "Etiqueta de escena, línea de nombre" en `on-dark`; `degree`, con el rol "Etiqueta de escena, línea de contenido" en `on-dark-muted`; y los `focusAreas` unidos por " · ", con ese mismo rol en `on-dark`, que pueden ocupar hasta tres renglones. Los datos llegan por propiedades como `SceneIdentity` (SCN-R05) y proceden de `SITE.authorName` y de los textos de Perfil (CPU-R03, F-29). |
+| SCN-R47 | La placa no es interactiva, no es enfocable, no recibe eventos de puntero y no es un encabezado: el `<h1>` sigue siendo el de SCN-R03. Está en el DOM justo después del `<h1>`, de modo que un lector de pantalla la lee a continuación. No se muestra mientras `data-boot` no es `done`. No cambia con la variante de escena (VIS §4.1.5). |
+| SCN-R48 | **Bienvenida.** Se muestra cuando se cumplen a la vez: el store de sesión está hidratado, `welcomeSeen` es `false` (TSC §4.9), `data-boot` es `done`, no hay ninguna sección abierta y el menú de ajustes está cerrado. Por tanto aparece al terminar el arranque de una primera visita, también si se saltó; si la primera página es una sección, aparece al cerrarla; y vuelve tras un reinicio de sesión. |
+| SCN-R49 | Es una `<section>` con `aria-labelledby` hacia su título, en la parte inferior central del escenario, a 16 px del borde inferior, con ancho `min(380px, 100% - 32px)` y 192 px de alto como máximo (AST-R56), en la capa `z-labels`. Es una placa oscura (VIS §4.5.1) con relleno de 16 px. Contiene, en este orden: el título `scene.welcomeTitle` como `<h2>`, con el rol "Etiqueta de escena, línea de nombre" en `on-dark`; el texto `scene.welcomeDescription`, con el rol "Cuerpo secundario" en `on-dark`; y una fila con un `<button>` con el texto `scene.exploreLabel` y un enlace a `sectionPath(locale, "profile")` con el texto `scene.profileLinkLabel`, ambos con el estilo "Botón sobre superficie oscura" (VIS-R29) y 44 px de alto. Aparece y se retira con la animación M-12. Sin sonido. |
+| SCN-R50 | La bienvenida se cierra, y se llama a `markWelcomeSeen()`, cuando: el visitante activa "Explorar"; pulsa Esc con el foco dentro de ella; o, mientras es visible, se abre una sección por cualquier medio (una zona, "Ver mi perfil" o la URL) o se abre el menú de ajustes. Si el foco estaba dentro de ella cuando se cierra con "Explorar" o con Esc, pasa a la zona `cpu`, la primera del orden de tabulación de la escena (QLT-R08). No se cierra sola por tiempo (QLT-R21). |
+| SCN-R51 | Al aparecer no toma el foco ni es una región viva: no interrumpe al lector de pantalla, que la encuentra después del `<h1>` y de la placa. En el orden de tabulación sus dos controles van después de la barra fija y antes de las zonas (QLT-R07), porque en el DOM está entre la placa y las zonas. Mientras es visible, las zonas que no tapa siguen respondiendo al puntero y al teclado. |
 
 ### 4.8 Imagen y disponibilidad
 
@@ -180,7 +194,7 @@ export const HOTSPOTS: Readonly<Record<SceneObjectId, Hotspot>> = {
 
 | ID | Requisito |
 | --- | --- |
-| SCN-R41 | La superposición de AST-R42 es un componente de `motherboard-scene` que solo se importa, de forma dinámica, cuando `process.env.NODE_ENV` es `development` y la URL contiene `?debug=hotspots`. Dibuja, en el SVG: la silueta y el identificador de cada zona, la caja de su área pulsable, la zona segura, la región reservada de AST-R47 y una cuadrícula cada 100 unidades con sus coordenadas. Muestra además las coordenadas del puntero en unidades de escena. |
+| SCN-R41 | La superposición de AST-R42 es un componente de `motherboard-scene` que solo se importa, de forma dinámica, cuando `process.env.NODE_ENV` es `development` y la URL contiene `?debug=hotspots`. Dibuja, en el SVG: la silueta y el identificador de cada zona, la caja de su área pulsable, la zona segura, las regiones reservadas de AST-R47, AST-R55 y AST-R56 y una cuadrícula cada 100 unidades con sus coordenadas. Muestra además las coordenadas del puntero en unidades de escena. |
 
 ### 4.11 Textos de interfaz
 
@@ -193,11 +207,14 @@ Espacio de nombres `scene` del diccionario de interfaz.
 | `settingsHardwareName` | Panel frontal | Front panel |
 | `settingsTitle` | Ajustes | Settings |
 | `postDisplayName` | Display de diagnóstico | Diagnostic display |
-| `hintLabel` | Cada componente iluminado abre una sección. | Each glowing component opens a section. |
+| `welcomeTitle` | Sistema listo | System ready |
+| `welcomeDescription` | Te doy la bienvenida a mi portfolio. Navega por los componentes de la placa para conocer sobre mí y lo que puedo hacer por ti. | Welcome to my portfolio. Explore the components on the board to learn about me and what I can do for you. |
+| `exploreLabel` | Explorar | Explore |
+| `profileLinkLabel` | Ver mi perfil | See my profile |
 
-Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display, `data-testid="scene-label"` en cada etiqueta, `data-testid="scene-hint"` en la pista, `data-testid="scene-auras"` en el SVG decorativo, `data-testid="scene-poster"` en el póster y `data-testid="calibration-overlay"` en la superposición de calibración.
+Identificadores de prueba: `data-testid="scene-root"` en el escenario, `data-testid="post-display"` en el grupo SVG del display, `data-testid="scene-label"` en cada etiqueta, `data-testid="scene-plate"` en la placa de identidad, `data-testid="scene-welcome"` en la bienvenida, `data-testid="scene-auras"` en el SVG decorativo, `data-testid="scene-poster"` en el póster y `data-testid="calibration-overlay"` en la superposición de calibración.
 
-Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable) y, en la zona `settings`, `data-label-placement` con su lado, que el menú de ajustes lee para colocarse (SET-R10); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la pista; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
+Además, estos atributos exponen a las pruebas el estado que de otro modo solo estaría en las clases: `data-zone` (identificador de la zona, en cada elemento pulsable) y, en la zona `settings`, `data-label-placement` con su lado, que el menú de ajustes lee para colocarse (SET-R10); `data-aura` y `data-state` (`rest`, `hover` o `active`) en el grupo de cada aura, y `data-part` (`glow`, `fill` o `focus-ring`) en sus partes; `data-visible` en cada etiqueta y en la bienvenida; `data-value` en el display, con sus dos dígitos; y `data-variant` y `data-state` (`pending`, `shown`, `kept` o `replaced`) en cada imagen.
 
 ### 4.12 Variante de escena
 
@@ -221,7 +238,7 @@ Además, estos atributos exponen a las pruebas el estado que de otro modo solo e
 | SCN-AC08 | Al pasar el puntero sobre una zona aparece su etiqueta; al llevarlo sobre la etiqueta, sigue visible; Esc la oculta sin mover el puntero; al sacar el puntero de ambas, desaparece. | Prueba E2E |
 | SCN-AC09 | Con la emulación de un dispositivo sin hover a 1024×768 px, las ocho etiquetas son visibles, todas quedan dentro del escenario y ninguna caja de etiqueta se solapa con otra. | Prueba E2E, solo en Chromium, que es el único motor que emula un dispositivo sin hover |
 | SCN-AC10 | El display muestra `00` en una sesión nueva; tras abrir y cerrar Perfil y Proyectos muestra `02`; abrir Perfil otra vez no cambia el valor; abrir "Acerca de este sitio" tampoco. La región de estado contiene "2 de 6 secciones visitadas" en `/es/`. | Prueba E2E |
-| SCN-AC11 | La pista inicial es visible en una sesión nueva con el texto de `scene.hintLabel`, y deja de serlo tras abrir una sección, también después de cerrarla. | Prueba E2E |
+| SCN-AC11 | Retirado el 2026-10-14 (D-83): la pista ya no existe. La sustituyen SCN-AC21 a SCN-AC24. | Revisión manual del autor: criterio retirado, sin comprobación |
 | SCN-AC12 | En `desktop`, en una primera visita, se solicita exactamente un archivo de la imagen de la escena y es un derivado AVIF de la variante `photo`; en `mobile` no se solicita ninguno (SYS-R16). | Prueba E2E, solo en Chromium |
 | SCN-AC13 | En cada viewport de modo `scene` de QLT §4.6, la caja del escenario tiene relación 16:9 con un error menor de 1 px, está centrada y no supera el viewport (AST-AC12). | Prueba E2E |
 | SCN-AC14 | Al cerrar el panel de Proyectos abierto por URL directa, el elemento con foco es la zona `ssd`. | Prueba E2E |
@@ -231,6 +248,10 @@ Además, estos atributos exponen a las pruebas el estado que de otro modo solo e
 | SCN-AC18 | En `desktop`, tras elegir "Boceto" en los ajustes: `<html>` tiene `data-scene="sketch"`, la imagen visible es un derivado de la variante `sketch`, el halo del aura de `cpu` tiene el color `aura-sketch`, y el enlace de la zona `cpu` conserva su posición, su tamaño y su nombre accesible. Tras recargar la página, todo ello se mantiene. | Prueba E2E |
 | SCN-AC19 | La función de navegación con flechas, sobre zonas de ejemplo, elige la más cercana dentro de los 45°, recurre al semiplano cuando no hay ninguna en ese ángulo y devuelve nada cuando no hay zona en esa dirección. | Prueba unitaria |
 | SCN-AC20 | En `desktop`, con el foco en `cpu`, la flecha derecha lleva el foco a `ram`, la izquierda desde `ram` lo devuelve a `cpu`, la flecha abajo desde `cpu` lo lleva a `ssd` y la flecha abajo desde `fan` a `settings`; cada pieza enfocada muestra su etiqueta, y la página no se desplaza. | Prueba E2E |
+| SCN-AC21 | En `desktop`, al terminar el arranque, la placa de identidad muestra "Juan Esteban Álvarez García", "Ingeniería de Sistemas y Computación" y las cuatro áreas de enfoque en `/es/`, y "Systems and Computing Engineering" con sus áreas en inglés en `/en/`; no contiene ningún elemento enfocable; y en cada viewport de modo `scene` de QLT §4.6 su caja no se solapa con la de ninguna zona interactiva ni con la barra fija. Durante el arranque no es visible. | Prueba E2E |
+| SCN-AC22 | En una sesión nueva, al terminar el arranque, la bienvenida es visible con "Sistema listo" y su texto, y el foco no está dentro de ella. Desde el último control de la barra fija, el tabulador recorre "Explorar", "Ver mi perfil" y después la zona `cpu`. | Prueba E2E |
+| SCN-AC23 | Activar "Explorar" oculta la bienvenida y deja el foco en la zona `cpu`; tras recargar la página no vuelve a mostrarse y `sessionStorage` tiene `welcomeSeen: true`. En otra sesión nueva: Esc con el foco en "Explorar" la oculta; abrir una sección mientras es visible la oculta y no reaparece al cerrarla; y tras un reinicio de sesión vuelve a mostrarse al terminar el arranque. Abrir directamente `/es/projects/` en una sesión nueva no la muestra hasta cerrar el panel. | Prueba E2E |
+| SCN-AC24 | En cada viewport de modo `scene` de QLT §4.6, la caja de la bienvenida no se solapa con la de ninguna de las ocho zonas interactivas, y su alto no supera 192 px. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -242,7 +263,7 @@ Además, estos atributos exponen a las pruebas el estado que de otro modo solo e
 | **Etiqueta con nombre de pieza y de sección** (D-25, SCN-R22). | Quien no sabe de hardware lee "SSD NVMe" y debajo "Proyectos": aprende qué es la pieza y qué va a encontrar. |
 | **Etiquetas siempre visibles sin hover** (SCN-R25). | En una tableta no hay forma de "pasar por encima"; sin esto las piezas serían anónimas. |
 | **Display de dos dígitos, no interactivo** (D-23). | Informa del progreso sin añadir otro control. El texto equivalente llega a los lectores de pantalla por la región de estado y a todos por el menú de ajustes. |
-| **Pista inicial** (SCN-R33). | El aura sugiere que algo se puede pulsar, pero una frase lo confirma a quien no lo intuye. Desaparece en cuanto cumple su función. |
+| **Placa de identidad y bienvenida en lugar de la pista** (SCN-R46 a SCN-R51, D-83). | La pista explicaba el mecanismo, pero no quién era el autor: el nombre solo existía para lectores de pantalla. La placa responde a quién y se queda; la bienvenida responde a qué hacer y se va en cuanto el visitante empieza, sin bloquear la escena ni robar el foco (P1, P2). Un reclutador entiende en segundos de quién es el sitio y cómo se usa. La frase se dirige al visitante porque así lo pidió el autor (I18N-R38). |
 | **Precarga de la imagen condicionada por la consulta de medios** (SCN-R36). | La descarga empieza con el HTML, en paralelo al JavaScript, y un teléfono nunca la inicia. |
 | **La variante se resuelve antes del primer pintado** (SCN-R36, SCN-R42). | Quien eligió el boceto no debe ver un fotograma de la fotografía ni descargarla. El script previo al pintado ya lee las preferencias para decidir el modo, así que fija también la variante e inicia la descarga de la imagen correcta. Por eso la precarga deja de ser una etiqueta estática, que no puede depender de una preferencia. |
 | **Rectángulo de foco dibujado en el SVG** (SCN-R21). | Es la única forma de mostrar un anillo alrededor de un elemento recortado con `clip-path`. Usa la caja y no la silueta porque un rectángulo se percibe como foco de forma inequívoca. |
@@ -255,6 +276,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-89). §4.7: se retiran la pista inicial (SCN-R33 y SCN-R34) y su criterio SCN-AC11; nuevos SCN-R46 y SCN-R47 (placa de identidad) y SCN-R48 a SCN-R51 (bienvenida). SCN-R05 y nuevo SCN-R52: `SceneIdentity` llega por propiedades. SCN-R10 y SCN-R41: las reservas de AST-R55 y AST-R56. §4.11: textos de la bienvenida en lugar de `hintLabel`, e identificadores de prueba. Nuevos SCN-AC21 a SCN-AC24. |
 | 2026-10-13 | 1.7 | Por decisión del autor (D-81), tras probar la escena con teclado: las flechas mueven el foco entre las piezas según su posición en la imagen. Nuevo SCN-R45 y criterios SCN-AC19 y SCN-AC20. |
 | 2026-10-13 | 1.6 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SCN-AC17 quedó confirmado por el autor en la versión 1.4. Sin cambio de requisitos respecto a la fila anterior. |
 | 2026-10-13 | 1.6 | Por indicación del autor al revisar las imágenes (D-76). SCN-R29: fondo bajo los dígitos del display, visible en el boceto. |

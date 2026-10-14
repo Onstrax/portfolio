@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 2.3 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 2.4 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -168,6 +168,17 @@ export function componentOfSection(slug: SectionSlug): ComponentId {
   }
   return match;
 }
+
+/**
+ * Proyectos con caso de estudio, en el orden en que se listan (VSN-R21, D-82). Cada uno es un
+ * `ProjectId` de SSD; una prueba de tipos lo comprueba (TSC-AC19).
+ */
+export const CASE_STUDY_IDS = ["thesis", "andespace", "dental-site"] as const;
+export type CaseStudyId = (typeof CASE_STUDY_IDS)[number];
+
+export function isCaseStudyId(value: unknown): value is CaseStudyId {
+  return CASE_STUDY_IDS.some((id) => id === value);
+}
 ```
 
 ### 4.4 Primitivas de contenido
@@ -214,6 +225,61 @@ export type RepositoryVisibility = "public" | "private";
 
 /** Número de personas del equipo, incluido el autor. 1 significa trabajo individual. */
 export type TeamSize = number;
+
+/** Texto con un fragmento destacado (TSC-R58). `emphasis` aparece una sola vez dentro de `text`. */
+export interface EmphasizedText {
+  readonly text: string;
+  readonly emphasis: string;
+}
+
+/** Elemento de contenido que admite un fragmento destacado: una cadena o un `EmphasizedText`. */
+export type RichLine = string | EmphasizedText;
+```
+
+| ID | Requisito |
+| --- | --- |
+| TSC-R58 | Un campo de contenido admite texto destacado solo si su tipo es `RichLine` (o un array de `RichLine`), y la spec de su sección lo indica. En las tablas de las specs, el fragmento destacado se escribe en **negrita**: la cadena completa es `text` y lo que va en negrita es `emphasis`. Cada elemento destaca como mucho un fragmento, que es una cifra o un resultado (VSN-R24, D-85). |
+| TSC-R59 | `src/shared/ui/rich-text.tsx` exporta el componente de servidor `RichText`, que recibe un `RichLine`: una cadena se renderiza tal cual; un `EmphasizedText`, como su `text` con la primera aparición de `emphasis` dentro de un `<strong>` (VIS §4.2, rol "Énfasis dentro de cuerpo"). Es el único lugar del código que interpreta un `RichLine`. |
+
+### 4.4.1 Contrato de caso de estudio
+
+| ID | Requisito |
+| --- | --- |
+| TSC-R60 | `src/shared/contracts/case-study.ts` DEBE contener las declaraciones siguientes. El contenido de cada caso vive en los textos de Proyectos (SSD §4.6) y la página que lo muestra la compone la vista simple (SMP §4.9). Los datos del proyecto que no dependen del idioma (nombre propio, tamaño de equipo, tecnologías y enlaces) no se repiten en el caso: se leen de sus hechos (SYS-R30). |
+
+```ts
+// src/shared/contracts/case-study.ts
+import type { RichLine } from "./content";
+
+/** Una decisión del proceso: qué alternativas había, qué se eligió y por qué. */
+export interface CaseStudyDecision {
+  readonly options: string;
+  readonly choice: string;
+  readonly reason: string;
+}
+
+/** Contenido de un caso de estudio en un idioma (VSN-R21). */
+export interface CaseStudyText {
+  /** Nombre breve para el título del documento y la vista previa: 40 caracteres como máximo. */
+  readonly title: string;
+  /** Descripción para los metadatos: entre 50 y 160 caracteres (QLT-R37). */
+  readonly description: string;
+  /** El problema y lo que estaba en juego, en párrafos. */
+  readonly problem: readonly string[];
+  /** Quiénes hicieron el proyecto y cómo se repartieron el trabajo, en una frase. */
+  readonly team: string;
+  /** Lo que hizo el autor. */
+  readonly contributions: readonly string[];
+  /** Lo que hizo el resto del equipo. Solo existe si el proyecto no es individual. */
+  readonly teamContributions?: string;
+  readonly decisions: readonly CaseStudyDecision[];
+  /** Cambios de rumbo durante el proyecto. */
+  readonly changes: readonly string[];
+  /** Resultado. Admite texto destacado. */
+  readonly outcome: readonly RichLine[];
+  /** Lo aprendido y lo que el autor haría distinto. */
+  readonly learned: readonly string[];
+}
 ```
 
 ### 4.5 Contrato de sección
@@ -297,7 +363,7 @@ El mismo componente se muestra dentro del panel de detalle y dentro de la vista 
 | TSC-R36 | Los tipos de hechos y de textos de una sección se declaran en el `types.ts` de su feature. El tipo de textos extiende `SectionTextBase`. |
 | TSC-R37 | Cada elemento repetible del contenido (un proyecto, un empleo, un enlace, un bloque) tiene un identificador que es una unión de literales derivada de un array `as const`. Los textos de esos elementos se declaran como `Record<Identificador, …>`, de modo que el compilador exija el texto de cada elemento en cada idioma. |
 | TSC-R38 | El orden en que se muestran los elementos es el orden del array de hechos. Los textos nunca determinan el orden. |
-| TSC-R39 | Las cadenas de contenido son texto plano: sin HTML, sin Markdown y sin saltos de línea. El énfasis y la estructura se expresan con campos separados, no con marcas dentro de una cadena. |
+| TSC-R39 | Las cadenas de contenido son texto plano: sin HTML, sin Markdown y sin saltos de línea. El énfasis y la estructura se expresan con campos separados, no con marcas dentro de una cadena: un fragmento destacado es el campo `emphasis` de un `EmphasizedText` (TSC-R58). |
 | TSC-R40 | `facts.ts` declara su objeto con `as const satisfies <TipoDeHechos>`; `es.ts` y `en.ts` declaran el suyo con `satisfies <TipoDeTextos>`. |
 
 | Dato | Va en | Ejemplo |
@@ -365,7 +431,7 @@ El compilador garantiza la forma del contenido. Lo que los tipos no pueden expre
 | --- | --- |
 | C1 Paridad de forma | Los textos en español y en inglés de cada sección tienen las mismas claves en todos los niveles y la misma longitud en cada array. |
 | C2 Cadenas limpias | Ninguna cadena está vacía, empieza o termina con espacio, ni contiene dos espacios seguidos. |
-| C3 Texto plano | Ninguna cadena contiene `<`, `>`, acento grave, `**`, `__` ni salto de línea (TSC-R39). |
+| C3 Texto plano | Ninguna cadena contiene `<`, `>`, acento grave, `**`, `__` ni salto de línea (TSC-R39). Se aplica también a `text` y `emphasis` de todo `EmphasizedText`. |
 | C4 Paridad numérica | Para cada cadena de texto, la colección de secuencias de dígitos que contiene es la misma en español y en inglés (por ejemplo, "4,2" y "4.2" contienen ambas `4` y `2`). |
 | C5 Sin traducir | Ninguna cadena de texto de cinco o más palabras es idéntica en español y en inglés. |
 | C6 Metadatos | `meta.title` y `meta.hardwareName` no están vacíos y `meta.title` no supera 40 caracteres; `meta.description` mide entre 50 y 160 caracteres. |
@@ -375,6 +441,8 @@ El compilador garantiza la forma del contenido. Lo que los tipos no pueden expre
 | C10 Tamaño de equipo | Toda propiedad `teamSize` es un entero mayor o igual que 1. |
 | C11 Líneas de arranque | Todo `message` es una sola línea no vacía de 96 caracteres como máximo. |
 | C12 Mayúsculas | Ninguna cadena de tres o más palabras está escrita íntegramente en mayúsculas (VIS-R09). |
+| C13 Texto destacado | En todo `EmphasizedText`, `emphasis` no está vacío, es distinto de `text` y aparece exactamente una vez dentro de él. En cada posición, el español y el inglés son los dos cadenas o los dos `EmphasizedText` (TSC-R58). |
+| C14 Casos de estudio | En todo `CaseStudyText`, `title` mide 40 caracteres como máximo y `description` entre 50 y 160 (QLT-R37); `decisions` y `outcome` no están vacíos (TSC-R60). |
 
 ### 4.9 Estado
 
@@ -404,6 +472,8 @@ export interface PersistedPrefs {
 export interface PersistedSession {
   readonly bootSeen: boolean;
   readonly visited: readonly PrimaryComponentId[];
+  /** La bienvenida de la escena ya se cerró en esta sesión (SCN-R50). */
+  readonly welcomeSeen: boolean;
 }
 
 export const STORAGE_KEYS = {
@@ -415,7 +485,11 @@ export const DEFAULT_PREFS: PersistedPrefs = {
   soundEnabled: false,
   sceneVariant: DEFAULT_SCENE_VARIANT,
 };
-export const DEFAULT_SESSION: PersistedSession = { bootSeen: false, visited: [] };
+export const DEFAULT_SESSION: PersistedSession = {
+  bootSeen: false,
+  visited: [],
+  welcomeSeen: false,
+};
 
 export interface PrefsStore extends PersistedPrefs {
   readonly hasHydrated: boolean;
@@ -428,6 +502,7 @@ export interface SessionStore extends PersistedSession {
   readonly hasHydrated: boolean;
   readonly markBootSeen: () => void;
   readonly markVisited: (id: PrimaryComponentId) => void;
+  readonly markWelcomeSeen: () => void;
   readonly reset: () => void;
 }
 
@@ -446,7 +521,8 @@ export interface UiStore {
 | `setSceneVariant(variant)` | `sceneVariant` toma el valor dado | Escribe `PersistedPrefs` de inmediato |
 | `markBootSeen()` | `bootSeen` pasa a `true` | Escribe `PersistedSession` de inmediato |
 | `markVisited(id)` | Añade `id` al final de `visited` si no estaba; si ya estaba, no cambia nada | Escribe `PersistedSession` solo si hubo cambio |
-| `reset()` | `bootSeen` pasa a `false` y `visited` a lista vacía | Escribe `PersistedSession` de inmediato |
+| `markWelcomeSeen()` | `welcomeSeen` pasa a `true`; si ya lo era, no cambia nada | Escribe `PersistedSession` solo si hubo cambio |
+| `reset()` | `bootSeen` y `welcomeSeen` pasan a `false` y `visited` a lista vacía | Escribe `PersistedSession` de inmediato |
 | `openSettings()`, `closeSettings()`, `toggleSettings()` | Cambian `settingsOpen` | Ninguna |
 
 ### 4.10 Rutas
@@ -455,14 +531,15 @@ export interface UiStore {
 | --- | --- |
 | TSC-R54 | `src/shared/config/routes.ts` DEBE exportar los tipos y las funciones siguientes, con el comportamiento de la tabla de ejemplos. Son funciones puras. De las funciones se muestra solo la firma. |
 | TSC-R55 | Toda ruta interna del sitio se construye con estas funciones. NO DEBEN aparecer en `src/` literales de ruta que contengan un locale (por ejemplo `"/es/"` o una plantilla que concatene el locale) fuera de `routes.ts` y de los archivos de prueba, que escriben literalmente las rutas que esperan. |
-| TSC-R56 | `parsePath` acepta la ruta con o sin barra final. Devuelve `null` para cualquier ruta que no corresponda a una de las tres vistas. |
+| TSC-R56 | `parsePath` acepta la ruta con o sin barra final. Devuelve `null` para cualquier ruta que no corresponda a una de las cuatro vistas. Una ruta de caso solo es válida bajo `projects` y con un `CaseStudyId`. |
 
 ```ts
 // src/shared/config/routes.ts
 export type HomePath = `/${Locale}/`;
 export type SectionPath = `/${Locale}/${SectionSlug}/`;
 export type CvPath = `/${Locale}/cv/`;
-export type AppPath = HomePath | SectionPath | CvPath;
+export type CaseStudyPath = `/${Locale}/projects/${CaseStudyId}/`;
+export type AppPath = HomePath | SectionPath | CvPath | CaseStudyPath;
 
 /** Segmento reservado para la vista simple; nunca es un `SectionSlug` (SYS-R10). */
 export const CV_SEGMENT = "cv";
@@ -470,11 +547,13 @@ export const CV_SEGMENT = "cv";
 export type ParsedPath =
   | { readonly view: "home"; readonly locale: Locale }
   | { readonly view: "section"; readonly locale: Locale; readonly section: SectionSlug }
-  | { readonly view: "cv"; readonly locale: Locale };
+  | { readonly view: "cv"; readonly locale: Locale }
+  | { readonly view: "case"; readonly locale: Locale; readonly caseStudy: CaseStudyId };
 
 export function homePath(locale: Locale): HomePath;
 export function sectionPath(locale: Locale, section: SectionSlug): SectionPath;
 export function cvPath(locale: Locale): CvPath;
+export function caseStudyPath(locale: Locale, caseStudy: CaseStudyId): CaseStudyPath;
 export function parsePath(pathname: string): ParsedPath | null;
 export function toPath(parsed: ParsedPath): AppPath;
 /** Misma vista y sección en otro idioma. Una ruta no reconocida lleva al inicio de ese idioma. */
@@ -486,12 +565,15 @@ export function withLocale(pathname: string, target: Locale): AppPath;
 | `homePath("es")` | `"/es/"` |
 | `sectionPath("en", "projects")` | `"/en/projects/"` |
 | `cvPath("es")` | `"/es/cv/"` |
+| `caseStudyPath("en", "thesis")` | `"/en/projects/thesis/"` |
 | `parsePath("/es/")` y `parsePath("/es")` | `{ view: "home", locale: "es" }` |
 | `parsePath("/en/projects/")` | `{ view: "section", locale: "en", section: "projects" }` |
 | `parsePath("/es/cv/")` | `{ view: "cv", locale: "es" }` |
+| `parsePath("/es/projects/dental-site/")` | `{ view: "case", locale: "es", caseStudy: "dental-site" }` |
 | `parsePath("/")`, `parsePath("/de/")`, `parsePath("/es/unknown/")`, `parsePath("/es/projects/extra/")` | `null` |
 | `withLocale("/es/projects/", "en")` | `"/en/projects/"` |
 | `withLocale("/es/cv/", "en")` | `"/en/cv/"` |
+| `withLocale("/es/projects/andespace/", "en")` | `"/en/projects/andespace/"` |
 | `withLocale("/algo/desconocido/", "en")` | `"/en/"` |
 
 ### 4.11 Assets y modo de render
@@ -564,16 +646,19 @@ export type RenderMode = "scene" | "simple";
 | TSC-AC06 | `SECTION_SLUGS` es `["profile", "experience", "projects", "stack", "contact", "ecosystem", "about"]`, no contiene `"cv"`, y cada guarda de §4.3 acepta todos los valores de su lista y rechaza valores ajenos, `null`, `undefined` y números. | Prueba unitaria |
 | TSC-AC07 | `SECTION_LIST` tiene siete definiciones en el orden de `SECTION_SLUGS`, `PRIMARY_SECTION_LIST` las seis primeras, ningún `componentId` se repite y `getSection(slug).slug === slug` para los siete slugs. | Prueba unitaria |
 | TSC-AC08 | `findContentIssues(SECTION_LIST)` devuelve una lista vacía. | Prueba unitaria |
-| TSC-AC09 | Para cada regla C1 a C12 existe un caso de ejemplo que `findContentIssues` marca con esa regla y un caso correcto que no marca. | Prueba unitaria |
+| TSC-AC09 | Para cada regla C1 a C14 existe un caso de ejemplo que `findContentIssues` marca con esa regla y un caso correcto que no marca. | Prueba unitaria |
 | TSC-AC10 | Todo `SitePath` presente en los hechos corresponde a un archivo existente en `public/`. | Prueba unitaria |
 | TSC-AC11 | `parsePrefs` y `parseSession` devuelven los valores por defecto para `null`, texto que no es JSON, un array, un número y un objeto con tipos erróneos; conservan los campos válidos de un objeto parcialmente inválido; `parsePrefs` sustituye por `photo` un `sceneVariant` que no es una variante válida; y `parseSession` elimina de `visited` los repetidos y los valores que no son `PrimaryComponentId`. | Prueba unitaria |
 | TSC-AC12 | Cada acción de los stores produce el efecto y la escritura de la tabla de §4.9; `markVisited` con un identificador ya presente no escribe en el almacenamiento. | Prueba unitaria |
 | TSC-AC13 | Antes de hidratar, los stores devuelven los valores por defecto aunque el almacenamiento contenga otros; después de montar `StoreHydrator` devuelven los valores almacenados y `hasHydrated` es `true`. | Prueba de componente |
-| TSC-AC14 | Las funciones de rutas devuelven los resultados de la tabla de §4.10. | Prueba unitaria |
+| TSC-AC14 | Las funciones de rutas devuelven los resultados de la tabla de §4.10, incluidas las de caso de estudio, y `parsePath("/es/projects/habicapital/")` y `parsePath("/es/stack/thesis/")` devuelven `null`. | Prueba unitaria |
 | TSC-AC15 | No hay literales de ruta con locale en `src/` fuera de `routes.ts` y de los archivos de prueba, ni accesos a `localStorage` o `sessionStorage` fuera de los archivos que permite TSC-R53. | Prueba de arquitectura |
 | TSC-AC16 | Al renderizar en un mismo documento las siete secciones con `idScope=""` y de nuevo con `idScope="panel-"`, para cada idioma: no hay ningún atributo `id` repetido, todo `id` de la primera tanda empieza por el slug de su sección, y ningún componente renderiza `<h1>`, `<h2>` ni un elemento de región como raíz. | Prueba de componente |
 | TSC-AC17 | El HTML que produce cada sección con `idScope=""` es idéntico al que produce con `idScope="panel-"` una vez eliminado ese prefijo de los atributos `id` y de los que los referencian. | Prueba de componente |
 | TSC-AC18 | Ningún archivo `content/*.ts` contiene `new Date` ni `Date.`, y cada feature de sección declara sus hechos y textos con `satisfies` (TSC-R40). | Prueba de arquitectura |
+| TSC-AC19 | `CASE_STUDY_IDS` es `["thesis", "andespace", "dental-site"]`, `isCaseStudyId` acepta esos tres valores y rechaza `"habicapital"`, `null` y números, y un archivo de pruebas de tipos demuestra que `CaseStudyId` es asignable a `ProjectId` de SSD. | Prueba unitaria |
+| TSC-AC20 | `parseSession` devuelve `welcomeSeen: false` y conserva `bootSeen` y `visited` para un valor guardado sin ese campo, como `{"bootSeen":true,"visited":["cpu"]}`; `markWelcomeSeen` escribe la sesión una sola vez; y `reset` deja `welcomeSeen` en `false`. | Prueba unitaria |
+| TSC-AC21 | `RichText` renderiza una cadena sin ningún `<strong>` y un `EmphasizedText` con exactamente un `<strong>` que contiene `emphasis`, con el resto de `text` antes y después, sin espacios añadidos. | Prueba de componente |
 
 ## 6. Decisiones y justificación
 
@@ -601,6 +686,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-85). §4.3: `CASE_STUDY_IDS` y su guarda. §4.4: `EmphasizedText` y `RichLine`, con TSC-R58 y TSC-R59 (`RichText`); TSC-R39 remite a ellos. Nuevo §4.4.1 con el contrato de caso de estudio (TSC-R60). §4.8: C3 se aplica también al texto destacado y nuevas reglas C13 y C14. §4.9: campo `welcomeSeen` y acción `markWelcomeSeen`; `reset` también lo pone a `false`. §4.10: vista `case` y `caseStudyPath`. Nuevos TSC-AC19 a TSC-AC21. |
 | 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Durante M4. TSC-R57: `assets.ts` contiene también `OgAsset` y `SiteTheme`. |
 | 2026-10-13 | 2.2 | Aclaraciones surgidas al implementar M1, por delegación del autor. TSC-R50: `serializePrefs` y `serializeSession`. TSC-R53, TSC-R55 y TSC-AC15: los archivos de prueba quedan exentos de las dos restricciones. |

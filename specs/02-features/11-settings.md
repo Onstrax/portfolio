@@ -2,18 +2,18 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.2 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 2.0 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
 ## 1. Propósito
 
-Especificar los controles globales de la escena: la barra fija con el idioma y el acceso a la vista simple, el menú de ajustes que abre el panel frontal (sonido, imagen de la escena, idioma, progreso y reinicio de sesión) y los efectos de sonido.
+Especificar los controles globales de la escena: la barra fija con el idioma, el acceso a la vista simple y los contactos directos, el menú de ajustes que abre el panel frontal (sonido, imagen de la escena, idioma, progreso y reinicio de sesión) y los efectos de sonido.
 
 ## 2. Alcance
 
-**Incluye:** la barra fija, el selector de idioma, el menú de ajustes, el reinicio de sesión y el catálogo y la síntesis de los efectos de sonido.
+**Incluye:** la barra fija y sus contactos directos, el selector de idioma, el menú de ajustes, el reinicio de sesión y el catálogo y la síntesis de los efectos de sonido.
 
 **No incluye:** la zona del panel frontal en la escena, que es de SCN (SCN-R11); las reglas del cambio de idioma, que son de I18N §4.5; ni cuándo reproduce cada feature su sonido, que lo dice su spec.
 
@@ -34,8 +34,8 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | ID | Requisito |
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
-| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2) y un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`. Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma y la vista simple sigan al alcance (PNL-R25). |
-| SET-R03 | Sus controles preceden en el orden de tabulación a las zonas de la escena (QLT-R07). |
+| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`; un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma, la vista simple y los contactos sigan al alcance (PNL-R25). |
+| SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a la bienvenida y a las zonas de la escena (QLT-R07). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
 ### 4.2 Selector de idioma
@@ -89,8 +89,8 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 
 | ID | Requisito |
 | --- | --- |
-| SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). El paso (2) es una salvaguarda: el menú y el panel son modales y no pueden estar abiertos a la vez. |
-| SET-R25 | El reinicio no cambia el idioma, la preferencia de sonido ni la imagen de la escena. Tras él, el display de diagnóstico muestra `00` y la pista inicial de la escena vuelve a verse (SCN-R33). |
+| SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` y `welcomeSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). El paso (2) es una salvaguarda: el menú y el panel son modales y no pueden estar abiertos a la vez. |
+| SET-R25 | El reinicio no cambia el idioma, la preferencia de sonido ni la imagen de la escena. Tras él, el display de diagnóstico muestra `00` y, al terminar el arranque, vuelve a mostrarse la bienvenida de la escena (SCN-R48). |
 | SET-R26 | El botón Power del panel frontal, visible en la imagen, no tiene ninguna función (D-11). |
 
 ### 4.7 Textos de interfaz
@@ -101,6 +101,10 @@ Espacio de nombres `settings` del diccionario de interfaz. Identificador de prue
 | --- | --- | --- |
 | `barAriaLabel` | Controles del sitio | Site controls |
 | `simpleViewLabel` | Vista simple | Simple view |
+| `cvShortLabel` | CV | CV |
+| `emailAriaLabel` | Escribir un correo | Send an email |
+| `linkedinAriaLabel` | LinkedIn | LinkedIn |
+| `githubAriaLabel` | GitHub | GitHub |
 | `menuTitle` | Ajustes | Settings |
 | `closeAriaLabel` | Cerrar ajustes | Close settings |
 | `soundLabel` | Sonido | Sound |
@@ -119,11 +123,30 @@ Espacio de nombres `settings` del diccionario de interfaz. Identificador de prue
 | SET-R28 | El cambio se aplica de inmediato y sin cerrar el menú: la escena cambia de imagen como indica SCN-R43. Con el sonido activado se reproduce el efecto `toggle`. |
 | SET-R29 | La variante elegida se conserva entre visitas. El reinicio de sesión no la modifica (SET-R25). |
 
+### 4.9 Contactos directos
+
+| ID | Requisito |
+| --- | --- |
+| SET-R30 | Los contactos directos son una lista (`<ul>`) de cuatro enlaces, en este orden, cada uno de 44×44 px como mínimo y con el estilo "Enlace (superficie oscura)" sin subrayado (VIS-R29): (1) el CV del idioma de la página, con el atributo `download` y `type="application/pdf"` (IO-R03), el icono `download` y el texto visible `settings.cvShortLabel`, y como nombre accesible `common.downloadCvLabel`, que contiene ese texto; (2) el correo, un enlace `mailto:` con el icono `mail` y el nombre accesible `settings.emailAriaLabel`; (3) LinkedIn y (4) GitHub, enlaces externos (SYS-R40) con su icono de marca a 20 px (VIS-R39) y como nombre accesible `settings.linkedinAriaLabel` o `settings.githubAriaLabel` seguido de `common.opensInNewTabHint` entre paréntesis. Los iconos son decorativos (VIS-R40). |
+| SET-R31 | `FixedBar` recibe los contactos por propiedades (SYS-R49) como `contacts: readonly QuickContact[]`. `buildQuickContacts(channels: readonly LinkFact[], cv: SitePath): readonly QuickContact[]`, función pura de `src/shared/lib/section-nav.ts`, toma de los canales de Contacto (IO-R07) los de `email`, `linkedin` y `github`, en ese orden, y antepone el CV; lanza un error si falta alguno, de modo que la compilación falle antes que publicar una barra incompleta. El layout del grupo `(scene)` la llama con los canales de `SECTIONS.contact` y `CV_FILES[locale]`. Las direcciones se escriben una sola vez, en los hechos de Contacto (SYS-R30). |
+
+```ts
+// src/shared/contracts/navigation.ts (añade)
+export const QUICK_CONTACT_IDS = ["cv", "email", "linkedin", "github"] as const;
+export type QuickContactId = (typeof QUICK_CONTACT_IDS)[number];
+
+/** Un contacto directo de la barra fija (SET-R30), con su dirección ya resuelta. */
+export interface QuickContact {
+  readonly id: QuickContactId;
+  readonly href: Href;
+}
+```
+
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
-| SET-AC01 | En `desktop`, la barra fija es visible en la esquina superior derecha del escenario, es un `<nav>` con el nombre "Controles del sitio" en `/es/`, y contiene las opciones "ES" y "EN" y el enlace "Vista simple", que lleva a `/es/cv/`. | Prueba E2E |
+| SET-AC01 | En `desktop`, la barra fija es visible en la esquina superior derecha del escenario, es un `<nav>` con el nombre "Controles del sitio" en `/es/`, y contiene las opciones "ES" y "EN", el enlace "Vista simple", que lleva a `/es/cv/`, y los cuatro contactos directos, en ese orden. | Prueba E2E |
 | SET-AC02 | En cada viewport de modo `scene` de QLT §4.6, la caja de la barra fija no se solapa con la caja de ninguna zona interactiva de la escena. | Prueba E2E |
 | SET-AC03 | El selector de idioma cumple I18N-AC11, I18N-AC12 e I18N-AC14 desde la barra fija y desde el menú de ajustes. | Prueba E2E |
 | SET-AC04 | Activar la zona "Panel frontal: Ajustes" abre un diálogo modal con el nombre "Ajustes" y el foco en el interruptor "Sonido". Esc, el botón de cerrar, un clic fuera y una segunda activación de la zona lo cierran, y el foco vuelve a la zona. | Prueba E2E |
@@ -131,10 +154,11 @@ Espacio de nombres `settings` del diccionario de interfaz. Identificador de prue
 | SET-AC06 | El interruptor de sonido tiene `role="switch"` y `aria-checked="false"` en una primera visita. Al activarlo pasa a `"true"`, `localStorage` contiene `soundEnabled: true`, y tras recargar la página sigue en `"true"`. | Prueba E2E |
 | SET-AC07 | Con el sonido apagado, `playSound` no crea ningún `AudioContext`. Con el sonido encendido, cada `SoundName` crea un oscilador con la onda, las frecuencias y la duración de la tabla de §4.5, y la ganancia nunca supera 0,06. | Prueba unitaria con una Web Audio API simulada |
 | SET-AC08 | `playSound` no lanza ni deja promesas rechazadas cuando `AudioContext` no existe, cuando su constructor lanza y cuando `resume()` se rechaza. | Prueba unitaria |
-| SET-AC09 | Tras visitar dos secciones, el menú muestra "2 de 6 secciones visitadas" en `/es/`. Activar "Reiniciar sesión": cierra el menú, deja la URL en `/es/`, muestra el arranque y, al terminar, el display marca `00` y la pista inicial es visible. | Prueba E2E |
+| SET-AC09 | Tras visitar dos secciones, el menú muestra "2 de 6 secciones visitadas" en `/es/`. Activar "Reiniciar sesión": cierra el menú, deja la URL en `/es/`, muestra el arranque y, al terminar, el display marca `00` y la bienvenida es visible. | Prueba E2E |
 | SET-AC10 | El reinicio de sesión conserva el idioma de la página y los valores de `soundEnabled` y `sceneVariant`. | Prueba E2E |
 | SET-AC11 | En `mobile` no se renderizan ni la barra fija ni el menú de ajustes. | Prueba E2E |
 | SET-AC13 | El menú de ajustes muestra el grupo "Imagen de la escena" con las opciones "Fotografía" y "Boceto" en `/es/`, y "Scene image", "Photo" y "Sketch" en `/en/`; en una primera visita está marcada la primera. Al elegir "Boceto", el menú sigue abierto, `localStorage` contiene `sceneVariant: "sketch"` y, tras recargar la página, sigue marcada. | Prueba E2E |
+| SET-AC14 | En `desktop`, la barra fija de `/es/` contiene, en este orden, los enlaces "Descargar CV (PDF)", que apunta a `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` con `download`; "Escribir un correo", con `mailto:juanalvarezgcl@gmail.com`; y "LinkedIn" y "GitHub", con las URLs de IO-R07, `target="_blank"` y `rel="noopener noreferrer"`. Cada uno mide al menos 44×44 px, y con un panel abierto siguen al alcance en la barra que se dibuja dentro de él. `buildQuickContacts` devuelve esos cuatro en orden y lanza un error si falta un canal. | Prueba E2E y prueba unitaria |
 | SET-AC12 | El autor escucha los cinco efectos con el sonido activado y confirma que son discretos y coherentes entre sí. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -159,6 +183,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-84). SET-R02: la barra fija añade un separador y los contactos directos; nuevo §4.9 (SET-R30 y SET-R31). SET-R03: los contactos van antes de la bienvenida y de las zonas. SET-R24 y SET-R25: el reinicio borra también `welcomeSeen` y la bienvenida reemplaza a la pista. §4.7: cuatro textos nuevos. SET-AC01 y SET-AC09 actualizados; nuevo SET-AC14. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SET-AC12: el autor escuchó los cinco efectos con el sonido activado y los dio por buenos (A5) el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73 y D-75). SET-R10: el menú elige un lado con sitio en lugar de tapar la pieza que lo abre. SET-R02: la barra fija se dibuja también dentro del panel abierto. SET-R12 y SET-R13 precisados. SET-R24 y SET-AC09: el reinicio no puede ocurrir con una sección abierta, porque los dos diálogos son modales. §4.7: identificador de prueba. |
 | 2026-10-13 | 1.1 | Por decisión del autor (D-66). Nuevo §4.8 (SET-R27 a SET-R29): selector de imagen de la escena en el menú de ajustes. SET-R11: nuevo orden del contenido. SET-R25 y SET-AC10: el reinicio conserva la variante. Tres textos nuevos y nuevo SET-AC13. El efecto `toggle` suena también al cambiar de imagen. |

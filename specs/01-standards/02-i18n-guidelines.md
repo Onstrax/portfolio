@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.2 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.3 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, TSC |
 
 ## 1. Propósito
@@ -70,6 +70,7 @@ export const LOCALE_META = {
 | Tipo de texto | Dónde vive | Quién lo define |
 | --- | --- | --- |
 | Contenido de una sección | `content/es.ts` y `content/en.ts` del feature de la sección | La spec de la sección |
+| Contenido de los casos de estudio | Los textos de Proyectos, en `content/es.ts` y `content/en.ts` de `ssd-projects` | SSD §4.6 |
 | Nombres de las secciones y de las piezas de hardware | `meta` de los textos de cada sección | VSN §4 |
 | Interfaz de un feature de armazón | Su espacio de nombres en el diccionario de interfaz | La spec del feature |
 | Interfaz transversal | Espacio de nombres `common` | Esta spec (§4.3.1) |
@@ -223,7 +224,7 @@ SMP implementa estos requisitos; aquí se fija qué deben cumplir.
 | I18N-R35 | **Equivalencia.** Ambos idiomas transmiten los mismos hechos, en el mismo orden y con el mismo número de elementos. Ningún dato aparece en un solo idioma. |
 | I18N-R36 | **Fuente.** Para el contenido que ya figura en los CVs actualizados, la redacción de cada idioma parte de la del CV en ese idioma. El contenido nuevo se redacta en ambos idiomas a la vez; no se traduce de forma literal. |
 | I18N-R37 | **Voz del contenido.** En español, primera persona del singular ("Diseñé", "Acompaño"). En inglés, primera persona implícita sin pronombre ("Designed", "Support"). Es el registro de los CVs. |
-| I18N-R38 | **Voz de la interfaz.** En español, infinitivos y sustantivos ("Cerrar", "Descargar CV"). En inglés, imperativos y sustantivos ("Close", "Download CV"). La interfaz no se dirige al visitante de "tú" ni de "usted". |
+| I18N-R38 | **Voz de la interfaz.** En español, infinitivos y sustantivos ("Cerrar", "Descargar CV"). En inglés, imperativos y sustantivos ("Close", "Download CV"). La interfaz no se dirige al visitante de "tú" ni de "usted". Única excepción, por decisión del autor (D-83): la bienvenida de la escena (SCN §4.7) habla en primera persona y se dirige al visitante de "tú" en español; su botón sigue la regla general ("Explorar", "Explore"). |
 | I18N-R39 | **Mayúsculas.** Títulos, etiquetas y botones usan mayúscula solo en la primera palabra y en los nombres propios, en ambos idiomas ("Stack tecnológico", "Tech stack"). El inglés no usa mayúsculas de título. Las mayúsculas sostenidas se aplican solo por CSS (VIS-R09). |
 | I18N-R40 | **Cifras.** Coma decimal en español y punto en inglés. En español, el símbolo de porcentaje va separado de la cifra por un espacio de no separación ("94 %"); en inglés va unido ("94%"). |
 | I18N-R41 | **Signos.** Raya corta (–) para intervalos; puntos suspensivos como un solo carácter (…); comillas tipográficas dobles (“ ”) y apóstrofo tipográfico (’) en ambos idiomas. El español abre las interrogaciones y exclamaciones (¿ ¡). |
@@ -249,6 +250,9 @@ SMP implementa estos requisitos; aquí se fija qué deben cumplir.
 | Equipo de N | Team of N |
 | Tiempo completo | Full-time |
 | Vista simple | Simple view |
+| Caso de estudio | Case study |
+| Opción académica en Machine Learning | Machine Learning minor |
+| Objetivos de Desarrollo Sostenible (ODS) | Sustainable Development Goals (SDGs) |
 
 ### 4.9 Añadir un idioma
 
@@ -321,6 +325,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.3 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-87). I18N-R04: el contenido de los casos de estudio vive en los textos de Proyectos. I18N-R38: excepción para la bienvenida de la escena, que se dirige al visitante. I18N-R44: tres términos fijos nuevos. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). I18N-AC18: el autor leyó las siete secciones en ambos idiomas, en la vista simple y de nuevo dentro del panel (A4), y las dio por buenas el 2026-10-13; queda anotado en la spec de cada sección. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |
 | 2026-10-12 | 1.2 | Confirmada por el autor el 2026-10-12. `common` gana `downloadCvLabel`, `copyLabel` y `copiedAnnouncement`, que usan varias secciones y la vista simple. |

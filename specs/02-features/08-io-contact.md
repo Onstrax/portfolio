@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.1 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.2 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -30,7 +30,7 @@ No aplica.
 | ID | Requisito |
 | --- | --- |
 | IO-R01 | Los CVs publicados son copias de `docs/CVs/CV_Juan_Esteban_Alvarez_Garcia_ES_Actualizado.pdf` y `docs/CVs/CV_Juan_Esteban_Alvarez_Garcia_EN_Actualizado.pdf`, guardadas en `public/cv/` con los nombres `juan-esteban-alvarez-garcia-cv-es.pdf` y `juan-esteban-alvarez-garcia-cv-en.pdf`. Las copias conservan en sus propiedades solo el título y el autor: se eliminan `Creator`, `Producer` y las fechas, tanto del diccionario de información del PDF como de su paquete XMP (IO-R04). |
-| IO-R02 | `src/shared/config/site.ts` exporta `CV_FILES: Readonly<Record<Locale, SitePath>>` con las rutas `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` y `/cv/juan-esteban-alvarez-garcia-cv-en.pdf`. Es la única definición de esas rutas; la usan Perfil, Contacto y la vista simple. |
+| IO-R02 | `src/shared/config/site.ts` exporta `CV_FILES: Readonly<Record<Locale, SitePath>>` con las rutas `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` y `/cv/juan-esteban-alvarez-garcia-cv-en.pdf`. Es la única definición de esas rutas; la usan Perfil, Contacto, la vista simple y los contactos directos de la barra fija (SET-R30). |
 | IO-R03 | Todo enlace de descarga del CV lleva el atributo `download` y el atributo `type="application/pdf"`. |
 | IO-R04 | Cada vez que el autor actualiza un CV, sustituye el archivo de `public/cv/` conservando el nombre. Antes de publicar, comprueba que las propiedades del documento PDF no contienen datos distintos de su nombre y el título. Una prueba lo verifica sobre los archivos de `public/cv/`. |
 | IO-R05 | Los CVs publicados DEBEN ser coherentes con el contenido del sitio. Si un dato cambia en un CV, se actualiza la spec de la sección afectada en el mismo cambio. |
@@ -69,7 +69,7 @@ export interface ContactText extends SectionTextBase {
 
 | ID | Requisito |
 | --- | --- |
-| IO-R07 | `content/facts.ts` contiene exactamente los valores de la tabla siguiente (F-12, F-13). `email` es `"juanalvarezgcl@gmail.com"`. |
+| IO-R07 | `content/facts.ts` contiene exactamente los valores de la tabla siguiente (F-12, F-13). `email` es `"juanalvarezgcl@gmail.com"`. Los canales `email`, `linkedin` y `github` alimentan también los contactos directos de la barra fija (SET-R31), que no repiten ninguna dirección. |
 
 | `id` | `href` | `display` |
 | --- | --- | --- |
@@ -164,6 +164,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.2 | Versión 2, pendiente de aprobación del autor (D-84). IO-R02 e IO-R07: los contactos directos de la barra fija leen el CV y tres canales de esta sección. Sin cambio de contenido. |
 | 2026-10-13 | 1.1 | IO-AC10: el autor abrió cada canal desde el sitio desplegado, en escritorio y en su teléfono, y todos funcionan. Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). IO-AC10, en la parte que no necesita el sitio desplegado: el autor revisó ambos idiomas (A4) y aceptó las propiedades de los dos PDF, que conservan un objeto interno de ONLYOFFICE, el 2026-10-13. La comprobación de cada canal desde el sitio desplegado, en escritorio y en un teléfono, se hace en M9. Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Por indicación del autor ("solo nombre y título"). IO-R01 e IO-R04: las copias publicadas de los CVs no llevan `Creator`, `Producer` ni fechas en sus propiedades, y una prueba lo comprueba. |

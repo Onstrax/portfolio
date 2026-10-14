@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.3 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.4 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
 ## 1. Propósito
@@ -13,17 +13,17 @@ Especificar la vista simple, que es la página plana con las siete secciones y l
 
 ## 2. Alcance
 
-**Incluye:** estructura y comportamiento de la vista simple, su uso como capa base, el desplazamiento a una sección, la impresión, la configuración del sitio y todos los metadatos.
+**Incluye:** estructura y comportamiento de la vista simple, su uso como capa base, el desplazamiento a una sección, la impresión, la página de caso de estudio, la configuración del sitio y todos los metadatos.
 
 **No incluye:** el contenido de las secciones (ver su spec), el aspecto de la página clara (ver VIS §4.5.3), las reglas de metadatos por idioma (ver I18N §4.6, que esta spec implementa) ni la analítica (ver DEP).
 
-Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJsonLd`, `getPageMetadata` y `getSitemapEntries`; `index.ts` exporta el componente de cliente `SectionScroller` (STR-R33).
+Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `CaseStudyPage`, `PersonJsonLd`, `getPageMetadata`, `getEntryMetadata` y `getSitemapEntries`; `index.ts` exporta el componente de cliente `SectionScroller` (STR-R33).
 
 ## 3. Definiciones
 
 | Término | Definición |
 | --- | --- |
-| **Vista** | Uno de los tres tipos de página con idioma: `home`, `section` o `cv` (`ParsedPath`, TSC §4.10). |
+| **Vista** | Uno de los cuatro tipos de página con idioma: `home`, `section`, `cv` o `case` (`ParsedPath`, TSC §4.10). |
 | **Origen del sitio** | El valor validado de `NEXT_PUBLIC_SITE_URL` (SYS-R35). |
 | **Capaz de escena** | Un viewport que cumple la consulta de SYS-R12; en CSS, la variante `scene-capable` (SYS-R50). |
 
@@ -81,13 +81,14 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 | `home` | `site.homeTitle` | `site.description` |
 | `section` | `site.sectionTitle({ title })`, con `meta.title` de la sección | `meta.description` de la sección |
 | `cv` | `site.cvTitle` | `site.cvDescription` |
+| `case` | `site.caseTitle({ title })`, con `title` del caso (SSD §4.6) | `description` del caso |
 
 ### 4.5 Datos estructurados, sitemap y robots
 
 | ID | Requisito |
 | --- | --- |
 | SMP-R18 | `PersonJsonLd` renderiza, en la capa base del grupo `(scene)` y por tanto en las páginas de inicio y de sección, un bloque `<script type="application/ld+json">` con un objeto `Person` de schema.org. Sus campos son los de la tabla siguiente y proceden de `SITE`, de `SECTIONS.profile` y de `SECTIONS.contact`; ningún valor se escribe a mano en este feature. |
-| SMP-R19 | `src/app/sitemap.ts` devuelve `getSitemapEntries()`: las 18 páginas con idioma (dos de inicio, catorce de sección y dos de `cv`), cada una con sus alternativas por idioma. No incluye `/`. |
+| SMP-R19 | `src/app/sitemap.ts` devuelve `getSitemapEntries()`: las 24 páginas con idioma (dos de inicio, catorce de sección, dos de `cv` y seis de caso de estudio), cada una con sus alternativas por idioma. No incluye `/`. |
 | SMP-R20 | `src/app/robots.ts` permite el rastreo de todo el sitio a cualquier agente y declara la URL absoluta del sitemap. |
 
 | Campo de `Person` | Valor |
@@ -133,6 +134,20 @@ Espacio de nombres `simpleView`:
 | `desktopHint` | La versión interactiva de este portfolio está disponible en pantallas de escritorio. | The interactive version of this portfolio is available on desktop screens. |
 | `interactiveLinkLabel` | Ver la versión interactiva | Open the interactive version |
 | `backToTopLabel` | Volver arriba | Back to top |
+| `caseKindTitle` | Caso de estudio | Case study |
+| `caseBackLabel` | Todos los proyectos | All projects |
+| `caseProblemTitle` | El problema | The problem |
+| `caseRoleTitle` | Mi rol | My role |
+| `caseContributionsTitle` | Mis aportes | My contributions |
+| `caseTeamTitle` | Aportes del equipo | Team contributions |
+| `caseProcessTitle` | El proceso | The process |
+| `caseDecisionsTitle` | Decisiones | Decisions |
+| `caseOptions` | Alternativas | Options |
+| `caseChoice` | Elección | Choice |
+| `caseReason` | Por qué | Why |
+| `caseChangesTitle` | Cambios de rumbo | Changes of direction |
+| `caseOutcomeTitle` | Resultado | Outcome |
+| `caseLearnedTitle` | Aprendizajes | Lessons learned |
 
 Espacio de nombres `site`:
 
@@ -141,11 +156,32 @@ Espacio de nombres `site`:
 | `homeTitle` | Juan Esteban Álvarez García · Portfolio interactivo | Juan Esteban Álvarez García · Interactive portfolio |
 | `sectionTitle({ title })` | {title} · Juan Esteban Álvarez García | {title} · Juan Esteban Álvarez García |
 | `cvTitle` | Currículum · Juan Esteban Álvarez García | Résumé · Juan Esteban Álvarez García |
+| `caseTitle({ title })` | {title} · Caso de estudio | {title} · Case study |
 | `description` | Portfolio de Juan Esteban Álvarez García, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada. | Portfolio of Juan Esteban Álvarez García, Systems Engineering student at Universidad de los Andes: software, cloud/DevOps and applied security. |
 | `cvDescription` | Perfil, experiencia, proyectos, stack y contacto de Juan Esteban Álvarez García en una sola página, lista para leer o imprimir. | Profile, experience, projects, stack and contact details of Juan Esteban Álvarez García on a single page, ready to read or print. |
 | `ogImageAlt` | Placa madre sobre un banco de trabajo, vista desde arriba | Motherboard on a workbench, seen from above |
 
 `sectionTitle` es idéntica en ambos idiomas porque solo compone un título ya traducido con un nombre propio; es una excepción registrada a la regla C5 (I18N-R48).
+
+### 4.9 Página de caso de estudio
+
+| ID | Requisito |
+| --- | --- |
+| SMP-R25 | `CaseStudyPage`, componente de servidor que `simple-view` exporta desde `server.ts`, renderiza la página de un caso de estudio (VSN-R21). Recibe `locale` y `caseStudy: CaseStudyId`, y toma de `SECTIONS.projects` (D-88) el proyecto con ese `id`, sus hechos (nombre propio, tamaño de equipo, visibilidad del repositorio, tecnologías y enlaces) y sus textos (`name`, `tagline`, `award`, `linkLabels` y `cases[caseStudy]`). Renderiza los bloques de la tabla siguiente, en ese orden. |
+| SMP-R26 | La página `src/app/[locale]/(plain)/projects/[caseStudy]/page.tsx` declara `generateStaticParams` con los `CASE_STUDY_IDS` y `dynamicParams = false`, obtiene sus metadatos con `getPageMetadata({ view: "case", caseStudy }, locale)` y renderiza `CaseStudyPage`. Es del grupo `(plain)`: sin script previo al pintado ni capa de escena (SYS-R19). |
+| SMP-R27 | La página usa la disposición de SMP-R06, el aspecto de VIS §4.5.3 y los estilos de contenido del panel (encabezados con icono, chips, listas y enlaces de VIS §4.6). Funciona completa sin JavaScript (SMP-R08) y se imprime en negro sobre blanco (SMP-R12). Su único componente de cliente es el selector de idioma, que lleva al mismo caso en el otro idioma (`withLocale`, TSC §4.10). |
+| SMP-R28 | Los `<h2>` de los cuatro bloques de contenido llevan como `id` `case-problem`, `case-role`, `case-process` y `case-outcome`. Cada decisión es un elemento de lista con una lista de descripción (`<dl>`) de tres términos: `simpleView.caseOptions`, `simpleView.caseChoice` y `simpleView.caseReason`, con `options`, `choice` y `reason`. Los elementos de `outcome` se renderizan con `RichText` (TSC-R59). |
+
+| Bloque | Elemento | Contenido |
+| --- | --- | --- |
+| Enlace de salto | `<a>` | `common.skipToContentLabel`, hacia `#content` (QLT-R02) |
+| Cabecera | `<header>` | Un enlace interno hacia `sectionPath(locale, "projects")` con el texto `simpleView.caseBackLabel` y el icono `chevron-left`; el selector de idioma (SET-R05) con el nombre `common.languageLabel`; y el enlace de descarga del CV de la cabecera de la vista simple (§4.2) |
+| Presentación | Dentro de `<main id="content">` | `simpleView.caseKindTitle` con el rol "Encabezado de bloque"; el nombre del proyecto (`properName` o `name`) como `<h1>`, con el rol "Vista simple, nombre"; `tagline`; los chips de SSD-R07 (reconocimiento, tamaño de equipo, repositorio privado y tecnologías); y los enlaces del proyecto con su `linkLabels`, como enlaces externos |
+| El problema | `<section>` | `<h2>` con `simpleView.caseProblemTitle` (icono `flag`) y los párrafos de `problem` |
+| Mi rol | `<section>` | `<h2>` con `simpleView.caseRoleTitle` (icono `users`); `team`; un `<h3>` con `simpleView.caseContributionsTitle` y la lista de `contributions`; y, si existe `teamContributions`, un `<h3>` con `simpleView.caseTeamTitle` y ese párrafo |
+| El proceso | `<section>` | `<h2>` con `simpleView.caseProcessTitle` (icono `compass`); un `<h3>` con `simpleView.caseDecisionsTitle` y la lista de `decisions` (SMP-R28); y un `<h3>` con `simpleView.caseChangesTitle` y la lista de `changes` |
+| Resultado | `<section>` | `<h2>` con `simpleView.caseOutcomeTitle` (icono `award`); la lista de `outcome`; y un `<h3>` con `simpleView.caseLearnedTitle` y la lista de `learned` |
+| Pie | `<footer>` | De nuevo el enlace `simpleView.caseBackLabel`, y `simpleView.backToTopLabel` hacia `#content` |
 
 ## 5. Criterios de aceptación
 
@@ -159,16 +195,19 @@ Espacio de nombres `site`:
 | SMP-AC06 | Con JavaScript desactivado, en `/es/` todos los enlaces de la navegación, el de descarga del CV y el de cambio de idioma funcionan (QLT-R41). | Prueba E2E |
 | SMP-AC07 | A 320 px de ancho, la vista simple no tiene scroll horizontal en ningún idioma (QLT-AC07). | Prueba E2E |
 | SMP-AC08 | Con la emulación de medio de impresión, no son visibles la navegación, el selector de idioma, el aviso ni los botones, y el color de fondo calculado del cuerpo es blanco. | Prueba E2E |
-| SMP-AC09 | `getPageMetadata` devuelve, para las 18 páginas, títulos y descripciones únicos dentro de los límites de QLT-R37, con los valores de la tabla de §4.4. | Prueba unitaria |
+| SMP-AC09 | `getPageMetadata` devuelve, para las 24 páginas, títulos y descripciones únicos dentro de los límites de QLT-R37, con los valores de la tabla de §4.4. | Prueba unitaria |
 | SMP-AC10 | El HTML exportado de cada página con idioma contiene los metadatos de SMP-R15 con URLs absolutas que empiezan por el origen del sitio (I18N-AC15, QLT-AC19). | Prueba de exportación |
-| SMP-AC11 | El HTML exportado de las páginas de inicio y de sección contiene un único bloque JSON-LD válido con `@type` `Person` y los nueve campos de §4.5; las páginas `/{locale}/cv/`, `/` y 404 no lo contienen (QLT-AC20). | Prueba de exportación |
-| SMP-AC12 | `out/sitemap.xml` lista exactamente las 18 URLs de SMP-R19 con sus alternativas, y `out/robots.txt` referencia el sitemap con URL absoluta. | Prueba de exportación |
+| SMP-AC11 | El HTML exportado de las páginas de inicio y de sección contiene un único bloque JSON-LD válido con `@type` `Person` y los nueve campos de §4.5; las páginas `/{locale}/cv/`, las de caso de estudio, `/` y 404 no lo contienen (QLT-AC20). | Prueba de exportación |
+| SMP-AC12 | `out/sitemap.xml` lista exactamente las 24 URLs de SMP-R19 con sus alternativas, y `out/robots.txt` referencia el sitemap con URL absoluta. | Prueba de exportación |
 | SMP-AC13 | `out/index.html` y `out/404.html` contienen `noindex`; ninguna otra página lo contiene. | Prueba de exportación |
 | SMP-AC14 | `public/og/` contiene exactamente un archivo, de 1200×630 px y 220 kB como máximo, y `OG_ASSET.src` apunta a él. | Ejecución de `pnpm assets:check` |
 | SMP-AC15 | `src/app/icon.svg` existe, y `src/app/apple-icon.png` mide 180×180 px. | Prueba unitaria que lee los archivos |
 | SMP-AC16 | Los textos de `simpleView` y `site` de ambos diccionarios son los de §4.8. | Prueba unitaria |
 | SMP-AC17 | El autor comparte la URL desplegada en LinkedIn y en WhatsApp y confirma que la vista previa muestra el título, la descripción y la imagen. | Revisión manual del autor, registrada en el historial de esta spec |
 | SMP-AC19 | El HTML exportado de `/` contiene la descripción, `og:title`, `og:description`, `og:url` igual al origen del sitio con `/`, `og:type` `profile`, `og:image` absoluta con sus dimensiones y la tarjeta `summary_large_image`, y sigue pidiendo no ser indexado. | Prueba de exportación |
+| SMP-AC20 | El HTML exportado de cada una de las seis páginas de caso tiene un `<main id="content">` con un único `<h1>` con el nombre del proyecto y cuatro `<h2>` con los `id` de SMP-R28 en ese orden; contiene `problem[0]`, `contributions[0]` y `decisions[0].choice` de su caso en el idioma de la página; tiene `lang` de su idioma; y no contiene el script previo al pintado, la capa de escena ni un bloque JSON-LD. | Prueba de exportación |
+| SMP-AC21 | `getPageMetadata({ view: "case", caseStudy: "thesis" }, "es")` devuelve el título "Tesis de autenticación poscuántica · Caso de estudio", la descripción del caso, la URL canónica `/es/projects/thesis/`, alternativas hacia `/es/projects/thesis/` y `/en/projects/thesis/` y `og:type` `website`; y los títulos y descripciones de las seis páginas de caso cumplen QLT-R37. | Prueba unitaria |
+| SMP-AC22 | En `desktop`, en el panel de Proyectos de `/es/projects/`, "Leer el caso completo" de la tesis lleva a `/es/projects/thesis/`; ahí, la opción de inglés del selector lleva a `/en/projects/thesis/`, y "All projects" a `/en/projects/` con el panel de Proyectos abierto. En `mobile`, "Todos los proyectos" lleva a la vista simple desplazada hasta Proyectos. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -191,6 +230,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.4 | Versión 2, pendiente de aprobación del autor (D-82, D-88). Nuevo §4.9: la página de caso de estudio (`CaseStudyPage`, SMP-R25 a SMP-R28) en `/{locale}/projects/{case}/`. SMP-R14: vista `case`. SMP-R19: el sitemap pasa a 24 páginas. §2 y §3: la página de caso y la vista `case`. §4.8: quince textos de `simpleView` y `site.caseTitle`. SMP-AC09, SMP-AC11 y SMP-AC12 actualizados; nuevos SMP-AC20 a SMP-AC22. |
 | 2026-10-14 | 1.3 | SMP-AC17: tras SMP 1.3, el autor compartió la URL en LinkedIn (Post Inspector) y en WhatsApp; las dos vistas previas muestran título, descripción e imagen, sin avisos. Sin cambio de requisitos. |
 | 2026-10-13 | 1.3 | Durante M9, por delegación del autor, tras compartir la URL en LinkedIn (A9): la vista previa solo mostraba el título, porque `/` no tenía descripción ni imagen y LinkedIn no ejecuta su redirección. SMP-R17: `/` lleva la descripción y los datos para compartir de la página de inicio en inglés. Nuevo SMP-AC19. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SMP-AC17 necesita la URL desplegada: se verifica en M9 (A9). Sin cambio de requisitos. |

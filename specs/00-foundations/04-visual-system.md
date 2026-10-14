@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 2.7 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 3.0 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -22,7 +22,7 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 | ID | Principio |
 | --- | --- |
 | V1 | **Dos mundos, una frontera clara.** La escena es oscura, cálida y fotográfica. El contenido se lee sobre una superficie clara, plana y de alto contraste. Abrir un panel es pasar de "explorar" a "leer". |
-| V2 | **El ámbar significa "se puede pulsar".** En superficies oscuras, el ámbar se reserva para lo interactivo. Nunca se usa como decoración ni para texto sobre superficies claras. En la variante boceto de la escena, cuyo fondo es claro, ese papel lo hace el carmesí `aura-sketch` (§4.1.5). |
+| V2 | **El ámbar significa "se puede pulsar".** En superficies oscuras, el ámbar se reserva para lo interactivo. Nunca se usa como decoración ni para texto sobre superficies claras. En la variante boceto de la escena, cuyo fondo es claro, ese papel lo hace el azul `aura-sketch` (§4.1.5). |
 | V3 | **La interfaz no compite con la fotografía.** Mientras no se interactúa, sobre la escena solo hay auras y una barra discreta. |
 | V4 | **Tipografía de dos voces.** Monoespaciada para lo que suena a hardware (títulos, etiquetas, registro de arranque); sans-serif para lo que se lee de corrido. |
 | V5 | **El movimiento informa.** Cada animación responde a una acción o indica un cambio de estado. Nada se mueve para adornar, salvo la respiración inicial del aura, que señala interactividad. |
@@ -95,7 +95,7 @@ Relaciones de contraste WCAG 2.2 calculadas el 2026-10-12. Mínimos: 4,5:1 para 
 | `boot-text` | `boot-bg` | 14,82:1 | 4,5:1 |
 | `boot-dim` | `boot-bg` | 6,72:1 | 4,5:1 |
 | `boot-ok` | `boot-bg` | 11,67:1 | 4,5:1 |
-| `aura-sketch` | `paper` | 5,78:1 | 3:1 |
+| `aura-sketch` | `paper` | 6,05:1 | 3:1 |
 | `ink` | `paper` (display de diagnóstico en el boceto) | 15,16:1 | 3:1 |
 
 #### 4.1.5 Variante boceto de la escena
@@ -104,10 +104,10 @@ La variante boceto (AST §4.10) es un dibujo sobre papel claro, donde el ámbar 
 
 | Token | Valor | Uso |
 | --- | --- | --- |
-| `aura-sketch` | `#B3123A` | Aura y rectángulo de foco de las zonas interactivas en la variante boceto |
+| `aura-sketch` | `#1F4FBF` | Aura y rectángulo de foco de las zonas interactivas en la variante boceto. Azul de bolígrafo (D-86) |
 | `paper` | `#F2EBDF` | Franjas fuera del escenario y viñeteado en la variante boceto. Es el color mediano del máster del boceto |
 
-Las placas oscuras (barra fija, etiquetas, ajustes y pista) no cambian con la variante: su fondo es propio y sus acentos siguen en `aura`.
+Las placas oscuras (barra fija, placa de identidad, etiquetas, ajustes y bienvenida) no cambian con la variante: su fondo es propio y sus acentos siguen en `aura`.
 
 #### 4.1.6 Impresión
 
@@ -127,6 +127,7 @@ La hoja de impresión de la vista simple (SMP-R12) usa negro sobre blanco.
 | VIS-R07 | El texto de cuerpo nunca mide menos de 16 px. Ningún texto mide menos de 12 px. |
 | VIS-R08 | Un bloque de texto de corrido no supera 72 caracteres por línea. El texto se alinea a la izquierda; no se justifica. |
 | VIS-R09 | El texto en mayúsculas se obtiene con CSS (`text-transform`), nunca escribiéndolo en mayúsculas en el contenido. |
+| VIS-R45 | El texto destacado (TSC-R58) usa el rol "Énfasis dentro de cuerpo": hereda la familia, el tamaño y el color del texto que lo rodea y solo cambia el peso a 600. NO DEBE llevar color, fondo, subrayado ni cursiva propios (D-85). |
 
 | Rol | Familia | Tamaño / interlínea | Peso | Otros |
 | --- | --- | --- | --- | --- |
@@ -194,7 +195,7 @@ El aura es la señal de que una pieza de hardware se puede pulsar. Se dibuja en 
 
 #### 4.5.1 Placa oscura
 
-Superficie de la barra fija, las etiquetas de la escena y el menú de ajustes.
+Superficie de la barra fija, la placa de identidad, las etiquetas de la escena, la bienvenida y el menú de ajustes.
 
 | ID | Requisito |
 | --- | --- |
@@ -288,7 +289,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | M-09 | Cambio de valor del display de diagnóstico | Opacidad del dígito 0,4 → 1 | `duration-fast`, `ease-out` | Cambio instantáneo |
 | M-10 | Pulsación de un botón | Escala 1 → 0,98 → 1 | `duration-instant`, `ease-out` | Sin animación |
 | M-11 | Aparición de la imagen de la escena al terminar de decodificarse | Opacidad 0 → 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
-| M-12 | Aparición y retirada de la pista de la escena | Opacidad 0 ↔ 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
+| M-12 | Aparición y retirada de la bienvenida de la escena (SCN §4.7) | Opacidad 0 ↔ 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
 
 ### 4.8 Iconografía
 
@@ -296,7 +297,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | --- | --- |
 | VIS-R37 | Los iconos son SVG en línea, definidos como componentes de React en `src/shared/ui/icons/`, con `viewBox="0 0 24 24"`, sin relleno, trazo de 2 unidades en `currentColor` y extremos redondeados. Se muestran a 16, 20 o 24 px. |
 | VIS-R38 | Los iconos de interfaz proceden del conjunto Lucide (licencia ISC), copiados al repositorio; no se instala el paquete. |
-| VIS-R39 | Los iconos de marca (GitHub, LinkedIn, WhatsApp) son el símbolo oficial de cada marca en una sola tinta (`currentColor`), con relleno en lugar de trazo, y siempre van acompañados del nombre de la marca en texto. |
+| VIS-R39 | Los iconos de marca (GitHub, LinkedIn, WhatsApp) son el símbolo oficial de cada marca en una sola tinta (`currentColor`), con relleno en lugar de trazo, y siempre van acompañados del nombre de la marca en texto. Única excepción: los contactos de la barra fija (SET-R02, D-84), que muestran solo el icono, a 20 px, y llevan el nombre de la marca como nombre accesible. |
 | VIS-R40 | Un icono junto a un texto es decorativo y lleva `aria-hidden="true"`. Un botón que solo muestra un icono DEBE tener nombre accesible. |
 | VIS-R41 | El conjunto base, usado por más de un feature, es: `close`, `chevron-left`, `chevron-right`, `external-link`, `download`, `volume-on`, `volume-off`, `reset`, `lock`, `users`. Los iconos propios de una sección se enumeran en la spec de esa sección y se añaden a la misma carpeta. |
 
@@ -341,7 +342,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | **Aura ámbar fija** (D-07). | Contraste alto frente a los tonos reales de la escena (entre 5:1 y 9:1 sobre PCB verde oscuro y madera oscura) y coherencia con la luz cálida de la lámpara. Es fija porque su única función es decir "esto se puede pulsar". |
 | **La respiración del aura dura 4,8 segundos y no se repite** (VIS-R16, D-34). | WCAG 2.2.2 (nivel A) exige poder pausar todo movimiento automático de más de 5 segundos. Limitarla cumple el criterio sin añadir un control de pausa: atrae la mirada cuando la escena aparece y después deja el aura fija, que es lo que pidió el autor. La versión 1.0 la definía como un bucle continuo. |
 | **El aura se dibuja hacia fuera del contorno** (VIS-R14). | Sobre metal claro (disipador del CPU, chapa del panel I/O) el ámbar apenas contrasta (1,5:1). Dibujada hacia fuera, se ve contra el PCB o la madera que rodean la pieza. AST exige que ese entorno sea oscuro. |
-| **Carmesí para el aura del boceto** (`aura-sketch`, D-66). | Sobre el papel del boceto, medido en `#F2EBDF`, el ámbar queda en 1,33:1. El carmesí alcanza 5,78:1, no coincide en tono con ninguna de las aguadas del dibujo (naranja, verde, azul, violeta y gris) ni con la tinta azul marino, y se lee como la anotación en rojo de un cuaderno de ingeniería. Es un token aparte porque, sobre las placas oscuras, el carmesí solo llega a 2,82:1: ahí el acento sigue siendo el ámbar. |
+| **Azul de bolígrafo para el aura del boceto** (`aura-sketch`, D-66, D-86). | Sobre el papel del boceto, medido en `#F2EBDF`, el ámbar queda en 1,33:1. El primer color elegido fue un carmesí (5,78:1), pero en una interfaz el rojo se lee como un error. El autor comparó capturas de las dos opciones y eligió el azul `#1F4FBF`: alcanza 6,05:1, se integra con la cuadrícula del papel como la tinta de un plano anotado y no comunica fallo. Comparte familia con las aguadas azules y la tinta azul marino del dibujo; se distingue de ellas porque es más saturado y porque el halo y el relleno siguen la silueta (QLT-R14, AST-AC12). Es un token aparte porque, sobre las placas oscuras, ese azul solo llega a 2,69:1: ahí el acento sigue siendo el ámbar. |
 | **Opacidad del 92 % en las placas oscuras.** | Deja intuir la fotografía detrás sin comprometer la lectura: incluso sobre un fondo blanco, que nunca ocurre en la escena, el texto mantiene 14:1 y el secundario 7,5:1. |
 | **`accent` oscuro en lugar del ámbar del aura sobre superficies claras.** | El ámbar del aura no es legible sobre claro. `accent` es el mismo matiz oscurecido hasta superar 4,5:1, así que conserva la identidad sin perder contraste. |
 | **Inter y JetBrains Mono.** | Ambas son variables, de licencia libre y con buena legibilidad en pantalla a tamaños pequeños. La monoespaciada da el carácter técnico; usarla también en el cuerpo cansaría la lectura. |
@@ -356,6 +357,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Versión 2, pendiente de aprobación del autor. Por decisión del autor (D-86): `aura-sketch` pasa de `#B3123A` a `#1F4FBF` (6,05:1 sobre `paper`); principio V2, §4.1.4, §4.1.5 y decisión reescritos. Nuevo VIS-R45: el texto destacado solo cambia el peso (D-85). VIS-R39: excepción para los iconos de la barra fija (D-84). VIS-R20 y §4.1.5: la placa de identidad y la bienvenida son placas oscuras. M-12 pasa a ser la animación de la bienvenida, que sustituye a la pista (D-83). |
 | 2026-10-13 | 2.7 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VIS-AC12: el autor revisó la escena, las etiquetas, la barra fija y el panel sobre las dos imágenes definitivas al aprobar M5, M6 y M7 y en la auditoría A6, el 2026-10-13; el aura es la que él mismo pidió en D-71 y D-72. Sin cambio de requisitos respecto a la fila anterior. |
 | 2026-10-13 | 2.7 | Por indicación del autor al revisar las imágenes (D-76): en el boceto, el contador no se leía. VIS-R44: cuarta propiedad, `--scene-display-back`, con el fondo de los dígitos del display. Durante M8: M-11 y M-12 duran `duration-fast` con movimiento reducido, como exige VIS-R36; el inventario decía "Igual" y contradecía a VIS-AC05. |
 | 2026-10-13 | 2.6 | Por decisión del autor al revisar el halo (D-72): el relleno de la pieza pasa a estar en todos los estados, y el halo en reposo baja de intensidad para que el paso a hover se note más. VIS-R13, VIS-R14 y tabla de §4.4. Los valores de hover y activo no cambian. |

@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 2.4 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 3.0 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
 
 ## 1. Propósito
@@ -51,7 +51,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | ID | Requisito |
 | --- | --- |
 | QLT-R06 | Toda la funcionalidad es operable solo con teclado. No existe ninguna trampa de foco; un panel o menú abierto retiene el foco pero siempre se cierra con Esc. |
-| QLT-R07 | En la escena, el orden de tabulación es: enlace de salto, controles de la barra fija y, después, los ocho elementos interactivos en este orden: `cpu`, `psu`, `ssd`, `ram`, `io`, `fan`, `cmos`, `settings` (el orden canónico de VSN §4, seguido del panel frontal). El orden no depende de la posición de cada pieza en la imagen. |
+| QLT-R07 | En la escena, el orden de tabulación es: enlace de salto; controles de la barra fija (selector de idioma, vista simple y los cuatro contactos directos de SET-R30); los dos controles de la bienvenida, mientras es visible (SCN-R51); y, después, los ocho elementos interactivos en este orden: `cpu`, `psu`, `ssd`, `ram`, `io`, `fan`, `cmos`, `settings` (el orden canónico de VSN §4, seguido del panel frontal). El orden no depende de la posición de cada pieza en la imagen. |
 | QLT-R08 | Al abrir un panel o un menú, el foco pasa a su interior. Al cerrarlo, el foco vuelve al elemento que lo abrió. Esc cierra el elemento abierto más reciente. |
 | QLT-R09 | El anillo de foco es siempre visible (VIS-R31) y el elemento con foco nunca queda tapado por la barra fija ni por otra capa. |
 | QLT-R10 | No hay atajos de una sola tecla, salvo durante la secuencia de arranque, en la que cualquier tecla la salta. |
@@ -107,6 +107,10 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | Escena con una etiqueta visible | `/{locale}/`, foco en `cpu` | 1280×720 | es |
 | Panel abierto, uno por sección | `/{locale}/{section}/`, las siete | 1280×720 | es, en |
 | Menú de ajustes abierto | `/{locale}/` | 1280×720 | es, en |
+| Escena con la bienvenida visible | `/{locale}/`, sesión nueva, al terminar el arranque | 1280×720 | es, en |
+| Escena con la bienvenida visible, variante boceto | `/{locale}/`, sesión nueva, con `sceneVariant: "sketch"` guardado | 1280×720 | es |
+| Caso de estudio, uno por proyecto | `/{locale}/projects/{case}/`, los tres | 1280×720 | es, en |
+| Caso de estudio en un teléfono | `/{locale}/projects/thesis/` | 390×844 | es |
 | Vista simple | `/{locale}/cv/` | 1280×720 y 390×844 | es, en |
 | Inicio en modo simple | `/{locale}/` | 390×844 | es, en |
 | Página de entrada sin JavaScript | `/` | 1280×720 | — |
@@ -140,7 +144,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 
 | Recurso de la carga inicial | Presupuesto |
 | --- | --- |
-| JavaScript total, modo `simple` (`/{locale}/` a 390×844 px y `/{locale}/cv/`) | ≤ 195 kB |
+| JavaScript total, modo `simple` (`/{locale}/` a 390×844 px, `/{locale}/cv/` y las páginas de caso) | ≤ 195 kB |
 | JavaScript total, modo `scene` (`/{locale}/` a 1280×720 px, primera visita) | ≤ 250 kB |
 | CSS total | ≤ 20 kB |
 | Documento HTML de cualquier página | ≤ 45 kB |
@@ -282,6 +286,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Versión 2, pendiente de aprobación del autor (D-82 a D-84). QLT-R07: el orden de tabulación de la escena incluye los contactos directos de la barra fija y, mientras es visible, la bienvenida. QLT-R26: cuatro estados auditables nuevos (bienvenida, en las dos variantes, y casos de estudio en escritorio y en teléfono). §4.2: el presupuesto de JavaScript del modo `simple` se aplica también a las páginas de caso. |
 | 2026-10-14 | 2.4 | QLT-AC27, paso 2: el autor repitió el recorrido con lector de pantalla y funciona. La auditoría manual de §4.8 queda completa. Sin cambio de requisitos. |
 | 2026-10-13 | 2.4 | QLT-AC27, paso 5: el autor abrió el sitio desplegado en su teléfono; la vista simple se lee bien y los enlaces de contacto y la descarga del CV funcionan. Solo queda aplazado el paso del lector de pantalla (PLAN-R10). Sin cambio de requisitos. |
 | 2026-10-13 | 2.4 | Por decisión del autor (D-80). QLT-R34 y §4.2: ya no hay librería de animación; las animaciones son CSS. Sin cambio de presupuestos. |

@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Implementada |
-| Versión | 1.6 |
-| Última actualización | 2026-10-13 |
+| Estado | En revisión |
+| Versión | 1.7 |
+| Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
 ## 1. Propósito
@@ -62,7 +62,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | DEP-R13 | El flujo hace, en este orden, sobre el mismo commit que pasó el CI: (1) instala con el lockfile congelado; (2) ejecuta `pnpm assets:check --release`, que falla si el máster de la escena es provisional (AST-R45); (3) ejecuta `pnpm build` con `NEXT_PUBLIC_SITE_URL` igual a la URL de producción; (4) sube `out/` al proyecto con `wrangler pages deploy`, indicando la rama `main`; (5) ejecuta la comprobación de DEP-R16 contra la URL de producción, con una espera de hasta 120 segundos. `wrangler` no es una dependencia del sitio: el flujo lo instala con npm fuera del repositorio, en la versión exacta que fija su variable `WRANGLER_VERSION`, publicada al menos 7 días antes (el mismo criterio que SYS-R37 aplica a las dependencias), y sin ejecutar scripts de instalación. Solo el paso que publica recibe los dos secretos. |
 | DEP-R14 | El flujo usa dos secretos del repositorio, `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`, y ninguno más. El token tiene únicamente el permiso de edición de Cloudflare Pages sobre la cuenta. |
 | DEP-R15 | El flujo declara `permissions: contents: read` y `checks: read`; el segundo le permite consultar el resultado de `ci-ok` (DEP-R12). No registra el despliegue en GitHub. Sus acciones se referencian por el SHA completo de su commit y solo pueden ser de las organizaciones `actions`, `pnpm` y `cloudflare`. No se ejecutan dos publicaciones a la vez: una nueva espera a que termine la anterior. |
-| DEP-R16 | `scripts/smoke-test.mjs` recibe una URL base y comprueba, con peticiones HTTP: que `/`, `/es/`, `/en/`, `/es/projects/` y `/en/cv/` responden 200; que `/es/` declara como canónica una URL que empieza por la URL base; que una ruta inexistente responde 404; que `/robots.txt` y `/sitemap.xml` responden 200; y que la respuesta de `/es/` incluye las cabeceras `Content-Security-Policy` y `X-Content-Type-Options`. Termina con error, indicando qué falló, si alguna comprobación no se cumple. Las peticiones no siguen redirecciones. Admite la opción `--wait <segundos>`: repite las comprobaciones cada 5 segundos hasta que todas se cumplen o se agota ese tiempo, porque el alojamiento puede tardar unos segundos en servir una publicación recién subida. |
+| DEP-R16 | `scripts/smoke-test.mjs` recibe una URL base y comprueba, con peticiones HTTP: que `/`, `/es/`, `/en/`, `/es/projects/`, `/en/cv/` y `/es/projects/thesis/` responden 200; que `/es/` declara como canónica una URL que empieza por la URL base; que una ruta inexistente responde 404; que `/robots.txt` y `/sitemap.xml` responden 200; y que la respuesta de `/es/` incluye las cabeceras `Content-Security-Policy` y `X-Content-Type-Options`. Termina con error, indicando qué falló, si alguna comprobación no se cumple. Las peticiones no siguen redirecciones. Admite la opción `--wait <segundos>`: repite las comprobaciones cada 5 segundos hasta que todas se cumplen o se agota ese tiempo, porque el alojamiento puede tardar unos segundos en servir una publicación recién subida. |
 | DEP-R17 | Si la comprobación falla, el flujo termina con error. La versión anterior se restaura desde el panel de Cloudflare Pages, que conserva los despliegues previos, y el defecto se corrige con un nuevo commit. |
 
 ### 4.5 Cabeceras
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.7 | Versión 2, pendiente de aprobación del autor (D-82). DEP-R16: la comprobación posterior a la publicación pide también una página de caso de estudio. |
 | 2026-10-14 | 1.6 | Estado: pasa a "Implementada" al cerrar M9, con todos sus criterios verificados: los automáticos, citados por pruebas (TST-R38), y los manuales, en las filas anteriores. Sin cambio de requisitos. |
 | 2026-10-13 | 1.6 | Verificación manual tras la primera publicación. DEP-AC09: la comprobación posterior pasa contra la URL de producción, y el Observatorio HTTP de Mozilla da A+ (125/100, 11 de 12 pruebas); la única que no pasa es la integridad de subrecursos (SRI) del script de analítica, que inserta Cloudflare y se sirve por HTTPS. DEP-AC10: el autor ve visitas en Web Analytics, y en producción no se crea ninguna cookie (comprobado con un navegador). DEP-AC11: el autor revisó el README y pidió que hablara en primera persona, cambio ya hecho; el repositorio, ya público (A2), no contiene `docs/` ni archivos `.env` en ningún commit. Sin cambio de requisitos. |
 | 2026-10-13 | 1.6 | Por decisión del autor (D-80). §4.6: se retira la mención de la librería de animación, que ya no existe. |
