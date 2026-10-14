@@ -47,7 +47,11 @@ export const es: UiDictionary = {
     settingsHardwareName: "Panel frontal",
     settingsTitle: "Ajustes",
     postDisplayName: "Display de diagnóstico",
-    hintLabel: "Cada componente iluminado abre una sección.",
+    welcomeTitle: "Sistema listo",
+    welcomeDescription:
+      "Te doy la bienvenida a mi portfolio. Navega por los componentes de la placa para conocer sobre mí y lo que puedo hacer por ti.",
+    exploreLabel: "Explorar",
+    profileLinkLabel: "Ver mi perfil",
   },
   panel: {
     closeAriaLabel: "Cerrar",
@@ -59,6 +63,10 @@ export const es: UiDictionary = {
   settings: {
     barAriaLabel: "Controles del sitio",
     simpleViewLabel: "Vista simple",
+    cvShortLabel: "CV",
+    emailAriaLabel: "Escribir un correo",
+    linkedinAriaLabel: "LinkedIn",
+    githubAriaLabel: "GitHub",
     menuTitle: "Ajustes",
     closeAriaLabel: "Cerrar ajustes",
     soundLabel: "Sonido",

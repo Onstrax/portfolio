@@ -10,13 +10,18 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ back: vi.fn(), replace: vi.fn() }),
 }));
 
-import { SECTION_LIST } from "@/features/registry";
-import { buildSectionNav } from "@/shared/lib/section-nav";
+import { SECTION_LIST, SECTIONS } from "@/features/registry";
+import { CV_FILES, SITE } from "@/shared/config/site";
+import { buildQuickContacts, buildSceneIdentity, buildSectionNav } from "@/shared/lib/section-nav";
 
 import { SceneLayer } from "./scene-layer";
 
 const root = document.documentElement;
-const SECTIONS = buildSectionNav(SECTION_LIST, "es");
+const LAYER = {
+  sections: buildSectionNav(SECTION_LIST, "es"),
+  identity: buildSceneIdentity(SITE.authorName, SECTIONS.profile.text.es),
+  contacts: buildQuickContacts(SECTIONS.contact.facts.channels, CV_FILES.es),
+};
 
 /** Replaces `matchMedia` with a query whose result the test controls. */
 function stubViewport(isSceneCapable: boolean) {
@@ -81,13 +86,13 @@ afterEach(() => {
 describe("SceneLayer", () => {
   it("SYS-AC19: tells the pre-paint script that the application has started", () => {
     stubViewport(false);
-    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
+    render(<SceneLayer {...LAYER}>{null}</SceneLayer>);
     expect(root.dataset["app"]).toBe("ready");
   });
 
   it("SYS-AC05: in a viewport that can show it, writes the scene mode and loads the scene", async () => {
     stubViewport(true);
-    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
+    render(<SceneLayer {...LAYER}>{null}</SceneLayer>);
 
     expect(root.dataset["mode"]).toBe("scene");
     expect(await findScene()).toBeInTheDocument();
@@ -111,7 +116,7 @@ describe("SceneLayer", () => {
 
     const container = document.createElement("div");
     document.body.append(container);
-    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>, { container, hydrate: true });
+    render(<SceneLayer {...LAYER}>{null}</SceneLayer>, { container, hydrate: true });
     await findScene();
     written.push(...observer.takeRecords().map((mutation) => mutation.oldValue));
     observer.disconnect();
@@ -123,7 +128,7 @@ describe("SceneLayer", () => {
   it("SYS-AC17: in simple mode renders nothing, not even the content of the page", () => {
     stubViewport(false);
     const { container } = render(
-      <SceneLayer sections={SECTIONS}>
+      <SceneLayer {...LAYER}>
         <p>Contenido de la sección</p>
       </SceneLayer>,
     );
@@ -134,7 +139,7 @@ describe("SceneLayer", () => {
   it("SYS-AC17: on the server renders nothing", () => {
     stubViewport(true);
     const html = renderToString(
-      <SceneLayer sections={SECTIONS}>
+      <SceneLayer {...LAYER}>
         <p>Contenido de la sección</p>
       </SceneLayer>,
     );
@@ -143,7 +148,7 @@ describe("SceneLayer", () => {
 
   it("SYS-AC07: follows the viewport across the threshold without reloading, both ways", async () => {
     const viewport = stubViewport(true);
-    const { container } = render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
+    const { container } = render(<SceneLayer {...LAYER}>{null}</SceneLayer>);
     await findScene();
 
     act(() => {
@@ -165,7 +170,7 @@ describe("SceneLayer", () => {
     // The content of a section is drawn by the panel: a section that throws breaks the layer.
     navigation.pathname = "/es/projects/";
     const { container } = render(
-      <SceneLayer sections={SECTIONS}>
+      <SceneLayer {...LAYER}>
         <Broken />
       </SceneLayer>,
     );
@@ -187,7 +192,7 @@ describe("SceneLayer", () => {
     stubViewport(true);
     navigation.pathname = "/es/projects/";
     render(
-      <SceneLayer sections={SECTIONS}>
+      <SceneLayer {...LAYER}>
         <p>Simulación de banca digital segura</p>
       </SceneLayer>,
     );
@@ -198,14 +203,14 @@ describe("SceneLayer", () => {
 
   it("marks the boot sequence as done when a client navigation lost what the script wrote", () => {
     stubViewport(true);
-    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
+    render(<SceneLayer {...LAYER}>{null}</SceneLayer>);
     expect(root.dataset["boot"]).toBe("done");
   });
 
   it("keeps the state of the boot sequence that the pre-paint script wrote", () => {
     stubViewport(true);
     root.dataset["boot"] = "play";
-    render(<SceneLayer sections={SECTIONS}>{null}</SceneLayer>);
+    render(<SceneLayer {...LAYER}>{null}</SceneLayer>);
     expect(root.dataset["boot"]).toBe("play");
   });
 });

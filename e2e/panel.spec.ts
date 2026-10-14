@@ -322,21 +322,6 @@ test.describe("visited sections", () => {
     await expect(display).toHaveAttribute("data-value", "02");
     expect(await visited(page)).toEqual(["cpu", "ssd"]);
   });
-
-  test("SCN-AC11: the hint shows in a new session and is gone once a section has been opened", async ({
-    page,
-  }) => {
-    await page.goto("/es/");
-    const hint = page.getByTestId("scene-hint");
-    await expect(hint).toBeVisible();
-    await expect(hint).toHaveText("Cada componente iluminado abre una sección.");
-
-    await open(page, SECTIONS[6]);
-    await expect(hint).toBeHidden();
-    await page.keyboard.press("Escape");
-    await expectClosed(page);
-    await expect(hint).toBeHidden();
-  });
 });
 
 test.describe("panel and render mode", () => {

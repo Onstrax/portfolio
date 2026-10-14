@@ -18,7 +18,10 @@ test.describe("profile", () => {
     const dialog = await openFromScene(page, "Procesador (CPU): Perfil", "Perfil");
 
     await expect(dialog.getByText("Disponible desde enero de 2027")).toBeVisible();
-    await expect(dialog.getByRole("link", { name: "Descargar CV (PDF)" })).toBeVisible();
+    // In the content: the bar drawn inside the panel has a résumé link of its own.
+    await expect(
+      dialog.getByTestId("panel-content").getByRole("link", { name: "Descargar CV (PDF)" }),
+    ).toBeVisible();
   });
 
   test("CPU-AC07: the processor opens the profile, with the availability and the CV (en)", async ({
@@ -28,7 +31,9 @@ test.describe("profile", () => {
     const dialog = await openFromScene(page, "Processor (CPU): Profile", "Profile");
 
     await expect(dialog.getByText("Available from January 2027")).toBeVisible();
-    await expect(dialog.getByRole("link", { name: "Download résumé (PDF)" })).toBeVisible();
+    await expect(
+      dialog.getByTestId("panel-content").getByRole("link", { name: "Download résumé (PDF)" }),
+    ).toBeVisible();
   });
 
   test("CPU-AC08: the link to the projects opens the projects panel without adding history", async ({
@@ -143,7 +148,8 @@ test.describe("contact", () => {
       "https://www.linkedin.com/in/juan-esteban-alvarez-garcia-21bb70364/",
       "https://github.com/Onstrax",
     ]) {
-      await expect(dialog.locator(`a[href="${href}"]`)).toBeAttached();
+      // In the content: the bar drawn inside the panel links some channels too.
+      await expect(dialog.getByTestId("panel-content").locator(`a[href="${href}"]`)).toBeAttached();
     }
   });
 

@@ -62,10 +62,19 @@ export const LABEL_NAME =
   "font-mono text-sm leading-5 font-semibold tracking-[0.06em] text-on-dark uppercase";
 export const LABEL_CONTENT = "font-mono text-xs leading-4 text-on-dark-muted";
 
-const HINT_BASE = `${DARK_PLATE} pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) w-max max-w-[calc(100%-1rem)] -translate-x-1/2 px-3 py-2 text-sm leading-5 transition-[opacity,visibility] duration-(--duration-base) ease-out motion-reduce:duration-(--duration-fast)`;
+/**
+ * The identity plate: a dark plate on the top left corner of the stage, shown once the boot
+ * sequence is done (SCN-R46, SCN-R47).
+ */
+export const PLATE = `${DARK_PLATE} pointer-events-none absolute top-4 left-4 z-(--z-bar) hidden max-h-28 max-w-[300px] flex-col overflow-hidden px-3 py-2 boot-done:flex`;
+export const PLATE_FOCUS_AREAS = "font-mono text-xs leading-4 text-on-dark";
 
-/** Appearance and removal of the hint (M-12). */
-export const HINT_STATES = {
-  visible: `${HINT_BASE} visible opacity-100`,
-  hidden: `${HINT_BASE} invisible opacity-0`,
+const WELCOME_BASE = `${DARK_PLATE} absolute bottom-4 left-1/2 z-(--z-labels) max-h-48 w-[min(380px,calc(100%-32px))] -translate-x-1/2 p-4 transition-[opacity,visibility] duration-(--duration-base) ease-out motion-reduce:duration-(--duration-fast)`;
+
+/** Appearance and removal of the welcome (M-12). Hidden, it leaves the tab order. */
+export const WELCOME_STATES = {
+  visible: `${WELCOME_BASE} visible opacity-100`,
+  hidden: `${WELCOME_BASE} invisible opacity-0`,
 } as const;
+
+export const WELCOME_DESCRIPTION = "mt-1 text-sm leading-5 text-on-dark";

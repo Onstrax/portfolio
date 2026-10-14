@@ -11,6 +11,7 @@ import {
 import { type ViewportName, VIEWPORTS } from "./support/viewports";
 
 const PREFS_KEY = "portfolio:v1:prefs";
+const SESSION_KEY = "portfolio:v1:session";
 const AURA = "rgb(255, 197, 61)";
 const VOID = "rgb(10, 9, 7)";
 const SCENE_TITLE = "Juan Esteban Álvarez García: portfolio interactivo";
@@ -41,6 +42,25 @@ function stage(page: Page): Locator {
   return page.getByTestId("scene-root");
 }
 
+function welcome(page: Page): Locator {
+  return page.getByTestId("scene-welcome");
+}
+
+function plate(page: Page): Locator {
+  return page.getByTestId("scene-plate");
+}
+
+/** Boxes of the eight interactive zones, by their identifier. */
+async function interactiveZoneBoxes(page: Page): Promise<readonly (readonly [string, Box])[]> {
+  const zones = page.locator("[data-zone]:not([data-zone=post-display])");
+  await expect(zones).toHaveCount(8);
+  const boxes: (readonly [string, Box])[] = [];
+  for (const zone of await zones.all()) {
+    boxes.push([(await zone.getAttribute("data-zone")) ?? "", await boxOf(zone)]);
+  }
+  return boxes;
+}
+
 function label(page: Page, name: string): Locator {
   return page.getByTestId("scene-label").filter({ hasText: name });
 }
@@ -58,6 +78,14 @@ async function tabTo(page: Page, target: Locator): Promise<void> {
     if (await target.evaluate((element) => element === document.activeElement)) return;
   }
   throw new Error("The element was not reached with the Tab key");
+}
+
+/** The session that the page stored, or `null`. */
+function storedSession(page: Page): Promise<Record<string, unknown> | null> {
+  return page.evaluate((key) => {
+    const value = window.sessionStorage.getItem(key);
+    return value === null ? null : (JSON.parse(value) as Record<string, unknown>);
+  }, SESSION_KEY);
 }
 
 /** Opacity of a part of the aura of a zone, as the browser computes it. */
@@ -279,16 +307,84 @@ test.describe("scene on a desktop", () => {
     expect(await page.evaluate(() => [window.scrollX, window.scrollY])).toEqual([0, 0]);
   });
 
+  for (const [locale, lines] of [
+    [
+      "es",
+      [
+        "Juan Esteban Álvarez García",
+        "Ingeniería de Sistemas y Computación",
+        "Desarrollo de software · Cloud/DevOps · Seguridad aplicada · Machine Learning",
+      ],
+    ],
+    [
+      "en",
+      [
+        "Juan Esteban Álvarez García",
+        "Systems and Computing Engineering",
+        "Software development · Cloud/DevOps · Applied security · Machine Learning",
+      ],
+    ],
+  ] as const) {
+    test(`SCN-AC21: the identity plate shows the name, the degree and the focus areas (${locale})`, async ({
+      page,
+    }) => {
+      await page.goto(`/${locale}/`);
+      await expect(plate(page)).toBeVisible();
+      await expect(plate(page).locator("p")).toHaveText([...lines]);
+      await expect(
+        plate(page).locator("a, button, input, select, textarea, [tabindex]"),
+      ).toHaveCount(0);
+    });
+  }
+
+  test("VIS-AC13: the breath of the aura ends within 5 seconds and leaves the glow at its maximum", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    const glow = page.locator('[data-aura="psu"] [data-part="glow"]');
+    await expect(glow).toHaveCount(1);
+
+    // The animation starts when the scene appears; its own timeline says when it will end.
+    const duration = await glow.evaluate((element) =>
+      Number(element.getAnimations()[0]?.effect?.getComputedTiming().endTime),
+    );
+    expect(duration).toBe(4800);
+    expect(duration).toBeLessThan(5000);
+
+    await expect
+      .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
+      .toBe(0);
+    expect(await auraOpacity(page, "psu", "glow")).toBe("0.5");
+    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.42");
+    expect(await auraOpacity(page, "psu", "fill")).toBe("0.08");
+  });
+});
+
+test.describe("scene with the welcome on view", () => {
+  test.use({ welcomeSeen: false });
+
   test("VIS-AC04: every focusable element of the scene shows a focus indicator in the aura color", async ({
     page,
   }) => {
     await page.goto("/es/");
     await expect(stage(page)).toBeVisible();
+    await expect(welcome(page)).toBeVisible();
 
-    // First the skip link and the controls of the fixed bar, which sit on dark plates.
-    for (const name of ["Saltar al contenido", "English", "Vista simple"]) {
+    // First the skip link, the controls of the fixed bar and those of the welcome, which sit on
+    // dark plates.
+    for (const [role, name] of [
+      ["link", "Saltar al contenido"],
+      ["link", "English"],
+      ["link", "Vista simple"],
+      ["link", "Descargar CV (PDF)"],
+      ["link", "Escribir un correo"],
+      ["link", "LinkedIn (se abre en una pestaña nueva)"],
+      ["link", "GitHub (se abre en una pestaña nueva)"],
+      ["button", "Explorar"],
+      ["link", "Ver mi perfil"],
+    ] as const) {
       await page.keyboard.press("Tab");
-      const control = page.getByRole("link", { name });
+      const control = page.getByRole(role, { name, exact: true });
       await expect(control).toBeFocused();
       const outline = await control.evaluate((element) => {
         const style = getComputedStyle(element);
@@ -315,26 +411,107 @@ test.describe("scene on a desktop", () => {
     }
   });
 
-  test("VIS-AC13: the breath of the aura ends within 5 seconds and leaves the glow at its maximum", async ({
+  test("SCN-AC22: the welcome shows without the focus, and Tab reaches it after the bar", async ({
     page,
   }) => {
     await page.goto("/es/");
-    const glow = page.locator('[data-aura="psu"] [data-part="glow"]');
-    await expect(glow).toHaveCount(1);
-
-    // The animation starts when the scene appears; its own timeline says when it will end.
-    const duration = await glow.evaluate((element) =>
-      Number(element.getAnimations()[0]?.effect?.getComputedTiming().endTime),
+    await expect(welcome(page)).toBeVisible();
+    await expect(welcome(page).getByRole("heading", { level: 2 })).toHaveText("Sistema listo");
+    await expect(welcome(page)).toContainText(
+      "Te doy la bienvenida a mi portfolio. Navega por los componentes de la placa para conocer sobre mí y lo que puedo hacer por ti.",
     );
-    expect(duration).toBe(4800);
-    expect(duration).toBeLessThan(5000);
+    expect(
+      await welcome(page).evaluate((element) => element.contains(document.activeElement)),
+    ).toBe(false);
 
-    await expect
-      .poll(() => glow.evaluate((element) => element.getAnimations().length), { timeout: 6000 })
-      .toBe(0);
-    expect(await auraOpacity(page, "psu", "glow")).toBe("0.5");
-    expect(await auraOpacity(page, "cmos", "glow")).toBe("0.42");
-    expect(await auraOpacity(page, "psu", "fill")).toBe("0.08");
+    await page.getByRole("link", { name: "GitHub (se abre en una pestaña nueva)" }).focus();
+    for (const target of [
+      page.getByRole("button", { name: "Explorar" }),
+      page.getByRole("link", { name: "Ver mi perfil" }),
+      page.getByRole("link", { name: "Procesador (CPU): Perfil" }),
+    ]) {
+      await page.keyboard.press("Tab");
+      await expect(target).toBeFocused();
+    }
+  });
+
+  test("SCN-AC23: Explore closes the welcome, moves the focus to the processor and is remembered", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await page.getByRole("button", { name: "Explorar" }).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(welcome(page)).toBeHidden();
+    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
+    expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
+
+    await page.reload();
+    await expect(stage(page)).toBeVisible();
+    await expect(html(page)).toHaveAttribute("data-app", "ready");
+    await expect(welcome(page)).toBeHidden();
+  });
+
+  test("SCN-AC23: Esc closes the welcome while the focus is in it", async ({ page }) => {
+    await page.goto("/es/");
+    await page.getByRole("button", { name: "Explorar" }).focus();
+    await page.keyboard.press("Escape");
+
+    await expect(welcome(page)).toBeHidden();
+    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
+  });
+
+  test("SCN-AC23: opening a section while the welcome shows closes it for the session", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await expect(welcome(page)).toBeVisible();
+    await page.getByRole("link", { name: "Pila CMOS: Acerca de este sitio" }).click();
+    await expect(page.getByRole("dialog", { name: "Acerca de este sitio" })).toBeVisible();
+    await expect(welcome(page)).toBeHidden();
+
+    await page.keyboard.press("Escape");
+    await expect(page).toHaveURL("/es/");
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(welcome(page)).toBeHidden();
+  });
+
+  test("SCN-AC23: a section opened at once puts the welcome off until it closes", async ({
+    page,
+  }) => {
+    await page.goto("/es/projects/");
+    await expect(page.getByRole("dialog", { name: "Proyectos" })).toBeVisible();
+    await expect(welcome(page)).toBeHidden();
+
+    await page.keyboard.press("Escape");
+    await expect(page).toHaveURL("/es/");
+    await expect(welcome(page)).toBeVisible();
+  });
+});
+
+test.describe("scene after the boot sequence of a first visit", () => {
+  test.use({ bootSeen: false });
+
+  test("SCN-AC21: the identity plate stays hidden while the boot plays and shows when it ends", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await expect(page.getByTestId("boot-screen")).toBeVisible();
+    // Read in one go, so that the boot cannot end between the two readings.
+    const [boot, display] = await plate(page).evaluate((element) => [
+      document.documentElement.dataset["boot"],
+      getComputedStyle(element).display,
+    ]);
+    expect(boot).not.toBe("done");
+    expect(display).toBe("none");
+
+    await expect(html(page)).toHaveAttribute("data-boot", "done");
+    await expect(plate(page)).toBeVisible();
+    // The welcome greets a first visit at the end of the boot, without taking the focus.
+    await expect(welcome(page)).toBeVisible();
+    expect(
+      await welcome(page).evaluate((element) => element.contains(document.activeElement)),
+    ).toBe(false);
   });
 });
 
@@ -494,6 +671,49 @@ test.describe("scene in every viewport", () => {
       expect(backdrop).toBe(VOID);
     });
   }
+
+  for (const name of SCENE_VIEWPORTS) {
+    test(`SCN-AC21: on ${name} the identity plate covers no piece and stays clear of the bar`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(VIEWPORTS[name]);
+      await page.goto("/es/");
+      await expect(plate(page)).toBeVisible();
+
+      const box = await boxOf(plate(page));
+      expect(box.width).toBeLessThanOrEqual(300);
+      expect(box.height).toBeLessThanOrEqual(112);
+      // Its text fits: nothing is cut by its maximum height.
+      expect(
+        await plate(page).evaluate((element) => element.scrollHeight <= element.clientHeight),
+      ).toBe(true);
+      for (const [zone, zoneBox] of await interactiveZoneBoxes(page)) {
+        expect(boxesOverlap(box, zoneBox), zone).toBe(false);
+      }
+      const bar = page.getByRole("navigation", { name: "Controles del sitio" });
+      expect(boxesOverlap(box, await boxOf(bar))).toBe(false);
+    });
+  }
+
+  test.describe("with the welcome on view", () => {
+    test.use({ welcomeSeen: false });
+
+    for (const name of SCENE_VIEWPORTS) {
+      test(`SCN-AC24: on ${name} the welcome covers no piece and is at most 192 px high`, async ({
+        page,
+      }) => {
+        await page.setViewportSize(VIEWPORTS[name]);
+        await page.goto("/es/");
+        await expect(welcome(page)).toBeVisible();
+
+        const box = await boxOf(welcome(page));
+        expect(box.height).toBeLessThanOrEqual(192);
+        for (const [zone, zoneBox] of await interactiveZoneBoxes(page)) {
+          expect(boxesOverlap(box, zoneBox), zone).toBe(false);
+        }
+      });
+    }
+  });
 
   test("SYS-AC05: at 1280×500 px the page is the simple view", async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.short);

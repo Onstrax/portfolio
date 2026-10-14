@@ -3,15 +3,16 @@ import type { ReactNode } from "react";
 
 import { BootScreen } from "@/features/boot-sequence/server";
 import { ScenePoster, SCENE_CONTENT_ID } from "@/features/motherboard-scene/server";
-import { SECTION_LIST } from "@/features/registry";
+import { SECTION_LIST, SECTIONS } from "@/features/registry";
 import { SectionScroller } from "@/features/simple-view";
 import { CONTENT_ID, PersonJsonLd, SimpleView } from "@/features/simple-view/server";
 import { SCENE_ASSETS } from "@/shared/assets/manifest.generated";
+import { CV_FILES, SITE } from "@/shared/config/site";
 import { isLocale } from "@/shared/contracts/locale";
 import { getUiDictionary } from "@/shared/i18n/get-ui-dictionary";
 import { LOCALE_META } from "@/shared/i18n/locales";
 import { buildPrePaintScript } from "@/shared/lib/pre-paint-script";
-import { buildSectionNav } from "@/shared/lib/section-nav";
+import { buildQuickContacts, buildSceneIdentity, buildSectionNav } from "@/shared/lib/section-nav";
 import { FONT_VARIABLES } from "@/shared/ui/fonts";
 import { SkipLink } from "@/shared/ui/skip-link";
 
@@ -55,7 +56,13 @@ export default async function SceneGroupLayout({ children, params }: SceneGroupL
         <div data-layer="scene" className="mode-scene:block hidden">
           <BootScreen locale={locale} />
           <ScenePoster />
-          <SceneLayer sections={buildSectionNav(SECTION_LIST, locale)}>{children}</SceneLayer>
+          <SceneLayer
+            sections={buildSectionNav(SECTION_LIST, locale)}
+            identity={buildSceneIdentity(SITE.authorName, SECTIONS.profile.text[locale])}
+            contacts={buildQuickContacts(SECTIONS.contact.facts.channels, CV_FILES[locale])}
+          >
+            {children}
+          </SceneLayer>
         </div>
         <SectionScroller />
       </body>

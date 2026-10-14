@@ -49,7 +49,7 @@ function stored(page: Page, key: string): Promise<Record<string, unknown> | null
 }
 
 test.describe("fixed bar", () => {
-  test("SET-AC01: the bar sits on the top right corner of the stage, with the languages and the simple view", async ({
+  test("SET-AC01: the bar sits on the top right corner of the stage, with the languages, the simple view and the contacts", async ({
     page,
   }) => {
     await page.goto("/es/");
@@ -67,6 +67,102 @@ test.describe("fixed bar", () => {
     await expect(bar(page).getByRole("link", { name: "Vista simple" })).toHaveAttribute(
       "href",
       "/es/cv/",
+    );
+    // After the other language, in this order.
+    const names = await bar(page)
+      .getByRole("link")
+      .evaluateAll((links) =>
+        links.slice(1).map((link) => link.getAttribute("aria-label") ?? link.textContent.trim()),
+      );
+    expect(names).toEqual([
+      "Vista simple",
+      "Descargar CV (PDF)",
+      "Escribir un correo",
+      "LinkedIn (se abre en una pestaña nueva)",
+      "GitHub (se abre en una pestaña nueva)",
+    ]);
+  });
+
+  test("SET-AC14: the bar links the résumé, the mail, LinkedIn and GitHub, at least 44×44 px each", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    const contacts = bar(page).getByRole("list").getByRole("link");
+    await expect(contacts).toHaveCount(4);
+
+    const cv = bar(page).getByRole("link", { name: "Descargar CV (PDF)" });
+    await expect(cv).toHaveAttribute("href", "/cv/juan-esteban-alvarez-garcia-cv-es.pdf");
+    await expect(cv).toHaveAttribute("download", "");
+    await expect(cv).toHaveText("CV");
+    await expect(bar(page).getByRole("link", { name: "Escribir un correo" })).toHaveAttribute(
+      "href",
+      "mailto:juanalvarezgcl@gmail.com",
+    );
+    for (const [name, href] of [
+      ["LinkedIn", "https://www.linkedin.com/in/juan-esteban-alvarez-garcia-21bb70364/"],
+      ["GitHub", "https://github.com/Onstrax"],
+    ] as const) {
+      const link = bar(page).getByRole("link", { name: `${name} (se abre en una pestaña nueva)` });
+      await expect(link).toHaveAttribute("href", href);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+    for (const contact of await contacts.all()) {
+      const box = await boxOf(contact);
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  test("SET-AC14: with a panel open the contacts stay at hand, in the bar drawn inside it", async ({
+    page,
+  }) => {
+    await page.goto("/es/projects/");
+    const panel = page.getByRole("dialog", { name: "Proyectos" });
+    await expect(panel).toBeVisible();
+
+    const panelBar = panel.getByRole("navigation", { name: "Controles del sitio" });
+    await expect(panelBar.getByRole("list").getByRole("link")).toHaveCount(4);
+    const email = panelBar.getByRole("link", { name: "Escribir un correo" });
+    await expect(email).toBeVisible();
+    await expect(email).toHaveAttribute("href", "mailto:juanalvarezgcl@gmail.com");
+  });
+
+  test("VSN-AC11: from the scene at rest, each contact is one activation away, with no panel open", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await expect(bar(page)).toBeVisible();
+
+    // The résumé downloads at once.
+    const download = page.waitForEvent("download");
+    await bar(page).getByRole("link", { name: "Descargar CV (PDF)" }).click();
+    expect((await download).suggestedFilename()).toBe("juan-esteban-alvarez-garcia-cv-es.pdf");
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+
+    // LinkedIn and GitHub open in a new tab; the requests to other origins are stopped there.
+    const context = page.context();
+    await context.route(/^https:\/\/(www\.linkedin\.com|github\.com)\//, (route) =>
+      route.fulfill({ status: 200, contentType: "text/plain", body: "" }),
+    );
+    for (const [name, url] of [
+      ["LinkedIn", "https://www.linkedin.com/in/juan-esteban-alvarez-garcia-21bb70364/"],
+      ["GitHub", "https://github.com/Onstrax"],
+    ] as const) {
+      const opened = context.waitForEvent("page");
+      await bar(page)
+        .getByRole("link", { name: `${name} (se abre en una pestaña nueva)` })
+        .click();
+      const tab = await opened;
+      await expect(tab).toHaveURL(url);
+      await tab.close();
+    }
+    await expect(page).toHaveURL("/es/");
+
+    // The mail link hands the address to the mail program in one activation.
+    await expect(bar(page).getByRole("link", { name: "Escribir un correo" })).toHaveAttribute(
+      "href",
+      "mailto:juanalvarezgcl@gmail.com",
     );
   });
 
@@ -322,13 +418,13 @@ test.describe("session reset", () => {
     await expect(page).toHaveURL(/\/(?:es|en)\/$/);
   }
 
-  test("SET-AC09: the menu shows the progress, and resetting replays the boot and clears it", async ({
+  test("SET-AC09, SCN-AC23: the menu shows the progress, and resetting replays the boot and the welcome", async ({
     page,
   }) => {
     await page.goto("/es/");
     await visit(page, "Procesador (CPU): Perfil");
     await visit(page, "SSD NVMe: Proyectos");
-    await expect(page.getByTestId("scene-hint")).toBeHidden();
+    await expect(page.getByTestId("scene-welcome")).toBeHidden();
 
     const dialog = await openMenu(page);
     await expect(dialog.getByText("2 de 6 secciones visitadas")).toBeVisible();
@@ -339,8 +435,12 @@ test.describe("session reset", () => {
     await expect(page.getByTestId("boot-screen")).toBeVisible();
     await expect(page.getByTestId("boot-screen")).toBeHidden();
     await expect(page.getByTestId("post-display")).toHaveAttribute("data-value", "00");
-    await expect(page.getByTestId("scene-hint")).toBeVisible();
-    expect(await stored(page, SESSION_KEY)).toEqual({ bootSeen: true, visited: [] });
+    await expect(page.getByTestId("scene-welcome")).toBeVisible();
+    expect(await stored(page, SESSION_KEY)).toEqual({
+      bootSeen: true,
+      visited: [],
+      welcomeSeen: false,
+    });
   });
 
   test("SET-AC10: resetting keeps the language, the sound and the scene image", async ({

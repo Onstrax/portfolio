@@ -57,7 +57,11 @@ export const en = {
     settingsHardwareName: "Front panel",
     settingsTitle: "Settings",
     postDisplayName: "Diagnostic display",
-    hintLabel: "Each glowing component opens a section.",
+    welcomeTitle: "System ready",
+    welcomeDescription:
+      "Welcome to my portfolio. Explore the components on the board to learn about me and what I can do for you.",
+    exploreLabel: "Explore",
+    profileLinkLabel: "See my profile",
   },
   panel: {
     closeAriaLabel: "Close",
@@ -82,6 +86,10 @@ export const en = {
   settings: {
     barAriaLabel: "Site controls",
     simpleViewLabel: "Simple view",
+    cvShortLabel: "CV",
+    emailAriaLabel: "Send an email",
+    linkedinAriaLabel: "LinkedIn",
+    githubAriaLabel: "GitHub",
     menuTitle: "Settings",
     closeAriaLabel: "Close settings",
     soundLabel: "Sound",

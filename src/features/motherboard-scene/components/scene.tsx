@@ -15,7 +15,7 @@ import {
 import { parsePath } from "@/shared/config/routes";
 import type { SceneVariant } from "@/shared/contracts/assets";
 import { SCENE_OBJECT_IDS, type SceneObjectId } from "@/shared/contracts/ids";
-import type { SectionNavItem } from "@/shared/contracts/navigation";
+import type { SceneIdentity, SectionNavItem } from "@/shared/contracts/navigation";
 import { useUiDictionary } from "@/shared/i18n/use-ui-dictionary";
 import { useSessionStore } from "@/shared/state/session-store";
 import { useUiStore } from "@/shared/state/ui-store";
@@ -39,10 +39,12 @@ import { isLabelVisible } from "../lib/label-state";
 import { SCENE_CONTENT_ID } from "../lib/scene-ids";
 import { SCENE_HEIGHT, SCENE_WIDTH, toClipPath, toStageRect } from "../lib/scene-space";
 import { Aura } from "./aura";
+import { IdentityPlate } from "./identity-plate";
 import { PostDisplay } from "./post-display";
-import { HINT_STATES, SCENE_VIEWPORT, STAGE_LAYER, ZONE } from "./scene.styles";
+import { SCENE_VIEWPORT, STAGE_LAYER, ZONE } from "./scene.styles";
 import { SceneImages } from "./scene-images";
 import { SceneLabel } from "./scene-label";
+import { SceneWelcome } from "./scene-welcome";
 import { Vignette } from "./vignette";
 
 const HOTSPOT_LIST = SCENE_OBJECT_IDS.map((id) => HOTSPOTS[id]);
@@ -93,13 +95,15 @@ function hasKeyboardFocus(element: Element): boolean {
 interface SceneProps {
   /** The seven sections, in canonical order, resolved for the language of the page (SCN-R05). */
   readonly sections: readonly SectionNavItem[];
+  /** Data of the identity plate, resolved for the language of the page (SCN-R05). */
+  readonly identity: SceneIdentity;
 }
 
 /**
  * The interactive view: the image of the board and, over it, one zone per piece of hardware with
- * its aura and its label, the diagnostic display and the initial hint (SCN-R01).
+ * its aura and its label, the diagnostic display, the identity plate and the welcome (SCN-R01).
  */
-export function Scene({ sections }: SceneProps) {
+export function Scene({ sections, identity }: SceneProps) {
   const { scene, common } = useUiDictionary();
   const location = parsePath(usePathname());
   const openSlug = location?.view === "section" ? location.section : null;
@@ -116,15 +120,11 @@ export function Scene({ sections }: SceneProps) {
 
   const [isCalibrating] = useState(() => CalibrationOverlay !== null && isCalibrationRequested());
   const [decoded, setDecoded] = useState<readonly SceneVariant[]>([]);
-  const [hasOpenedSection, setHasOpenedSection] = useState(false);
-  if (openSlug !== null && !hasOpenedSection) setHasOpenedSection(true);
-  // A session reset brings the hint back (SET-R25). It shows as the boot sequence being unseen.
-  const isBootSeen = useSessionStore((state) => state.bootSeen);
-  const [wasBootSeen, setWasBootSeen] = useState(isBootSeen);
-  if (wasBootSeen !== isBootSeen) {
-    setWasBootSeen(isBootSeen);
-    if (wasBootSeen && openSlug === null) setHasOpenedSection(false);
-  }
+  const isWelcomeSeen = useSessionStore((state) => state.welcomeSeen);
+  const markWelcomeSeen = useSessionStore((state) => state.markWelcomeSeen);
+  // A session reset clears `welcomeSeen`, so the welcome comes back after the boot (SCN-R48).
+  const isWelcomeVisible =
+    hasSession && !isWelcomeSeen && isBootDone && openSlug === null && !isSettingsOpen;
 
   const primaryTotal = sections.filter((section) => section.isPrimary).length;
   const visitedLabel = common.visitedSectionsLabel({ count: visitedCount, total: primaryTotal });
@@ -160,6 +160,15 @@ export function Scene({ sections }: SceneProps) {
     hasMarkedReady.current = true;
     performance.mark("scene:ready");
   }, [isImageReady, isBootDone]);
+
+  // Opening a section or the settings menu while the welcome shows closes it for good. A section
+  // opened before it showed only puts it off until the section closes (SCN-R48, SCN-R50).
+  const wasWelcomeVisible = useRef(false);
+  useEffect(() => {
+    const wasVisible = wasWelcomeVisible.current;
+    wasWelcomeVisible.current = isWelcomeVisible;
+    if (wasVisible && (openSlug !== null || isSettingsOpen)) markWelcomeSeen();
+  }, [isWelcomeVisible, openSlug, isSettingsOpen, markWelcomeSeen]);
 
   // When a section closes and the focus is nowhere in the scene, it goes to the piece that had
   // opened that section (SCN-R38).
@@ -215,7 +224,6 @@ export function Scene({ sections }: SceneProps) {
       onPointerLeave={labels.leave}
     />
   );
-  const isHintVisible = hasSession && visitedCount === 0 && !hasOpenedSection;
 
   return (
     <main id={SCENE_CONTENT_ID} tabIndex={-1} inert={!isBootDone} className={SCENE_VIEWPORT}>
@@ -223,6 +231,17 @@ export function Scene({ sections }: SceneProps) {
         {scene.pageTitle}
       </h1>
       <div ref={stage} data-testid="scene-root" className={STAGE_BOX}>
+        {/* Right after the heading, and the welcome before the zones, for the reading and tab
+            order (SCN-R47, SCN-R51). */}
+        <IdentityPlate identity={identity} />
+        <SceneWelcome
+          isVisible={isWelcomeVisible}
+          onDismiss={(hadFocus) => {
+            // The focus goes on to the first piece of the scene (QLT-R08).
+            if (hadFocus) stage.current?.querySelector<HTMLElement>('[data-zone="cpu"]')?.focus();
+            markWelcomeSeen();
+          }}
+        />
         <SceneImages
           variant={variant}
           onReady={(ready) => {
@@ -292,13 +311,6 @@ export function Scene({ sections }: SceneProps) {
         {labelOf("settings", settingsNames.hardwareName, settingsNames.title)}
         {labelOf("post-display", scene.postDisplayName, visitedLabel)}
 
-        <p
-          data-testid="scene-hint"
-          data-visible={isHintVisible}
-          className={HINT_STATES[isHintVisible ? "visible" : "hidden"]}
-        >
-          {scene.hintLabel}
-        </p>
         <p role="status" className="sr-only">
           {visitedLabel}
         </p>

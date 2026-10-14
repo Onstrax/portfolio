@@ -2,7 +2,7 @@
 
 import { Component, lazy, type ReactNode, Suspense, useLayoutEffect, useState } from "react";
 
-import type { SectionNavItem } from "@/shared/contracts/navigation";
+import type { QuickContact, SceneIdentity, SectionNavItem } from "@/shared/contracts/navigation";
 import { readRenderMode, useRenderMode } from "@/shared/state/use-render-mode";
 
 // The code of the scene layer is only downloaded in scene mode (QLT-R34).
@@ -56,6 +56,10 @@ class SceneBoundary extends Component<SceneBoundaryProps, { readonly hasFailed: 
 interface SceneLayerProps {
   /** The seven sections, resolved by the server layout for the language of the page (SYS-R49). */
   readonly sections: readonly SectionNavItem[];
+  /** Data of the identity plate of the scene (SCN-R52). */
+  readonly identity: SceneIdentity;
+  /** Direct contacts of the fixed bar (SET-R31). */
+  readonly contacts: readonly QuickContact[];
   /** Content of the page: the section that the detail panel shows, or nothing on the home. */
   readonly children: ReactNode;
 }
@@ -66,7 +70,7 @@ interface SceneLayerProps {
  * loads the scene on demand and, if the scene fails, leaves the page in the simple view. On the
  * server and in simple mode it renders nothing (SYS-R48).
  */
-export function SceneLayer({ sections, children }: SceneLayerProps) {
+export function SceneLayer({ sections, identity, contacts, children }: SceneLayerProps) {
   const viewportMode = useRenderMode();
   const [hasFailed, setFailed] = useState(false);
   const mode = hasFailed ? "simple" : viewportMode;
@@ -98,16 +102,19 @@ export function SceneLayer({ sections, children }: SceneLayerProps) {
       </Suspense>
       {/* Before the scene, so that its controls come first in the tab order (SET-R03). */}
       <Suspense fallback={null}>
-        <FixedBar focusKey="bar" />
+        <FixedBar focusKey="bar" contacts={contacts} />
       </Suspense>
       <Suspense fallback={null}>
-        <Scene sections={sections} />
+        <Scene sections={sections} identity={identity} />
       </Suspense>
       <Suspense fallback={null}>
         <SettingsMenu sections={sections} focusKey="bar" />
       </Suspense>
       <Suspense fallback={null}>
-        <DetailPanel sections={sections} toolbar={<FixedBar focusKey="panel-bar" />}>
+        <DetailPanel
+          sections={sections}
+          toolbar={<FixedBar focusKey="panel-bar" contacts={contacts} />}
+        >
           {children}
         </DetailPanel>
       </Suspense>

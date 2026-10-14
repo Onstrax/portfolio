@@ -8,6 +8,32 @@ function html(page: Page): Locator {
   return page.locator("html");
 }
 
+/** The skip link and the controls of the fixed bar, by their accessible names (QLT-R07). */
+const BAR_ORDER = [
+  "Saltar al contenido",
+  "ENEnglish",
+  "Vista simple",
+  "Descargar CV (PDF)",
+  "Escribir un correo",
+  "LinkedIn (se abre en una pestaña nueva)",
+  "GitHub (se abre en una pestaña nueva)",
+];
+
+/** Presses Tab as many times as asked, and returns the name of each element that got the focus. */
+async function tabOrder(page: Page, presses: number): Promise<readonly string[]> {
+  const order: string[] = [];
+  for (let press = 0; press < presses; press += 1) {
+    await page.keyboard.press("Tab");
+    order.push(
+      await page.evaluate(() => {
+        const element = document.activeElement;
+        return (element?.getAttribute("aria-label") ?? element?.textContent ?? "").trim();
+      }),
+    );
+  }
+  return order;
+}
+
 /**
  * Presses Tab, or Shift+Tab to go backwards, until the element has the focus, as a keyboard user
  * would reach it.
@@ -27,15 +53,8 @@ test.describe("keyboard", () => {
     await page.goto("/es/");
     await expect(page.getByTestId("scene-root")).toBeVisible();
 
-    const order: string[] = [];
-    for (let presses = 0; presses < 11; presses += 1) {
-      await page.keyboard.press("Tab");
-      order.push(await page.evaluate(() => (document.activeElement?.textContent ?? "").trim()));
-    }
-    expect(order).toEqual([
-      "Saltar al contenido",
-      "ENEnglish",
-      "Vista simple",
+    expect(await tabOrder(page, 15)).toEqual([
+      ...BAR_ORDER,
       "Procesador (CPU): Perfil",
       "Fuente de poder (PSU): Experiencia",
       "SSD NVMe: Proyectos",
@@ -45,6 +64,24 @@ test.describe("keyboard", () => {
       "Pila CMOS: Acerca de este sitio",
       "Panel frontal: Ajustes",
     ]);
+  });
+
+  test.describe("with the welcome on view", () => {
+    test.use({ welcomeSeen: false });
+
+    test("QLT-AC03: the two controls of the welcome come between the fixed bar and the pieces", async ({
+      page,
+    }) => {
+      await page.goto("/es/");
+      await expect(page.getByTestId("scene-welcome")).toBeVisible();
+
+      expect(await tabOrder(page, 10)).toEqual([
+        ...BAR_ORDER,
+        "Explorar",
+        "Ver mi perfil",
+        "Procesador (CPU): Perfil",
+      ]);
+    });
   });
 
   test.describe("from a first visit", () => {
@@ -59,6 +96,9 @@ test.describe("keyboard", () => {
       // Skip the boot sequence.
       await page.keyboard.press("Enter");
       await expect(html(page)).toHaveAttribute("data-boot", "done");
+
+      // The welcome waits after the fixed bar without taking the focus; the pieces come after it.
+      await expect(page.getByTestId("scene-welcome")).toBeVisible();
 
       // Open and close each of the seven panels from its piece.
       for (const [zone, title] of [
@@ -98,6 +138,12 @@ test.describe("keyboard", () => {
       await expect(page.getByTestId("post-display")).toHaveAttribute("data-value", "00");
       // The control that asked for the replay is gone: the focus waits on the title of the scene.
       await expect(page.getByRole("heading", { level: 1 })).toBeFocused();
+      // A new session greets again; "Explore" closes the welcome and goes on to the first piece.
+      const explore = page.getByRole("button", { name: "Explorar" });
+      await tabTo(page, explore);
+      await page.keyboard.press("Enter");
+      await expect(page.getByTestId("scene-welcome")).toBeHidden();
+      await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeFocused();
 
       // Change the language from the fixed bar.
       const english = page

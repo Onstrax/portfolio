@@ -232,7 +232,7 @@ describe("DetailPanel", () => {
 
     expect(useSessionStore.getState().visited).toEqual(["cpu", "ssd"]);
     expect(window.sessionStorage.getItem("portfolio:v1:session")).toBe(
-      '{"bootSeen":false,"visited":["cpu","ssd"]}',
+      '{"bootSeen":false,"visited":["cpu","ssd"],"welcomeSeen":false}',
     );
   });
 

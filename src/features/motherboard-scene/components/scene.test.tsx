@@ -18,18 +18,23 @@ import { useUiStore } from "@/shared/state/ui-store";
 import { Scene } from "./scene";
 
 const root = document.documentElement;
+const IDENTITY = {
+  name: "Ada Lovelace",
+  degree: "Matemáticas",
+  focusAreas: ["Análisis", "Máquinas analíticas"],
+};
 
 function renderScene(locale: "es" | "en" = "es", pathname = `/${locale}/`) {
   navigation.locale = locale;
   navigation.pathname = pathname;
   const sections = buildSectionNav(SECTION_LIST, locale);
-  const view = render(<Scene sections={sections} />);
+  const view = render(<Scene sections={sections} identity={IDENTITY} />);
   return {
     ...view,
     /** Navigates on the client: the scene stays mounted and only the path changes. */
     navigate: (next: string) => {
       navigation.pathname = next;
-      view.rerender(<Scene sections={sections} />);
+      view.rerender(<Scene sections={sections} identity={IDENTITY} />);
     },
   };
 }
@@ -64,6 +69,13 @@ function images(): readonly HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>("img[data-variant]")];
 }
 
+// jsdom loads no stylesheet. The welcome, while closed, stays in the page to fade out (M-12) and
+// is hidden with the `invisible` class: this rule gives the class its meaning, so that the queries
+// by role leave the closed welcome out, as a browser does.
+const INVISIBLE_RULE = document.createElement("style");
+INVISIBLE_RULE.textContent = ".invisible { visibility: hidden; }";
+document.head.append(INVISIBLE_RULE);
+
 beforeEach(() => {
   vi.stubGlobal(
     "ResizeObserver",
@@ -79,7 +91,8 @@ beforeEach(() => {
   root.dataset["boot"] = "done";
   delete root.dataset["scene"];
   usePrefsStore.setState({ sceneVariant: "photo", hasHydrated: false });
-  useSessionStore.setState({ visited: [], bootSeen: false, hasHydrated: true });
+  // The welcome is closed unless a test is about it: its controls are links and buttons too.
+  useSessionStore.setState({ visited: [], bootSeen: false, welcomeSeen: true, hasHydrated: true });
   useUiStore.setState({ settingsOpen: false });
   performance.clearMarks();
 });
@@ -366,7 +379,7 @@ describe("Scene: labels", () => {
   });
 });
 
-describe("Scene: diagnostic display and hint", () => {
+describe("Scene: diagnostic display", () => {
   it("SCN-AC10: shows the number of primary sections visited and announces it", () => {
     renderScene();
     const display = screen.getByTestId("post-display");
@@ -395,28 +408,158 @@ describe("Scene: diagnostic display and hint", () => {
       new Set(["1", "0.08"]),
     );
   });
+});
 
-  it("SCN-AC11: shows the hint in a new session and removes it for good once a section opens", () => {
-    const { navigate } = renderScene();
-    const hint = screen.getByTestId("scene-hint");
-    expect(hint).toHaveTextContent("Cada componente iluminado abre una sección.");
-    expect(hint).toHaveAttribute("data-visible", "true");
+describe("Scene: identity plate and welcome", () => {
+  function welcome(): HTMLElement {
+    return screen.getByTestId("scene-welcome");
+  }
 
-    navigate("/es/about/");
-    expect(hint).toHaveAttribute("data-visible", "false");
-    navigate("/es/");
-    expect(hint).toHaveAttribute("data-visible", "false");
+  beforeEach(() => {
+    useSessionStore.setState({ welcomeSeen: false });
   });
 
-  it("shows no hint until the session is known, nor when a section has been visited", () => {
+  it("SCN-AC21: the plate shows the name, the degree and the focus areas, with nothing to focus", () => {
+    renderScene();
+    const plate = screen.getByTestId("scene-plate");
+    expect([...plate.children].map((line) => line.textContent)).toEqual([
+      "Ada Lovelace",
+      "Matemáticas",
+      "Análisis · Máquinas analíticas",
+    ]);
+    expect(plate.querySelector("a, button, [tabindex]")).toBeNull();
+    expect(within(plate).queryByRole("heading")).toBeNull();
+  });
+
+  it("SCN-AC21: the plate comes right after the heading, before everything else of the scene", () => {
+    renderScene();
+    const stage = screen.getByTestId("scene-root");
+    expect(stage.previousElementSibling).toBe(screen.getByRole("heading", { level: 1 }));
+    expect(stage.firstElementChild).toBe(screen.getByTestId("scene-plate"));
+  });
+
+  it("SCN-AC22: shows the welcome once the session is known, without taking the focus", () => {
     useSessionStore.setState({ hasHydrated: false });
     renderScene();
-    expect(screen.getByTestId("scene-hint")).toHaveAttribute("data-visible", "false");
+    expect(welcome()).toHaveAttribute("data-visible", "false");
 
     act(() => {
-      useSessionStore.setState({ visited: ["ram"], hasHydrated: true });
+      useSessionStore.setState({ hasHydrated: true });
     });
-    expect(screen.getByTestId("scene-hint")).toHaveAttribute("data-visible", "false");
+    expect(welcome()).toHaveAttribute("data-visible", "true");
+    expect(welcome()).not.toContainElement(document.activeElement as HTMLElement | null);
+    expect(within(welcome()).getByRole("heading", { level: 2 })).toHaveTextContent("Sistema listo");
+    expect(screen.getByRole("region", { name: "Sistema listo" })).toBe(welcome());
+    expect(welcome()).toHaveTextContent("Te doy la bienvenida a mi portfolio.");
+    expect(within(welcome()).getByRole("link", { name: "Ver mi perfil" })).toHaveAttribute(
+      "href",
+      "/es/profile/",
+    );
+  });
+
+  it("SCN-AC22: comes before the zones in the tab order", () => {
+    renderScene();
+    const explore = within(welcome()).getByRole("button", { name: "Explorar" });
+    expect(
+      explore.compareDocumentPosition(zone("cpu")) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("shows no welcome while the boot sequence plays, nor once it has been closed", () => {
+    root.dataset["boot"] = "play";
+    renderScene();
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+
+    act(() => {
+      useSessionStore.setState({ welcomeSeen: true });
+      root.dataset["boot"] = "done";
+    });
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+  });
+
+  it("SCN-AC23: Explore closes it for the session and moves the focus to the cpu zone", async () => {
+    renderScene();
+    const explore = within(welcome()).getByRole("button", { name: "Explorar" });
+    explore.focus();
+    await userEvent.keyboard("{Enter}");
+
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(zone("cpu")).toHaveFocus();
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+  });
+
+  it("SCN-AC23: Esc inside it closes it and moves the focus to the cpu zone", async () => {
+    renderScene();
+    within(welcome()).getByRole("link", { name: "Ver mi perfil" }).focus();
+    await userEvent.keyboard("{Escape}");
+
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(zone("cpu")).toHaveFocus();
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+  });
+
+  it("closed with the pointer while the focus is elsewhere, it leaves the focus where it was", () => {
+    renderScene();
+    const heading = screen.getByRole("heading", { level: 1 });
+    heading.focus();
+    fireEvent.click(within(welcome()).getByRole("button", { name: "Explorar" }));
+
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(heading).toHaveFocus();
+  });
+
+  it("SCN-AC23: a section opened while it shows closes it, and it does not come back", () => {
+    const { navigate } = renderScene();
+    navigate("/es/about/");
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+
+    navigate("/es/");
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+  });
+
+  it("SCN-AC23: opening the settings menu while it shows closes it", () => {
+    renderScene();
+    act(() => {
+      useUiStore.setState({ settingsOpen: true });
+    });
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+
+    act(() => {
+      useUiStore.setState({ settingsOpen: false });
+    });
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+  });
+
+  it("SCN-AC23: a section open from the start puts it off until the section closes", () => {
+    const { navigate } = renderScene("es", "/es/projects/");
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+    expect(useSessionStore.getState().welcomeSeen).toBe(false);
+
+    navigate("/es/");
+    expect(welcome()).toHaveAttribute("data-visible", "true");
+  });
+
+  it("SCN-AC23: comes back after a session reset", async () => {
+    renderScene();
+    await userEvent.click(within(welcome()).getByRole("button", { name: "Explorar" }));
+    expect(welcome()).toHaveAttribute("data-visible", "false");
+
+    act(() => {
+      useSessionStore.getState().reset();
+    });
+    expect(welcome()).toHaveAttribute("data-visible", "true");
+  });
+
+  it("speaks the language of the page", () => {
+    renderScene("en");
+    expect(screen.getByRole("region", { name: "System ready" })).toHaveTextContent(
+      "Welcome to my portfolio.",
+    );
+    expect(within(welcome()).getByRole("link", { name: "See my profile" })).toHaveAttribute(
+      "href",
+      "/en/profile/",
+    );
   });
 });
 

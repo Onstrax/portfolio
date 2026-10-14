@@ -11,7 +11,7 @@ describe("state contract", () => {
     expect(DEFAULT_PREFS).toEqual({ soundEnabled: false, sceneVariant: "photo" });
   });
 
-  it("starts a session with the boot sequence unseen and no visited sections", () => {
-    expect(DEFAULT_SESSION).toEqual({ bootSeen: false, visited: [] });
+  it("starts a session with the boot sequence and the welcome unseen and no visited sections", () => {
+    expect(DEFAULT_SESSION).toEqual({ bootSeen: false, visited: [], welcomeSeen: false });
   });
 });

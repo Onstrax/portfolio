@@ -70,6 +70,18 @@ const TITLES: Readonly<Record<string, readonly [string, string]>> = {
   about: ["Acerca de este sitio", "About this site"],
 };
 
+/**
+ * Waits until the welcome has faded in: while it fades (M-12), its text has less contrast than its
+ * colors give.
+ */
+async function waitForWelcome(page: Page): Promise<void> {
+  const welcome = page.getByTestId("scene-welcome");
+  await expect(welcome).toBeVisible();
+  await expect
+    .poll(() => welcome.evaluate((element) => element.getAnimations({ subtree: true }).length))
+    .toBe(0);
+}
+
 async function expectNoViolations(page: Page): Promise<void> {
   expect(await findAccessibilityViolations(page)).toEqual([]);
 }
@@ -132,6 +144,38 @@ test.describe("auditable states of the scene", () => {
       page.getByTestId("scene-label").filter({ hasText: "Procesador (CPU)" }),
     ).toBeVisible();
     await expectNoViolations(page);
+  });
+
+  test.describe("with the welcome on view", () => {
+    test.use({ welcomeSeen: false });
+
+    for (const locale of LOCALES) {
+      test(`QLT-AC01, VIS-AC03: the scene with the welcome has no accessibility violations (${locale})`, async ({
+        page,
+      }) => {
+        await page.goto(`/${locale}/`);
+        await expect(page.locator("img[data-state=shown]")).toBeVisible();
+        await expect(page.getByTestId("scene-welcome")).toBeVisible();
+        await waitForWelcome(page);
+        await expectNoViolations(page);
+      });
+    }
+
+    test("QLT-AC01: the welcome over the sketch variant has no accessibility violations", async ({
+      page,
+    }) => {
+      await page.addInitScript(() => {
+        window.localStorage.setItem(
+          "portfolio:v1:prefs",
+          JSON.stringify({ soundEnabled: false, sceneVariant: "sketch" }),
+        );
+      });
+      await page.goto("/es/");
+      await expect(page.locator("img[data-state=shown]")).toHaveAttribute("data-variant", "sketch");
+      await expect(page.getByTestId("scene-welcome")).toBeVisible();
+      await waitForWelcome(page);
+      await expectNoViolations(page);
+    });
   });
 
   test.describe("during the boot sequence", () => {

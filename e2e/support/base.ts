@@ -19,6 +19,11 @@ interface BaseOptions {
    * tests of the boot sequence itself turn it off (TST-R26).
    */
   readonly bootSeen: boolean;
+  /**
+   * `true` to start with the welcome of the scene already closed, written together with
+   * `bootSeen`; the tests of the welcome turn it off (TST-R26).
+   */
+  readonly welcomeSeen: boolean;
 }
 
 interface BaseFixtures {
@@ -53,9 +58,10 @@ const FIREFOX_LOAD_TIMEOUT_MS = 10_000;
 export const test = base.extend<BaseOptions & BaseFixtures>({
   allowedIssues: [[], { option: true }],
   bootSeen: [true, { option: true }],
+  welcomeSeen: [true, { option: true }],
 
   pageGuard: [
-    async ({ page, allowedIssues, bootSeen, browserName, javaScriptEnabled }, use) => {
+    async ({ page, allowedIssues, bootSeen, welcomeSeen, browserName, javaScriptEnabled }, use) => {
       const issues: PageIssue[] = [];
       const record = (kind: PageIssueKind, detail: string): void => {
         if (!allowedIssues.includes(kind)) issues.push({ kind, detail });
@@ -93,15 +99,19 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
 
       if (bootSeen) {
         // Only when the session is new: a reload must find what the page stored.
-        await page.addInitScript((key) => {
-          try {
-            if (window.sessionStorage.getItem(key) === null) {
-              window.sessionStorage.setItem(key, JSON.stringify({ bootSeen: true, visited: [] }));
+        const session = { bootSeen: true, visited: [], welcomeSeen };
+        await page.addInitScript(
+          ({ key, value }) => {
+            try {
+              if (window.sessionStorage.getItem(key) === null) {
+                window.sessionStorage.setItem(key, value);
+              }
+            } catch {
+              // A test that disables storage starts without a session.
             }
-          } catch {
-            // A test that disables storage starts without a session.
-          }
-        }, SESSION_KEY);
+          },
+          { key: SESSION_KEY, value: JSON.stringify(session) },
+        );
       }
 
       // Firefox, under load, can report the end of the initial blank page after the first

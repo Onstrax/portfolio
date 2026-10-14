@@ -282,7 +282,7 @@ test.describe("replay after a session reset", () => {
     await expect(bootScreen(page)).toBeVisible();
     await expect(html(page)).toHaveAttribute("data-boot", "play");
     await expect(bootScreen(page)).toBeHidden();
-    expect(await session(page)).toEqual({ bootSeen: true, visited: [] });
+    expect(await session(page)).toEqual({ bootSeen: true, visited: [], welcomeSeen: false });
   });
 
   test.describe("with reduced motion", () => {
