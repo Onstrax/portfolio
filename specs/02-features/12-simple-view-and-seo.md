@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.4 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
@@ -230,6 +230,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.4 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. Sin cambio de requisitos. |
 | 2026-10-14 | 1.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.4 | Versión 2, pendiente de aprobación del autor (D-82, D-88). Nuevo §4.9: la página de caso de estudio (`CaseStudyPage`, SMP-R25 a SMP-R28) en `/{locale}/projects/{case}/`. SMP-R14: vista `case`. SMP-R19: el sitemap pasa a 24 páginas. §2 y §3: la página de caso y la vista `case`. §4.8: quince textos de `simpleView` y `site.caseTitle`. SMP-AC09, SMP-AC11 y SMP-AC12 actualizados; nuevos SMP-AC20 a SMP-AC22. |
 | 2026-10-14 | 1.3 | SMP-AC17: tras SMP 1.3, el autor compartió la URL en LinkedIn (Post Inspector) y en WhatsApp; las dos vistas previas muestran título, descripción e imagen, sin avisos. Sin cambio de requisitos. |

@@ -27,7 +27,7 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | --- | --- | --- | --- |
 | VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Aprobada |
 | SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Aprobada |
-| STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Aprobada |
+| STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Implementada |
 | VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Aprobada |
 | AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Aprobada |
 | TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Aprobada |
@@ -39,14 +39,14 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | PNL | [02-features/03-detail-panel.md](02-features/03-detail-panel.md) | Modal, anterior/siguiente, historial, fragmentos | Implementada |
 | CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Implementada |
 | PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Implementada |
-| SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Aprobada |
+| SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Implementada |
 | RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Implementada |
 | IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Aprobada |
 | FAN | [02-features/09-fan-ecosystem.md](02-features/09-fan-ecosystem.md) | Sección Ecosistema personal | Implementada |
 | CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Implementada |
 | SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Aprobada |
-| SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Aprobada |
-| DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Aprobada |
+| SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Implementada |
+| DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Implementada |
 | PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Aprobada |
 
 `CLAUDE.md`, en la raíz del repositorio, resume las reglas de trabajo para agentes y apunta a este índice.
@@ -307,3 +307,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-14 | Versión 2, pendiente de aprobación del autor. Hechos F-22 a F-29 y decisiones D-82 a D-90. Enmendadas: VSN 2.4, SYS 2.8, STR 1.9, VIS 3.0, AST 3.3, TSC 2.4, I18N 1.3, QLT 3.0, TST 1.10, SCN 2.0, CPU 1.1, PSU 1.1, SSD 1.1, RAM 1.1, IO 1.2, SET 2.0, SMP 1.4, DEP 1.7 y PLAN 1.6, todas en "En revisión". BOOT, PNL, FAN y CMOS no cambian. |
 | 2026-10-14 | El autor aprueba todas las specs de la versión 2; las 19 enmendadas pasan a "Aprobada". Empieza M10. |
 | 2026-10-14 | Cierre de M10: CPU, RAM y PSU pasan a "Implementada". |
+| 2026-10-14 | Cierre de M11: SSD, SMP, STR y DEP pasan a "Implementada". |

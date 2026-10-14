@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -393,6 +393,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura de los tres casos en su página queda para A12 (SSD-AC14). Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Durante M10: los textos en inglés usan el apóstrofo tipográfico (’), como exige I18N-R41. Sin cambio de contenido. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-82, D-85, D-87, D-88; F-23, F-25 a F-28). Dos proyectos compactos nuevos de Machine Learning, `respiratory-etl` y `sdg-text-classifier`; `email-blacklist` pasa a público con su enlace. Los `highlights` son `RichLine` y destacan tres resultados. Nuevo `caseLinkLabel` y enlace de la tarjeta al caso (SSD-R07). Nuevo §4.6 con el contenido de los tres casos de estudio, redactado a partir de las respuestas del autor; lo revisa él antes de aprobar. Líneas de arranque: 11 proyectos. Criterios SSD-AC01 y SSD-AC03 a SSD-AC07 actualizados; nuevos SSD-AC11 a SSD-AC14. |

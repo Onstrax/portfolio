@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.7 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.7 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La comprobación posterior a la publicación ya pide una página de caso y pasa contra producción. Sin cambio de requisitos. |
 | 2026-10-14 | 1.7 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.7 | Versión 2, pendiente de aprobación del autor (D-82). DEP-R16: la comprobación posterior a la publicación pide también una página de caso de estudio. |
 | 2026-10-14 | 1.6 | Estado: pasa a "Implementada" al cerrar M9, con todos sus criterios verificados: los automáticos, citados por pruebas (TST-R38), y los manuales, en las filas anteriores. Sin cambio de requisitos. |
