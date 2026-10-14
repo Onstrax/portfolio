@@ -1,14 +1,15 @@
-import { type AppPath, cvPath, homePath, sectionPath } from "@/shared/config/routes";
+import { type AppPath, caseStudyPath, cvPath, homePath, sectionPath } from "@/shared/config/routes";
 import { getSiteUrl } from "@/shared/config/site";
-import type { SectionSlug } from "@/shared/contracts/ids";
+import type { CaseStudyId, SectionSlug } from "@/shared/contracts/ids";
 import { FALLBACK_LOCALE, type Locale, LOCALES } from "@/shared/contracts/locale";
 import { LOCALE_META } from "@/shared/i18n/locales";
 
-/** One of the three kinds of page that have a language (SMP §3). */
+/** One of the four kinds of page that have a language (SMP §3). */
 export type PageView =
   | { readonly view: "home" }
   | { readonly view: "section"; readonly section: SectionSlug }
-  | { readonly view: "cv" };
+  | { readonly view: "cv" }
+  | { readonly view: "case"; readonly caseStudy: CaseStudyId };
 
 export function pagePath(page: PageView, locale: Locale): AppPath {
   switch (page.view) {
@@ -18,6 +19,8 @@ export function pagePath(page: PageView, locale: Locale): AppPath {
       return sectionPath(locale, page.section);
     case "cv":
       return cvPath(locale);
+    case "case":
+      return caseStudyPath(locale, page.caseStudy);
   }
 }
 

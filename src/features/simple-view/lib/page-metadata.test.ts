@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { describe, expect, it } from "vitest";
 
-import { SECTION_SLUGS } from "@/shared/contracts/ids";
+import { CASE_STUDY_IDS, SECTION_SLUGS } from "@/shared/contracts/ids";
 import { LOCALES } from "@/shared/contracts/locale";
 
 import { getEntryMetadata, getPageMetadata } from "./page-metadata";
@@ -13,6 +13,7 @@ const PAGES: readonly PageView[] = [
   { view: "home" },
   ...SECTION_SLUGS.map((section): PageView => ({ view: "section", section })),
   { view: "cv" },
+  ...CASE_STUDY_IDS.map((caseStudy): PageView => ({ view: "case", caseStudy })),
 ];
 
 const ALL: readonly Metadata[] = PAGES.flatMap((page) =>
@@ -20,14 +21,14 @@ const ALL: readonly Metadata[] = PAGES.flatMap((page) =>
 );
 
 describe("getPageMetadata", () => {
-  it("SMP-AC09: gives the 18 pages unique titles and descriptions within their limits", () => {
+  it("SMP-AC09: gives the 24 pages unique titles and descriptions within their limits", () => {
     const titles = ALL.map((metadata) =>
       typeof metadata.title === "string" ? metadata.title : "",
     );
     const descriptions = ALL.map((metadata) => metadata.description ?? "");
-    expect(ALL).toHaveLength(18);
-    expect(new Set(titles).size).toBe(18);
-    expect(new Set(descriptions).size).toBe(18);
+    expect(ALL).toHaveLength(24);
+    expect(new Set(titles).size).toBe(24);
+    expect(new Set(descriptions).size).toBe(24);
     for (const title of titles) {
       expect(title.length, title).toBeGreaterThan(0);
       expect(title.length, title).toBeLessThanOrEqual(60);
@@ -131,5 +132,28 @@ describe("getEntryMetadata", () => {
     expect(entry.alternates).toBeUndefined();
     expect(entry.openGraph).toEqual({ ...home.openGraph, url: `${ORIGIN}/` });
     expect(entry.twitter).toEqual(home.twitter);
+  });
+});
+
+describe("metadata of a case study", () => {
+  it("SMP-AC21: titles the page with the case and points to its own URL in each language", () => {
+    const metadata = getPageMetadata({ view: "case", caseStudy: "thesis" }, "es");
+    expect(metadata.title).toBe("Tesis de autenticación poscuántica · Caso de estudio");
+    expect(metadata.description).toBe(
+      "Caso de estudio de mi tesis: un protocolo de autenticación de conocimiento cero, resistente a la computación cuántica y basado en Module-LWE.",
+    );
+    expect(metadata.alternates?.canonical).toBe(`${ORIGIN}/es/projects/thesis/`);
+    expect(metadata.alternates?.languages).toEqual({
+      es: `${ORIGIN}/es/projects/thesis/`,
+      en: `${ORIGIN}/en/projects/thesis/`,
+      "x-default": `${ORIGIN}/en/projects/thesis/`,
+    });
+    expect(metadata.openGraph).toMatchObject({
+      type: "website",
+      url: `${ORIGIN}/es/projects/thesis/`,
+    });
+    expect(getPageMetadata({ view: "case", caseStudy: "andespace" }, "en").title).toBe(
+      "AndeSpace · Case study",
+    );
   });
 });

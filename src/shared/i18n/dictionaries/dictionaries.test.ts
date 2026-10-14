@@ -21,6 +21,10 @@ const SAMPLES: Readonly<Record<string, { readonly es: string; readonly en: strin
     es: es.site.sectionTitle({ title: "Proyectos" }),
     en: en.site.sectionTitle({ title: "Projects" }),
   },
+  "site.caseTitle": {
+    es: es.site.caseTitle({ title: "AndeSpace" }),
+    en: en.site.caseTitle({ title: "AndeSpace" }),
+  },
   "scene.hotspotName": {
     es: es.scene.hotspotName({ hardwareName: "SSD NVMe", title: "Proyectos" }),
     en: en.scene.hotspotName({ hardwareName: "NVMe SSD", title: "Projects" }),
@@ -177,6 +181,7 @@ describe("interface dictionaries", () => {
         es: "Proyectos · Juan Esteban Álvarez García",
         en: "Projects · Juan Esteban Álvarez García",
       },
+      "site.caseTitle": { es: "AndeSpace · Caso de estudio", en: "AndeSpace · Case study" },
       "scene.hotspotName": { es: "SSD NVMe: Proyectos", en: "NVMe SSD: Projects" },
       "panel.previousAriaLabel": {
         es: "Sección anterior: Perfil",

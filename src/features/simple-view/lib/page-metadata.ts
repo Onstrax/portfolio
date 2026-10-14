@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { getSection } from "@/features/registry";
+import { getSection, SECTIONS } from "@/features/registry";
 import { OG_ASSET } from "@/shared/assets/manifest.generated";
 import { SITE } from "@/shared/config/site";
 import { FALLBACK_LOCALE, type Locale, LOCALES } from "@/shared/contracts/locale";
@@ -23,6 +23,10 @@ function pageText(
     }
     case "cv":
       return { title: site.cvTitle, description: site.cvDescription };
+    case "case": {
+      const { title, description } = SECTIONS.projects.text[locale].cases[page.caseStudy];
+      return { title: site.caseTitle({ title }), description };
+    }
   }
 }
 
