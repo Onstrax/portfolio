@@ -42,6 +42,8 @@ function timeLeft(screen: HTMLElement, isReplay: boolean): number {
 /**
  * Moves the focus to the title of the scene. The scene stops being inert a moment after
  * `data-boot` says `done`, when it renders again, so the focus may take a few frames to land.
+ * If something else takes the focus meanwhile, such as the welcome of the scene, which is modal,
+ * the focus stays there (BOOT-R21).
  */
 function focusSceneTitle(attemptsLeft = 10): void {
   const title = document.querySelector<HTMLElement>('[data-layer="scene"] h1');
@@ -49,6 +51,8 @@ function focusSceneTitle(attemptsLeft = 10): void {
   title.focus();
   if (document.activeElement === title || attemptsLeft === 0) return;
   requestAnimationFrame(() => {
+    const active = document.activeElement;
+    if (active !== null && active !== document.body) return;
     focusSceneTitle(attemptsLeft - 1);
   });
 }
