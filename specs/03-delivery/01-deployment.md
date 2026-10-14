@@ -140,7 +140,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | Dato | Valor |
 | --- | --- |
 | URL de producción | `https://juan-esteban-alvarez.pages.dev` |
-| Fecha de la primera publicación | Se anota al completar el hito M9 del plan |
+| Fecha de la primera publicación | 2026-10-13, desde el commit `c56272f` |
 
 ## 5. Criterios de aceptación
 
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | §4.9: fecha de la primera publicación (DEP-R29). El flujo de publicación se ejecutó solo tras el CI en verde de ese commit y la comprobación posterior pasó contra la URL de producción. Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Tras la primera publicación, por delegación del autor (D-79). DEP-R25 era erróneo: el script de analítica no envía sus datos al propio dominio, sino a `https://cloudflareinsights.com`, y la política lo bloqueaba, con un error en la consola en cada página y sin registrar visitas. §4.6: `connect-src` admite ese origen. |
 | 2026-10-13 | 1.4 | Durante M9, por delegación del autor (D-78). DEP-R12: el flujo comprueba por sí mismo el resultado de `ci-ok` del commit, también en una ejecución manual. DEP-R13: `wrangler` se instala fuera del proyecto, en versión exacta y sin scripts de instalación. DEP-R15: permiso `checks: read` y sin registro de despliegues. DEP-R16: opción `--wait` y peticiones sin redirecciones. DEP-AC06 precisado. §4.9: URL de producción, comunicada por el autor tras crear el proyecto (A8). |
 | 2026-10-13 | 1.3 | Durante M8, por delegación del autor (D-77). DEP-R20: el servidor de `preview` comprime con gzip las respuestas de texto. |
