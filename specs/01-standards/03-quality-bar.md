@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 3.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
@@ -286,6 +286,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38): los estados auditables nuevos de QLT-R26 (bienvenida y casos de estudio), el orden de tabulación de QLT-R07 (QLT-AC03) y el presupuesto de JavaScript con una página de caso. QLT-AC12 pasa en CI. QLT-AC27 queda para la auditoría manual del autor sobre lo nuevo (A14). Sin cambio de requisitos. |
 | 2026-10-14 | 3.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 3.0 | Versión 2, pendiente de aprobación del autor (D-82 a D-84). QLT-R07: el orden de tabulación de la escena incluye los contactos directos de la barra fija y, mientras es visible, la bienvenida. QLT-R26: cuatro estados auditables nuevos (bienvenida, en las dos variantes, y casos de estudio en escritorio y en teléfono). §4.2: el presupuesto de JavaScript del modo `simple` se aplica también a las páginas de caso. |
 | 2026-10-14 | 2.4 | QLT-AC27, paso 2: el autor repitió el recorrido con lector de pantalla y funciona. La auditoría manual de §4.8 queda completa. Sin cambio de requisitos. |

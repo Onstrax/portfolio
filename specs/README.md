@@ -25,14 +25,14 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 
 | Código | Archivo | Contenido | Estado |
 | --- | --- | --- | --- |
-| VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Aprobada |
+| VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Implementada |
 | SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Implementada |
 | STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Implementada |
-| VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Aprobada |
+| VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Implementada |
 | AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Implementada |
 | TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Implementada |
 | I18N | [01-standards/02-i18n-guidelines.md](01-standards/02-i18n-guidelines.md) | Diccionarios, formateadores, cambio de idioma, reglas de traducción | Implementada |
-| QLT | [01-standards/03-quality-bar.md](01-standards/03-quality-bar.md) | Accesibilidad, rendimiento, presupuestos de peso, robustez, definición de terminado | Aprobada |
+| QLT | [01-standards/03-quality-bar.md](01-standards/03-quality-bar.md) | Accesibilidad, rendimiento, presupuestos de peso, robustez, definición de terminado | Implementada |
 | TST | [01-standards/04-testing-and-ci.md](01-standards/04-testing-and-ci.md) | Niveles de prueba, TDD, E2E, Lighthouse, trazabilidad, pipeline de CI | Implementada |
 | BOOT | [02-features/01-boot-sequence.md](02-features/01-boot-sequence.md) | Secuencia de arranque | Implementada |
 | SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Implementada |
@@ -47,7 +47,7 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Implementada |
 | SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Implementada |
 | DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Implementada |
-| PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Aprobada |
+| PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Implementada |
 
 `CLAUDE.md`, en la raíz del repositorio, resume las reglas de trabajo para agentes y apunta a este índice.
 
@@ -311,3 +311,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-14 | Cierre de M11: SSD, SMP, STR y DEP pasan a "Implementada". |
 | 2026-10-14 | El autor aprueba A11 y A12. Por su decisión, D-91: nuevo orden de los destacados de Proyectos, SSD 2.0. Empieza M12. |
 | 2026-10-14 | Cierre de M12: SCN, SET, IO, TSC, SYS, AST, I18N y TST pasan a "Implementada". |
+| 2026-10-14 | Cierre de M13 y de la versión 2: VSN, VIS, QLT y PLAN pasan a "Implementada"; las 23 specs lo están. Pendientes del autor: A13, A14 y A7. |

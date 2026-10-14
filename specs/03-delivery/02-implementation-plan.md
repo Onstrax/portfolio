@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.6 |
 | Última actualización | 2026-10-14 |
 | Depende de | Todas las demás specs |
@@ -240,6 +240,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.6 | Cierre de M12 y M13. Estado: pasa a "Implementada": todas las specs del índice están en ese estado y la prueba de trazabilidad pasa, lo que PLAN-AC04 deja a la revisión del autor. Pendientes del autor: A13 y A14, y A7 (AST-AC06) desde la versión 1. |
 | 2026-10-14 | 1.6 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.6 | Versión 2, pendiente de aprobación del autor. Nuevo §4.6 con las reglas de v2 (PLAN-R14 a PLAN-R16), los hitos M10 a M13 y las tareas del autor A11 a A14. A10 hecha. §4.4: filas de los hitos nuevos. Nuevo PLAN-AC04. |
 | 2026-10-14 | 1.5 | Cierre de M9. Estado: pasa a "Implementada" (PLAN-AC02: todas las specs del índice están en ese estado y la prueba de trazabilidad pasa). A9 hecha; el paso del lector de pantalla de A6 ya no está aplazado. Solo queda A7 (AST-AC06). |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 3.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR |
@@ -357,6 +357,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38). La auditoría con axe recorre ya la bienvenida en las dos variantes (VIS-AC03) y la prueba de movimiento reducido mide su transición (VIS-AC05). VIS-AC12 queda para la revisión del autor de la placa, la bienvenida y la barra fija (A13). Sin cambio de requisitos. |
 | 2026-10-14 | 3.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 3.0 | Versión 2, pendiente de aprobación del autor. Por decisión del autor (D-86): `aura-sketch` pasa de `#B3123A` a `#1F4FBF` (6,05:1 sobre `paper`); principio V2, §4.1.4, §4.1.5 y decisión reescritos. Nuevo VIS-R45: el texto destacado solo cambia el peso (D-85). VIS-R39: excepción para los iconos de la barra fija (D-84). VIS-R20 y §4.1.5: la placa de identidad y la bienvenida son placas oscuras. M-12 pasa a ser la animación de la bienvenida, que sustituye a la pista (D-83). |
 | 2026-10-13 | 2.7 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VIS-AC12: el autor revisó la escena, las etiquetas, la barra fija y el panel sobre las dos imágenes definitivas al aprobar M5, M6 y M7 y en la auditoría A6, el 2026-10-13; el aura es la que él mismo pidió en D-71 y D-72. Sin cambio de requisitos respecto a la fila anterior. |
