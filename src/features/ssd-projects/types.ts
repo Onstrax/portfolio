@@ -11,8 +11,8 @@ import type { SectionTextBase } from "@/shared/contracts/section";
 export const PROJECT_IDS = [
   "thesis",
   "andespace",
-  "habicapital",
   "dental-site",
+  "habicapital",
   "monitoring-platform",
   "email-blacklist",
   "ahorrapp",

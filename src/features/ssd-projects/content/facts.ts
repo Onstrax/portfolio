@@ -26,6 +26,14 @@ export const projectsFacts = {
       ],
     },
     {
+      id: "dental-site",
+      featured: true,
+      stack: ["Next.js", "TypeScript", "Tailwind CSS", "Leaflet", "Netlify"],
+      teamSize: 1,
+      repository: "private",
+      links: [{ id: "live-site", href: "https://martha-landing.netlify.app/" }],
+    },
+    {
       id: "habicapital",
       featured: true,
       properName: "HabiCapital",
@@ -33,14 +41,6 @@ export const projectsFacts = {
       teamSize: 1,
       repository: "public",
       links: [{ id: "code", href: "https://github.com/Onstrax/HabiCapital" }],
-    },
-    {
-      id: "dental-site",
-      featured: true,
-      stack: ["Next.js", "TypeScript", "Tailwind CSS", "Leaflet", "Netlify"],
-      teamSize: 1,
-      repository: "private",
-      links: [{ id: "live-site", href: "https://martha-landing.netlify.app/" }],
     },
     {
       id: "monitoring-platform",

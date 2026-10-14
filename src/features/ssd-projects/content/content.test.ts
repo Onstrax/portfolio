@@ -29,8 +29,8 @@ describe("projects facts", () => {
     expect(projects.map((project) => project.repository)).toEqual([
       "public",
       "public",
-      "public",
       "private",
+      "public",
       "private",
       "public",
       "public",
@@ -45,8 +45,8 @@ describe("projects facts", () => {
     expect(projects.map((project): readonly string[] => project.stack)).toEqual([
       ["Python", "SageMath", "LaTeX"],
       ["Flutter", "FastAPI", "PostgreSQL", "GitHub Actions"],
-      ["Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
       ["Next.js", "TypeScript", "Tailwind CSS", "Leaflet", "Netlify"],
+      ["Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
       ["GCP", "GitHub Actions", "CI/CD"],
       ["AWS", "GitHub Actions", "CI/CD"],
       ["Angular"],
@@ -66,8 +66,8 @@ describe("projects facts", () => {
       "andespace flutter https://github.com/G33-Moviles-2026-1/G33-Flutter-Moviles-2026-1",
       "andespace backend https://github.com/G33-Moviles-2026-1/G33-Backend-Moviles-2026-1",
       "andespace wiki https://github.com/G33-Moviles-2026-1/Wiki",
-      "habicapital code https://github.com/Onstrax/HabiCapital",
       "dental-site live-site https://martha-landing.netlify.app/",
+      "habicapital code https://github.com/Onstrax/HabiCapital",
       "email-blacklist repository https://github.com/DevOps-Misw4304-202610/Proyecto1",
       "ahorrapp frontend https://github.com/Onstrax/AhorrApp",
       "ahorrapp backend https://github.com/Onstrax/AhorrApp-Backend",
@@ -95,7 +95,7 @@ describe("projects texts", () => {
   it("SSD-AC03: both languages have the same highlights, awards and notes per project", () => {
     for (const text of [projectsEs, projectsEn]) {
       expect(PROJECT_IDS.map((id) => text.projects[id].highlights.length)).toEqual([
-        2, 2, 2, 3, 1, 1, 1, 1, 2, 1, 2,
+        2, 2, 3, 2, 1, 1, 1, 1, 2, 1, 2,
       ]);
       expect(PROJECT_IDS.filter((id) => "award" in text.projects[id])).toEqual([
         "andespace",

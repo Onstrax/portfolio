@@ -119,15 +119,15 @@ describe("ProjectsSection", () => {
       ]);
     expect(emphasized(spanish.container)).toEqual([
       ["projects-thesis", "resistente a ataques cuánticos"],
-      ["projects-habicapital", "~94\u00a0% de cobertura reportada"],
       ["projects-dental-site", "~2-3 nuevos clientes al mes"],
+      ["projects-habicapital", "~94\u00a0% de cobertura reportada"],
     ]);
     spanish.unmount();
     const english = render(<ProjectsSection locale="en" idScope="" />);
     expect(emphasized(english.container)).toEqual([
       ["projects-thesis", "quantum-resistant"],
-      ["projects-habicapital", "~94% reported code coverage"],
       ["projects-dental-site", "2-3 new clients per month"],
+      ["projects-habicapital", "~94% reported code coverage"],
     ]);
   });
 
