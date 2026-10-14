@@ -55,7 +55,7 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
   bootSeen: [true, { option: true }],
 
   pageGuard: [
-    async ({ page, allowedIssues, bootSeen, browserName }, use) => {
+    async ({ page, allowedIssues, bootSeen, browserName, javaScriptEnabled }, use) => {
       const issues: PageIssue[] = [];
       const record = (kind: PageIssueKind, detail: string): void => {
         if (!allowedIssues.includes(kind)) issues.push({ kind, detail });
@@ -117,6 +117,13 @@ export const test = base.extend<BaseOptions & BaseFixtures>({
             return await goto(url, { timeout: FIREFOX_LOAD_TIMEOUT_MS, ...options });
           } catch (error) {
             const isTimeout = error instanceof Error && error.name === "TimeoutError";
+            // Without JavaScript a page keeps no state, so loading it again changes nothing, and
+            // it leaves Playwright with a navigation that it did see end. The tests that follow
+            // links need that: there every click is a navigation, and one started from a page
+            // that Playwright still believes to be loading is never seen to end either.
+            if (isTimeout && !javaScriptEnabled) {
+              return await goto(url, { timeout: FIREFOX_LOAD_TIMEOUT_MS, ...options });
+            }
             const wanted = new URL(url, ORIGIN).pathname;
             const isThere = await page
               .evaluate(
