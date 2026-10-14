@@ -4,7 +4,7 @@
 // With `--wait`, the checks are repeated until they all pass or that time runs out: a host can
 // take some seconds to serve a site that was just published.
 
-const PAGES = ["/", "/es/", "/en/", "/es/projects/", "/en/cv/"];
+const PAGES = ["/", "/es/", "/en/", "/es/projects/", "/en/cv/", "/es/projects/thesis/"];
 const FILES = ["/robots.txt", "/sitemap.xml"];
 const UNKNOWN_PATH = "/this-page-does-not-exist/";
 const HOME = "/es/";

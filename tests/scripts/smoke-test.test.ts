@@ -21,7 +21,16 @@ interface SampleSite {
   readonly canonicalOrigin?: string;
 }
 
-const PATHS = ["/", "/es/", "/en/", "/es/projects/", "/en/cv/", "/robots.txt", "/sitemap.xml"];
+const PATHS = [
+  "/",
+  "/es/",
+  "/en/",
+  "/es/projects/",
+  "/en/cv/",
+  "/es/projects/thesis/",
+  "/robots.txt",
+  "/sitemap.xml",
+];
 const servers: Server[] = [];
 
 /** Starts a server that answers as the published site does, except for what `site` changes. */
@@ -125,5 +134,14 @@ describe("smoke-test.mjs", () => {
 
     expect(code).toBe(2);
     expect(output).toContain("usage:");
+  });
+
+  it("DEP-AC07: fails when the page of a case study is missing", async () => {
+    const base = await sampleServer({ answers: { "/es/projects/thesis/": { status: 404 } } });
+
+    const { code, output } = await smokeTest(base);
+
+    expect(code).toBe(1);
+    expect(output).toContain("/es/projects/thesis/ answered 404 instead of 200");
   });
 });
