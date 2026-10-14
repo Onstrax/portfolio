@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { SECTION_SLUGS } from "@/shared/contracts/ids";
 import { LOCALES } from "@/shared/contracts/locale";
 
-import { getPageMetadata } from "./page-metadata";
+import { getEntryMetadata, getPageMetadata } from "./page-metadata";
 import { languageAlternates, pagePath, type PageView } from "./page-urls";
 
 const ORIGIN = "http://localhost:4173";
@@ -118,5 +118,18 @@ describe("page URLs", () => {
       en: `${ORIGIN}/en/cv/`,
       "x-default": `${ORIGIN}/en/cv/`,
     });
+  });
+});
+
+describe("getEntryMetadata", () => {
+  it("SMP-AC19: gives the entry page the description and sharing data of the English home", () => {
+    const entry = getEntryMetadata();
+    const home = getPageMetadata({ view: "home" }, "en");
+
+    expect(entry.robots).toEqual({ index: false });
+    expect(entry.description).toBe(home.description);
+    expect(entry.alternates).toBeUndefined();
+    expect(entry.openGraph).toEqual({ ...home.openGraph, url: `${ORIGIN}/` });
+    expect(entry.twitter).toEqual(home.twitter);
   });
 });

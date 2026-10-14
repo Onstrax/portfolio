@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
+import { getEntryMetadata } from "@/features/simple-view/server";
 import { homePath } from "@/shared/config/routes";
 import { FALLBACK_LOCALE, type Locale, LOCALES } from "@/shared/contracts/locale";
 import { getUiDictionary } from "@/shared/i18n/get-ui-dictionary";
@@ -19,10 +20,7 @@ const ORDERED_LOCALES: readonly Locale[] = [
   ...LOCALES.filter((locale) => locale !== FALLBACK_LOCALE),
 ];
 
-export const metadata: Metadata = {
-  title: fallback.languageGate.title,
-  robots: { index: false },
-};
+export const metadata: Metadata = getEntryMetadata();
 
 /**
  * `/`: sends the visitor to the home of a language (SYS-R08). Without JavaScript it shows one

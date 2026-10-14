@@ -116,6 +116,22 @@ test("SMP-AC10, I18N-AC15: every page with language declares its metadata with a
   }
 });
 
+test("SMP-AC19: the entry page, which is the address people share, carries the sharing data", () => {
+  const html = readExportedFile("index.html");
+  const home = readExportedFile("en/index.html");
+
+  expect(meta(html, "description")).toEqual(meta(home, "description"));
+  expect(meta(html, "og:title")).toEqual([title(home)]);
+  expect(meta(html, "og:description")).toEqual(meta(home, "description"));
+  expect(meta(html, "og:url")).toEqual([`${ORIGIN}/`]);
+  expect(meta(html, "og:type")).toEqual(["profile"]);
+  for (const key of ["og:image", "og:image:width", "og:image:height", "og:image:alt"]) {
+    expect(meta(html, key), key).toEqual(meta(home, key));
+  }
+  expect(meta(html, "twitter:card")).toEqual(["summary_large_image"]);
+  expect(meta(html, "robots")).toEqual(["noindex"]);
+});
+
 test("QLT-AC19: titles and descriptions are within their limits and unique", () => {
   const titles = LOCALE_PAGES.map((page) => title(readExportedFile(page.file)));
   const descriptions = LOCALE_PAGES.map(
