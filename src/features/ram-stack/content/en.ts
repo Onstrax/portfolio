@@ -15,7 +15,10 @@ export const stackEn = {
     gcp: { title: "Cloud: Google Cloud" },
     aws: { title: "Cloud: AWS" },
     devops: { title: "DevOps and tooling" },
-    data: { title: "Data and AI", note: "Machine Learning fundamentals." },
+    data: {
+      title: "Data and AI",
+      note: "Machine Learning minor. Besides the two public projects in Projects, built an MLP that classifies gamma rays and hadrons, a CNN that diagnoses cassava diseases from photos, and linear regression and K-Means exercises, in private repositories.",
+    },
     security: { title: "Security and cryptography" },
   },
   methodsTitle: "Engineering and methods",

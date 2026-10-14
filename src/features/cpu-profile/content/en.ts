@@ -9,7 +9,7 @@ export const profileEn = {
     description: `Professional profile, education, languages and recognition of ${SITE.authorName}, Systems and Computing Engineering student.`,
   },
   degree: "Systems and Computing Engineering",
-  focusAreas: ["Software development", "Cloud/DevOps", "Applied security"],
+  focusAreas: ["Software development", "Cloud/DevOps", "Applied security", "Machine Learning"],
   availability: "Available from January 2027 · Full-time · On-site or hybrid in Bogotá",
   summaryTitle: "Summary",
   summary: [
@@ -22,7 +22,8 @@ export const profileEn = {
   education: {
     uniandes: {
       program: "B.Sc. in Systems and Computing Engineering",
-      detail: "Final semester of coursework; thesis in progress.",
+      detail:
+        "Final semester of coursework; thesis in progress; Machine Learning minor, completed with the degree.",
     },
     hm: {
       program: "Academic exchange · Munich, Germany",
@@ -40,6 +41,11 @@ export const profileEn = {
     "Computer Infrastructure",
     "Design and Analysis of Algorithms",
     "Machine Learning Fundamentals",
+    "Business Intelligence",
+    "Modeling, Simulation and Optimization",
+    "The Artificial Man",
+    "Deep Learning Analysis",
+    "Principles and Foundations of Deep Learning",
     "Team Software Development",
     "Mobile Application Development",
     "Cloud Software Development",

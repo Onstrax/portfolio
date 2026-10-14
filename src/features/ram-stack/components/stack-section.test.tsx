@@ -22,7 +22,7 @@ describe("StackSection", () => {
       ["Cloud: Google Cloud", 7],
       ["Cloud: AWS", 10],
       ["DevOps y herramientas", 10],
-      ["Datos e inteligencia artificial", 4],
+      ["Datos e inteligencia artificial", 6],
       ["Seguridad y criptografía", 9],
       ["Ingeniería y metodologías", 9],
     ]);
@@ -43,7 +43,7 @@ describe("StackSection", () => {
       "Security and cryptography",
       "Engineering and methods",
     ]);
-    expect(blocks().map(([, count]) => count)).toEqual([5, 6, 4, 7, 10, 10, 4, 9, 9]);
+    expect(blocks().map(([, count]) => count)).toEqual([5, 6, 4, 7, 10, 10, 6, 9, 9]);
   });
 
   it("RAM-AC05: shows no level indicator of any kind", () => {

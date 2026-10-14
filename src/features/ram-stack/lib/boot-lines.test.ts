@@ -6,7 +6,7 @@ import { buildStackBootLines } from "./boot-lines";
 describe("stack boot lines", () => {
   it("RAM-AC06: is exactly the line of the spec", () => {
     expect(ramStackSection.bootLines).toEqual([
-      { message: "Memory: 8 banks, 55 modules online", status: "ok" },
+      { message: "Memory: 8 banks, 57 modules online", status: "ok" },
     ]);
   });
 

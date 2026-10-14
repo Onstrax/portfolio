@@ -45,13 +45,13 @@ describe("ProfileSection", () => {
     const spanish = render(<ProfileSection locale="es" idScope="" />);
     const details = spanish.container.querySelector("details");
     expect(details).not.toHaveAttribute("open");
-    expect(details?.querySelector("summary")).toHaveTextContent("Cursos relevantes (10)");
-    expect(details?.querySelectorAll("li")).toHaveLength(10);
+    expect(details?.querySelector("summary")).toHaveTextContent("Cursos relevantes (15)");
+    expect(details?.querySelectorAll("li")).toHaveLength(15);
     spanish.unmount();
 
     const english = render(<ProfileSection locale="en" idScope="" />);
     expect(english.container.querySelector("summary")).toHaveTextContent(
-      "Relevant coursework (10)",
+      "Relevant coursework (15)",
     );
   });
 

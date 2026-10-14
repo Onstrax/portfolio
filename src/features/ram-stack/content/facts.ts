@@ -50,7 +50,7 @@ export const stackFacts = {
         "SSH",
       ],
     },
-    { id: "data", items: ["PostgreSQL", "MySQL", "MongoDB", "Keras"] },
+    { id: "data", items: ["PostgreSQL", "MySQL", "MongoDB", "pandas", "scikit-learn", "Keras"] },
     {
       id: "security",
       items: ["AES", "RSA", "TLS", "JWT", "Argon2id", "HMAC", "ZKP/LWE", "Kyber", "ECDSA"],

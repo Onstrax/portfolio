@@ -33,8 +33,8 @@ describe("profile texts", () => {
   it("CPU-AC02: each language has the same number of elements and a text per identifier", () => {
     for (const text of [profileEs, profileEn]) {
       expect(text.summary).toHaveLength(4);
-      expect(text.courses).toHaveLength(10);
-      expect(text.focusAreas).toHaveLength(3);
+      expect(text.courses).toHaveLength(15);
+      expect(text.focusAreas).toHaveLength(4);
       expect(Object.keys(text.education)).toEqual([...EDUCATION_IDS]);
       expect(Object.keys(text.languages)).toEqual([...LANGUAGE_IDS]);
     }

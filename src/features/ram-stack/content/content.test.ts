@@ -9,7 +9,7 @@ describe("stack facts", () => {
   it("RAM-AC01: holds the eight groups in order with their technologies", () => {
     expect(stackFacts.groups.map((group) => group.id)).toEqual([...STACK_GROUP_IDS]);
     expect(stackFacts.groups.map((group) => group.items.length)).toEqual([
-      5, 6, 4, 7, 10, 10, 4, 9,
+      5, 6, 4, 7, 10, 10, 6, 9,
     ]);
     expect(stackFacts.groups[0].items).toEqual(["Python", "Java", "TypeScript", "SQL", "Dart"]);
     expect(stackFacts.groups[1].items).toEqual([
@@ -54,7 +54,14 @@ describe("stack facts", () => {
       "SonarQube",
       "SSH",
     ]);
-    expect(stackFacts.groups[6].items).toEqual(["PostgreSQL", "MySQL", "MongoDB", "Keras"]);
+    expect(stackFacts.groups[6].items).toEqual([
+      "PostgreSQL",
+      "MySQL",
+      "MongoDB",
+      "pandas",
+      "scikit-learn",
+      "Keras",
+    ]);
     expect(stackFacts.groups[7].items).toEqual([
       "AES",
       "RSA",
@@ -70,8 +77,8 @@ describe("stack facts", () => {
 
   it("RAM-AC02: repeats no technology within a group or between groups", () => {
     const items = stackFacts.groups.flatMap((group): readonly string[] => group.items);
-    expect(items).toHaveLength(55);
-    expect(new Set(items).size).toBe(55);
+    expect(items).toHaveLength(57);
+    expect(new Set(items).size).toBe(57);
   });
 });
 

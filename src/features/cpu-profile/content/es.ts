@@ -9,7 +9,7 @@ export const profileEs = {
     description: `Perfil profesional, formación, idiomas y reconocimientos de ${SITE.authorName}, estudiante de Ingeniería de Sistemas y Computación.`,
   },
   degree: "Ingeniería de Sistemas y Computación",
-  focusAreas: ["Desarrollo de software", "Cloud/DevOps", "Seguridad aplicada"],
+  focusAreas: ["Desarrollo de software", "Cloud/DevOps", "Seguridad aplicada", "Machine Learning"],
   availability: "Disponible desde enero de 2027 · Tiempo completo · Presencial o híbrido en Bogotá",
   summaryTitle: "Resumen",
   summary: [
@@ -22,7 +22,8 @@ export const profileEs = {
   education: {
     uniandes: {
       program: "Ingeniería de Sistemas y Computación",
-      detail: "Último semestre de asignaturas; tesis en desarrollo.",
+      detail:
+        "Último semestre de asignaturas; tesis en desarrollo; opción académica en Machine Learning, que se completa con el grado.",
     },
     hm: {
       program: "Intercambio académico · Múnich, Alemania",
@@ -40,6 +41,11 @@ export const profileEs = {
     "Infraestructura Computacional",
     "Diseño y Análisis de Algoritmos",
     "Fundamentos de Machine Learning",
+    "Inteligencia de Negocios",
+    "Modelado, Simulación y Optimización",
+    "El Hombre Artificial",
+    "Análisis con Deep Learning",
+    "Principios y Fundamentos del Deep Learning",
     "Desarrollo de Software en Equipo",
     "Construcción de Aplicaciones Móviles",
     "Desarrollo de Software en la Nube",
