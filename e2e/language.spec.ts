@@ -7,7 +7,9 @@ const PREFS_KEY = "portfolio:v1:prefs";
 /**
  * Waits until the entry page has sent the browser to a home. The page itself is asked where it
  * is: Firefox sometimes does not report the end of a navigation that a script started, and an
- * assertion on the URL of Playwright would then wait for it in vain (TST-R26).
+ * assertion on the URL of Playwright would then wait for it in vain (TST-R26). For the same
+ * reason the entry page is opened waiting only until its document is parsed: the redirect can
+ * leave its load unfinished, and WebKit then never reported it.
  */
 async function expectRedirectTo(page: Page, path: string): Promise<void> {
   await expect
@@ -19,7 +21,7 @@ test.describe("entry page with a Spanish browser", () => {
   test.use({ locale: "es-CO" });
 
   test("SYS-AC04: leads to the Spanish home", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await expectRedirectTo(page, "/es/");
   });
 
@@ -38,7 +40,7 @@ test.describe("entry page with a Spanish browser", () => {
     await page.getByRole("banner").getByRole("link", { name: "English" }).click();
     await expect(page).toHaveURL("/en/cv/");
 
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await expectRedirectTo(page, "/en/");
   });
 
@@ -46,7 +48,7 @@ test.describe("entry page with a Spanish browser", () => {
     await page.goto("/en/");
     await expect(page.getByRole("link", { name: "Processor (CPU): Profile" })).toBeVisible();
 
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await expectRedirectTo(page, "/es/");
   });
 });
@@ -55,7 +57,7 @@ test.describe("entry page with a German browser", () => {
   test.use({ locale: "de-DE" });
 
   test("SYS-AC04: leads to the English home", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await expectRedirectTo(page, "/en/");
   });
 });
@@ -71,7 +73,7 @@ test.describe("entry page with an English browser", () => {
       );
     }, PREFS_KEY);
 
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await expectRedirectTo(page, "/es/");
   });
 });
