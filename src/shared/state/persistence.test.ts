@@ -38,11 +38,16 @@ describe("parsePrefs", () => {
 describe("parseSession", () => {
   it("TSC-AC11: returns the defaults for missing, malformed or wrongly shaped values", () => {
     for (const raw of INVALID_RAW) {
-      expect(parseSession(raw), String(raw)).toEqual({ bootSeen: false, visited: [] });
+      expect(parseSession(raw), String(raw)).toEqual({
+        bootSeen: false,
+        visited: [],
+        welcomeSeen: false,
+      });
     }
-    expect(parseSession('{"bootSeen":"true","visited":"cpu"}')).toEqual({
+    expect(parseSession('{"bootSeen":"true","visited":"cpu","welcomeSeen":1}')).toEqual({
       bootSeen: false,
       visited: [],
+      welcomeSeen: false,
     });
   });
 
@@ -50,6 +55,20 @@ describe("parseSession", () => {
     expect(parseSession('{"bootSeen":true,"visited":["cpu","ssd","cpu","cmos","gpu",3]}')).toEqual({
       bootSeen: true,
       visited: ["cpu", "ssd"],
+      welcomeSeen: false,
+    });
+  });
+
+  it("TSC-AC20: reads a session stored before the welcome existed, keeping its fields", () => {
+    expect(parseSession('{"bootSeen":true,"visited":["cpu"]}')).toEqual({
+      bootSeen: true,
+      visited: ["cpu"],
+      welcomeSeen: false,
+    });
+    expect(parseSession('{"bootSeen":true,"visited":[],"welcomeSeen":true}')).toEqual({
+      bootSeen: true,
+      visited: [],
+      welcomeSeen: true,
     });
   });
 });
@@ -62,8 +81,8 @@ describe("serialization", () => {
     expect(serializePrefs({ soundEnabled: true, sceneVariant: "sketch" })).toBe(
       '{"soundEnabled":true,"sceneVariant":"sketch"}',
     );
-    expect(serializeSession({ bootSeen: true, visited: ["cpu"] })).toBe(
-      '{"bootSeen":true,"visited":["cpu"]}',
+    expect(serializeSession({ bootSeen: true, visited: ["cpu"], welcomeSeen: false })).toBe(
+      '{"bootSeen":true,"visited":["cpu"],"welcomeSeen":false}',
     );
   });
 
@@ -75,7 +94,7 @@ describe("serialization", () => {
   it("round-trips through the parsers", () => {
     const prefs = { soundEnabled: true, sceneVariant: "sketch" as const, locale: "en" as const };
     expect(parsePrefs(serializePrefs(prefs))).toEqual(prefs);
-    const session = { bootSeen: true, visited: ["ram", "io"] as const };
+    const session = { bootSeen: true, visited: ["ram", "io"] as const, welcomeSeen: true };
     expect(parseSession(serializeSession(session))).toEqual(session);
   });
 });

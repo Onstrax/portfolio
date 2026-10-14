@@ -5,7 +5,7 @@ import { DEFAULT_SESSION, type SessionStore, STORAGE_KEYS } from "@/shared/contr
 import { serializeSession } from "./persistence";
 import { writeStorage } from "./safe-storage";
 
-/** State that lasts as long as the browser tab: boot sequence seen and visited sections. */
+/** State that lasts as long as the browser tab: boot sequence seen, visited sections and welcome. */
 export const useSessionStore = create<SessionStore>()((set, get) => {
   const persist = (): void => {
     writeStorage("session", STORAGE_KEYS.session, serializeSession(get()));
@@ -21,6 +21,11 @@ export const useSessionStore = create<SessionStore>()((set, get) => {
       const { visited } = get();
       if (visited.includes(id)) return;
       set({ visited: [...visited, id] });
+      persist();
+    },
+    markWelcomeSeen: () => {
+      if (get().welcomeSeen) return;
+      set({ welcomeSeen: true });
       persist();
     },
     reset: () => {

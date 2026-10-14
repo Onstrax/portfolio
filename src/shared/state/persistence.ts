@@ -30,7 +30,7 @@ export function parsePrefs(raw: string | null): PersistedPrefs {
 
 /** Reads the stored session. Total: every missing or invalid field takes its default. */
 export function parseSession(raw: string | null): PersistedSession {
-  const { bootSeen, visited } = parseRecord(raw);
+  const { bootSeen, visited, welcomeSeen } = parseRecord(raw);
   const ids: readonly unknown[] = Array.isArray(visited) ? visited : [];
   const unique: PrimaryComponentId[] = [];
   for (const id of ids) {
@@ -39,6 +39,7 @@ export function parseSession(raw: string | null): PersistedSession {
   return {
     bootSeen: typeof bootSeen === "boolean" ? bootSeen : DEFAULT_SESSION.bootSeen,
     visited: unique,
+    welcomeSeen: typeof welcomeSeen === "boolean" ? welcomeSeen : DEFAULT_SESSION.welcomeSeen,
   };
 }
 
@@ -54,6 +55,6 @@ export function serializePrefs(prefs: PersistedPrefs): string {
 
 /** JSON text stored under `STORAGE_KEYS.session`: only the persisted fields (TSC-R49). */
 export function serializeSession(session: PersistedSession): string {
-  const { bootSeen, visited } = session;
-  return JSON.stringify({ bootSeen, visited });
+  const { bootSeen, visited, welcomeSeen } = session;
+  return JSON.stringify({ bootSeen, visited, welcomeSeen });
 }

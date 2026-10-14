@@ -89,9 +89,9 @@ describe("session store", () => {
 
     expect(session.getState()).toMatchObject({ bootSeen: false, visited: [] });
     expect(writes.map((write) => write.value)).toEqual([
-      '{"bootSeen":true,"visited":[]}',
-      '{"bootSeen":true,"visited":["cpu"]}',
-      '{"bootSeen":false,"visited":[]}',
+      '{"bootSeen":true,"visited":[],"welcomeSeen":false}',
+      '{"bootSeen":true,"visited":["cpu"],"welcomeSeen":false}',
+      '{"bootSeen":false,"visited":[],"welcomeSeen":false}',
     ]);
     expect(writes.every((write) => write.area === "session")).toBe(true);
     expect(writes.every((write) => write.key === "portfolio:v1:session")).toBe(true);
@@ -106,6 +106,21 @@ describe("session store", () => {
 
     expect(session.getState().visited).toEqual(["ssd", "cpu"]);
     expect(writes).toHaveLength(2);
+  });
+
+  it("TSC-AC20: markWelcomeSeen writes the session once, and reset clears it", async () => {
+    const { session } = await loadStores();
+
+    session.getState().markWelcomeSeen();
+    session.getState().markWelcomeSeen();
+    expect(session.getState().welcomeSeen).toBe(true);
+    expect(writes.map((write) => write.value)).toEqual([
+      '{"bootSeen":false,"visited":[],"welcomeSeen":true}',
+    ]);
+
+    session.getState().reset();
+    expect(session.getState().welcomeSeen).toBe(false);
+    expect(writes.at(-1)?.value).toBe('{"bootSeen":false,"visited":[],"welcomeSeen":false}');
   });
 });
 

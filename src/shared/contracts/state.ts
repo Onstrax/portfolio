@@ -13,6 +13,8 @@ export interface PersistedPrefs {
 export interface PersistedSession {
   readonly bootSeen: boolean;
   readonly visited: readonly PrimaryComponentId[];
+  /** The welcome of the scene was already closed in this session (SCN-R50). */
+  readonly welcomeSeen: boolean;
 }
 
 export const STORAGE_KEYS = {
@@ -24,7 +26,11 @@ export const DEFAULT_PREFS: PersistedPrefs = {
   soundEnabled: false,
   sceneVariant: DEFAULT_SCENE_VARIANT,
 };
-export const DEFAULT_SESSION: PersistedSession = { bootSeen: false, visited: [] };
+export const DEFAULT_SESSION: PersistedSession = {
+  bootSeen: false,
+  visited: [],
+  welcomeSeen: false,
+};
 
 export interface PrefsStore extends PersistedPrefs {
   readonly hasHydrated: boolean;
@@ -37,6 +43,7 @@ export interface SessionStore extends PersistedSession {
   readonly hasHydrated: boolean;
   readonly markBootSeen: () => void;
   readonly markVisited: (id: PrimaryComponentId) => void;
+  readonly markWelcomeSeen: () => void;
   readonly reset: () => void;
 }
 
