@@ -1,6 +1,6 @@
 # Portfolio
 
-Interactive portfolio of Juan Esteban Álvarez García: a PC motherboard whose components open the sections of his profile.
+My interactive portfolio: a PC motherboard whose components open the sections of my profile.
 
 **Live site:** <https://juan-esteban-alvarez.pages.dev>
 
@@ -8,11 +8,11 @@ Interactive portfolio of Juan Esteban Álvarez García: a PC motherboard whose c
 
 ## How it is built
 
-The site is written with spec-driven development. Every behavior is first described in a specification, with numbered requirements and acceptance criteria, and only then implemented. Each automated test cites the criterion it verifies, and a traceability test fails if an implemented spec has a criterion that no test covers.
+I built this site with spec-driven development. I first described every behavior in a specification, with numbered requirements and acceptance criteria, and only then implemented it. Each automated test cites the criterion it verifies, and a traceability test fails if an implemented spec has a criterion that no test covers.
 
-The specifications are the source of truth, and they are written in Spanish. Start at [`specs/README.md`](specs/README.md), which indexes them and records every decision taken along the way.
+The specifications are the source of truth, and I wrote them in Spanish. Start at [`specs/README.md`](specs/README.md), which indexes them and records every decision I took along the way.
 
-Some of what they ask for:
+Some of what I asked of the site:
 
 - **A static site.** No application server, no database and no cookies. The URL is the state: every section has its own address.
 - **Two layers.** A plain page that works without JavaScript and on a phone, and over it, on a large enough screen, the interactive scene.
@@ -34,7 +34,7 @@ Some of what they ask for:
 
 ## Commands
 
-The project needs Node 24 and pnpm 11.
+You need Node 24 and pnpm 11.
 
 ```bash
 pnpm install    # install the dependencies
@@ -49,10 +49,10 @@ pnpm build      # static export to out/
 
 [![CI](https://github.com/Onstrax/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Onstrax/portfolio/actions/workflows/ci.yml)
 
-Every push to `main` runs the gate in GitHub Actions, in the three browser engines, together with Lighthouse. Only a commit that passes it is published.
+Every push to `main` runs the gate in GitHub Actions, in the three browser engines, together with Lighthouse. Only a commit that passes it gets published.
 
 ## License
 
-The source code, configuration, scripts, tests and specifications are released under the [MIT License](LICENSE).
+I release the source code, configuration, scripts, tests and specifications under the [MIT License](LICENSE).
 
-The content is not: all rights are reserved on the profile texts (`src/features/*/content/`), the résumés (`public/cv/`), the portrait (`design/portrait/`, `public/portrait/`) and the scene image and the files derived from it (`design/scene/`, `public/scene/`, `public/og/`).
+The content is not: I reserve all rights on the texts about me (`src/features/*/content/`), the résumés (`public/cv/`), the portrait (`design/portrait/`, `public/portrait/`) and the scene image and the files derived from it (`design/scene/`, `public/scene/`, `public/og/`).
