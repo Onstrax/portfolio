@@ -51,6 +51,8 @@ test.describe("keyboard", () => {
     test.use({ bootSeen: false });
 
     test("VSN-AC08: the whole site can be used with the keyboard alone", async ({ page }) => {
+      // A whole tour of the site: in WebKit under load it takes over 20 seconds.
+      test.slow();
       await page.goto("/es/");
       await expect(page.getByTestId("boot-screen")).toBeVisible();
 

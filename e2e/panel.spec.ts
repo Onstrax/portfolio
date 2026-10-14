@@ -176,7 +176,9 @@ test.describe("opening and closing the panel", () => {
 });
 
 test.describe("moving between sections", () => {
-  test("PNL-AC05: next and previous walk the seven sections in a circle, showing the position", async ({
+  // Each walk is a test of its own: seven changes of section take up to 15 seconds in WebKit
+  // under load, and both walks together came close to the time limit of a test.
+  test("PNL-AC05: next walks the seven sections in a circle, showing the position", async ({
     page,
   }) => {
     await page.goto("/es/");
@@ -190,6 +192,15 @@ test.describe("moving between sections", () => {
       await expect(page).toHaveURL(path);
       await expect(page.getByText(`${String(step + 1)} / 7`)).toBeVisible();
     }
+  });
+
+  test("PNL-AC05: previous walks the seven sections in a circle, showing the position", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await open(page, SECTIONS[0]);
+    await expect(page.getByText("1 / 7")).toBeVisible();
+
     for (const step of [6, 5, 4, 3, 2, 1, 0]) {
       const { title, path } = SECTIONS[step] ?? SECTIONS[0];
       await page.getByRole("link", { name: `Sección anterior: ${title}` }).click();
@@ -362,6 +373,8 @@ test.describe("panel and render mode", () => {
   test("VSN-AC01: every section opens with one click, or with one activation from the keyboard", async ({
     page,
   }) => {
+    // Opens and closes the seven sections: in WebKit under load it takes over 20 seconds.
+    test.slow();
     await page.goto("/es/");
     for (const section of SECTIONS) {
       await open(page, section);

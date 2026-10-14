@@ -150,6 +150,8 @@ test.describe("scene on a desktop", () => {
   test("SYS-AC11, QLT-AC21: a tour of the site only requests its own origin, without errors or warnings", async ({
     page,
   }) => {
+    // A whole tour of the site: in WebKit under load it takes over 20 seconds.
+    test.slow();
     const origins = new Set<string>();
     page.on("request", (request) => {
       if (/^https?:/.test(request.url())) origins.add(new URL(request.url()).origin);
