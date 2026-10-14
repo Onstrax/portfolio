@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.3 |
+| Versión | 2.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
 
@@ -121,7 +121,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | QLT-R31 | La capa de escena DEBE registrar la marca `scene:ready` con `performance.mark` en el momento en que la imagen está decodificada y las zonas admiten interacción. En Chromium a 1280×720 px, sin limitación de red, `scene:ready` ocurre como máximo 3000 ms después del inicio de la navegación en una primera visita (con arranque) y 1200 ms cuando el arranque se omite. |
 | QLT-R32 | El primer pintado NO DEBE depender de JavaScript descargado: la vista simple y la primera pantalla del arranque se pintan con el HTML y el CSS del servidor más el script previo al pintado. |
 | QLT-R33 | Los recursos de la carga inicial DEBEN respetar los presupuestos de peso de la tercera tabla. Un presupuesto solo se cambia modificando esta spec. |
-| QLT-R34 | El código de la capa de escena (escena, arranque, panel, menú de ajustes) y la librería de animación se cargan bajo demanda y solo en modo `scene`. Los sonidos se sintetizan en el navegador (ver SET): no hay archivos de audio, y no se crea ningún contexto de audio mientras el sonido está desactivado. La imagen de la escena no se solicita en modo `simple` (SYS-R16). |
+| QLT-R34 | El código de la capa de escena (escena, arranque, panel, menú de ajustes) se carga bajo demanda y solo en modo `scene`. Los sonidos se sintetizan en el navegador (ver SET): no hay archivos de audio, y no se crea ningún contexto de audio mientras el sonido está desactivado. La imagen de la escena no se solicita en modo `simple` (SYS-R16). |
 | QLT-R35 | Toda imagen declara su ancho y su alto, y las fuentes usan el ajuste de métricas de respaldo de `next/font`, de modo que la carga no desplace el contenido. |
 | QLT-R36 | En la carga inicial se descargan como máximo dos archivos de fuente. |
 
@@ -149,7 +149,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | Total transferido, modo `simple` a 390×844 px | ≤ 420 kB |
 | Total transferido, modo `scene` a 1920×1080 px, primera visita | ≤ 800 kB |
 
-Los presupuestos de JavaScript parten de la base del marco (171 kB): dejan 24 kB para el código propio en modo `simple` y 79 kB para el código propio y la librería de animación en modo `scene`. El script de analítica (ver DEP) no cuenta en estos presupuestos.
+Los presupuestos de JavaScript parten de la base del marco (171 kB): dejan 24 kB para el código propio en modo `simple` y 79 kB para el código propio en modo `scene`. El script de analítica (ver DEP) no cuenta en estos presupuestos.
 
 ### 4.3 Metadatos
 
@@ -267,7 +267,7 @@ SMP implementa estos mínimos.
 | **Ninguna animación automática de más de 5 segundos** (QLT-R19, D-34). | WCAG 2.2.2 es de nivel A y exige poder pausar todo movimiento automático que dure más. Limitar la respiración del aura a sus primeros segundos cumple el criterio sin añadir un control de pausa, y deja la escena en calma mientras se leen las etiquetas. Esta decisión obligó a enmendar VIS-R16. |
 | **Orden de tabulación canónico, no espacial** (QLT-R07). | La posición de las piezas depende de la imagen generada. Un orden fijo es predecible, coincide con el de la vista simple y no cambia si se regenera la imagen. |
 | **Presupuestos de peso medidos sobre la base real del marco** (QLT-R33). | Next.js 16 y React 19 ocupan 171 kB antes de escribir una línea. Fijar los presupuestos a partir de esa medida los hace exigentes pero alcanzables; inventarlos habría producido límites imposibles o inútiles. |
-| **Código de la escena bajo demanda** (QLT-R34, D-40). | Quien llega desde un teléfono ve la vista simple; no debe pagar la descarga de la escena, del arranque ni de la librería de animación. |
+| **Código de la escena bajo demanda** (QLT-R34, D-40). | Quien llega desde un teléfono ve la vista simple; no debe pagar la descarga de la escena ni del arranque. |
 | **Marca `scene:ready` propia** (QLT-R31). | Las métricas estándar no ven la escena: mientras dura el arranque, el elemento más grande pintado es texto. La marca mide lo que importa al visitante, que es cuándo puede explorar. |
 | **Vista simple como red de seguridad ante fallos** (QLT-R43, QLT-R44). | Sin estas dos reglas, un archivo bloqueado por una red corporativa o un error en la escena dejarían al visitante ante una pantalla de arranque detenida o en blanco. La vista simple ya existe en el HTML; solo hay que mostrarla. |
 | **Cero errores y advertencias de consola** (QLT-R40). | Es lo primero que ve quien abre las herramientas de desarrollo, y las advertencias de hidratación suelen esconder defectos reales. |
@@ -282,6 +282,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.4 | Por decisión del autor (D-80). QLT-R34 y §4.2: ya no hay librería de animación; las animaciones son CSS. Sin cambio de presupuestos. |
 | 2026-10-13 | 2.3 | Durante M8, por delegación del autor (D-77). QLT-R30 y glosario: el Largest Contentful Paint del preajuste `mobile` se mide con la limitación aplicada de verdad, no estimada; el límite de 2,5 s no cambia. Medido el 2026-10-13 en `/es/` y `/en/cv/`: 1,6 s con limitación aplicada y 2,7 s con la estimación por defecto de Lighthouse. Estado: pasa a "Implementada" al cerrar M8. QLT-AC27: el autor completó el 2026-10-13, en su equipo y antes de la primera publicación, los pasos de teclado, zoom, movimiento reducido, sin JavaScript y herramientas de desarrollo de §4.8, sin incidencias. Quedan dos pasos: el del lector de pantalla, aplazado con su visto bueno (PLAN-R10), y el del teléfono real, que necesita el sitio desplegado (M9). |
 | 2026-10-13 | 2.2 | Por decisión del autor (D-66). §4.1.7: nuevo estado auditable con la variante boceto. QLT-R14: el aura se distingue en las dos variantes. |
 | 2026-10-13 | 2.1 | Cabecera: se retira la marca de enmienda pendiente; el autor confirmó el 2026-10-13 que todas las enmiendas están aprobadas. Sin cambio de requisitos. |

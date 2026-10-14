@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.6 |
+| Versión | 2.7 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN |
 
@@ -52,7 +52,7 @@ El sistema es un **monolito de frontend sin servidor de aplicación**. Todo el c
 
 Versiones verificadas contra el registro de npm el 2026-10-12. La combinación Next.js 16.4.0 + React 19.3.0 + TypeScript 6.0.3 con exportación estática se validó ese día con un prototipo desechable (ver §6).
 
-**Versiones de arranque.** La implementación empieza el 2026-10-13, antes de que las versiones más recientes cumplan la edad mínima de SYS-R37. En aplicación de SYS-R03, la tabla fija la versión anterior más reciente que sí la cumple para diez paquetes: `next` y `eslint-config-next` 16.3.8 (en lugar de 16.4.0), `@playwright/test` 1.63.0 (1.64.0), `vite` 8.3.2 (8.3.4), `motion` 14.0.0 (14.1.0), `@types/node` 24.19.1 (24.19.2), `prettier` 3.9.9 (3.9.10), `vitest` y `@vitest/coverage-v8` 5.0.3 (5.0.4) y `typescript-eslint` 8.71.1 (8.71.2). Además `eslint` baja a 9.39.5, porque `eslint-config-next` 16.3.8 no funciona con ESLint 10. Esta combinación se instaló, compiló, analizó y probó en el prototipo el 2026-10-13 con la regla de 7 días activa y sin excepciones. Subir a las versiones entre paréntesis y a ESLint 10.12.0 es un cambio opcional a partir del 2026-10-20, en un solo commit que actualice esta tabla.
+**Versiones de arranque.** La implementación empieza el 2026-10-13, antes de que las versiones más recientes cumplan la edad mínima de SYS-R37. En aplicación de SYS-R03, la tabla fija la versión anterior más reciente que sí la cumple para nueve paquetes: `next` y `eslint-config-next` 16.3.8 (en lugar de 16.4.0), `@playwright/test` 1.63.0 (1.64.0), `vite` 8.3.2 (8.3.4), `@types/node` 24.19.1 (24.19.2), `prettier` 3.9.9 (3.9.10), `vitest` y `@vitest/coverage-v8` 5.0.3 (5.0.4) y `typescript-eslint` 8.71.1 (8.71.2). Además `eslint` baja a 9.39.5, porque `eslint-config-next` 16.3.8 no funciona con ESLint 10. Esta combinación se instaló, compiló, analizó y probó en el prototipo el 2026-10-13 con la regla de 7 días activa y sin excepciones. Subir a las versiones entre paréntesis y a ESLint 10.12.0 es un cambio opcional a partir del 2026-10-20, en un solo commit que actualice esta tabla.
 
 | ID | Requisito |
 | --- | --- |
@@ -74,7 +74,6 @@ Versiones verificadas contra el registro de npm el 2026-10-12. La combinación N
 | --- | --- | --- |
 | `next` | 16.3.8 | Framework (App Router, exportación estática) |
 | `react`, `react-dom` | 19.3.0 | Librería de interfaz |
-| `motion` | 14.0.0 | Animaciones (sucesor del paquete `framer-motion`) |
 | `zustand` | 5.0.15 | Estado de sesión y preferencias |
 
 #### Dependencias de desarrollo
@@ -381,6 +380,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.7 | Por decisión del autor (D-80). §4.1: se retira `motion`, que ningún código usaba; todas las animaciones son CSS. |
 | 2026-10-13 | 2.6 | Durante M9, por delegación del autor. SYS-R36: se anota que los dos secretos de la publicación viven en GitHub y no son variables del proyecto. |
 | 2026-10-13 | 2.5 | Durante M8, por delegación del autor (D-77). §4.9: `preview` comprime con gzip las respuestas de texto (DEP-R20). Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 2.4 | Durante M7, por delegación del autor. SYS-R20: el script previo al pintado anota una pulsación temprana que salta el arranque (D-74). SYS-R47: orden de montaje de los armazones y barra dentro del panel (D-73); `data-mode` no pasa por `simple` durante la hidratación, defecto de M5 corregido con una prueba que lo reproduce. |

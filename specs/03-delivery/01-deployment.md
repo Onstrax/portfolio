@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.5 |
+| Versión | 1.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
@@ -112,7 +112,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | `frame-ancestors` | `'none'` |
 | `upgrade-insecure-requests` | Sin valor |
 
-`style-src-attr 'unsafe-inline'` es necesario porque la escena posiciona las zonas con el atributo `style` (STR-R23) y la librería de animación escribe estilos en línea. `img-src data:` permite el marcador de posición de la escena (AST-R35). `connect-src https://cloudflareinsights.com` permite que el script de analítica envíe sus datos (DEP-R25).
+`style-src-attr 'unsafe-inline'` es necesario porque la escena posiciona las zonas con el atributo `style` (STR-R23). `img-src data:` permite el marcador de posición de la escena (AST-R35). `connect-src https://cloudflareinsights.com` permite que el script de analítica envíe sus datos (DEP-R25).
 
 ### 4.7 Analítica
 
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.6 | Por decisión del autor (D-80). §4.6: se retira la mención de la librería de animación, que ya no existe. |
 | 2026-10-13 | 1.5 | §4.9: fecha de la primera publicación (DEP-R29). El flujo de publicación se ejecutó solo tras el CI en verde de ese commit y la comprobación posterior pasó contra la URL de producción. Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Tras la primera publicación, por delegación del autor (D-79). DEP-R25 era erróneo: el script de analítica no envía sus datos al propio dominio, sino a `https://cloudflareinsights.com`, y la política lo bloqueaba, con un error en la consola en cada página y sin registrar visitas. §4.6: `connect-src` admite ese origen. |
 | 2026-10-13 | 1.4 | Durante M9, por delegación del autor (D-78). DEP-R12: el flujo comprueba por sí mismo el resultado de `ci-ok` del commit, también en una ejecución manual. DEP-R13: `wrangler` se instala fuera del proyecto, en versión exacta y sin scripts de instalación. DEP-R15: permiso `checks: read` y sin registro de despliegues. DEP-R16: opción `--wait` y peticiones sin redirecciones. DEP-AC06 precisado. §4.9: URL de producción, comunicada por el autor tras crear el proyecto (A8). |

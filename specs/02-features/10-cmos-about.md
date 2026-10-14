@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.1 |
+| Versión | 1.2 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
@@ -55,7 +55,7 @@ export interface AboutText extends SectionTextBase {
 
 | ID | Requisito |
 | --- | --- |
-| CMOS-R02 | `content/facts.ts` contiene `stack` con estos elementos, en este orden: `Next.js`, `React`, `TypeScript`, `Tailwind CSS`, `Motion`, `Zustand`, `Vitest`, `Playwright`. Y `repository`, con `id: "repository"` y `href` igual a `SITE.repositoryUrl`. |
+| CMOS-R02 | `content/facts.ts` contiene `stack` con estos elementos, en este orden: `Next.js`, `React`, `TypeScript`, `Tailwind CSS`, `Zustand`, `Vitest`, `Playwright`. Y `repository`, con `id: "repository"` y `href` igual a `SITE.repositoryUrl`. |
 | CMOS-R03 | `stack` DEBE corresponder a las dependencias reales del proyecto (SYS §4.1). Si una se sustituye, esta lista se actualiza en el mismo cambio. |
 
 ### 4.3 Textos
@@ -107,10 +107,10 @@ Iconos propios de esta sección: `clipboard-check`, `layers` e `image`.
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
-| CMOS-AC01 | `facts.stack` es exactamente la lista de CMOS-R02, y cada elemento corresponde, sin distinguir mayúsculas, a una dependencia de `package.json`: `next`, `react`, `typescript`, `tailwindcss`, `motion`, `zustand`, `vitest` y `@playwright/test`. | Prueba unitaria |
+| CMOS-AC01 | `facts.stack` es exactamente la lista de CMOS-R02, y cada elemento corresponde, sin distinguir mayúsculas, a una dependencia de `package.json`: `next`, `react`, `typescript`, `tailwindcss`, `zustand`, `vitest` y `@playwright/test`. | Prueba unitaria |
 | CMOS-AC02 | `facts.repository.href` es igual a `SITE.repositoryUrl` y empieza por `https://github.com/`. | Prueba unitaria |
 | CMOS-AC03 | Cada idioma tiene tres elementos en `method` y tres en `quality`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
-| CMOS-AC04 | El componente renderiza cuatro `<h3>` con los títulos de §4.3 en ese orden, ocho chips de stack y un enlace externo al repositorio con `target="_blank"` y `rel="noopener noreferrer"`. | Prueba de componente |
+| CMOS-AC04 | El componente renderiza cuatro `<h3>` con los títulos de §4.3 en ese orden, siete chips de stack y un enlace externo al repositorio con `target="_blank"` y `rel="noopener noreferrer"`. | Prueba de componente |
 | CMOS-AC05 | `bootLines` es exactamente la tabla de §4.5. | Prueba unitaria |
 | CMOS-AC06 | En `desktop`, abrir la zona de la pila CMOS en `/es/` muestra el panel "Acerca de este sitio" con "Cómo se construyó" y el enlace "Código y especificaciones en GitHub"; en `/en/`, "About this site" con "How it was built". El display de diagnóstico no cambia al abrirlo. | Prueba E2E |
 | CMOS-AC07 | Antes de cada publicación, el autor confirma que las tres afirmaciones de `quality` siguen siendo ciertas (CMOS-R05) y revisa ambos idiomas (I18N-AC18). | Revisión manual del autor, registrada en el historial de esta spec |
@@ -133,6 +133,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.2 | Por decisión del autor (D-80). CMOS-R02, CMOS-AC01 y CMOS-AC04: `Motion` sale de la lista del stack, porque el sitio no lo usa: sus animaciones son CSS. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). CMOS-AC07: el autor revisó ambos idiomas (A4) el 2026-10-13. Las tres afirmaciones de `quality` tienen detrás los criterios de QLT que M8 deja verificados; la de lector de pantalla se apoya en las pruebas automáticas, y su comprobación manual con Orca queda aplazada (QLT 2.3, PLAN-R10): si encontrara un fallo, se corrige o se retira la frase (CMOS-R05). Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Pendiente de la revisión de contenido del autor (A4). `image`: el texto menciona las dos variantes de la escena (D-66). |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |
