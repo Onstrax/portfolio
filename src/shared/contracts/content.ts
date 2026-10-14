@@ -30,3 +30,12 @@ export type RepositoryVisibility = "public" | "private";
 
 /** Number of people in the team, the author included. 1 means individual work. */
 export type TeamSize = number;
+
+/** Text with one emphasized fragment (TSC-R58). `emphasis` appears exactly once inside `text`. */
+export interface EmphasizedText {
+  readonly text: string;
+  readonly emphasis: string;
+}
+
+/** A content element that may emphasize one fragment: a plain string or an `EmphasizedText`. */
+export type RichLine = string | EmphasizedText;

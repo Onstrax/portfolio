@@ -204,8 +204,34 @@ describe("findContentIssues", () => {
     expect(rulesOf({ facts: { stack: ["AWS", "CI/CD", "ECS FARGATE"] } })).toEqual([]);
   });
 
-  it("covers the twelve rules", () => {
-    expect(CONTENT_RULES).toHaveLength(12);
+  it("TSC-AC09: C13 reports an emphasis that is empty, the whole text or not found once", () => {
+    const line = (text: string, emphasis: string) => ({ text, emphasis });
+    const both = (es: unknown, en: unknown): Overrides => ({
+      text: { es: { ...TEXT_ES, lines: [es] }, en: { ...TEXT_EN, lines: [en] } },
+    });
+    const sound = both(
+      line("Más de 100 pruebas", "100 pruebas"),
+      line("Over 100 tests", "100 tests"),
+    );
+    expect(rulesOf(sound)).toEqual([]);
+    expect(rulesOf(both(line("Una frase", ""), line("A sentence", "sentence")))).toContain("C13");
+    expect(rulesOf(both(line("Una frase", "Una frase"), line("A sentence", "A")))).toEqual(["C13"]);
+    expect(rulesOf(both(line("Una frase", "otra"), line("A sentence", "A")))).toEqual(["C13"]);
+    expect(rulesOf(both(line("la a y la a", "la a"), line("A sentence", "A")))).toEqual(["C13"]);
+  });
+
+  it("TSC-AC09: C13 reports a line emphasized in one language and plain in the other", () => {
+    const overrides: Overrides = {
+      text: {
+        es: { ...TEXT_ES, lines: [{ text: "Una frase larga", emphasis: "frase" }] },
+        en: { ...TEXT_EN, lines: ["A long sentence"] },
+      },
+    };
+    expect(rulesOf(overrides)).toEqual(["C13"]);
+  });
+
+  it("covers the thirteen rules", () => {
+    expect(CONTENT_RULES).toHaveLength(13);
   });
 
   it("names the section, the path and the rule of every issue", () => {

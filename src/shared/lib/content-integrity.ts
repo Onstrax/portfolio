@@ -18,6 +18,7 @@ export const CONTENT_RULES = [
   "C10",
   "C11",
   "C12",
+  "C13",
 ] as const;
 export type ContentRule = (typeof CONTENT_RULES)[number];
 
@@ -45,6 +46,39 @@ type UnknownRecord = Readonly<Record<string, unknown>>;
 
 function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** `true` for an `EmphasizedText`: an object with exactly the string fields `text` and `emphasis`. */
+function isEmphasizedText(
+  value: unknown,
+): value is { readonly text: string; readonly emphasis: string } {
+  if (!isRecord(value)) return false;
+  const keys = Object.keys(value).sort();
+  return (
+    keys.join(",") === "emphasis,text" &&
+    typeof value["text"] === "string" &&
+    typeof value["emphasis"] === "string"
+  );
+}
+
+/** Rule C13: the fragment exists, is not the whole text and appears exactly once in it. */
+function checkEmphasis(text: string, emphasis: string, path: string, report: Report): void {
+  if (emphasis === "") {
+    report(path, "C13", "the emphasized fragment is empty");
+    return;
+  }
+  if (emphasis === text) {
+    report(path, "C13", "the emphasized fragment is the whole text");
+    return;
+  }
+  const occurrences = text.split(emphasis).length - 1;
+  if (occurrences !== 1) {
+    report(
+      path,
+      "C13",
+      `the emphasized fragment appears ${String(occurrences)} times in the text instead of once`,
+    );
+  }
 }
 
 function wordCount(value: string): number {
@@ -132,6 +166,10 @@ function compareTranslations(first: unknown, second: unknown, path: string, repo
     first.slice(0, second.length).forEach((item: unknown, index) => {
       compareTranslations(item, second[index], `${path}[${String(index)}]`, report);
     });
+    return;
+  }
+  if (isEmphasizedText(first) !== isEmphasizedText(second)) {
+    report(path, "C13", "the line is emphasized in one language and plain in the other");
     return;
   }
   if (isRecord(first) && isRecord(second)) {
@@ -267,7 +305,7 @@ function checkBootLines(lines: readonly unknown[], report: Report): void {
 }
 
 /**
- * Returns one issue for every breach of rules C1 to C12 in the given sections (TSC-R44).
+ * Returns one issue for every breach of rules C1 to C13 in the given sections (TSC-R44).
  * An empty list means the content is sound.
  */
 export function findContentIssues(
@@ -285,6 +323,7 @@ export function findContentIssues(
         for (const issue of findStringIssues(value)) report(path, issue.rule, issue.detail);
       }
       if (Array.isArray(value)) checkIdentifiers(value, path, report);
+      if (isEmphasizedText(value)) checkEmphasis(value.text, value.emphasis, path, report);
       if (!isRecord(value)) return;
       if ("start" in value && "end" in value) checkPeriod(value, path, report);
       if ("teamSize" in value) {
