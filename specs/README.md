@@ -37,10 +37,10 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | BOOT | [02-features/01-boot-sequence.md](02-features/01-boot-sequence.md) | Secuencia de arranque | Implementada |
 | SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Aprobada |
 | PNL | [02-features/03-detail-panel.md](02-features/03-detail-panel.md) | Modal, anterior/siguiente, historial, fragmentos | Implementada |
-| CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Aprobada |
-| PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Aprobada |
+| CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Implementada |
+| PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Implementada |
 | SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Aprobada |
-| RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Aprobada |
+| RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Implementada |
 | IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Aprobada |
 | FAN | [02-features/09-fan-ecosystem.md](02-features/09-fan-ecosystem.md) | Sección Ecosistema personal | Implementada |
 | CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Implementada |
@@ -306,3 +306,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-14 | Cierre de M9. El autor confirma la vista previa en LinkedIn y WhatsApp (SMP-AC17), revisa el flujo de publicación (TST-AC15) y completa la auditoría con lector de pantalla (QLT-AC27). DEP y PLAN pasan a "Implementada": las 23 specs lo están. Solo queda A7 (AST-AC06). |
 | 2026-10-14 | Versión 2, pendiente de aprobación del autor. Hechos F-22 a F-29 y decisiones D-82 a D-90. Enmendadas: VSN 2.4, SYS 2.8, STR 1.9, VIS 3.0, AST 3.3, TSC 2.4, I18N 1.3, QLT 3.0, TST 1.10, SCN 2.0, CPU 1.1, PSU 1.1, SSD 1.1, RAM 1.1, IO 1.2, SET 2.0, SMP 1.4, DEP 1.7 y PLAN 1.6, todas en "En revisión". BOOT, PNL, FAN y CMOS no cambian. |
 | 2026-10-14 | El autor aprueba todas las specs de la versión 2; las 19 enmendadas pasan a "Aprobada". Empieza M10. |
+| 2026-10-14 | Cierre de M10: CPU, RAM y PSU pasan a "Implementada". |
