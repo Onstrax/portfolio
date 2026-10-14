@@ -25,7 +25,10 @@ export const projectsEn = {
       name: "Thesis: post-quantum zero-knowledge authentication",
       tagline: "Ongoing research",
       highlights: [
-        "Co-designing a quantum-resistant Zero-Knowledge authentication protocol based on Learning with Errors (LWE); leading the LWE mathematical component.",
+        {
+          text: "Co-designing a quantum-resistant Zero-Knowledge authentication protocol based on Learning with Errors (LWE); leading the LWE mathematical component.",
+          emphasis: "quantum-resistant",
+        },
         "Theoretical framework completed; developing benchmarks for runtime, memory, network traffic and estimated security strength in bits.",
       ],
       note: "Advised at Universidad de los Andes.",
@@ -42,7 +45,10 @@ export const projectsEn = {
       tagline: "Secure digital banking simulation",
       highlights: [
         "Individually designed and built a P2P platform with applied security: JWT, Argon2id, AES-256-GCM, HMAC, immutable ledger and idempotency.",
-        "AI-assisted specification-driven development (SDD) and TDD; over 100 passing automated tests and ~94% reported code coverage.",
+        {
+          text: "AI-assisted specification-driven development (SDD) and TDD; over 100 passing automated tests and ~94% reported code coverage.",
+          emphasis: "~94% reported code coverage",
+        },
       ],
     },
     "dental-site": {
@@ -50,7 +56,10 @@ export const projectsEn = {
       tagline: "Production site for a real client",
       highlights: [
         "Designed, built and deployed the whole site: treatments, team, FAQ, clinic map and legal pages.",
-        "WhatsApp call to action and contact form; it has helped attract an estimated 2-3 new clients per month.",
+        {
+          text: "WhatsApp call to action and contact form; it has helped attract an estimated 2-3 new clients per month.",
+          emphasis: "2-3 new clients per month",
+        },
         "Ongoing maintenance since launch.",
       ],
     },
@@ -90,6 +99,21 @@ export const projectsEn = {
         "Heuristic-based approximate solution to the NP-complete pancake sorting problem.",
       ],
       award: "Two runner-up awards in its section",
+    },
+    "respiratory-etl": {
+      name: "Acute respiratory disease ETL for Bogotá",
+      tagline: "Data engineering",
+      highlights: [
+        "Built the whole ETL pipeline: extraction, transformation and incremental loading into a SQLite data warehouse served through a FastAPI API. Teammates trained a regression model and built the Power BI dashboards.",
+      ],
+    },
+    "sdg-text-classifier": {
+      name: "Sustainable Development Goals text classifier",
+      tagline: "Machine Learning",
+      highlights: [
+        "Trained and evaluated an SVM model that classifies texts into 4 Sustainable Development Goals, and explored and processed the data.",
+        "Built the Next.js web interface and its connection to the model API, implemented data augmentation and compared its results, and coordinated the team’s deliverables.",
+      ],
     },
   },
 } satisfies ProjectsText;

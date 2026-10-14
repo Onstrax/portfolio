@@ -8,7 +8,7 @@ import { projectsFacts } from "./facts";
 const { projects } = projectsFacts;
 
 describe("projects facts", () => {
-  it("SSD-AC01: holds the nine projects in order with their category, team and repository", () => {
+  it("SSD-AC01: holds the eleven projects in order with their category, team and repository", () => {
     expect(projects.map((project) => project.id)).toEqual([...PROJECT_IDS]);
     expect(projects.map((project) => project.featured)).toEqual([
       true,
@@ -20,18 +20,22 @@ describe("projects facts", () => {
       false,
       false,
       false,
+      false,
+      false,
     ]);
-    expect(projects.map((project) => project.teamSize)).toEqual([2, 6, 1, 1, 4, 4, 3, 5, 2]);
+    expect(projects.map((project) => project.teamSize)).toEqual([2, 6, 1, 1, 4, 4, 3, 5, 2, 3, 3]);
     expect(projects.map((project) => project.repository)).toEqual([
       "public",
       "public",
       "public",
       "private",
       "private",
-      "private",
+      "public",
       "public",
       "private",
       "private",
+      "public",
+      "public",
     ]);
   });
 
@@ -46,10 +50,12 @@ describe("projects facts", () => {
       ["Angular"],
       ["Angular", "Spring", "MySQL"],
       ["Java", "Python"],
+      ["Python", "pandas", "FastAPI", "SQLAlchemy", "SQLite"],
+      ["Python", "scikit-learn", "FastAPI", "Next.js"],
     ]);
   });
 
-  it("SSD-AC01: holds the nine links with their exact addresses", () => {
+  it("SSD-AC01: holds the twelve links with their exact addresses", () => {
     const links = projects.flatMap((project) =>
       project.links.map((link) => `${project.id} ${link.id} ${link.href}`),
     );
@@ -60,9 +66,12 @@ describe("projects facts", () => {
       "andespace wiki https://github.com/G33-Moviles-2026-1/Wiki",
       "habicapital code https://github.com/Onstrax/HabiCapital",
       "dental-site live-site https://martha-landing.netlify.app/",
+      "email-blacklist repository https://github.com/DevOps-Misw4304-202610/Proyecto1",
       "ahorrapp frontend https://github.com/Onstrax/AhorrApp",
       "ahorrapp backend https://github.com/Onstrax/AhorrApp-Backend",
       "ahorrapp landing https://github.com/Onstrax/Ahorrapp-Landing",
+      "respiratory-etl repository https://github.com/Onstrax/ETL",
+      "sdg-text-classifier repository https://github.com/Onstrax/Analitica-de-textos",
     ]);
   });
 });
@@ -84,7 +93,7 @@ describe("projects texts", () => {
   it("SSD-AC03: both languages have the same highlights, awards and notes per project", () => {
     for (const text of [projectsEs, projectsEn]) {
       expect(PROJECT_IDS.map((id) => text.projects[id].highlights.length)).toEqual([
-        2, 2, 2, 3, 1, 1, 1, 1, 2,
+        2, 2, 2, 3, 1, 1, 1, 1, 2, 1, 2,
       ]);
       expect(PROJECT_IDS.filter((id) => "award" in text.projects[id])).toEqual([
         "andespace",
@@ -105,7 +114,13 @@ describe("projects texts", () => {
   });
 
   it("separates the percentage sign with a non-breaking space in Spanish only (I18N-R40)", () => {
-    expect(projectsEs.projects.habicapital.highlights[1]).toContain("~94 % de cobertura");
-    expect(projectsEn.projects.habicapital.highlights[1]).toContain("~94% reported");
+    expect(projectsEs.projects.habicapital.highlights[1]).toEqual({
+      text: expect.stringContaining("~94 % de cobertura") as unknown,
+      emphasis: "~94 % de cobertura reportada",
+    });
+    expect(projectsEn.projects.habicapital.highlights[1]).toEqual({
+      text: expect.stringContaining("~94% reported") as unknown,
+      emphasis: "~94% reported code coverage",
+    });
   });
 });

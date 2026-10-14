@@ -25,7 +25,10 @@ export const projectsEs = {
       name: "Tesis: autenticación poscuántica de conocimiento cero",
       tagline: "Investigación en desarrollo",
       highlights: [
-        "Codiseño de un protocolo de autenticación Zero-Knowledge resistente a ataques cuánticos, basado en Learning with Errors (LWE); lidero el componente matemático LWE.",
+        {
+          text: "Codiseño de un protocolo de autenticación Zero-Knowledge resistente a ataques cuánticos, basado en Learning with Errors (LWE); lidero el componente matemático LWE.",
+          emphasis: "resistente a ataques cuánticos",
+        },
         "Marco teórico completado; en desarrollo, benchmarks de tiempo, memoria, tráfico de red y estimación de seguridad en bits.",
       ],
       note: "Asesorada en la Universidad de los Andes.",
@@ -42,7 +45,10 @@ export const projectsEs = {
       tagline: "Simulación de banca digital segura",
       highlights: [
         "Diseñé y construí individualmente una plataforma P2P con seguridad aplicada: JWT, Argon2id, AES-256-GCM, HMAC, ledger inmutable e idempotencia.",
-        "Desarrollo asistido por IA con especificaciones (SDD) y TDD; más de 100 pruebas automatizadas exitosas y ~94 % de cobertura reportada.",
+        {
+          text: "Desarrollo asistido por IA con especificaciones (SDD) y TDD; más de 100 pruebas automatizadas exitosas y ~94 % de cobertura reportada.",
+          emphasis: "~94 % de cobertura reportada",
+        },
       ],
     },
     "dental-site": {
@@ -50,7 +56,10 @@ export const projectsEs = {
       tagline: "Sitio en producción para un cliente real",
       highlights: [
         "Diseñé, desarrollé y publiqué el sitio completo: tratamientos, profesionales, preguntas frecuentes, mapa de sedes y páginas legales.",
-        "Llamada a la acción por WhatsApp y formulario de contacto; ha contribuido a atraer ~2-3 nuevos clientes al mes.",
+        {
+          text: "Llamada a la acción por WhatsApp y formulario de contacto; ha contribuido a atraer ~2-3 nuevos clientes al mes.",
+          emphasis: "~2-3 nuevos clientes al mes",
+        },
         "Mantenimiento continuo desde su publicación.",
       ],
     },
@@ -90,6 +99,21 @@ export const projectsEs = {
         "Solución aproximada, basada en heurística, al problema NP-completo de ordenamiento de panqueques.",
       ],
       award: "Dos segundos puestos de su sección",
+    },
+    "respiratory-etl": {
+      name: "ETL de enfermedades respiratorias agudas en Bogotá",
+      tagline: "Ingeniería de datos",
+      highlights: [
+        "Construí todo el proceso ETL: extracción, transformación y carga incremental a un data warehouse en SQLite, servido con una API en FastAPI. El resto del equipo entrenó un modelo de regresión y creó los tableros de Power BI.",
+      ],
+    },
+    "sdg-text-classifier": {
+      name: "Clasificador de textos según los Objetivos de Desarrollo Sostenible",
+      tagline: "Machine Learning",
+      highlights: [
+        "Entrené y evalué un modelo SVM que clasifica textos en 4 Objetivos de Desarrollo Sostenible, y exploré y procesé los datos.",
+        "Desarrollé la interfaz web en Next.js y su conexión con la API del modelo, implementé la aumentación de datos y comparé sus resultados, y coordiné las entregas del equipo.",
+      ],
     },
   },
 } satisfies ProjectsText;

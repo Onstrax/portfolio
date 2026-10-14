@@ -5,6 +5,7 @@ import { Chip } from "@/shared/ui/chip";
 import { ExternalLink } from "@/shared/ui/external-link";
 import { FactChips } from "@/shared/ui/fact-chips";
 import { AwardIcon } from "@/shared/ui/icons/award";
+import { RichText } from "@/shared/ui/rich-text";
 
 import { projectName } from "../lib/project-name";
 import type { ProjectFact, ProjectsText } from "../types";
@@ -41,7 +42,11 @@ export function ProjectCard({ project, text, locale, id }: ProjectCardProps) {
           <Chip key={technology}>{technology}</Chip>
         ))}
       </div>
-      <BulletList items={highlights} />
+      <BulletList
+        items={highlights.map((line, index) => (
+          <RichText key={index} line={line} />
+        ))}
+      />
       {note !== undefined && <p className="text-ink-muted text-sm leading-5">{note}</p>}
       {project.links.length > 0 && (
         <ul className="flex flex-wrap gap-x-4 gap-y-1">

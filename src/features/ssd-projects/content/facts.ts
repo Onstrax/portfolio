@@ -55,8 +55,8 @@ export const projectsFacts = {
       featured: false,
       stack: ["AWS", "GitHub Actions", "CI/CD"],
       teamSize: 4,
-      repository: "private",
-      links: [],
+      repository: "public",
+      links: [{ id: "repository", href: "https://github.com/DevOps-Misw4304-202610/Proyecto1" }],
     },
     {
       id: "ahorrapp",
@@ -87,6 +87,22 @@ export const projectsFacts = {
       teamSize: 2,
       repository: "private",
       links: [],
+    },
+    {
+      id: "respiratory-etl",
+      featured: false,
+      stack: ["Python", "pandas", "FastAPI", "SQLAlchemy", "SQLite"],
+      teamSize: 3,
+      repository: "public",
+      links: [{ id: "repository", href: "https://github.com/Onstrax/ETL" }],
+    },
+    {
+      id: "sdg-text-classifier",
+      featured: false,
+      stack: ["Python", "scikit-learn", "FastAPI", "Next.js"],
+      teamSize: 3,
+      repository: "public",
+      links: [{ id: "repository", href: "https://github.com/Onstrax/Analitica-de-textos" }],
     },
   ],
 } as const satisfies ProjectsFacts;

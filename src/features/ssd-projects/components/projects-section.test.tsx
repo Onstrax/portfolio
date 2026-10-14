@@ -16,14 +16,14 @@ function article(id: string): HTMLElement {
 }
 
 describe("ProjectsSection", () => {
-  it("SSD-AC04: renders four featured and five compact projects, each with its anchor", () => {
+  it("SSD-AC04: renders four featured and seven compact projects, each with its anchor", () => {
     render(<ProjectsSection locale="es" idScope="" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Destacados",
       "Más proyectos",
     ]);
     expect(articlesUnder("Destacados")).toHaveLength(4);
-    expect(articlesUnder("Más proyectos")).toHaveLength(5);
+    expect(articlesUnder("Más proyectos")).toHaveLength(7);
     expect(screen.getAllByRole("article").map((item) => item.id)).toEqual(
       PROJECT_IDS.map((id) => `projects-${id}`),
     );
@@ -55,7 +55,7 @@ describe("ProjectsSection", () => {
     ).toBeInTheDocument();
   });
 
-  it("SSD-AC05: labels the five private repositories and links none of them", () => {
+  it("SSD-AC05: labels the four private repositories and links none of them", () => {
     render(<ProjectsSection locale="es" idScope="" />);
     const privateProjects = screen
       .getAllByRole("article")
@@ -63,7 +63,6 @@ describe("ProjectsSection", () => {
     expect(privateProjects.map((item) => item.id)).toEqual([
       "projects-dental-site",
       "projects-monitoring-platform",
-      "projects-email-blacklist",
       "projects-dogspa",
       "projects-algorithms",
     ]);
@@ -75,10 +74,10 @@ describe("ProjectsSection", () => {
     }
   });
 
-  it("SSD-AC06: renders nine external links that open safely in a new tab", () => {
+  it("SSD-AC06: renders twelve external links that open safely in a new tab", () => {
     render(<ProjectsSection locale="en" idScope="" />);
     const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(9);
+    expect(links).toHaveLength(12);
     for (const link of links) {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -107,5 +106,26 @@ describe("ProjectsSection", () => {
     expect(
       within(article("projects-thesis")).getByText("Asesorada en la Universidad de los Andes."),
     ).toBeInTheDocument();
+  });
+
+  it("SSD-AC13: emphasizes exactly the three results of the spec", () => {
+    const spanish = render(<ProjectsSection locale="es" idScope="" />);
+    const emphasized = (container: HTMLElement) =>
+      [...container.querySelectorAll("strong")].map((element) => [
+        element.closest("article")?.id,
+        element.textContent,
+      ]);
+    expect(emphasized(spanish.container)).toEqual([
+      ["projects-thesis", "resistente a ataques cuánticos"],
+      ["projects-habicapital", "~94\u00a0% de cobertura reportada"],
+      ["projects-dental-site", "~2-3 nuevos clientes al mes"],
+    ]);
+    spanish.unmount();
+    const english = render(<ProjectsSection locale="en" idScope="" />);
+    expect(emphasized(english.container)).toEqual([
+      ["projects-thesis", "quantum-resistant"],
+      ["projects-habicapital", "~94% reported code coverage"],
+      ["projects-dental-site", "2-3 new clients per month"],
+    ]);
   });
 });

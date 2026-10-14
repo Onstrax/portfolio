@@ -10,7 +10,7 @@ import { projectName } from "./project-name";
 describe("projects boot lines", () => {
   it("SSD-AC07: are exactly the two lines of the spec", () => {
     expect(ssdProjectsSection.bootLines).toEqual([
-      { message: "nvme0n1: 9 projects mounted, 4 featured", status: "ok" },
+      { message: "nvme0n1: 11 projects mounted, 4 featured", status: "ok" },
       { message: "Loading thesis: post-quantum zero-knowledge authentication", status: "none" },
     ]);
   });
@@ -18,7 +18,7 @@ describe("projects boot lines", () => {
   it("omits the second line when no project is featured", () => {
     const compact = projectsFacts.projects.filter((project) => !project.featured);
     expect(buildProjectsBootLines({ projects: compact }, projectsEn)).toEqual([
-      { message: "nvme0n1: 5 projects mounted, 0 featured", status: "ok" },
+      { message: "nvme0n1: 7 projects mounted, 0 featured", status: "ok" },
     ]);
   });
 });

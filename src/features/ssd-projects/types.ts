@@ -1,4 +1,9 @@
-import type { LinkFact, RepositoryVisibility, TeamSize } from "@/shared/contracts/content";
+import type {
+  LinkFact,
+  RepositoryVisibility,
+  RichLine,
+  TeamSize,
+} from "@/shared/contracts/content";
 import type { SectionTextBase } from "@/shared/contracts/section";
 
 export const PROJECT_IDS = [
@@ -11,6 +16,8 @@ export const PROJECT_IDS = [
   "ahorrapp",
   "dogspa",
   "algorithms",
+  "respiratory-etl",
+  "sdg-text-classifier",
 ] as const;
 export type ProjectId = (typeof PROJECT_IDS)[number];
 
@@ -43,7 +50,8 @@ export interface ProjectsFacts {
 export interface ProjectText {
   readonly name?: string;
   readonly tagline: string;
-  readonly highlights: readonly string[];
+  /** May emphasize one fragment each (TSC-R58). */
+  readonly highlights: readonly RichLine[];
   /** Recognition received, if any. */
   readonly award?: string;
   /** Short clarification, if any. */
