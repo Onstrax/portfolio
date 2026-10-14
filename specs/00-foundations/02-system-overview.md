@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.5 |
+| Versión | 2.6 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN |
 
@@ -269,7 +269,7 @@ src/app/
 | ID | Requisito |
 | --- | --- |
 | SYS-R35 | El proyecto DEBE compilar con una única variable obligatoria, `NEXT_PUBLIC_SITE_URL`: el origen público del sitio, sin barra final (por ejemplo `https://ejemplo.pages.dev`). Se usa para URLs absolutas en metadatos, `hreflang` y sitemap. Si falta en una compilación de producción, la compilación DEBE fallar con un mensaje que nombre la variable. |
-| SYS-R36 | El repositorio DEBE incluir `.env.example` con todas las variables y sin valores secretos. El proyecto no maneja ningún secreto. Si DEP añade variables de despliegue, DEBE registrarlas también en esta sección. |
+| SYS-R36 | El repositorio DEBE incluir `.env.example` con todas las variables y sin valores secretos. El proyecto no maneja ningún secreto. Si DEP añade variables de despliegue, DEBE registrarlas también en esta sección. DEP no añade ninguna al proyecto: los dos secretos de la publicación (DEP-R14) se guardan en GitHub y solo los lee `deploy.yml`. |
 
 ### 4.11 Cadena de suministro y seguridad
 
@@ -381,6 +381,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 2.6 | Durante M9, por delegación del autor. SYS-R36: se anota que los dos secretos de la publicación viven en GitHub y no son variables del proyecto. |
 | 2026-10-13 | 2.5 | Durante M8, por delegación del autor (D-77). §4.9: `preview` comprime con gzip las respuestas de texto (DEP-R20). Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 2.4 | Durante M7, por delegación del autor. SYS-R20: el script previo al pintado anota una pulsación temprana que salta el arranque (D-74). SYS-R47: orden de montaje de los armazones y barra dentro del panel (D-73); `data-mode` no pasa por `simple` durante la hidratación, defecto de M5 corregido con una prueba que lo reproduce. |
 | 2026-10-13 | 2.3 | Durante M5, por delegación del autor (D-68). Nuevo SYS-R52 y árbol de `src/app/`: el elemento `<html>` pasa a los layouts de grupo, con un layout nuevo en `(plain)`, porque es la única forma de que el script previo al pintado quede en `<head>` solo en las páginas de la escena. SYS-R46: dos enlaces de salto, uno por modo. SYS-R47: `SceneLayer` restablece `data-boot` tras una navegación del cliente. SYS-R50: variante `no-hover`. SYS-R05: `agentRules: false`. SYS-R44 precisado. |

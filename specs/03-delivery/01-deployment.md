@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.3 |
+| Versión | 1.4 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
@@ -58,11 +58,11 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 
 | ID | Requisito |
 | --- | --- |
-| DEP-R12 | El flujo `.github/workflows/deploy.yml` se ejecuta cuando el flujo de CI termina bien sobre un commit de `main` (evento `workflow_run`) y también a petición manual (`workflow_dispatch`). Nunca se ejecuta para un commit cuyo trabajo `ci-ok` no haya terminado bien (TST-R44). |
-| DEP-R13 | El flujo hace, en este orden, sobre el mismo commit que pasó el CI: (1) instala con el lockfile congelado; (2) ejecuta `pnpm assets:check --release`, que falla si el máster de la escena es provisional (AST-R45); (3) ejecuta `pnpm build` con `NEXT_PUBLIC_SITE_URL` igual a la URL de producción; (4) sube `out/` al proyecto con `wrangler pages deploy`, indicando la rama `main`; (5) ejecuta la comprobación de DEP-R16 contra la URL de producción. |
+| DEP-R12 | El flujo `.github/workflows/deploy.yml` se ejecuta cuando el flujo de CI termina bien sobre un commit de `main` (evento `workflow_run`) y también a petición manual (`workflow_dispatch`). Nunca se ejecuta para un commit cuyo trabajo `ci-ok` no haya terminado bien (TST-R44): con `workflow_run`, solo continúa si el CI se lanzó por un `push` a `main` y terminó bien; y en los dos casos, antes de instalar nada, consulta el resultado del trabajo `ci-ok` de ese commit y termina con error si no es correcto, de modo que una ejecución manual tampoco publica un commit sin CI en verde. Una ejecución manual solo se admite sobre `main`. |
+| DEP-R13 | El flujo hace, en este orden, sobre el mismo commit que pasó el CI: (1) instala con el lockfile congelado; (2) ejecuta `pnpm assets:check --release`, que falla si el máster de la escena es provisional (AST-R45); (3) ejecuta `pnpm build` con `NEXT_PUBLIC_SITE_URL` igual a la URL de producción; (4) sube `out/` al proyecto con `wrangler pages deploy`, indicando la rama `main`; (5) ejecuta la comprobación de DEP-R16 contra la URL de producción, con una espera de hasta 120 segundos. `wrangler` no es una dependencia del sitio: el flujo lo instala con npm fuera del repositorio, en la versión exacta que fija su variable `WRANGLER_VERSION`, publicada al menos 7 días antes (el mismo criterio que SYS-R37 aplica a las dependencias), y sin ejecutar scripts de instalación. Solo el paso que publica recibe los dos secretos. |
 | DEP-R14 | El flujo usa dos secretos del repositorio, `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`, y ninguno más. El token tiene únicamente el permiso de edición de Cloudflare Pages sobre la cuenta. |
-| DEP-R15 | El flujo declara `permissions: contents: read`, más `deployments: write` si registra el despliegue en GitHub. Sus acciones se referencian por el SHA completo de su commit y solo pueden ser de las organizaciones `actions`, `pnpm` y `cloudflare`. No se ejecutan dos publicaciones a la vez: una nueva espera a que termine la anterior. |
-| DEP-R16 | `scripts/smoke-test.mjs` recibe una URL base y comprueba, con peticiones HTTP: que `/`, `/es/`, `/en/`, `/es/projects/` y `/en/cv/` responden 200; que `/es/` declara como canónica una URL que empieza por la URL base; que una ruta inexistente responde 404; que `/robots.txt` y `/sitemap.xml` responden 200; y que la respuesta de `/es/` incluye las cabeceras `Content-Security-Policy` y `X-Content-Type-Options`. Termina con error, indicando qué falló, si alguna comprobación no se cumple. |
+| DEP-R15 | El flujo declara `permissions: contents: read` y `checks: read`; el segundo le permite consultar el resultado de `ci-ok` (DEP-R12). No registra el despliegue en GitHub. Sus acciones se referencian por el SHA completo de su commit y solo pueden ser de las organizaciones `actions`, `pnpm` y `cloudflare`. No se ejecutan dos publicaciones a la vez: una nueva espera a que termine la anterior. |
+| DEP-R16 | `scripts/smoke-test.mjs` recibe una URL base y comprueba, con peticiones HTTP: que `/`, `/es/`, `/en/`, `/es/projects/` y `/en/cv/` responden 200; que `/es/` declara como canónica una URL que empieza por la URL base; que una ruta inexistente responde 404; que `/robots.txt` y `/sitemap.xml` responden 200; y que la respuesta de `/es/` incluye las cabeceras `Content-Security-Policy` y `X-Content-Type-Options`. Termina con error, indicando qué falló, si alguna comprobación no se cumple. Las peticiones no siguen redirecciones. Admite la opción `--wait <segundos>`: repite las comprobaciones cada 5 segundos hasta que todas se cumplen o se agota ese tiempo, porque el alojamiento puede tardar unos segundos en servir una publicación recién subida. |
 | DEP-R17 | Si la comprobación falla, el flujo termina con error. La versión anterior se restaura desde el panel de Cloudflare Pages, que conserva los despliegues previos, y el defecto se corrige con un nuevo commit. |
 
 ### 4.5 Cabeceras
@@ -139,7 +139,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 
 | Dato | Valor |
 | --- | --- |
-| URL de producción | Se anota al crear el proyecto de Cloudflare Pages |
+| URL de producción | `https://juan-esteban-alvarez.pages.dev` |
 | Fecha de la primera publicación | Se anota al completar el hito M9 del plan |
 
 ## 5. Criterios de aceptación
@@ -151,7 +151,7 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | DEP-AC03 | Ninguna política contiene `'unsafe-inline'` ni `'unsafe-eval'` en `script-src`. | Prueba de exportación |
 | DEP-AC04 | Con una carpeta de ejemplo, `build-headers.mjs` genera los hashes correctos de dos scripts en línea, ignora un bloque `application/ld+json`, reúne en uno los scripts de datos de Next.js (DEP-R32), y falla cuando la política de un documento superaría los 2000 caracteres. | Prueba de script |
 | DEP-AC05 | Las respuestas de `pnpm preview` para `/es/` incluyen las cabeceras de §4.5 y la política del documento, sin la directiva `upgrade-insecure-requests` (DEP-R20), y durante las pruebas E2E no se registra ninguna infracción de la política (QLT-AC21). | Prueba E2E |
-| DEP-AC06 | `deploy.yml` se dispara solo con `workflow_run` del flujo de CI sobre `main` con resultado correcto y con `workflow_dispatch`; referencia únicamente los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID`; toda línea `uses:` apunta a un SHA de 40 caracteres de una organización admitida; y ejecuta `assets:check --release` antes de compilar. | Prueba unitaria que lee el archivo |
+| DEP-AC06 | `deploy.yml` se dispara solo con `workflow_run` del flujo de CI sobre `main` con resultado correcto y con `workflow_dispatch`; referencia únicamente los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` y declara solo los permisos de DEP-R15; toda línea `uses:` apunta a un SHA de 40 caracteres de una organización admitida; y ejecuta `assets:check --release` antes de compilar. | Prueba unitaria que lee el archivo |
 | DEP-AC07 | `smoke-test.mjs`, contra un servidor de ejemplo, termina bien cuando se cumplen todas las comprobaciones de DEP-R16 y con error cuando falta la cabecera de la política, cuando una página responde 500 y cuando la ruta inexistente responde 200. | Prueba de script |
 | DEP-AC08 | `LICENSE` contiene el texto de la licencia MIT con el nombre del autor. | Prueba unitaria que lee el archivo |
 | DEP-AC09 | La URL de producción sirve el sitio; `smoke-test.mjs` pasa contra ella; y el Observatorio HTTP de Mozilla le da una calificación de A o superior. | Revisión manual del autor tras la primera publicación, registrada en el historial de esta spec |
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.4 | Durante M9, por delegación del autor (D-78). DEP-R12: el flujo comprueba por sí mismo el resultado de `ci-ok` del commit, también en una ejecución manual. DEP-R13: `wrangler` se instala fuera del proyecto, en versión exacta y sin scripts de instalación. DEP-R15: permiso `checks: read` y sin registro de despliegues. DEP-R16: opción `--wait` y peticiones sin redirecciones. DEP-AC06 precisado. §4.9: URL de producción, comunicada por el autor tras crear el proyecto (A8). |
 | 2026-10-13 | 1.3 | Durante M8, por delegación del autor (D-77). DEP-R20: el servidor de `preview` comprime con gzip las respuestas de texto. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor: un requisito resultó inviable con el contenido real. Nuevo DEP-R32: los scripts de datos de Next.js se reúnen en uno por documento antes de calcular los hashes, porque 52 hashes no caben en una línea de `_headers`. DEP-AC04 ampliado. |
 | 2026-10-13 | 1.1 | Decidido por delegación del autor durante M0, tras fallar WebKit en el primer CI. DEP-R20 y DEP-AC05: el servidor de `preview` retira `upgrade-insecure-requests` de la política, porque sirve por HTTP; `out/_headers` no cambia. |
