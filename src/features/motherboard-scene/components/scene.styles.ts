@@ -16,11 +16,11 @@ export const IMAGE_STATES = {
   /** Active and not decoded yet: on top, invisible. */
   pending: `${IMAGE_BASE} z-1 opacity-0`,
   /** Active and decoded: fades in over whatever was shown (M-11). */
-  shown: `${IMAGE_BASE} z-1 opacity-100 transition-opacity duration-(--duration-base) ease-out`,
+  shown: `${IMAGE_BASE} z-1 opacity-100 transition-opacity duration-(--duration-base) ease-out motion-reduce:duration-(--duration-fast)`,
   /** Replaced, but the active one is not decoded yet: stays visible. */
   kept: `${IMAGE_BASE} opacity-100`,
   /** Replaced: disappears once the active one has faded in over it. */
-  replaced: `${IMAGE_BASE} opacity-0 transition-opacity delay-(--duration-base) duration-0`,
+  replaced: `${IMAGE_BASE} opacity-0 transition-opacity delay-(--duration-base) duration-0 motion-reduce:delay-(--duration-fast)`,
 } as const;
 
 export type ImageState = keyof typeof IMAGE_STATES;
@@ -62,7 +62,7 @@ export const LABEL_NAME =
   "font-mono text-sm leading-5 font-semibold tracking-[0.06em] text-on-dark uppercase";
 export const LABEL_CONTENT = "font-mono text-xs leading-4 text-on-dark-muted";
 
-const HINT_BASE = `${DARK_PLATE} pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) w-max max-w-[calc(100%-1rem)] -translate-x-1/2 px-3 py-2 text-sm leading-5 transition-[opacity,visibility] duration-(--duration-base) ease-out`;
+const HINT_BASE = `${DARK_PLATE} pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) w-max max-w-[calc(100%-1rem)] -translate-x-1/2 px-3 py-2 text-sm leading-5 transition-[opacity,visibility] duration-(--duration-base) ease-out motion-reduce:duration-(--duration-fast)`;
 
 /** Appearance and removal of the hint (M-12). */
 export const HINT_STATES = {
