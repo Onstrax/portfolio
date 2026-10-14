@@ -254,7 +254,7 @@ Los proyectos que no aparecen en la segunda tabla no tienen enlaces.
 | `name` | Clasificador de textos según los Objetivos de Desarrollo Sostenible | Sustainable Development Goals text classifier |
 | `tagline` | Machine Learning | Machine Learning |
 | `highlights[0]` | Entrené y evalué un modelo SVM que clasifica textos en 4 Objetivos de Desarrollo Sostenible, y exploré y procesé los datos. | Trained and evaluated an SVM model that classifies texts into 4 Sustainable Development Goals, and explored and processed the data. |
-| `highlights[1]` | Desarrollé la interfaz web en Next.js y su conexión con la API del modelo, implementé la aumentación de datos y comparé sus resultados, y coordiné las entregas del equipo. | Built the Next.js web interface and its connection to the model API, implemented data augmentation and compared its results, and coordinated the team's deliverables. |
+| `highlights[1]` | Desarrollé la interfaz web en Next.js y su conexión con la API del modelo, implementé la aumentación de datos y comparé sus resultados, y coordiné las entregas del equipo. | Built the Next.js web interface and its connection to the model API, implemented data augmentation and compared its results, and coordinated the team’s deliverables. |
 
 ### 4.4 Presentación
 
@@ -302,7 +302,7 @@ Iconos propios de esta sección: `star` y `folder`.
 | `decisions[0].options` | Un protocolo interactivo o uno no interactivo; y, para LWE, la variante binaria, Ring-LWE, Module-LWE o la de redondeo (Learning with Rounding). | An interactive or a non-interactive protocol; and, for LWE, the binary, Ring-LWE, Module-LWE or rounding (Learning with Rounding) variant. |
 | `decisions[0].choice` | Un protocolo no interactivo basado en Module-LWE. | A non-interactive protocol based on Module-LWE. |
 | `decisions[0].reason` | Los dos se parametrizan con facilidad hasta alcanzar un objetivo de seguridad concreto, son ligeros y funcionan en dispositivos de gama baja. | Both can be tuned easily to reach a given security target, are lightweight and run on low-end devices. |
-| `changes[0]` | La primera versión del prototipo podía filtrar el secreto del usuario. La rediseñamos: en lugar de enviar el compromiso por la red, ahora solo se envían sus bits altos, que el verificador reconstruye. | The first version of the prototype could leak the user's secret, so it was redesigned: instead of sending the commitment over the network, it now sends only its high bits, which the verifier reconstructs. |
+| `changes[0]` | La primera versión del prototipo podía filtrar el secreto del usuario. La rediseñamos: en lugar de enviar el compromiso por la red, ahora solo se envían sus bits altos, que el verificador reconstruye. | The first version of the prototype could leak the user’s secret, so it was redesigned: instead of sending the commitment over the network, it now sends only its high bits, which the verifier reconstructs. |
 | `outcome[0]` | El tráfico de red pasó **de megabytes a pocos kilobytes**. | Network traffic went **from megabytes down to a few kilobytes**. |
 | `outcome[1]` | El tiempo de ejecución pasó de varios segundos a **menos de medio segundo**. | Runtime went from several seconds to **under half a second**. |
 | `outcome[2]` | El marco teórico está completo; los benchmarks de tiempo, memoria, tráfico de red y seguridad en bits siguen en desarrollo. | The theoretical framework is complete; benchmarks for runtime, memory, network traffic and security in bits are still in progress. |
@@ -314,7 +314,7 @@ Iconos propios de esta sección: `star` y `folder`.
 | --- | --- | --- |
 | `title` | AndeSpace | AndeSpace |
 | `description` | Caso de estudio de AndeSpace: una app para reservar espacios de la universidad y coordinarse con amigos según sus horarios. | AndeSpace case study: an app to book university spaces and coordinate with friends based on their schedules. |
-| `problem[0]` | En la universidad había espacios desaprovechados, y no existía una forma sencilla de reservar espacios para grupos ni de organizarse con amigos según sus horarios. | University spaces went unused, and there was no simple way to book group spaces or to get together with friends based on everyone's schedule. |
+| `problem[0]` | En la universidad había espacios desaprovechados, y no existía una forma sencilla de reservar espacios para grupos ni de organizarse con amigos según sus horarios. | University spaces went unused, and there was no simple way to book group spaces or to get together with friends based on everyone’s schedule. |
 | `problem[1]` | Sin ella se desperdician espacios y tiempo, y los grupos no llegan a coordinarse porque encontrar un horario común cuesta demasiado. | Without it, spaces and time are wasted, and groups fail to coordinate because finding a common slot takes too much effort. |
 | `team` | Equipo de 6: tres personas en la app de Kotlin y tres en la de Flutter, todas también en el backend y la base de datos compartidos. Yo trabajé en la de Flutter. | Team of 6: three people on the Kotlin app and three on the Flutter app, all of them also on the shared backend and database. Worked on the Flutter app. |
 | `contributions[0]` | Diseñé y construí la pantalla de inicio, la búsqueda, la reserva de salones y la red de amigos con estados de visibilidad (ocupado, en casa, libre…). | Designed and built the home screen, search, classroom booking and the friends network with visibility statuses (busy, at home, free…). |
@@ -325,8 +325,8 @@ Iconos propios de esta sección: `star` y `folder`.
 | `decisions[0].reason` | Reducir la fricción, que la app se entendiera sin explicaciones y no abrumar a quien la usa. | To reduce friction, make the app understandable without explanations and avoid overwhelming its users. |
 | `decisions[1].options` | Mostrar siempre a los amigos o no. | Always showing friends or not. |
 | `decisions[1].choice` | Que cada persona decida su visibilidad frente a sus amigos. | Letting each person decide how visible they are to their friends. |
-| `decisions[1].reason` | La privacidad la controla el usuario, no la app. | Privacy stays in the user's hands, not the app's. |
-| `changes[0]` | La parte social no estaba en el plan inicial. Con el feedback vimos que era imprescindible, porque el círculo social es inseparable de cómo se aprovechan los espacios, y pivotamos para incorporarla. | The social side was not in the original plan. Feedback showed it was essential, because people's social circle is inseparable from how they use spaces, so the team pivoted to include it. |
+| `decisions[1].reason` | La privacidad la controla el usuario, no la app. | Privacy stays in the user’s hands, not the app’s. |
+| `changes[0]` | La parte social no estaba en el plan inicial. Con el feedback vimos que era imprescindible, porque el círculo social es inseparable de cómo se aprovechan los espacios, y pivotamos para incorporarla. | The social side was not in the original plan. Feedback showed it was essential, because people’s social circle is inseparable from how they use spaces, so the team pivoted to include it. |
 | `outcome[0]` | **Mejor proyecto de su sección** en Construcción de Aplicaciones Móviles. | **Best Project in its section** in Mobile Application Development. |
 | `outcome[1]` | Aprendí a trabajar con un backend unificado e independiente de dos frontends distintos, algo que no había hecho antes. | Learned, for the first time, to build one unified backend that serves two different frontends. |
 | `learned[0]` | Incorporaría mucho antes la parte de amigos y horarios, porque era la que más valor aportaba. | Would bring the friends and schedules features in much earlier, since they added the most value. |
@@ -342,7 +342,7 @@ Iconos propios de esta sección: `star` y `folder`.
 | `team` | Trabajo individual, para un cliente real. | Individual work for a real client. |
 | `contributions[0]` | Identifiqué el problema y conversé con la doctora para entender lo que necesitaba. | Identified the problem and talked with the dentist to understand what she needed. |
 | `contributions[1]` | Especifiqué los requisitos, diseñé, implementé y desplegué el sitio, y lo sigo manteniendo. | Specified the requirements, designed, built and deployed the site, and still maintain it. |
-| `decisions[0].options` | Escribir con el vocabulario de la doctora o con uno pensado para el paciente. | Writing with the dentist's vocabulary or with one meant for patients. |
+| `decisions[0].options` | Escribir con el vocabulario de la doctora o con uno pensado para el paciente. | Writing with the dentist’s vocabulary or with one meant for patients. |
 | `decisions[0].choice` | Reescribir los textos con un lenguaje cercano al paciente. | Rewriting the copy in plain, patient-friendly language. |
 | `decisions[0].reason` | El vocabulario técnico de la doctora hacía difícil conectar con quien llega como paciente. La decisión ha dado buenos resultados. | Her technical vocabulary made it hard to connect with people arriving as patients. The decision has paid off. |
 | `changes[0]` | Al principio no había previsto la versión móvil. Luego fue evidente que la mayoría de pacientes llegaría desde el teléfono y no desde el escritorio, y la incorporé. | The mobile version was not planned at first. It then became clear that most patients would arrive from their phones rather than from a desktop, so it was added. |
@@ -393,6 +393,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Durante M10: los textos en inglés usan el apóstrofo tipográfico (’), como exige I18N-R41. Sin cambio de contenido. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-82, D-85, D-87, D-88; F-23, F-25 a F-28). Dos proyectos compactos nuevos de Machine Learning, `respiratory-etl` y `sdg-text-classifier`; `email-blacklist` pasa a público con su enlace. Los `highlights` son `RichLine` y destacan tres resultados. Nuevo `caseLinkLabel` y enlace de la tarjeta al caso (SSD-R07). Nuevo §4.6 con el contenido de los tres casos de estudio, redactado a partir de las respuestas del autor; lo revisa él antes de aprobar. Líneas de arranque: 11 proyectos. Criterios SSD-AC01 y SSD-AC03 a SSD-AC07 actualizados; nuevos SSD-AC11 a SSD-AC14. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SSD-AC09 y SSD-AC10: el autor revisó el contenido en ambos idiomas, en la vista simple y en el panel (A4), y lo dio por bueno el 2026-10-13. Sin cambio de requisitos. |
