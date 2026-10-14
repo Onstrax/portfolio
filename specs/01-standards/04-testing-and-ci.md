@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.10 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
@@ -225,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.10 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): la opción `welcomeSeen` de la prueba base (TST-R26). Sin cambio de requisitos. |
 | 2026-10-14 | 1.10 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.10 | Versión 2, pendiente de aprobación del autor (D-83). TST-R26: nueva opción `welcomeSeen` de la prueba base, activada por defecto, que marca la bienvenida como vista junto con el arranque. |
 | 2026-10-14 | 1.9 | TST-AC15: el autor revisó en GitHub Actions que cada ejecución de `deploy.yml` llega solo después de un CI en verde del mismo commit. Sin cambio de requisitos. |

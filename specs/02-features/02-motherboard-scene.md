@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
@@ -276,6 +276,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): la placa de identidad, la bienvenida (SCN-AC21 a SCN-AC24) y las tres reservas en `validateHotspots` y en la superposición (SCN-AC02, SCN-AC03). Sin cambio de requisitos. |
 | 2026-10-14 | 2.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-89). §4.7: se retiran la pista inicial (SCN-R33 y SCN-R34) y su criterio SCN-AC11; nuevos SCN-R46 y SCN-R47 (placa de identidad) y SCN-R48 a SCN-R51 (bienvenida). SCN-R05 y nuevo SCN-R52: `SceneIdentity` llega por propiedades. SCN-R10 y SCN-R41: las reservas de AST-R55 y AST-R56. §4.11: textos de la bienvenida en lugar de `hintLabel`, e identificadores de prueba. Nuevos SCN-AC21 a SCN-AC24. |
 | 2026-10-13 | 1.7 | Por decisión del autor (D-81), tras probar la escena con teclado: las flechas mueven el foco entre las piezas según su posición en la imagen. Nuevo SCN-R45 y criterios SCN-AC19 y SCN-AC20. |

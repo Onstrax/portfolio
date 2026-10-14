@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 2.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
@@ -183,6 +183,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): los contactos directos de la barra fija, también dentro del panel abierto (SET-AC01, SET-AC14), y la bienvenida tras el reinicio (SET-AC09). Sin cambio de requisitos. |
 | 2026-10-14 | 2.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-84). SET-R02: la barra fija añade un separador y los contactos directos; nuevo §4.9 (SET-R30 y SET-R31). SET-R03: los contactos van antes de la bienvenida y de las zonas. SET-R24 y SET-R25: el reinicio borra también `welcomeSeen` y la bienvenida reemplaza a la pista. §4.7: cuatro textos nuevos. SET-AC01 y SET-AC09 actualizados; nuevo SET-AC14. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SET-AC12: el autor escuchó los cinco efectos con el sonido activado y los dio por buenos (A5) el 2026-10-13. Sin cambio de requisitos. |

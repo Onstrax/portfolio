@@ -26,25 +26,25 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | Código | Archivo | Contenido | Estado |
 | --- | --- | --- | --- |
 | VSN | [00-foundations/01-vision-and-scope.md](00-foundations/01-vision-and-scope.md) | Objetivo, audiencia, principios, mapa de componentes, alcance, glosario | Aprobada |
-| SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Aprobada |
+| SYS | [00-foundations/02-system-overview.md](00-foundations/02-system-overview.md) | Stack y versiones, rutas, modos de render, estado global | Implementada |
 | STR | [00-foundations/03-feature-first-structure.md](00-foundations/03-feature-first-structure.md) | Árbol de carpetas, capas, reglas de dependencia, nomenclatura | Implementada |
 | VIS | [00-foundations/04-visual-system.md](00-foundations/04-visual-system.md) | Tokens de color, tipografía, aura, superficies, movimiento | Aprobada |
-| AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Aprobada |
-| TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Aprobada |
-| I18N | [01-standards/02-i18n-guidelines.md](01-standards/02-i18n-guidelines.md) | Diccionarios, formateadores, cambio de idioma, reglas de traducción | Aprobada |
+| AST | [00-foundations/05-scene-asset.md](00-foundations/05-scene-asset.md) | Imagen de la escena: composición, prompt, aceptación, derivados, calibración | Implementada |
+| TSC | [01-standards/01-typescript-contracts.md](01-standards/01-typescript-contracts.md) | Reglas de TypeScript, identificadores, contrato de sección, hechos y textos, estado, rutas | Implementada |
+| I18N | [01-standards/02-i18n-guidelines.md](01-standards/02-i18n-guidelines.md) | Diccionarios, formateadores, cambio de idioma, reglas de traducción | Implementada |
 | QLT | [01-standards/03-quality-bar.md](01-standards/03-quality-bar.md) | Accesibilidad, rendimiento, presupuestos de peso, robustez, definición de terminado | Aprobada |
-| TST | [01-standards/04-testing-and-ci.md](01-standards/04-testing-and-ci.md) | Niveles de prueba, TDD, E2E, Lighthouse, trazabilidad, pipeline de CI | Aprobada |
+| TST | [01-standards/04-testing-and-ci.md](01-standards/04-testing-and-ci.md) | Niveles de prueba, TDD, E2E, Lighthouse, trazabilidad, pipeline de CI | Implementada |
 | BOOT | [02-features/01-boot-sequence.md](02-features/01-boot-sequence.md) | Secuencia de arranque | Implementada |
-| SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Aprobada |
+| SCN | [02-features/02-motherboard-scene.md](02-features/02-motherboard-scene.md) | Zonas pulsables, auras, etiquetas, teclado, display de diagnóstico | Implementada |
 | PNL | [02-features/03-detail-panel.md](02-features/03-detail-panel.md) | Modal, anterior/siguiente, historial, fragmentos | Implementada |
 | CPU | [02-features/04-cpu-profile.md](02-features/04-cpu-profile.md) | Sección Perfil y fotografía | Implementada |
 | PSU | [02-features/05-psu-experience.md](02-features/05-psu-experience.md) | Sección Experiencia | Implementada |
 | SSD | [02-features/06-ssd-projects.md](02-features/06-ssd-projects.md) | Sección Proyectos | Implementada |
 | RAM | [02-features/07-ram-stack.md](02-features/07-ram-stack.md) | Sección Stack tecnológico | Implementada |
-| IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Aprobada |
+| IO | [02-features/08-io-contact.md](02-features/08-io-contact.md) | Sección Contacto y archivos del CV | Implementada |
 | FAN | [02-features/09-fan-ecosystem.md](02-features/09-fan-ecosystem.md) | Sección Ecosistema personal | Implementada |
 | CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Implementada |
-| SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Aprobada |
+| SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Implementada |
 | SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Implementada |
 | DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Implementada |
 | PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Aprobada |
@@ -310,3 +310,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-14 | Cierre de M10: CPU, RAM y PSU pasan a "Implementada". |
 | 2026-10-14 | Cierre de M11: SSD, SMP, STR y DEP pasan a "Implementada". |
 | 2026-10-14 | El autor aprueba A11 y A12. Por su decisión, D-91: nuevo orden de los destacados de Proyectos, SSD 2.0. Empieza M12. |
+| 2026-10-14 | Cierre de M12: SCN, SET, IO, TSC, SYS, AST, I18N y TST pasan a "Implementada". |
