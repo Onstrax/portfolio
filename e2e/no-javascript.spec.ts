@@ -1,3 +1,5 @@
+import type { Locator } from "@playwright/test";
+
 import { expect, test } from "./support/base";
 
 // With JavaScript disabled the browser blocks every script, and reports each one as a failed request.
@@ -25,6 +27,24 @@ const CONTENT: Readonly<Record<string, readonly string[]>> = {
   ],
 };
 
+/**
+ * Follows a link of a page without JavaScript, where every click is a full navigation. After a
+ * click Playwright waits until the browser reports how that navigation ended, and Firefox, under
+ * load, can fail to report it although the new page is there: the click does not wait, and the
+ * page itself says where it is (TST-R26).
+ */
+async function follow(link: Locator, target: string): Promise<void> {
+  await link.click({ noWaitAfter: true });
+  await expect
+    .poll(() =>
+      link
+        .page()
+        .evaluate(() => `${window.location.pathname}${window.location.hash}`)
+        .catch(() => "navigating"),
+    )
+    .toBe(target);
+}
+
 for (const [locale, fragments] of Object.entries(CONTENT)) {
   test(`VSN-AC03: the server HTML holds the seven sections without JavaScript (${locale})`, async ({
     page,
@@ -44,22 +64,21 @@ test("SMP-AC06: the download link works without JavaScript", async ({ page }) =>
   await page.goto("/es/");
 
   const download = page.waitForEvent("download");
-  await page.getByRole("link", { name: "Descargar CV (PDF)" }).first().click();
+  // The download starts as a navigation that the browser abandons: see `follow`.
+  await page.getByRole("link", { name: "Descargar CV (PDF)" }).first().click({ noWaitAfter: true });
   expect((await download).suggestedFilename()).toBe("juan-esteban-alvarez-garcia-cv-es.pdf");
 });
 
 test("SMP-AC06: language and navigation links work without JavaScript", async ({ page }) => {
   await page.goto("/es/");
 
-  await page.getByRole("link", { name: "English" }).click();
-  await expect(page).toHaveURL("/en/");
+  await follow(page.getByRole("link", { name: "English" }), "/en/");
   await expect(page.getByRole("heading", { level: 2, name: "Profile" })).toBeVisible();
 
-  await page
-    .getByRole("navigation", { name: "Sections" })
-    .getByRole("link", { name: "Contact" })
-    .click();
-  await expect(page).toHaveURL("/en/#contact");
+  await follow(
+    page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Contact" }),
+    "/en/#contact",
+  );
   await expect(page.getByRole("region", { name: "Contact" })).toBeInViewport();
 });
 
