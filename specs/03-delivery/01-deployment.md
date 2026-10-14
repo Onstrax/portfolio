@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Aprobada |
-| Versión | 1.4 |
+| Versión | 1.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
 
@@ -105,21 +105,21 @@ Especificar dónde vive el código, bajo qué licencia, dónde se publica el sit
 | `style-src-attr` | `'unsafe-inline'` |
 | `img-src` | `'self' data:` |
 | `font-src` | `'self'` |
-| `connect-src` | `'self'` |
+| `connect-src` | `'self'` y `https://cloudflareinsights.com` |
 | `object-src` | `'none'` |
 | `base-uri` | `'self'` |
 | `form-action` | `'none'` |
 | `frame-ancestors` | `'none'` |
 | `upgrade-insecure-requests` | Sin valor |
 
-`style-src-attr 'unsafe-inline'` es necesario porque la escena posiciona las zonas con el atributo `style` (STR-R23) y la librería de animación escribe estilos en línea. `img-src data:` permite el marcador de posición de la escena (AST-R35).
+`style-src-attr 'unsafe-inline'` es necesario porque la escena posiciona las zonas con el atributo `style` (STR-R23) y la librería de animación escribe estilos en línea. `img-src data:` permite el marcador de posición de la escena (AST-R35). `connect-src https://cloudflareinsights.com` permite que el script de analítica envíe sus datos (DEP-R25).
 
 ### 4.7 Analítica
 
 | ID | Requisito |
 | --- | --- |
 | DEP-R24 | El uso del sitio se mide con **Cloudflare Web Analytics**, activado desde el panel del proyecto de Pages, que inserta su script en las páginas al publicarlas. El repositorio no contiene el script ni ningún identificador de analítica. |
-| DEP-R25 | Es la única petición a un tercero que hace el sitio (SYS-R41): el script se carga desde `https://static.cloudflareinsights.com` y envía sus datos al propio dominio del sitio. Según Cloudflare, no usa cookies ni almacenamiento local ni identifica a los visitantes por su dirección IP o su navegador; por eso no hay aviso de cookies (VSN §7). |
+| DEP-R25 | Son las únicas peticiones a terceros que hace el sitio (SYS-R41): el script se carga desde `https://static.cloudflareinsights.com` y envía sus datos a `https://cloudflareinsights.com`, comprobado en la primera publicación. Según Cloudflare, no usa cookies ni almacenamiento local ni identifica a los visitantes por su dirección IP o su navegador; por eso no hay aviso de cookies (VSN §7). |
 | DEP-R26 | No se envían eventos personalizados. Lo que interesa medir, qué secciones se abren, se obtiene de las páginas vistas, porque cada sección tiene su URL (SYS §4.3). |
 | DEP-R27 | Las compilaciones locales y las de CI no incluyen analítica: la inserta Cloudflare solo en producción. |
 
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.5 | Tras la primera publicación, por delegación del autor (D-79). DEP-R25 era erróneo: el script de analítica no envía sus datos al propio dominio, sino a `https://cloudflareinsights.com`, y la política lo bloqueaba, con un error en la consola en cada página y sin registrar visitas. §4.6: `connect-src` admite ese origen. |
 | 2026-10-13 | 1.4 | Durante M9, por delegación del autor (D-78). DEP-R12: el flujo comprueba por sí mismo el resultado de `ci-ok` del commit, también en una ejecución manual. DEP-R13: `wrangler` se instala fuera del proyecto, en versión exacta y sin scripts de instalación. DEP-R15: permiso `checks: read` y sin registro de despliegues. DEP-R16: opción `--wait` y peticiones sin redirecciones. DEP-AC06 precisado. §4.9: URL de producción, comunicada por el autor tras crear el proyecto (A8). |
 | 2026-10-13 | 1.3 | Durante M8, por delegación del autor (D-77). DEP-R20: el servidor de `preview` comprime con gzip las respuestas de texto. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor: un requisito resultó inviable con el contenido real. Nuevo DEP-R32: los scripts de datos de Next.js se reúnen en uno por documento antes de calcular los hashes, porque 52 hashes no caben en una línea de `_headers`. DEP-AC04 ampliado. |
