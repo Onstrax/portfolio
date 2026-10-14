@@ -4,7 +4,7 @@ import type { OgAsset, PortraitAsset, SceneAssets, SiteTheme } from "@/shared/co
 export const SCENE_ASSETS = {
   "photo": {
     "version": "dc169b385cc7",
-    "provisional": true,
+    "provisional": false,
     "width": 3840,
     "height": 2160,
     "sceneSpace": {
@@ -68,7 +68,7 @@ export const SCENE_ASSETS = {
   },
   "sketch": {
     "version": "b71cba0939ff",
-    "provisional": true,
+    "provisional": false,
     "width": 3840,
     "height": 2160,
     "sceneSpace": {

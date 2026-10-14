@@ -7,12 +7,12 @@ Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-10-12 |
-| Estado | `provisional` |
+| Estado | `accepted` |
 | Versión del máster | `dc169b385cc7` |
 | Archivo | `design/scene/master.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 11,1 MB |
 | Imagen de origen | `docs/Generations/Tenth generation.jpg`, 1376×768 px |
 
-El estado es `provisional` porque quedan revisiones manuales de la imagen (AST-AC02 al 100 % de tamaño y AST-AC06), previstas en M8. La calibración ya está revisada por el autor (SCN-AC17). Pasa a `accepted` cuando se completen.
+El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes, y la calibración ya estaba revisada (SCN-AC17). Quedan aplazadas con su visto bueno (PLAN-R10), para los días siguientes a la publicación, la medición con herramienta de AST-AC01 y la prueba con una persona ajena de AST-AC06.
 
 Calibración: las nueve zonas se trazaron el 2026-10-13 sobre este máster (`src/features/motherboard-scene/hotspots.ts`, versión `dc169b385cc7`).
 
@@ -58,12 +58,12 @@ Cajas estimadas a ojo en el espacio de escena (1600×900 unidades). Sirven como 
 
 | Criterio | Resultado | Fecha |
 | --- | --- | --- |
-| AST-AC01 (cámara cenital) | Conforme a la vista; pendiente la medición con herramienta | 2026-10-12 |
-| AST-AC02 (sin texto) | Pendiente de la revisión al 100 %. Se observan marcas diminutas en dos puertos USB y en los botones del panel frontal, que no se leen como texto a tamaño de pantalla | 2026-10-12 |
+| AST-AC01 (cámara cenital) | Conforme a la vista. La medición con herramienta queda aplazada con el visto bueno del autor (PLAN-R10) | 2026-10-13 |
+| AST-AC02 (sin texto) | Conforme. Revisada al 100 % por el autor, que la dio por buena sin ajustes. Hay marcas diminutas en dos puertos USB y en los botones del panel frontal, que no se leen como texto | 2026-10-13 |
 | AST-AC03 (nada brilla, sin personas ni objetos ajenos) | Conforme | 2026-10-12 |
 | AST-AC04 (nueve objetos, sin duplicados) | Conforme. Hay dos disipadores junto al procesador que no son el SSD | 2026-10-12 |
 | AST-AC05 (aspecto de cada objeto) | Conforme | 2026-10-12 |
-| AST-AC06 (reconocible por alguien ajeno al hardware) | Pendiente | — |
+| AST-AC06 (reconocible por alguien ajeno al hardware) | Aplazada con el visto bueno del autor (PLAN-R10) | 2026-10-13 |
 | AST-AC07 (atrezo y enfoque) | Conforme | 2026-10-12 |
 | AST-AC08 (brillo de las esquinas) | Conforme: superior derecha 4,5 %; superior izquierda 29,5 %; inferior izquierda 7,6 %; inferior derecha 7,4 % | 2026-10-12 |
 | AST-AC09 (formato del máster) | Conforme | 2026-10-12 |
@@ -76,12 +76,12 @@ Añadido el 2026-10-13 por decisión del autor (D-66, AST §4.10).
 | Campo | Valor |
 | --- | --- |
 | Fecha | 2026-10-13 |
-| Estado | `provisional` |
+| Estado | `accepted` |
 | Versión del máster | `b71cba0939ff` |
 | Archivo | `design/scene/master-sketch.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 12,7 MB |
 | Imagen de origen | `docs/Generations/Eleventh generation.jpg`, 1376×768 px |
 
-El estado es `provisional` hasta que se complete la revisión de AST-AC22, prevista en M8. La calibración sobre esta variante ya está revisada por el autor (AST-AC20).
+El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes (AST-AC22), y la calibración sobre esta variante ya estaba revisada (AST-AC20).
 
 Calibración: los polígonos de la fotografía se comprobaron sobre este máster el 2026-10-13 (versión `b71cba0939ff`); no necesitaron ningún ajuste.
 
@@ -124,4 +124,4 @@ Medida el 2026-10-13 por correlación de bordes, objeto por objeto, en el espaci
 | AST-AC08 (brillo de las esquinas, AST-R51: al menos 70 %) | Conforme: superior derecha 89,3 %; superior izquierda 87,9 %; inferior izquierda 91,7 %; inferior derecha 79,9 % | 2026-10-13 |
 | AST-AC09 (formato del máster) | Conforme | 2026-10-13 |
 | AST-AC20 (los polígonos siguen las siluetas del boceto) | Comprobado a la vista con la superposición: los nueve polígonos siguen las siluetas. Revisado y aprobado por el autor con la superposición | 2026-10-13 |
-| AST-AC22 (nueve objetos reconocibles y ninguna palabra legible) | Pendiente de la revisión al 100 %. A tamaño de pantalla hay fórmulas y gráficas garabateadas en los márgenes y rótulos ilegibles sobre la placa, que AST-R51 admite | — |
+| AST-AC22 (nueve objetos reconocibles y ninguna palabra legible) | Conforme. Revisado al 100 % por el autor. Hay fórmulas y gráficas garabateadas en los márgenes y rótulos ilegibles sobre la placa, que AST-R51 admite. Lo único que señaló fue que el display de diagnóstico no se leía sobre los segmentos dibujados; se resolvió en código, sin tocar la imagen (D-76) | 2026-10-13 |
