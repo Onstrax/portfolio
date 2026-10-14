@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Última actualización | 2026-10-13 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
@@ -74,7 +74,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `PersonJ
 | SMP-R14 | El título y la descripción de cada vista son los de la tabla siguiente, con los textos del espacio de nombres `site` (§4.8) y de `meta` de la sección (TSC-R26). Cumplen QLT-R37. |
 | SMP-R15 | Cada página declara: URL canónica, alternativas `hreflang` y `x-default` (I18N-R28, I18N-R29); `og:title`, `og:description`, `og:url`, `og:type` con valor `profile` en el inicio y `website` en el resto, `og:locale` y sus alternativas (I18N-R30), `og:site_name` con `SITE.authorName` y `og:image` con sus dimensiones y `site.ogImageAlt`; tarjeta de Twitter de tipo `summary_large_image`; y `theme-color` con el valor del token `void`, que el layout de locale toma de `SITE_THEME` en el manifiesto generado (AST-R36), porque el código no puede escribir colores literales (STR-R22). |
 | SMP-R16 | Todas las URLs de los metadatos son absolutas y se construyen con el origen del sitio y los ayudantes de rutas (TSC §4.10). |
-| SMP-R17 | Las páginas `/` y 404 usan como título `languageGate.title` y `notFound.title` en inglés (I18N §4.3.2) y llevan `robots: noindex`. No son páginas de contenido (QLT-R39). |
+| SMP-R17 | Las páginas `/` y 404 usan como título `languageGate.title` y `notFound.title` en inglés (I18N §4.3.2) y llevan `robots: noindex`. No son páginas de contenido (QLT-R39). Pero `/` es la dirección que se comparte, y las redes no ejecutan su redirección: `getEntryMetadata()` le da la descripción de `site.description` y los datos para compartir de SMP-R15 de la página de inicio en inglés (`og:title` con `site.homeTitle`, `og:url` con el origen del sitio y `/`, `og:type` `profile`, imagen y tarjeta), sin URL canónica ni alternativas. |
 
 | Vista | Título | Descripción |
 | --- | --- | --- |
@@ -168,6 +168,7 @@ Espacio de nombres `site`:
 | SMP-AC15 | `src/app/icon.svg` existe, y `src/app/apple-icon.png` mide 180×180 px. | Prueba unitaria que lee los archivos |
 | SMP-AC16 | Los textos de `simpleView` y `site` de ambos diccionarios son los de §4.8. | Prueba unitaria |
 | SMP-AC17 | El autor comparte la URL desplegada en LinkedIn y en WhatsApp y confirma que la vista previa muestra el título, la descripción y la imagen. | Revisión manual del autor, registrada en el historial de esta spec |
+| SMP-AC19 | El HTML exportado de `/` contiene la descripción, `og:title`, `og:description`, `og:url` igual al origen del sitio con `/`, `og:type` `profile`, `og:image` absoluta con sus dimensiones y la tarjeta `summary_large_image`, y sigue pidiendo no ser indexado. | Prueba de exportación |
 
 ## 6. Decisiones y justificación
 
@@ -190,6 +191,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-13 | 1.3 | Durante M9, por delegación del autor, tras compartir la URL en LinkedIn (A9): la vista previa solo mostraba el título, porque `/` no tenía descripción ni imagen y LinkedIn no ejecuta su redirección. SMP-R17: `/` lleva la descripción y los datos para compartir de la página de inicio en inglés. Nuevo SMP-AC19. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SMP-AC17 necesita la URL desplegada: se verifica en M9 (A9). Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor. SMP-R18 y SMP-AC11: los datos estructurados van en la capa base del grupo `(scene)`, es decir, en inicio y secciones. SMP-R15: `theme-color` sale del manifiesto. SMP-R12: se aclara qué cuenta como botón al imprimir. |
 | 2026-10-13 | 1.1 | SMP-R21: la imagen para compartir sale del máster de la variante `photo` (D-66). |

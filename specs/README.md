@@ -281,3 +281,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | Durante M9, por delegación del autor: decisión D-78. DEP 1.4 (flujo de publicación, comprobación posterior y URL de producción) y SYS 2.6. |
 | 2026-10-13 | Durante M9, por delegación del autor: TST 1.9 (las pruebas sin JavaScript no esperan el aviso de navegación de Firefox; los recorridos de todo el sitio tienen el triple de tiempo). |
 | 2026-10-13 | Tras la primera publicación, por delegación del autor: decisión D-79. DEP 1.5 (destino de los datos de la analítica en la política de seguridad). |
+| 2026-10-13 | Durante M9, por delegación del autor, tras su prueba en LinkedIn (A9): SMP 1.3 (la página de entrada lleva la descripción y los datos para compartir). |
