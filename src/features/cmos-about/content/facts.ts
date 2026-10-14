@@ -8,7 +8,6 @@ export const aboutFacts = {
     "React",
     "TypeScript",
     "Tailwind CSS",
-    "Motion",
     "Zustand",
     "Vitest",
     "Playwright",
