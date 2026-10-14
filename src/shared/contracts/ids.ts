@@ -59,3 +59,14 @@ export function componentOfSection(slug: SectionSlug): ComponentId {
   }
   return match;
 }
+
+/**
+ * Projects with a case study, in the order they are listed (VSN-R21, D-82). Each one is a
+ * `ProjectId` of the projects section; a type test checks it (TSC-AC19).
+ */
+export const CASE_STUDY_IDS = ["thesis", "andespace", "dental-site"] as const;
+export type CaseStudyId = (typeof CASE_STUDY_IDS)[number];
+
+export function isCaseStudyId(value: unknown): value is CaseStudyId {
+  return CASE_STUDY_IDS.some((id) => id === value);
+}

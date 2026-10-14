@@ -19,6 +19,7 @@ export const CONTENT_RULES = [
   "C11",
   "C12",
   "C13",
+  "C14",
 ] as const;
 export type ContentRule = (typeof CONTENT_RULES)[number];
 
@@ -78,6 +79,45 @@ function checkEmphasis(text: string, emphasis: string, path: string, report: Rep
       "C13",
       `the emphasized fragment appears ${String(occurrences)} times in the text instead of once`,
     );
+  }
+}
+
+/** `true` for a `CaseStudyText`: an object with the fields that only a case study has. */
+function isCaseStudyText(value: unknown): value is UnknownRecord {
+  return (
+    isRecord(value) &&
+    ["title", "description", "problem", "decisions", "outcome"].every((key) => key in value)
+  );
+}
+
+/** Rule C14: a short title, a description within the limits and some decisions and outcome. */
+function checkCaseStudy(value: UnknownRecord, path: string, report: Report): void {
+  const { title, description, decisions, outcome } = value;
+  if (typeof title !== "string" || title.length > MAX_TITLE_LENGTH) {
+    report(
+      `${path}.title`,
+      "C14",
+      `the title has more than ${String(MAX_TITLE_LENGTH)} characters`,
+    );
+  }
+  if (
+    typeof description !== "string" ||
+    description.length < DESCRIPTION_LENGTH.min ||
+    description.length > DESCRIPTION_LENGTH.max
+  ) {
+    report(
+      `${path}.description`,
+      "C14",
+      `the description must have between ${String(DESCRIPTION_LENGTH.min)} and ${String(DESCRIPTION_LENGTH.max)} characters`,
+    );
+  }
+  for (const [key, list] of [
+    ["decisions", decisions],
+    ["outcome", outcome],
+  ] as const) {
+    if (!Array.isArray(list) || list.length === 0) {
+      report(`${path}.${key}`, "C14", `a case study needs at least one element in ${key}`);
+    }
   }
 }
 
@@ -305,7 +345,7 @@ function checkBootLines(lines: readonly unknown[], report: Report): void {
 }
 
 /**
- * Returns one issue for every breach of rules C1 to C13 in the given sections (TSC-R44).
+ * Returns one issue for every breach of rules C1 to C14 in the given sections (TSC-R44).
  * An empty list means the content is sound.
  */
 export function findContentIssues(
@@ -324,6 +364,7 @@ export function findContentIssues(
       }
       if (Array.isArray(value)) checkIdentifiers(value, path, report);
       if (isEmphasizedText(value)) checkEmphasis(value.text, value.emphasis, path, report);
+      if (isCaseStudyText(value)) checkCaseStudy(value, path, report);
       if (!isRecord(value)) return;
       if ("start" in value && "end" in value) checkPeriod(value, path, report);
       if ("teamSize" in value) {

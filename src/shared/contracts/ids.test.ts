@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  CASE_STUDY_IDS,
   COMPONENT_IDS,
   componentOfSection,
+  isCaseStudyId,
   isComponentId,
   isPrimaryComponentId,
   isSectionSlug,
@@ -15,6 +17,18 @@ import {
 } from "./ids";
 
 const FOREIGN_VALUES: readonly unknown[] = ["gpu", "cv", "", null, undefined, 3];
+
+describe("case study identifiers", () => {
+  it("TSC-AC19: lists the three projects with a case study and guards them", () => {
+    expect(CASE_STUDY_IDS).toEqual(["thesis", "andespace", "dental-site"]);
+    for (const id of CASE_STUDY_IDS) {
+      expect(isCaseStudyId(id)).toBe(true);
+    }
+    for (const value of [...FOREIGN_VALUES, "habicapital", "projects"]) {
+      expect(isCaseStudyId(value)).toBe(false);
+    }
+  });
+});
 
 describe("canonical identifiers", () => {
   it("TSC-AC06: SECTION_SLUGS is the canonical order and never contains the cv segment", () => {

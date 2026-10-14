@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { CV_SEGMENT, cvPath, homePath, parsePath, sectionPath, toPath, withLocale } from "./routes";
+import {
+  caseStudyPath,
+  CV_SEGMENT,
+  cvPath,
+  homePath,
+  parsePath,
+  sectionPath,
+  toPath,
+  withLocale,
+} from "./routes";
 
 describe("routes", () => {
   it("TSC-AC14: builds the three kinds of path", () => {
@@ -8,6 +17,23 @@ describe("routes", () => {
     expect(sectionPath("en", "projects")).toBe("/en/projects/");
     expect(cvPath("es")).toBe("/es/cv/");
     expect(CV_SEGMENT).toBe("cv");
+    expect(caseStudyPath("en", "thesis")).toBe("/en/projects/thesis/");
+  });
+
+  it("TSC-AC14: parses the path of a case study, only under projects and with a case id", () => {
+    expect(parsePath("/es/projects/dental-site/")).toEqual({
+      view: "case",
+      locale: "es",
+      caseStudy: "dental-site",
+    });
+    expect(parsePath("/en/projects/andespace")).toEqual({
+      view: "case",
+      locale: "en",
+      caseStudy: "andespace",
+    });
+    for (const path of ["/es/projects/habicapital/", "/es/stack/thesis/", "/es/cv/thesis/"]) {
+      expect(parsePath(path), path).toBeNull();
+    }
   });
 
   it("TSC-AC14: parses the home path with or without the trailing slash", () => {
@@ -36,6 +62,7 @@ describe("routes", () => {
       "/de/",
       "/es/unknown/",
       "/es/projects/extra/",
+      "/es/projects/thesis/extra/",
       "es/projects",
       "/es//projects/",
     ]) {
@@ -44,7 +71,7 @@ describe("routes", () => {
   });
 
   it("TSC-AC14: toPath is the inverse of parsePath", () => {
-    for (const path of ["/es/", "/en/stack/", "/en/cv/"]) {
+    for (const path of ["/es/", "/en/stack/", "/en/cv/", "/es/projects/thesis/"]) {
       const parsed = parsePath(path);
       expect(parsed).not.toBeNull();
       if (parsed !== null) expect(toPath(parsed)).toBe(path);
@@ -55,6 +82,7 @@ describe("routes", () => {
     expect(withLocale("/es/projects/", "en")).toBe("/en/projects/");
     expect(withLocale("/es/cv/", "en")).toBe("/en/cv/");
     expect(withLocale("/en/", "es")).toBe("/es/");
+    expect(withLocale("/es/projects/andespace/", "en")).toBe("/en/projects/andespace/");
   });
 
   it("TSC-AC14: withLocale sends an unknown path to the home of the target language", () => {

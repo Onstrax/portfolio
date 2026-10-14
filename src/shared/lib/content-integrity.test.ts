@@ -230,8 +230,37 @@ describe("findContentIssues", () => {
     expect(rulesOf(overrides)).toEqual(["C13"]);
   });
 
-  it("covers the thirteen rules", () => {
-    expect(CONTENT_RULES).toHaveLength(13);
+  it("TSC-AC09: C14 reports a case study with a long title, a description out of range or no decisions", () => {
+    const sound = {
+      title: "Un caso",
+      description: DESCRIPTION_ES,
+      problem: ["Un problema"],
+      team: "Trabajo individual.",
+      contributions: ["Lo hice"],
+      decisions: [{ options: "A o B", choice: "A", reason: "Porque sí" }],
+      changes: ["Un cambio"],
+      outcome: ["Un resultado"],
+      learned: ["Una lección"],
+    };
+    // The same case in both languages, apart from the description, which has five words or more.
+    const withCase = (changes: Readonly<Record<string, unknown>>): Overrides => ({
+      text: {
+        es: { ...TEXT_ES, cases: { thesis: { ...sound, ...changes } } },
+        en: {
+          ...TEXT_EN,
+          cases: { thesis: { ...sound, description: DESCRIPTION_EN, ...changes } },
+        },
+      },
+    });
+    expect(rulesOf(withCase({}))).toEqual([]);
+    expect(rulesOf(withCase({ title: "x".repeat(41) }))).toEqual(["C14"]);
+    expect(rulesOf(withCase({ description: "Corta." }))).toEqual(["C14"]);
+    expect(rulesOf(withCase({ decisions: [] }))).toEqual(["C14"]);
+    expect(rulesOf(withCase({ outcome: [] }))).toEqual(["C14"]);
+  });
+
+  it("covers the fourteen rules", () => {
+    expect(CONTENT_RULES).toHaveLength(14);
   });
 
   it("names the section, the path and the rule of every issue", () => {
