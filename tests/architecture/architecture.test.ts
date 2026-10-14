@@ -19,6 +19,7 @@ import {
   findStructureViolations,
   findTestHygieneViolations,
   findTransitionAllViolations,
+  findUnsafeHtmlViolations,
   formatViolations,
   SECTION_FEATURES,
   SHARED_FOLDERS,
@@ -40,6 +41,13 @@ const STORAGE_FILES: readonly string[] = [
   "src/shared/state/safe-storage.ts",
   "src/shared/lib/pre-paint-script.ts",
   "src/shared/lib/language-redirect-script.ts",
+];
+
+/** The three places where raw HTML may be set (QLT-R48). */
+const RAW_HTML_FILES: readonly string[] = [
+  "src/app/[locale]/(scene)/layout.tsx",
+  "src/app/page.tsx",
+  "src/features/simple-view/components/person-json-ld.tsx",
 ];
 
 /** Files where an ESLint rule may be disabled (TST-R17). */
@@ -131,6 +139,14 @@ describe("conventions of src", () => {
 
   it("I18N-AC09: no perceivable attribute carries a hand-written string", () => {
     expectNone(findAttributeLiteralViolations(SRC));
+  });
+
+  it("QLT-AC25: raw HTML is set only in three places, and nothing evaluates strings as code", () => {
+    expectNone(findUnsafeHtmlViolations(SRC, RAW_HTML_FILES));
+    const rawHtml = ["dangerously", "SetInnerHTML"].join("");
+    for (const file of RAW_HTML_FILES) {
+      expect(SRC.find((source) => source.path === file)?.content, file).toContain(rawHtml);
+    }
   });
 
   it("SYS-AC18: the scene-capable variant uses the media query of the render mode constant", () => {

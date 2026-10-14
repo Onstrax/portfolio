@@ -51,6 +51,30 @@ describe("ESLint configuration: accessibility rules", () => {
     expect(await lintSnippet(component(jsx), HOST.layout)).toContain(`jsx-a11y/${rule}`);
   });
 
+  it("QLT-AC05: reports a click handler on an element that is not a control, and a positive tabIndex", async () => {
+    const onDiv = await lintSnippet(component("<div onClick={noop} />"), HOST.layout);
+    expect(onDiv).toContain("jsx-a11y/click-events-have-key-events");
+    expect(onDiv).toContain("jsx-a11y/no-static-element-interactions");
+
+    expect(
+      await lintSnippet(component('<a href="/es/" tabIndex={3}>x</a>'), HOST.layout),
+    ).toContain("jsx-a11y/tabindex-no-positive");
+  });
+
+  it("QLT-AC05: accepts click handlers on links, buttons and other native controls", async () => {
+    for (const jsx of [
+      '<button type="button" onClick={noop} />',
+      '<a href="/es/" onClick={noop}>x</a>',
+      '<input type="checkbox" aria-label="x" onClick={noop} />',
+    ]) {
+      const reported = await lintSnippet(component(jsx), HOST.layout);
+      expect(
+        reported.filter((rule) => rule.startsWith("jsx-a11y/")),
+        jsx,
+      ).toEqual([]);
+    }
+  });
+
   it("accepts an accessible equivalent", async () => {
     expect(
       await lintSnippet(component('<button type="button" onClick={noop} />'), HOST.layout),

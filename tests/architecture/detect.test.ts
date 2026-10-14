@@ -17,6 +17,7 @@ import {
   findStructureViolations,
   findTestHygieneViolations,
   findTransitionAllViolations,
+  findUnsafeHtmlViolations,
   formatViolations,
   type SourceFile,
   type Violation,
@@ -572,5 +573,61 @@ describe("findCustomVariantQuery", () => {
   it("returns nothing for a variant that is missing or is not a media query", () => {
     expect(findCustomVariantQuery(css, "scene-wide")).toBeUndefined();
     expect(findCustomVariantQuery(css, "mode-scene")).toBeUndefined();
+  });
+});
+
+describe("findUnsafeHtmlViolations", () => {
+  const rawHtml = ["dangerously", "SetInnerHTML"].join("");
+  const allowed = ["src/app/page.tsx"];
+  const source = (path: string, content: string) => ({ path, content });
+
+  it("accepts raw HTML in the listed files and reports it anywhere else", () => {
+    const markup = `<script ${rawHtml}={{ __html: code }} />`;
+    expect(findUnsafeHtmlViolations([source("src/app/page.tsx", markup)], allowed)).toEqual([]);
+    expect(findUnsafeHtmlViolations([source("src/shared/ui/chip.tsx", markup)], allowed)).toEqual([
+      {
+        rule: "QLT-AC25",
+        file: "src/shared/ui/chip.tsx",
+        line: 1,
+        message: "raw HTML may only be set in the three places of QLT-R48",
+      },
+    ]);
+  });
+
+  it("reports code evaluated from strings", () => {
+    const evaluated = `const run = ${["ev", "al"].join("")}("1 + 1");`;
+    const built = `const run = new ${["Func", "tion"].join("")}("return 1");`;
+    const found = findUnsafeHtmlViolations(
+      [source("src/shared/lib/a.ts", evaluated), source("src/shared/lib/b.ts", built)],
+      allowed,
+    );
+    expect(found.map((violation) => violation.message)).toEqual([
+      "strings must not be evaluated as code (QLT-R49)",
+      "strings must not be evaluated as code (QLT-R49)",
+    ]);
+  });
+
+  it("reports an event handler written as an HTML attribute, and not a React handler", () => {
+    const attribute = ["on", "click"].join("");
+    const inline = `const html = '<button ${attribute}="go()">x</button>';`;
+    expect(findUnsafeHtmlViolations([source("src/shared/lib/a.ts", inline)], allowed)).toHaveLength(
+      1,
+    );
+    expect(
+      findUnsafeHtmlViolations(
+        [source("src/shared/ui/a.tsx", '<button type="button" onClick={go}>x</button>')],
+        allowed,
+      ),
+    ).toEqual([]);
+  });
+
+  it("looks only at the source of the application, not at its tests", () => {
+    const markup = `<div ${rawHtml}={{ __html: "x" }} />`;
+    expect(
+      findUnsafeHtmlViolations(
+        [source("src/shared/ui/a.test.tsx", markup), source("tests/x.ts", markup)],
+        allowed,
+      ),
+    ).toEqual([]);
   });
 });

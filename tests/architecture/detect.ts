@@ -667,6 +667,47 @@ export function findContentFileViolations(files: readonly SourceFile[]): readonl
   return violations;
 }
 
+const INNER_HTML = ["dangerously", "SetInnerHTML"].join("");
+const EVALUATION_PATTERN = new RegExp(
+  `\\b(?:${["ev", "al"].join("")}|new\\s+${["Func", "tion"].join("")})\\s*\\(`,
+  "g",
+);
+const EVENT_ATTRIBUTE_PATTERN = /<[a-z][^>]*\son[a-z]+\s*=\s*["']/gi;
+
+/**
+ * QLT-AC25: raw HTML is only set in the listed files, and nothing evaluates strings as code nor
+ * writes event handlers as HTML attributes, which a strict content security policy forbids.
+ */
+export function findUnsafeHtmlViolations(
+  files: readonly SourceFile[],
+  rawHtmlFiles: readonly string[],
+): readonly Violation[] {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    if (!file.path.startsWith("src/") || isTestFile(file.path)) continue;
+    const report = (index: number, message: string): void => {
+      violations.push({
+        rule: "QLT-AC25",
+        file: file.path,
+        line: lineAt(file.content, index),
+        message,
+      });
+    };
+    if (!rawHtmlFiles.includes(file.path)) {
+      for (const match of file.content.matchAll(new RegExp(INNER_HTML, "g"))) {
+        report(match.index, "raw HTML may only be set in the three places of QLT-R48");
+      }
+    }
+    for (const match of file.content.matchAll(EVALUATION_PATTERN)) {
+      report(match.index, "strings must not be evaluated as code (QLT-R49)");
+    }
+    for (const match of file.content.matchAll(EVENT_ATTRIBUTE_PATTERN)) {
+      report(match.index, "event handlers must not be written as HTML attributes (QLT-R49)");
+    }
+  }
+  return violations;
+}
+
 /**
  * SYS-AC18: media query of a Tailwind variant declared with `@custom-variant name (@media …);`,
  * or `undefined` when the stylesheet declares no such variant.
