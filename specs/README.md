@@ -46,8 +46,8 @@ Estados posibles: **Pendiente** (sin escribir) · **En revisión** (escrita, esp
 | CMOS | [02-features/10-cmos-about.md](02-features/10-cmos-about.md) | Sección Acerca de este sitio | Implementada |
 | SET | [02-features/11-settings.md](02-features/11-settings.md) | Barra fija, menú de ajustes, sonido, reinicio | Implementada |
 | SMP | [02-features/12-simple-view-and-seo.md](02-features/12-simple-view-and-seo.md) | Vista simple, móvil, metadatos, iconos | Implementada |
-| DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Aprobada |
-| PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Aprobada |
+| DEP | [03-delivery/01-deployment.md](03-delivery/01-deployment.md) | Repositorio, licencias, hosting, publicación, cabeceras, analítica | Implementada |
+| PLAN | [03-delivery/02-implementation-plan.md](03-delivery/02-implementation-plan.md) | Hitos ordenados, tareas del autor y criterios de salida | Implementada |
 
 `CLAUDE.md`, en la raíz del repositorio, resume las reglas de trabajo para agentes y apunta a este índice.
 
@@ -286,3 +286,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-13 | Durante M9, por delegación del autor, tras su prueba en LinkedIn (A9): SMP 1.3 (la página de entrada lleva la descripción y los datos para compartir). |
 | 2026-10-13 | Por decisión del autor: D-80 (se retira `motion`). SYS 2.7, QLT 2.4, CMOS 1.2 y DEP 1.6. README del repositorio en primera persona, a petición del autor. |
 | 2026-10-13 | Por decisión del autor: D-81 (flechas en la escena). SCN 1.7. |
+| 2026-10-14 | Cierre de M9. El autor confirma la vista previa en LinkedIn y WhatsApp (SMP-AC17), revisa el flujo de publicación (TST-AC15) y completa la auditoría con lector de pantalla (QLT-AC27). DEP y PLAN pasan a "Implementada": las 23 specs lo están. Solo queda A7 (AST-AC06). |

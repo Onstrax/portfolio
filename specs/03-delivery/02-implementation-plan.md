@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | Aprobada |
+| Estado | Implementada |
 | Versión | 1.5 |
 | Última actualización | 2026-10-13 |
 | Depende de | Todas las demás specs |
@@ -129,7 +129,7 @@ Ordenar la construcción del sitio en hitos pequeños, cada uno con un resultado
 | A6 | Auditoría manual: teclado, lector de pantalla, zoom, movimiento reducido, teléfono, sin JavaScript y consola | Durante M8 | QLT-AC27, VIS-AC12 |
 | A7 | Mostrar la escena a una persona ajena al hardware y comprobar que identifica las seis piezas con sus etiquetas | Durante M8 | AST-AC06 |
 | A8 | Crear la cuenta y el proyecto de Cloudflare Pages, generar el token, guardar los dos secretos en GitHub y activar Web Analytics | Al empezar M9 | DEP-AC09, DEP-AC10 |
-| A9 | Compartir la URL en LinkedIn y WhatsApp para comprobar la vista previa, y pasar el Observatorio HTTP de Mozilla | Al cerrar M9 | SMP-AC17, DEP-AC09 |
+| A9 | Hecha el 2026-10-14: vista previa correcta en LinkedIn y WhatsApp tras SMP 1.3, y A+ en el Observatorio HTTP de Mozilla | — | SMP-AC17, DEP-AC09 |
 | A10 | Cuando el repositorio de la automatización hotelera sea público, indicarlo para actualizar PSU (PSU-R07) | Cuando ocurra | — |
 
 ### 4.4 Registro de avance
@@ -147,7 +147,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | M6 | 2026-10-13 | `5de1c71` | CI en verde en los tres motores, sin reintentos, y `pnpm check:docker` en local. 627 pruebas unitarias y de componente y 322 E2E. Las siete secciones se abren sobre la escena en un diálogo modal nativo; cerrar vuelve atrás en el historial y anterior y siguiente no lo llenan. VSN-AC06, I18N-AC11 e I18N-AC12 pasaron a M7 (PLAN 1.5). Las specs de PNL y de las siete secciones no cambian aún a "Implementada": falta la lectura del contenido dentro del panel (A4), que el autor hará al revisar M6 y M7 juntos. |
 | M7 | 2026-10-13 | `c615413` | CI en verde en los tres motores y `pnpm check:docker` en local. 671 pruebas unitarias y de componente y 442 E2E. Arranque con registro real de las secciones, barra fija, menú de ajustes con sonido, imagen de la escena, idioma, progreso y reinicio; los doce features de STR ya existen. Defectos encontrados y corregidos por el camino: `data-mode` pasaba un instante por `simple` al hidratar (venía de M5, SYS-R15); el arranque ignoraba una pulsación anterior a la carga del código; el clic no lo saltaba en WebKit; y tras un reinicio, WebKit dejaba el foco sin poder avanzar con el tabulador. Decisiones por delegación: D-73 a D-75. En el CI, una prueba de Firefox de la redirección de `/` pasó solo al reintentar; se corrigió en el commit siguiente (TST-R26). Los límites de tiempo del arranque se miden solo en Chromium (TST-R22). Pendientes del autor: escuchar los cinco efectos de sonido (A5, SET-AC12) y leer el contenido dentro del panel (A4); después de su revisión de M6 y M7, las specs que estos hitos dejan implementadas cambian de estado. |
 | M8 | 2026-10-13 | `e108cad` | CI en verde en los tres motores y en Lighthouse, sin ninguna prueba que pase solo al reintentar, y `pnpm check:docker` en local. 684 pruebas unitarias y de componente y 556 E2E. Recorrido de axe por todos los estados auditables, presupuestos de peso y Lighthouse real en tres pasadas (D-77). Pesos medidos: JavaScript, 142 kB en modo `simple` y 169 kB en modo `scene`; CSS, 9 kB; fuentes, 89 kB; documentos, 38 kB como máximo. Lighthouse en local: rendimiento de 98 en escritorio y 96 en móvil. Defectos corregidos: en el boceto no se leía el display de diagnóstico (D-76) y, con movimiento reducido, dos transiciones duraban 250 ms. El autor confirmó la lectura del contenido en el panel (A4), los sonidos (A5), la auditoría manual (A6) y las dos imágenes al 100 %; los dos másteres pasan a `accepted`. Aplazado con su visto bueno (PLAN-R10): A7 (AST-AC06), la medición de AST-AC01 y el paso del lector de pantalla de A6; el paso del teléfono real de A6 necesita el sitio desplegado. En la puerta local, bajo carga, una prueba sin JavaScript agotó su tiempo en Firefox; se reforzó la prueba base (TST-R26) y la puerta siguiente pasó entera. Todas las specs salvo DEP y PLAN pasan a "Implementada". |
-| M9 | — | — | — |
+| M9 | 2026-10-14 | `b42c3ee` | CI en verde en los tres motores y en Lighthouse, sin reintentos, y `pnpm check:docker` en local. 703 pruebas unitarias y de componente y 563 E2E. Sitio en producción en `https://juan-esteban-alvarez.pages.dev`, publicado por `deploy.yml` tras cada CI en verde; primera publicación desde `c56272f`, el 2026-10-13. Defectos que solo aparecieron en producción, corregidos: la política bloqueaba el envío de datos de la analítica (D-79) y la vista previa de `/` no tenía descripción ni imagen (SMP 1.3). Pruebas endurecidas frente a cuelgues de Firefox y lentitud de WebKit bajo carga (TST 1.8 y 1.9). A petición del autor, tras probar el sitio: se retira `motion` (D-80), flechas entre piezas (D-81) y README en primera persona. El autor completó A2, A6 (también el lector de pantalla), A8 y A9, y midió AST-AC01. Queda solo A7 (AST-AC06), aplazada con su visto bueno (PLAN-R10). Todas las specs pasan a "Implementada" en el commit siguiente (PLAN-AC02). |
 
 ### 4.5 Si el tiempo no alcanza
 
@@ -185,6 +185,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.5 | Cierre de M9. Estado: pasa a "Implementada" (PLAN-AC02: todas las specs del índice están en ese estado y la prueba de trazabilidad pasa). A9 hecha; el paso del lector de pantalla de A6 ya no está aplazado. Solo queda A7 (AST-AC06). |
 | 2026-10-13 | 1.5 | Tareas del autor tras la primera publicación: A2 hecha; A9 hecha para el Observatorio (A+), y para LinkedIn se repite tras corregir la vista previa de `/` (SMP 1.3); la medición de AST-AC01, aplazada en M8, ya está hecha. A7 y el lector de pantalla siguen aplazados (PLAN-R10). Sin cambio de requisitos. |
 | 2026-10-13 | 1.5 | Durante M6, por delegación del autor. VSN-AC06, I18N-AC11 e I18N-AC12 pasan de M6 a M7: necesitan el selector de idioma de la barra fija. Se anota en §4.4 la revisión del autor de M2 a M5. |
 | 2026-10-13 | 1.4 | Durante M5, por delegación del autor. M5 a M7: las pruebas E2E de SCN-AC10, AC11 y AC14 pasan a M6 y la de SCN-AC18 a M7, porque recorren el panel y el menú de ajustes; M5 las comprueba en su forma parcial. M5 añade AST-AC12. |

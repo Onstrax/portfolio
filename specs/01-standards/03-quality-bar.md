@@ -282,6 +282,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.4 | QLT-AC27, paso 2: el autor repitió el recorrido con lector de pantalla y funciona. La auditoría manual de §4.8 queda completa. Sin cambio de requisitos. |
 | 2026-10-13 | 2.4 | QLT-AC27, paso 5: el autor abrió el sitio desplegado en su teléfono; la vista simple se lee bien y los enlaces de contacto y la descarga del CV funcionan. Solo queda aplazado el paso del lector de pantalla (PLAN-R10). Sin cambio de requisitos. |
 | 2026-10-13 | 2.4 | Por decisión del autor (D-80). QLT-R34 y §4.2: ya no hay librería de animación; las animaciones son CSS. Sin cambio de presupuestos. |
 | 2026-10-13 | 2.3 | Durante M8, por delegación del autor (D-77). QLT-R30 y glosario: el Largest Contentful Paint del preajuste `mobile` se mide con la limitación aplicada de verdad, no estimada; el límite de 2,5 s no cambia. Medido el 2026-10-13 en `/es/` y `/en/cv/`: 1,6 s con limitación aplicada y 2,7 s con la estimación por defecto de Lighthouse. Estado: pasa a "Implementada" al cerrar M8. QLT-AC27: el autor completó el 2026-10-13, en su equipo y antes de la primera publicación, los pasos de teclado, zoom, movimiento reducido, sin JavaScript y herramientas de desarrollo de §4.8, sin incidencias. Quedan dos pasos: el del lector de pantalla, aplazado con su visto bueno (PLAN-R10), y el del teléfono real, que necesita el sitio desplegado (M9). |

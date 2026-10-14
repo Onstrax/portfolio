@@ -191,6 +191,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.3 | SMP-AC17: tras SMP 1.3, el autor compartió la URL en LinkedIn (Post Inspector) y en WhatsApp; las dos vistas previas muestran título, descripción e imagen, sin avisos. Sin cambio de requisitos. |
 | 2026-10-13 | 1.3 | Durante M9, por delegación del autor, tras compartir la URL en LinkedIn (A9): la vista previa solo mostraba el título, porque `/` no tenía descripción ni imagen y LinkedIn no ejecuta su redirección. SMP-R17: `/` lleva la descripción y los datos para compartir de la página de inicio en inglés. Nuevo SMP-AC19. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SMP-AC17 necesita la URL desplegada: se verifica en M9 (A9). Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M4, por delegación del autor. SMP-R18 y SMP-AC11: los datos estructurados van en la capa base del grupo `(scene)`, es decir, en inicio y secciones. SMP-R15: `theme-color` sale del manifiesto. SMP-R12: se aclara qué cuenta como botón al imprimir. |

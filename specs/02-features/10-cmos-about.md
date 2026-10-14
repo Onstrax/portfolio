@@ -133,6 +133,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.2 | CMOS-AC07: la afirmación de `quality` sobre el lector de pantalla queda comprobada también a mano, con la auditoría del autor (QLT-AC27). Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Por decisión del autor (D-80). CMOS-R02, CMOS-AC01 y CMOS-AC04: `Motion` sale de la lista del stack, porque el sitio no lo usa: sus animaciones son CSS. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). CMOS-AC07: el autor revisó ambos idiomas (A4) el 2026-10-13. Las tres afirmaciones de `quality` tienen detrás los criterios de QLT que M8 deja verificados; la de lector de pantalla se apoya en las pruebas automáticas, y su comprobación manual con Orca queda aplazada (QLT 2.3, PLAN-R10): si encontrara un fallo, se corrige o se retira la frase (CMOS-R05). Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Pendiente de la revisión de contenido del autor (A4). `image`: el texto menciona las dos variantes de la escena (D-66). |
