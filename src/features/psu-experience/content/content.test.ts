@@ -19,7 +19,11 @@ describe("experience facts", () => {
     expect(experienceFacts.jobs.map((job) => job.teamSize)).toEqual([1, 1, 1]);
     expect(experienceFacts.jobs[0].organization).toBe("Universidad de los Andes");
     expect(experienceFacts.jobs[1].stack).toEqual(["Python", "Selenium"]);
-    expect(experienceFacts.jobs[1].repository).toBe("private");
+    expect(experienceFacts.jobs[1].repository).toBe("public");
+    expect(experienceFacts.jobs[1].repositoryLink).toEqual({
+      id: "repository",
+      href: "https://github.com/PortafolioSor0/All-Inclusive",
+    });
     expect(experienceFacts.leadershipPeriod).toEqual({
       start: { year: 2022 },
       end: { year: 2024 },

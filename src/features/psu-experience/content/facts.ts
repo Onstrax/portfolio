@@ -14,7 +14,11 @@ export const experienceFacts = {
       period: { start: { year: 2024, month: 7 }, end: { year: 2025, month: 1 } },
       teamSize: 1,
       stack: ["Python", "Selenium"],
-      repository: "private",
+      repository: "public",
+      repositoryLink: {
+        id: "repository",
+        href: "https://github.com/PortafolioSor0/All-Inclusive",
+      },
     },
     {
       id: "tutor",

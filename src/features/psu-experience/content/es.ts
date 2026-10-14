@@ -13,26 +13,36 @@ export const experienceEs = {
     "teaching-assistant": {
       role: "Monitor académico",
       highlights: [
-        "Acompaño a ~30 estudiantes de Diseño de Productos e Innovación en TI mediante evaluación de entregas, resolución de dudas, talleres de apoyo y creación de material didáctico.",
+        {
+          text: "Acompaño a ~30 estudiantes de Diseño de Productos e Innovación en TI mediante evaluación de entregas, resolución de dudas, talleres de apoyo y creación de material didáctico.",
+          emphasis: "~30 estudiantes",
+        },
       ],
     },
     freelance: {
       role: "Desarrollador freelance",
       highlights: [
-        "Automaticé la extracción de datos y el registro de cientos a miles de reservas hoteleras por ejecución, reduciendo un proceso semanal a aproximadamente un día.",
+        {
+          text: "Automaticé la extracción de datos y el registro de cientos a miles de reservas hoteleras por ejecución, reduciendo un proceso semanal a aproximadamente un día.",
+          emphasis: "un proceso semanal a aproximadamente un día",
+        },
         "Diseñé y publiqué la web de un consultorio odontológico, que sigo manteniendo.",
       ],
     },
     tutor: {
       role: "Tutor particular de programación",
       highlights: [
-        "He acompañado a ~20 estudiantes en programación, POO, estructuras de datos y algoritmos; diseñé ejercicios y dirigí sesiones individuales y grupos de hasta cinco personas.",
+        {
+          text: "He acompañado a ~20 estudiantes en programación, POO, estructuras de datos y algoritmos; diseñé ejercicios y dirigí sesiones individuales y grupos de hasta cinco personas.",
+          emphasis: "~20 estudiantes",
+        },
         "Materias: Introducción a la Programación; Estructuras de Datos y Algoritmos; Diseño y Programación Orientada a Objetos; Desarrollo de Software en Equipo.",
         "Mis estudiantes mejoran su desempeño en proyectos y exámenes; la mayoría vuelve a contactarme en materias posteriores y me recomienda.",
       ],
     },
   },
   dentalSiteLinkLabel: "Ver el proyecto",
+  automationLinkLabel: "Ver el repositorio",
   skillsTitle: "Competencias interpersonales",
   skills: [
     "Resolución analítica de problemas",

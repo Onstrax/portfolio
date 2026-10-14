@@ -41,7 +41,7 @@ describe("ExperienceSection", () => {
     ]);
   });
 
-  it("PSU-AC03: shows the stack and the private repository of the freelance job", () => {
+  it("PSU-AC03: shows the stack of the freelance job", () => {
     render(<ExperienceSection locale="es" idScope="" />);
     const [, freelance] = screen.getAllByRole("article");
     expect(freelance).toBeDefined();
@@ -49,9 +49,41 @@ describe("ExperienceSection", () => {
     expect(within(freelance).getByRole("heading", { level: 4 })).toHaveTextContent(
       "Desarrollador freelance",
     );
-    for (const chip of ["Python", "Selenium", "Repositorio privado"]) {
+    for (const chip of ["Python", "Selenium"]) {
       expect(within(freelance).getByText(chip)).toBeInTheDocument();
     }
+  });
+
+  it("PSU-AC08: links the hotel automation to its public repository, with no private chip", () => {
+    for (const [locale, name] of [
+      ["es", /^Ver el repositorio/],
+      ["en", /^See the repository/],
+    ] as const) {
+      const view = render(<ExperienceSection locale={locale} idScope="" />);
+      const link = screen.getByRole("link", { name });
+      expect(link).toHaveAttribute("href", "https://github.com/PortafolioSor0/All-Inclusive");
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(screen.queryByText("Repositorio privado")).not.toBeInTheDocument();
+      expect(screen.queryByText("Private repository")).not.toBeInTheDocument();
+      view.unmount();
+    }
+  });
+
+  it("PSU-AC09: emphasizes exactly the three figures of the jobs", () => {
+    const spanish = render(<ExperienceSection locale="es" idScope="" />);
+    expect([...spanish.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
+      "~30 estudiantes",
+      "un proceso semanal a aproximadamente un día",
+      "~20 estudiantes",
+    ]);
+    spanish.unmount();
+    const english = render(<ExperienceSection locale="en" idScope="" />);
+    expect([...english.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
+      "~30 students",
+      "approximately one week of repetitive work to one day",
+      "~20 students",
+    ]);
   });
 
   it("PSU-AC04: links the dental site to its project", () => {
