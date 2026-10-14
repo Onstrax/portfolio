@@ -224,6 +224,7 @@ Resumen de una línea por decisión; el detalle y la justificación completa viv
 | D-87 | 2026-10-14, por decisión del autor: el portfolio incluye la opción académica en Machine Learning, sus cursos y sus proyectos, aunque los CVs no los mencionen: el CV debe ser conciso y el portfolio puede ser más holgado. | CPU, RAM, SSD |
 | D-88 | 2026-10-14, por delegación del autor: la página de cada caso vive en `/{locale}/projects/{caso}/`, en el grupo `(plain)`, como la del CV. Su contenido está en `ssd-projects` y la página la compone `simple-view`, que ya reúne las páginas planas, los metadatos y el sitemap; así no hace falta un feature nuevo. | SYS, STR, SMP, SSD, TSC |
 | D-89 | 2026-10-14, por delegación del autor: la escena reserva sin objetos interactivos la franja superior (barra fija y placa), la esquina superior izquierda (placa) y el centro inferior (bienvenida), y `validateHotspots` lo comprueba. La calibración actual ya lo cumple. | AST, SCN |
+| D-91 | 2026-10-14, por decisión del autor al revisar M11: en Proyectos, la web odontológica pasa delante de HabiCapital, para que los tres destacados con caso de estudio vayan seguidos y el enlace "Leer el caso completo" no salte de una tarjeta. | SSD |
 | D-90 | 2026-10-14, por decisión del autor: quedan fuera de v2 las capturas o demos de los proyectos, los idiomas nuevos (portugués y alemán), un chatbot, un blog, más animaciones, el modo claro u oscuro y los testimonios. | VSN |
 | D-81 | 2026-10-13, por decisión del autor tras probar la escena con teclado: además del tabulador, las flechas mueven el foco entre las piezas de la escena según su posición en la imagen. El orden de tabulación no cambia. | SCN |
 | D-80 | 2026-10-13, por decisión del autor: se retira la librería `motion`. Estaba en las dependencias y en la lista del stack de "Acerca de este sitio", pero ningún código la usaba: todas las animaciones son CSS. Deja sin efecto la parte de D-40 que habla de la librería. | SYS, QLT, CMOS, DEP |
@@ -308,3 +309,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-14 | El autor aprueba todas las specs de la versión 2; las 19 enmendadas pasan a "Aprobada". Empieza M10. |
 | 2026-10-14 | Cierre de M10: CPU, RAM y PSU pasan a "Implementada". |
 | 2026-10-14 | Cierre de M11: SSD, SMP, STR y DEP pasan a "Implementada". |
+| 2026-10-14 | El autor aprueba A11 y A12. Por su decisión, D-91: nuevo orden de los destacados de Proyectos, SSD 2.0. Empieza M12. |

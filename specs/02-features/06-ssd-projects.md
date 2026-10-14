@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.1 |
+| Versión | 2.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
@@ -39,8 +39,8 @@ Feature: `src/features/ssd-projects/`. Exporta `ssdProjectsSection`. Fuentes: CV
 export const PROJECT_IDS = [
   "thesis",
   "andespace",
-  "habicapital",
   "dental-site",
+  "habicapital",
   "monitoring-platform",
   "email-blacklist",
   "ahorrapp",
@@ -110,8 +110,8 @@ export interface ProjectsText extends SectionTextBase {
 | --- | --- | --- | --- | --- | --- |
 | `thesis` | Sí | — | `Python`, `SageMath`, `LaTeX` | 2 | `public` |
 | `andespace` | Sí | `AndeSpace` | `Flutter`, `FastAPI`, `PostgreSQL`, `GitHub Actions` | 6 | `public` |
-| `habicapital` | Sí | `HabiCapital` | `Python`, `FastAPI`, `Next.js`, `PostgreSQL`, `Docker` | 1 | `public` |
 | `dental-site` | Sí | — | `Next.js`, `TypeScript`, `Tailwind CSS`, `Leaflet`, `Netlify` | 1 | `private` |
+| `habicapital` | Sí | `HabiCapital` | `Python`, `FastAPI`, `Next.js`, `PostgreSQL`, `Docker` | 1 | `public` |
 | `monitoring-platform` | No | — | `GCP`, `GitHub Actions`, `CI/CD` | 4 | `private` |
 | `email-blacklist` | No | — | `AWS`, `GitHub Actions`, `CI/CD` | 4 | `public` |
 | `ahorrapp` | No | `AhorrApp` | `Angular` | 3 | `public` |
@@ -126,8 +126,8 @@ export interface ProjectsText extends SectionTextBase {
 | `andespace` | `flutter` | `https://github.com/G33-Moviles-2026-1/G33-Flutter-Moviles-2026-1` |
 | `andespace` | `backend` | `https://github.com/G33-Moviles-2026-1/G33-Backend-Moviles-2026-1` |
 | `andespace` | `wiki` | `https://github.com/G33-Moviles-2026-1/Wiki` |
-| `habicapital` | `code` | `https://github.com/Onstrax/HabiCapital` |
 | `dental-site` | `live-site` | `https://martha-landing.netlify.app/` |
+| `habicapital` | `code` | `https://github.com/Onstrax/HabiCapital` |
 | `ahorrapp` | `frontend` | `https://github.com/Onstrax/AhorrApp` |
 | `ahorrapp` | `backend` | `https://github.com/Onstrax/AhorrApp-Backend` |
 | `ahorrapp` | `landing` | `https://github.com/Onstrax/Ahorrapp-Landing` |
@@ -179,15 +179,7 @@ Los proyectos que no aparecen en la segunda tabla no tienen enlaces.
 | `highlights[1]` | Calidad de código apoyada en SonarQube. | Used SonarQube for code quality checks. |
 | `award` | Mejor proyecto de su sección · Construcción de Aplicaciones Móviles | Best Project in its section · Mobile Application Development |
 
-#### 4.3.3 `habicapital`
-
-| Campo | Español | Inglés |
-| --- | --- | --- |
-| `tagline` | Simulación de banca digital segura | Secure digital banking simulation |
-| `highlights[0]` | Diseñé y construí individualmente una plataforma P2P con seguridad aplicada: JWT, Argon2id, AES-256-GCM, HMAC, ledger inmutable e idempotencia. | Individually designed and built a P2P platform with applied security: JWT, Argon2id, AES-256-GCM, HMAC, immutable ledger and idempotency. |
-| `highlights[1]` | Desarrollo asistido por IA con especificaciones (SDD) y TDD; más de 100 pruebas automatizadas exitosas y **~94 % de cobertura reportada**. | AI-assisted specification-driven development (SDD) and TDD; over 100 passing automated tests and **~94% reported code coverage**. |
-
-#### 4.3.4 `dental-site`
+#### 4.3.3 `dental-site`
 
 | Campo | Español | Inglés |
 | --- | --- | --- |
@@ -196,6 +188,14 @@ Los proyectos que no aparecen en la segunda tabla no tienen enlaces.
 | `highlights[0]` | Diseñé, desarrollé y publiqué el sitio completo: tratamientos, profesionales, preguntas frecuentes, mapa de sedes y páginas legales. | Designed, built and deployed the whole site: treatments, team, FAQ, clinic map and legal pages. |
 | `highlights[1]` | Llamada a la acción por WhatsApp y formulario de contacto; ha contribuido a atraer **~2-3 nuevos clientes al mes**. | WhatsApp call to action and contact form; it has helped attract an estimated **2-3 new clients per month**. |
 | `highlights[2]` | Mantenimiento continuo desde su publicación. | Ongoing maintenance since launch. |
+
+#### 4.3.4 `habicapital`
+
+| Campo | Español | Inglés |
+| --- | --- | --- |
+| `tagline` | Simulación de banca digital segura | Secure digital banking simulation |
+| `highlights[0]` | Diseñé y construí individualmente una plataforma P2P con seguridad aplicada: JWT, Argon2id, AES-256-GCM, HMAC, ledger inmutable e idempotencia. | Individually designed and built a P2P platform with applied security: JWT, Argon2id, AES-256-GCM, HMAC, immutable ledger and idempotency. |
+| `highlights[1]` | Desarrollo asistido por IA con especificaciones (SDD) y TDD; más de 100 pruebas automatizadas exitosas y **~94 % de cobertura reportada**. | AI-assisted specification-driven development (SDD) and TDD; over 100 passing automated tests and **~94% reported code coverage**. |
 
 #### 4.3.5 `monitoring-platform`
 
@@ -356,7 +356,7 @@ Iconos propios de esta sección: `star` y `folder`.
 | --- | --- | --- |
 | SSD-AC01 | Los hechos contienen los once proyectos de §4.2 en ese orden, con los valores de `featured`, `stack`, `teamSize` y `repository` de la tabla, y los doce enlaces de la segunda tabla con sus URLs exactas. | Prueba unitaria |
 | SSD-AC02 | Cada proyecto tiene `properName` en los hechos o `name` en ambos idiomas, pero no ambos; los cuatro proyectos con `properName` son `andespace`, `habicapital`, `ahorrapp` y `dogspa`. | Prueba unitaria |
-| SSD-AC03 | En ambos idiomas, el número de `highlights` por proyecto es 2, 2, 2, 3, 1, 1, 1, 1, 2, 1 y 2, en el orden de `PROJECT_IDS`; tienen `award` exactamente `andespace`, `ahorrapp`, `dogspa` y `algorithms`; y solo `thesis` tiene `note`. | Prueba unitaria |
+| SSD-AC03 | En ambos idiomas, el número de `highlights` por proyecto es 2, 2, 3, 2, 1, 1, 1, 1, 2, 1 y 2, en el orden de `PROJECT_IDS`; tienen `award` exactamente `andespace`, `ahorrapp`, `dogspa` y `algorithms`; y solo `thesis` tiene `note`. | Prueba unitaria |
 | SSD-AC04 | El componente renderiza dos `<h3>` y once `<article>`, cuatro bajo el primero y siete bajo el segundo, con `id` igual a `projects-` más el `id` del proyecto cuando `idScope` está vacío. | Prueba de componente |
 | SSD-AC05 | El proyecto `andespace` muestra "Equipo de 6" o "Team of 6"; `habicapital`, "Trabajo individual" o "Individual work"; y los cuatro proyectos con repositorio privado (`dental-site`, `monitoring-platform`, `dogspa` y `algorithms`) muestran "Repositorio privado" o "Private repository" y ningún enlace a un repositorio. | Prueba de componente |
 | SSD-AC06 | Hay doce enlaces externos en total, todos con `target="_blank"` y `rel="noopener noreferrer"`, y los dos enlaces "Backend" tienen nombres accesibles distintos. | Prueba de componente |
@@ -366,7 +366,7 @@ Iconos propios de esta sección: `star` y `folder`.
 | SSD-AC10 | El autor revisa ambos idiomas y comprueba que cada enlace abre el repositorio o el sitio correcto (I18N-AC18). | Revisión manual del autor, registrada en el historial de esta spec |
 | SSD-AC11 | `cases` tiene en ambos idiomas un texto por cada `CaseStudyId` con los valores de §4.6; `thesis` y `andespace` tienen `teamContributions` y `dental-site` no (SSD-R12); y `findContentIssues` no encuentra incumplimientos de C13 ni de C14 en ellos. | Prueba unitaria |
 | SSD-AC12 | Las tarjetas de `thesis`, `andespace` y `dental-site` muestran el enlace "Leer el caso completo" (o "Read the full case study") hacia `/es/projects/thesis/`, `/es/projects/andespace/` y `/es/projects/dental-site/` (o sus equivalentes en inglés), sin `target`; ninguna otra tarjeta lo muestra. | Prueba de componente |
-| SSD-AC13 | La sección renderiza exactamente tres `<strong>`, en las tarjetas de `thesis`, `habicapital` y `dental-site`, con los fragmentos en negrita de §4.3. | Prueba de componente |
+| SSD-AC13 | La sección renderiza exactamente tres `<strong>`, en las tarjetas de `thesis`, `dental-site` y `habicapital`, con los fragmentos en negrita de §4.3. | Prueba de componente |
 | SSD-AC14 | El autor lee los tres casos en ambos idiomas, en su página, y confirma que son fieles a lo que contó y que no nombran a terceros (I18N-AC18, VSN-AC09). | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -393,6 +393,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Por decisión del autor al revisar M11 (D-91): la web odontológica pasa al tercer lugar y HabiCapital al cuarto, para que los tres destacados con caso de estudio vayan seguidos. Cambian `PROJECT_IDS`, el orden de las dos tablas de §4.2 y de §4.3.3 y §4.3.4, SSD-AC03 y SSD-AC13. SSD-AC10 y SSD-AC14: el autor leyó en el sitio el contenido nuevo de M10 y los tres casos en ambos idiomas, y los aprobó (A11 y A12), el 2026-10-14. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura de los tres casos en su página queda para A12 (SSD-AC14). Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Durante M10: los textos en inglés usan el apóstrofo tipográfico (’), como exige I18N-R41. Sin cambio de contenido. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |

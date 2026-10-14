@@ -168,6 +168,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | RAM-AC08: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-87, F-22 a F-24). Grupo `data`: añade `pandas` y `scikit-learn` (57 elementos, RAM-AC01 y línea de arranque actualizados). `groups.data.note`: la opción académica en Machine Learning y los proyectos privados de ese ámbito. |
