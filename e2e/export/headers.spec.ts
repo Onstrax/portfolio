@@ -37,7 +37,7 @@ const FIXED_DIRECTIVES: Readonly<Record<string, readonly string[]>> = {
   "style-src-attr": ["'unsafe-inline'"],
   "img-src": ["'self'", "data:"],
   "font-src": ["'self'"],
-  "connect-src": ["'self'"],
+  "connect-src": ["'self'", "https://cloudflareinsights.com"],
   "object-src": ["'none'"],
   "base-uri": ["'self'"],
   "form-action": ["'none'"],

@@ -7,7 +7,9 @@ import path from "node:path";
 
 const MAX_RULES = 100;
 const MAX_LINE_LENGTH = 2000;
+/** Where the analytics script is loaded from, and where it sends its data (DEP-R25). */
 const ANALYTICS_ORIGIN = "https://static.cloudflareinsights.com";
+const ANALYTICS_ENDPOINT = "https://cloudflareinsights.com";
 
 const GLOBAL_HEADERS = [
   ["X-Content-Type-Options", "nosniff"],
@@ -103,7 +105,7 @@ function contentSecurityPolicy(hashes) {
     "style-src-attr 'unsafe-inline'",
     "img-src 'self' data:",
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self' ${ANALYTICS_ENDPOINT}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'none'",
