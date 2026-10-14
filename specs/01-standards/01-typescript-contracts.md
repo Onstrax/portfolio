@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 2.4 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR |
@@ -686,6 +686,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-85). §4.3: `CASE_STUDY_IDS` y su guarda. §4.4: `EmphasizedText` y `RichLine`, con TSC-R58 y TSC-R59 (`RichText`); TSC-R39 remite a ellos. Nuevo §4.4.1 con el contrato de caso de estudio (TSC-R60). §4.8: C3 se aplica también al texto destacado y nuevas reglas C13 y C14. §4.9: campo `welcomeSeen` y acción `markWelcomeSeen`; `reset` también lo pone a `false`. §4.10: vista `case` y `caseStudyPath`. Nuevos TSC-AC19 a TSC-AC21. |
 | 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Durante M4. TSC-R57: `assets.ts` contiene también `OgAsset` y `SiteTheme`. |

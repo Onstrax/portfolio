@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 3.3 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS |
@@ -392,6 +392,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 3.3 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 3.3 | Versión 2, pendiente de aprobación del autor (D-83, D-84, D-89). AST-R47: la reserva pasa de la esquina de la barra fija a toda la franja superior, porque la barra crece con los contactos y la placa de identidad ocupa la izquierda. Nuevos AST-R55 (esquina superior izquierda, placa de identidad) y AST-R56 (centro inferior, bienvenida). AST-AC10 comprueba las tres. Los dos másteres actuales cumplen las tres reservas con su calibración: ninguna zona baja de `y` = 119, la fuente de poder empieza en `y` = 312 y el SSD termina en `y` = 551. |
 | 2026-10-13 | 3.2 | AST-AC01: el autor midió con herramienta que los bordes de la placa son paralelos a los de la imagen dentro de 1°; resultado anotado en `PROVENANCE.md`. Sigue aplazada AST-AC06 (A7). Sin cambio de requisitos. |
 | 2026-10-13 | 3.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). El autor revisó los dos másteres al 100 % el 2026-10-13 y los dio por buenos sin ajustes: AST-AC02 a AC05 y AC07 en la fotografía y AST-AC22 en el boceto. Lo único que señaló, el contraste del display de diagnóstico sobre el boceto, se resolvió en código (D-76). Con AST-AC10, AC11 y AC20 ya confirmados en la calibración y AST-AC19 hecho (A1), las dos secciones de `PROVENANCE.md` pasan a `accepted`. Aplazadas con su visto bueno (PLAN-R10): la medición con herramienta de AST-AC01 y la prueba con una persona ajena de AST-AC06. Sin cambio de requisitos. |

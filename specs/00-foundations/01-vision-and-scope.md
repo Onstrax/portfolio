@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 2.4 |
 | Última actualización | 2026-10-14 |
 | Depende de | — |
@@ -213,6 +213,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82 a D-87, D-90). §6 reescrito con el alcance de v2: VSN-R21 a VSN-R25. Las antiguas V2-01 y V2-02 pasan a §6.1, sin fecha. §7: capturas y demos tampoco en los casos; chatbot, testimonios y animaciones gratuitas, fuera. Nuevos VSN-AC11 y VSN-AC12. Glosario: placa de identidad, bienvenida, caso de estudio y texto destacado. |
 | 2026-10-13 | 2.3 | VSN-AC09: el autor revisó el sitio desplegado y no contiene nombres de terceros ni datos de las imágenes de referencia. Sin cambio de requisitos. |
 | 2026-10-13 | 2.3 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). VSN-AC09 se comprueba antes de la primera publicación, en M9. Sin cambio de requisitos. |

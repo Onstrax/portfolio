@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -168,6 +168,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-87, F-22 a F-24). Grupo `data`: añade `pandas` y `scikit-learn` (57 elementos, RAM-AC01 y línea de arranque actualizados). `groups.data.note`: la opción académica en Machine Learning y los proyectos privados de ese ámbito. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). RAM-AC08: el autor revisó ambos idiomas y la lista, en la vista simple y en el panel (A4), el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
@@ -250,6 +250,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-87, F-22, F-29). `focusAreas` añade Machine Learning, que también muestra la placa de identidad de la escena (SCN-R46). `education.uniandes.detail` menciona la opción académica en Machine Learning, y los cursos pasan de diez a quince con los cinco restantes de esa opción. CPU-R04, CPU-AC02 y CPU-AC05 actualizados. Las traducciones al inglés de los cursos nuevos son propuestas y las revisa el autor. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). CPU-AC10: el autor revisó ambos idiomas y el encuadre de la fotografía, en la vista simple y en el panel (A4), el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-01, F-03, F-14, F-15 y la parte de F-18 relativa al Hall de la Fama. |

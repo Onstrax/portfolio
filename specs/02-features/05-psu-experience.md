@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -175,6 +175,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-85, F-25). La automatización hotelera es pública: `repository` pasa a `"public"`, `JobFact` gana `repositoryLink` y PSU-R07 enlaza el repositorio con `automationLinkLabel`. Los `highlights` son `RichLine` y destacan tres cifras. PSU-AC03 ya no espera el chip de repositorio privado. Nuevos PSU-AC08 y PSU-AC09. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). PSU-AC07: el autor revisó ambos idiomas, en la vista simple y en el panel (A4), el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-02, F-08, F-09 y la parte de F-05 y F-18 relativa a la experiencia. |

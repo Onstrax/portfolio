@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 2.0 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
@@ -183,6 +183,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.0 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.0 | Versión 2, pendiente de aprobación del autor (D-83, D-84). SET-R02: la barra fija añade un separador y los contactos directos; nuevo §4.9 (SET-R30 y SET-R31). SET-R03: los contactos van antes de la bienvenida y de las zonas. SET-R24 y SET-R25: el reinicio borra también `welcomeSeen` y la bienvenida reemplaza a la pista. §4.7: cuatro textos nuevos. SET-AC01 y SET-AC09 actualizados; nuevo SET-AC14. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SET-AC12: el autor escuchó los cinco efectos con el sonido activado y los dio por buenos (A5) el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73 y D-75). SET-R10: el menú elige un lado con sitio en lugar de tapar la pieza que lo abre. SET-R02: la barra fija se dibuja también dentro del panel abierto. SET-R12 y SET-R13 precisados. SET-R24 y SET-AC09: el reinicio no puede ocurrir con una sección abierta, porque los dos diálogos son modales. §4.7: identificador de prueba. |

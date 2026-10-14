@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 2.8 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN |
@@ -385,6 +385,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 2.8 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.8 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-84, D-88). §4.3: nuevas rutas `/{locale}/projects/{case}/`; SYS-R09 pasa a 26 documentos, y SYS-R19 y SYS-AC06 incluyen las páginas de caso. §4.5: su ruta en el árbol del grupo `(plain)`. §4.6: campo `welcomeSeen` del store de sesión, sin cambiar el prefijo. SYS-R49: la placa y los contactos llegan por propiedades. |
 | 2026-10-13 | 2.7 | Por decisión del autor (D-80). §4.1: se retira `motion`, que ningún código usaba; todas las animaciones son CSS. |
 | 2026-10-13 | 2.6 | Durante M9, por delegación del autor. SYS-R36: se anota que los dos secretos de la publicación viven en GitHub y no son variables del proyecto. |

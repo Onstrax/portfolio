@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.7 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, AST, QLT, TST, SMP |
@@ -180,6 +180,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.7 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.7 | Versión 2, pendiente de aprobación del autor (D-82). DEP-R16: la comprobación posterior a la publicación pide también una página de caso de estudio. |
 | 2026-10-14 | 1.6 | Estado: pasa a "Implementada" al cerrar M9, con todos sus criterios verificados: los automáticos, citados por pruebas (TST-R38), y los manuales, en las filas anteriores. Sin cambio de requisitos. |
 | 2026-10-13 | 1.6 | Verificación manual tras la primera publicación. DEP-AC09: la comprobación posterior pasa contra la URL de producción, y el Observatorio HTTP de Mozilla da A+ (125/100, 11 de 12 pruebas); la única que no pasa es la integridad de subrecursos (SRI) del script de analítica, que inserta Cloudflare y se sirve por HTTPS. DEP-AC10: el autor ve visitas en Web Analytics, y en producción no se crea ninguna cookie (comprobado con un navegador). DEP-AC11: el autor revisó el README y pidió que hablara en primera persona, cambio ya hecho; el repositorio, ya público (A2), no contiene `docs/` ni archivos `.env` en ningún commit. Sin cambio de requisitos. |

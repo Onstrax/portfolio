@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.1 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -393,6 +393,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.1 | Versión 2, pendiente de aprobación del autor (D-82, D-85, D-87, D-88; F-23, F-25 a F-28). Dos proyectos compactos nuevos de Machine Learning, `respiratory-etl` y `sdg-text-classifier`; `email-blacklist` pasa a público con su enlace. Los `highlights` son `RichLine` y destacan tres resultados. Nuevo `caseLinkLabel` y enlace de la tarjeta al caso (SSD-R07). Nuevo §4.6 con el contenido de los tres casos de estudio, redactado a partir de las respuestas del autor; lo revisa él antes de aprobar. Líneas de arranque: 11 proyectos. Criterios SSD-AC01 y SSD-AC03 a SSD-AC07 actualizados; nuevos SSD-AC11 a SSD-AC14. |
 | 2026-10-13 | 1.0 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). SSD-AC09 y SSD-AC10: el autor revisó el contenido en ambos idiomas, en la vista simple y en el panel (A4), y lo dio por bueno el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-12 | 1.0 | Aprobada por el autor. Versión inicial. Incorpora F-04 a F-07 y F-10 a F-12. |

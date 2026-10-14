@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.10 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, TSC, I18N, QLT |
@@ -225,6 +225,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.10 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.10 | Versión 2, pendiente de aprobación del autor (D-83). TST-R26: nueva opción `welcomeSeen` de la prueba base, activada por defecto, que marca la bienvenida como vista junto con el arranque. |
 | 2026-10-14 | 1.9 | TST-AC15: el autor revisó en GitHub Actions que cada ejecución de `deploy.yml` llega solo después de un CI en verde del mismo commit. Sin cambio de requisitos. |
 | 2026-10-13 | 1.9 | Durante M9, por delegación del autor. TST-R26: las pruebas sin JavaScript siguen los enlaces sin esperar el aviso del final de la navegación y preguntan a la página dónde está. En la puerta local, Firefox volvió a dejar una de ellas esperando tras un clic, con la página nueva ya cargada; la repetición de la navegación inicial de la versión 1.8 no bastaba. TST-R29: los recorridos de todo el sitio se marcan como lentos, con el triple de tiempo, y los dos sentidos de PNL-AC05 pasan a ser dos pruebas; en WebKit, en la puerta local, ese recorrido superó los 30 segundos. |

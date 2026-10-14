@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.9 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS |
@@ -314,6 +314,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.9 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.9 | Versión 2, pendiente de aprobación del autor (D-88). Catálogo de features: `simple-view` compone también las páginas de caso de estudio, cuyo contenido vive en `ssd-projects`. No hay features nuevos. |
 | 2026-10-13 | 1.8 | Durante M8, por delegación del autor (D-77). Árbol del repositorio: tercer archivo de configuración de Lighthouse, `lighthouserc.mobile-lcp.json`. Estado: pasa a "Implementada" al cerrar M8. |
 | 2026-10-13 | 1.7 | Durante M2, por delegación del autor. Árbol: se añade `scripts/assets-shared.mjs`, para que la lista de derivados, sus pesos máximos y la medición del brillo estén escritos una sola vez. |

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Estado | En revisión |
+| Estado | Aprobada |
 | Versión | 1.2 |
 | Última actualización | 2026-10-14 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
@@ -164,6 +164,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-14 | 1.2 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.2 | Versión 2, pendiente de aprobación del autor (D-84). IO-R02 e IO-R07: los contactos directos de la barra fija leen el CV y tres canales de esta sección. Sin cambio de contenido. |
 | 2026-10-13 | 1.1 | IO-AC10: el autor abrió cada canal desde el sitio desplegado, en escritorio y en su teléfono, y todos funcionan. Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). IO-AC10, en la parte que no necesita el sitio desplegado: el autor revisó ambos idiomas (A4) y aceptó las propiedades de los dos PDF, que conservan un objeto interno de ONLYOFFICE, el 2026-10-13. La comprobación de cada canal desde el sitio desplegado, en escritorio y en un teléfono, se hace en M9. Sin cambio de requisitos. |
