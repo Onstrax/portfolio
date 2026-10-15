@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.8 |
+| Versión | 1.9 |
 | Última actualización | 2026-10-15 |
 | Depende de | Todas las demás specs |
 
@@ -242,6 +242,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 1.9 | A16 hecha: el autor revisó el cambio de D-93 a D-96 y lo dio por bueno. La versión 2 queda cerrada, sin tareas pendientes. |
 | 2026-10-15 | 1.8 | A7 y A15 hechas: la persona ajena al hardware navegó todo el sitio guiándose por las etiquetas (AST-AC06), y el autor revisó la bienvenida modal. Por su decisión, tras probar el sitio con varios visitantes, D-93 a D-96; se publican en un solo `push` (PLAN-R15) y añaden la tarea A16. Pendiente del autor: A16. |
 | 2026-10-14 | 1.7 | A13 y A14 hechas: el autor revisó la placa, la bienvenida y la barra fija, y auditó lo nuevo en escritorio y en teléfono. Por su decisión (D-92), la bienvenida pasa a ser una terminal modal centrada; el cambio llega después de cerrar v2, en un solo `push` (PLAN-R15), y añade la tarea A15. Pendientes del autor: A15 y A7. |
 | 2026-10-14 | 1.6 | Cierre de M12 y M13. Estado: pasa a "Implementada": todas las specs del índice están en ese estado y la prueba de trazabilidad pasa, lo que PLAN-AC04 deja a la revisión del autor. Pendientes del autor: A13 y A14, y A7 (AST-AC06) desde la versión 1. |
