@@ -72,6 +72,21 @@
   }
 }
 
+/* Progress bar of the boot sequence (M-13): it fills from the left as the lines appear. */
+@keyframes boot-progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@utility boot-progress {
+  animation: boot-progress linear both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* From the boot sequence to the scene (M-02): the boot screen fades and the scene comes closer. */
 @keyframes scene-in {
   from {

@@ -12,6 +12,9 @@ export const es: UiDictionary = {
     individualWorkLabel: "Trabajo individual",
     teamOfLabel: ({ count }) => `Equipo de ${String(count)}`,
     languageLabel: "Idioma",
+    viewLabel: "Vista",
+    interactiveViewLabel: "Interactiva",
+    simpleViewLabel: "Simple",
     visitedSectionsLabel: ({ count, total }) =>
       `${String(count)} de ${String(total)} secciones visitadas`,
     downloadCvLabel: "Descargar CV (PDF)",
@@ -39,12 +42,12 @@ export const es: UiDictionary = {
   boot: {
     skipLabel: "Saltar",
     skipHint: "Cualquier tecla salta el arranque",
-    loadingAnnouncement: "Iniciando el portfolio",
+    loadingAnnouncement: `Cargando el portfolio de ${SITE.authorName}`,
   },
   scene: {
     pageTitle: `${SITE.authorName}: portfolio interactivo`,
     hotspotName: ({ hardwareName, title }) => `${hardwareName}: ${title}`,
-    settingsHardwareName: "Panel frontal",
+    settingsHardwareName: "Panel de control",
     settingsTitle: "Ajustes",
     postDisplayName: "Display de diagnóstico",
     welcomeTitle: "Sistema listo",
@@ -53,6 +56,8 @@ export const es: UiDictionary = {
     exploreLabel: "Explorar",
     profileLinkLabel: "Ver mi perfil",
     closeWelcomeAriaLabel: "Cerrar bienvenida",
+    simpleViewLinkLabel: "Vista simple",
+    hintLabel: "Cada componente iluminado abre una sección.",
   },
   panel: {
     closeAriaLabel: "Cerrar",
@@ -63,7 +68,6 @@ export const es: UiDictionary = {
   },
   settings: {
     barAriaLabel: "Controles del sitio",
-    simpleViewLabel: "Vista simple",
     cvShortLabel: "CV",
     emailAriaLabel: "Escribir un correo",
     linkedinAriaLabel: "LinkedIn",
@@ -82,7 +86,6 @@ export const es: UiDictionary = {
     navAriaLabel: "Secciones",
     desktopHint:
       "La versión interactiva de este portfolio está disponible en pantallas de escritorio.",
-    interactiveLinkLabel: "Ver la versión interactiva",
     backToTopLabel: "Volver arriba",
     caseKindTitle: "Caso de estudio",
     caseBackLabel: "Todos los proyectos",

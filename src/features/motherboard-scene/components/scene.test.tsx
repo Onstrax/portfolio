@@ -120,7 +120,7 @@ describe("Scene: structure", () => {
       ["Pila CMOS: Acerca de este sitio", "/es/about/"],
     ]);
 
-    const button = within(main).getByRole("button", { name: "Panel frontal: Ajustes" });
+    const button = within(main).getByRole("button", { name: "Panel de control: Ajustes" });
     expect(button).toHaveAttribute("aria-haspopup", "dialog");
     expect(links.at(-1)?.compareDocumentPosition(button)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
@@ -131,7 +131,7 @@ describe("Scene: structure", () => {
       "href",
       "/en/profile/",
     );
-    expect(screen.getByRole("button", { name: "Front panel: Settings" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Control panel: Settings" })).toBeInTheDocument();
   });
 
   it("has a single heading, the title of the page for screen readers", () => {
@@ -368,9 +368,9 @@ describe("Scene: labels", () => {
     expect(label("Memoria RAM")).toHaveAttribute("data-visible", "true");
   });
 
-  it("names the front panel and the diagnostic display, which shows the progress of the session", () => {
+  it("names the control panel and the diagnostic display, which shows the progress of the session", () => {
     renderScene();
-    expect(label("Panel frontal")).toHaveTextContent("Panel frontalAjustes");
+    expect(label("Panel de control")).toHaveTextContent("Panel de controlAjustes");
 
     fireEvent.pointerEnter(zone("post-display"));
     expect(label("Display de diagnóstico")).toHaveAttribute("data-visible", "true");
@@ -462,17 +462,43 @@ describe("Scene: identity plate and welcome", () => {
     expect(dialog).toHaveTextContent("Te doy la bienvenida a mi portfolio.");
   });
 
-  it("SCN-AC22: has the close button, Explore and the link to the profile, in that order", () => {
+  it("SCN-AC22: has the close button, Explore, the profile and the simple view, in that order", () => {
     renderScene();
     const dialog = screen.getByRole("dialog", { name: "Sistema listo" });
     const controls = [...dialog.querySelectorAll("button, a")];
     expect(
       controls.map((control) => control.getAttribute("aria-label") ?? control.textContent),
-    ).toEqual(["Cerrar bienvenida", "Explorar", "Ver mi perfil"]);
+    ).toEqual(["Cerrar bienvenida", "Explorar", "Ver mi perfil", "Vista simple"]);
     expect(within(dialog).getByRole("link", { name: "Ver mi perfil" })).toHaveAttribute(
       "href",
       "/es/profile/",
     );
+    expect(within(dialog).getByRole("link", { name: "Vista simple" })).toHaveAttribute(
+      "href",
+      "/es/cv/",
+    );
+  });
+
+  it("SCN-AC23: leaving for the simple view counts the welcome as seen", () => {
+    renderScene();
+    const link = screen.getByRole("link", { name: "Vista simple" });
+    // The page leaves the scene: only the session matters here.
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+    });
+    fireEvent.click(link);
+    expect(useSessionStore.getState().welcomeSeen).toBe(true);
+  });
+
+  it("SCN-AC25: shows the hint at all times, also once a section has been opened", () => {
+    const { navigate } = renderScene();
+    const hint = screen.getByTestId("scene-hint");
+    expect(hint).toHaveTextContent("Cada componente iluminado abre una sección.");
+    expect(hint.querySelector("a, button, [tabindex]")).toBeNull();
+
+    navigate("/es/about/");
+    navigate("/es/");
+    expect(screen.getByTestId("scene-hint")).toBeInTheDocument();
   });
 
   it("does not open while the boot sequence plays, nor once it has been closed", () => {
@@ -586,9 +612,9 @@ describe("Scene: identity plate and welcome", () => {
 });
 
 describe("Scene: behaviour", () => {
-  it("the front panel toggles the settings menu and tells whether it is open", async () => {
+  it("the control panel toggles the settings menu and tells whether it is open", async () => {
     renderScene();
-    const button = screen.getByRole("button", { name: "Panel frontal: Ajustes" });
+    const button = screen.getByRole("button", { name: "Panel de control: Ajustes" });
     expect(button).toHaveAttribute("aria-expanded", "false");
 
     await userEvent.click(button);

@@ -25,6 +25,7 @@ import { LanguageSwitcher } from "@/shared/ui/language-switcher";
 import { LINK_BASE, LINK_SURFACES } from "@/shared/ui/link.styles";
 import { RichText } from "@/shared/ui/rich-text";
 import { SkipLink } from "@/shared/ui/skip-link";
+import { TOP_ID } from "@/shared/ui/top-anchor";
 
 import { CONTENT_ID } from "./simple-view";
 
@@ -106,7 +107,12 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
     <div className="mx-auto w-full max-w-[760px] px-4 py-8 sm:px-6">
       <SkipLink label={common.skipToContentLabel} targetId={CONTENT_ID} />
 
-      <header className="flex flex-wrap items-center gap-4 print:hidden">
+      {/* The target of "Back to top", with the way back and the résumé in view (SMP-R29). */}
+      <header
+        id={TOP_ID}
+        tabIndex={-1}
+        className="flex scroll-mt-8 flex-wrap items-center gap-4 focus:outline-none print:hidden"
+      >
         <BackLink href={backHref}>{simpleView.caseBackLabel}</BackLink>
         <LanguageSwitcher label={common.languageLabel} focusKey="case-study" surface="light" />
         <ButtonLink href={CV_FILES[locale]} downloadType="application/pdf" icon={<DownloadIcon />}>
@@ -182,7 +188,7 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
 
       <footer className="border-ink/20 mt-12 flex flex-wrap gap-x-6 gap-y-2 border-t pt-6 print:hidden">
         <BackLink href={backHref}>{simpleView.caseBackLabel}</BackLink>
-        <a href={`#${CONTENT_ID}`} className={TEXT_LINK}>
+        <a href={`#${TOP_ID}`} className={TEXT_LINK}>
           {simpleView.backToTopLabel}
         </a>
       </footer>

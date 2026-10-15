@@ -194,7 +194,10 @@ test.describe("scene on a desktop", () => {
       await expect(page).toHaveURL("/es/");
     }
     await page.goto("/es/cv/");
-    await page.getByRole("link", { name: "Ver la versión interactiva" }).click();
+    await page
+      .getByRole("group", { name: "Vista" })
+      .getByRole("link", { name: "Interactiva" })
+      .click();
     await expect(page).toHaveURL("/es/");
     await expect(stage(page)).toBeVisible();
     await page.goto("/en/");
@@ -213,7 +216,7 @@ test.describe("scene on a desktop", () => {
     for (const { name, href } of ZONES) {
       await expect(main.getByRole("link", { name })).toHaveAttribute("href", href);
     }
-    const settings = main.getByRole("button", { name: "Panel frontal: Ajustes" });
+    const settings = main.getByRole("button", { name: "Panel de control: Ajustes" });
     await expect(settings).toHaveAttribute("aria-expanded", "false");
     await expect(main.getByRole("button")).toHaveCount(1);
   });
@@ -348,7 +351,7 @@ test.describe("scene on a desktop", () => {
     for (const [role, name] of [
       ["link", "Saltar al contenido"],
       ["link", "English"],
-      ["link", "Vista simple"],
+      ["link", "Simple"],
       ["link", "Descargar CV (PDF)"],
       ["link", "Escribir un correo"],
       ["link", "LinkedIn (se abre en una pestaña nueva)"],
@@ -380,6 +383,22 @@ test.describe("scene on a desktop", () => {
       });
       expect(stroke, id).toEqual({ width: 2, color: AURA, scaling: "non-scaling-stroke" });
     }
+  });
+
+  test("SCN-AC25: the hint stays at the foot of the scene, also after opening a section", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    const hint = page.getByTestId("scene-hint");
+    await expect(hint).toBeVisible();
+    await expect(hint).toHaveText("Cada componente iluminado abre una sección.");
+    await expect(hint.locator("a, button, [tabindex]")).toHaveCount(0);
+
+    await page.getByRole("link", { name: "SSD NVMe: Proyectos" }).click();
+    await expect(page.getByRole("dialog", { name: "Proyectos" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page).toHaveURL("/es/");
+    await expect(hint).toBeVisible();
   });
 
   test("VIS-AC13: the breath of the aura ends within 5 seconds and leaves the glow at its maximum", async ({
@@ -435,7 +454,7 @@ test.describe("scene with the welcome open", () => {
     expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
   }
 
-  test("SCN-AC22: the welcome opens as a modal terminal and Tab only walks its three controls", async ({
+  test("SCN-AC22: the welcome opens as a modal terminal and Tab only walks its four controls", async ({
     page,
   }) => {
     const dialog = await openWelcome(page);
@@ -447,6 +466,7 @@ test.describe("scene with the welcome open", () => {
       dialog.getByRole("button", { name: "Cerrar bienvenida" }),
       dialog.getByRole("button", { name: "Explorar" }),
       dialog.getByRole("link", { name: "Ver mi perfil" }),
+      dialog.getByRole("link", { name: "Vista simple" }),
     ];
     for (const control of controls) {
       await page.keyboard.press("Tab");
@@ -474,6 +494,7 @@ test.describe("scene with the welcome open", () => {
       dialog.getByRole("button", { name: "Cerrar bienvenida" }),
       dialog.getByRole("button", { name: "Explorar" }),
       dialog.getByRole("link", { name: "Ver mi perfil" }),
+      dialog.getByRole("link", { name: "Vista simple" }),
     ]) {
       await page.keyboard.press("Tab");
       await expect(control).toBeFocused();
@@ -535,6 +556,20 @@ test.describe("scene with the welcome open", () => {
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL("/es/");
     await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(welcome(page)).toHaveCount(0);
+  });
+
+  test("SCN-AC23: Simple view leaves for the cv page and counts the welcome as seen", async ({
+    page,
+  }) => {
+    const dialog = await openWelcome(page);
+    await dialog.getByRole("link", { name: "Vista simple" }).click();
+    await expect(page).toHaveURL("/es/cv/");
+    expect(await storedSession(page)).toMatchObject({ welcomeSeen: true });
+
+    await page.goto("/es/");
+    await expect(stage(page)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Procesador (CPU): Perfil" })).toBeVisible();
     await expect(welcome(page)).toHaveCount(0);
   });
 
@@ -756,6 +791,26 @@ test.describe("scene in every viewport", () => {
       }
       const bar = page.getByRole("navigation", { name: "Controles del sitio" });
       expect(boxesOverlap(box, await boxOf(bar))).toBe(false);
+    });
+  }
+
+  for (const name of SCENE_VIEWPORTS) {
+    test(`SCN-AC25: on ${name} the hint fits in the stage and covers no piece`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(VIEWPORTS[name]);
+      await page.goto("/es/");
+      const hint = page.getByTestId("scene-hint");
+      await expect(hint).toBeVisible();
+
+      const box = await boxOf(hint);
+      const frame = await boxOf(stage(page));
+      expect(box.x).toBeGreaterThanOrEqual(frame.x);
+      expect(box.x + box.width).toBeLessThanOrEqual(frame.x + frame.width);
+      expect(box.y + box.height).toBeLessThanOrEqual(frame.y + frame.height);
+      for (const [zone, zoneBox] of await interactiveZoneBoxes(page)) {
+        expect(boxesOverlap(box, zoneBox), zone).toBe(false);
+      }
     });
   }
 

@@ -42,7 +42,7 @@ import { SCENE_HEIGHT, SCENE_WIDTH, toClipPath, toStageRect } from "../lib/scene
 import { Aura } from "./aura";
 import { IdentityPlate } from "./identity-plate";
 import { PostDisplay } from "./post-display";
-import { SCENE_VIEWPORT, STAGE_LAYER, ZONE } from "./scene.styles";
+import { HINT, SCENE_VIEWPORT, STAGE_LAYER, ZONE } from "./scene.styles";
 import { SceneImages } from "./scene-images";
 import { SceneLabel } from "./scene-label";
 import { SceneWelcome } from "./scene-welcome";
@@ -251,6 +251,7 @@ export function Scene({ sections, identity }: SceneProps) {
           isOpen={isWelcomeOpen}
           onDismiss={markWelcomeSeen}
           onClosed={focusFirstZone}
+          onLeave={markWelcomeSeen}
         />
         <SceneImages
           variant={variant}
@@ -321,6 +322,10 @@ export function Scene({ sections, identity }: SceneProps) {
         {labelOf("settings", settingsNames.hardwareName, settingsNames.title)}
         {labelOf("post-display", scene.postDisplayName, visitedLabel)}
 
+        {/* Always there once the boot is done, for whoever closed the welcome unread (SCN-R53). */}
+        <p data-testid="scene-hint" className={HINT}>
+          {scene.hintLabel}
+        </p>
         <p role="status" className="sr-only">
           {visitedLabel}
         </p>

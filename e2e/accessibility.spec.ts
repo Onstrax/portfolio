@@ -202,14 +202,18 @@ test.describe("auditable states of the scene", () => {
       await expect(page.getByTestId("boot-screen")).toBeVisible();
       await expect(page.getByRole("button", { name: "Saltar" })).toBeVisible();
       // The state to audit is the whole log: a line that is still fading in has, for 100 ms, less
-      // contrast than its color gives.
+      // contrast than its color gives. The progress bar keeps its last frame, so it stays listed.
       await expect
         .poll(() =>
           page
             .getByTestId("boot-screen")
-            .evaluate((screen) => screen.getAnimations({ subtree: true }).length),
+            .evaluate((screen) =>
+              screen
+                .getAnimations({ subtree: true })
+                .every((animation) => animation.playState === "finished"),
+            ),
         )
-        .toBe(0);
+        .toBe(true);
 
       await expectNoViolations(page);
       await expect(page.locator("html")).toHaveAttribute("data-boot", "play");

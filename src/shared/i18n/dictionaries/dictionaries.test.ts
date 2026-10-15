@@ -106,6 +106,9 @@ describe("interface dictionaries", () => {
       present: "actualidad",
       individualWorkLabel: "Trabajo individual",
       languageLabel: "Idioma",
+      viewLabel: "Vista",
+      interactiveViewLabel: "Interactiva",
+      simpleViewLabel: "Simple",
       downloadCvLabel: "Descargar CV (PDF)",
       copyLabel: "Copiar",
       copiedAnnouncement: "Copiado",
@@ -117,11 +120,14 @@ describe("interface dictionaries", () => {
       present: "present",
       individualWorkLabel: "Individual work",
       languageLabel: "Language",
+      viewLabel: "View",
+      interactiveViewLabel: "Interactive",
+      simpleViewLabel: "Simple",
       downloadCvLabel: "Download résumé (PDF)",
       copyLabel: "Copy",
       copiedAnnouncement: "Copied",
     });
-    expect(Object.keys(en.common)).toHaveLength(11);
+    expect(Object.keys(en.common)).toHaveLength(14);
   });
 
   it("I18N-AC03: hold the strings of the language gate and of the 404 page", () => {

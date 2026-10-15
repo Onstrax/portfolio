@@ -49,9 +49,9 @@ interface SettingsMenuProps {
 }
 
 /**
- * The small dialog that the front panel of the scene opens: sound, scene image, language,
+ * The small dialog that the control panel of the scene opens: sound, scene image, language,
  * progress and session reset (SET-R08 to SET-R14). Whether it is open lives in the interface
- * store, which the front panel toggles.
+ * store, which the control panel toggles.
  */
 export function SettingsMenu({ sections, focusKey }: SettingsMenuProps) {
   const { common, settings } = useUiDictionary();
@@ -81,7 +81,7 @@ export function SettingsMenu({ sections, focusKey }: SettingsMenuProps) {
   }
   const isShown = isOpen || isClosing;
 
-  // Opens next to the front panel, with the focus on the sound switch (SET-R10, SET-R12).
+  // Opens next to the control panel, with the focus on the sound switch (SET-R10, SET-R12).
   useLayoutEffect(() => {
     const element = dialog.current;
     if (element === null || !isOpen) return;
@@ -103,7 +103,7 @@ export function SettingsMenu({ sections, focusKey }: SettingsMenuProps) {
     soundSwitch.current?.focus();
   }, [isOpen]);
 
-  // Closes once its animation has played, and returns the focus to the front panel (SET-R12).
+  // Closes once its animation has played, and returns the focus to the control panel (SET-R12).
   useEffect(() => {
     if (!isClosing) return;
     let isCurrent = true;

@@ -33,7 +33,7 @@ describe("menuPosition", () => {
   });
 
   it("SET-AC05: goes beside the zone when there is no room above nor below it", () => {
-    // The front panel on the smallest stage: the menu is taller than the space over and under it.
+    // The control panel on the smallest stage: the menu is taller than the space over and under it.
     const frontPanel = { left: 770, top: 333, width: 105, height: 77 };
     const position = menuPosition({ zone: frontPanel, stage, menu, side: "bottom" });
 

@@ -130,7 +130,7 @@ test.describe("what the site leaves in the browser", () => {
     await expect(page.getByRole("dialog", { name: "Proyectos" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL("/es/");
-    await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+    await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
     await page.getByRole("switch", { name: "Sonido" }).click();
     await page.getByRole("radio", { name: "Boceto" }).check();
     await page
@@ -176,7 +176,7 @@ test.describe("controls and fonts", () => {
     await expect(bar).toBeVisible();
     expect(await smallestSide(bar.getByRole("link"))).toBeGreaterThanOrEqual(44);
 
-    await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+    await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
     const menu = page.getByRole("dialog", { name: "Ajustes" });
     await expect(menu).toBeVisible();
     await expect
@@ -266,7 +266,7 @@ test.describe("reduced motion", () => {
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL("/es/");
 
-    await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+    await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
     await expect(page.getByTestId("settings-menu")).toBeVisible();
     expect(await motion(page)).toEqual({ longest: 150, looping: 0 });
 

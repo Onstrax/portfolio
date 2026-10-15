@@ -54,8 +54,30 @@ describe("BootScreen", () => {
     expect(screen.getByText("Any key skips the boot sequence")).toBeInTheDocument();
   });
 
-  it("announces that the portfolio is starting to screen readers", () => {
+  it("BOOT-AC12: says whose portfolio is loading, in a visible status line outside the log", () => {
+    const { unmount } = render(<BootScreen locale="es" />);
+    const context = screen.getByRole("status");
+    expect(context).toHaveTextContent("Cargando el portfolio de Juan Esteban Álvarez García");
+    expect(context).not.toHaveClass("sr-only");
+    expect(context.closest("[lang]")).toBeNull();
+    unmount();
+
+    render(<BootScreen locale="en" />);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Loading Juan Esteban Álvarez García’s portfolio",
+    );
+  });
+
+  it("BOOT-AC13: fills a decorative progress bar in the time the last line takes to appear", () => {
     render(<BootScreen locale="es" />);
-    expect(screen.getByRole("status")).toHaveTextContent("Iniciando el portfolio");
+    const bootScreen = screen.getByTestId("boot-screen");
+    const bar = bootScreen.querySelector('[data-part="progress"]');
+    const fill = bootScreen.querySelector<HTMLElement>('[data-part="progress-fill"]');
+
+    expect(bar).toHaveAttribute("aria-hidden", "true");
+    expect(fill?.style.animationDuration).toBe(lines().at(-1)?.style.animationDelay);
+    // Above the log, after the status line.
+    const log = bootScreen.querySelector('[data-part="log"]');
+    expect(bar?.compareDocumentPosition(log as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 });

@@ -10,6 +10,9 @@ export const en = {
     individualWorkLabel: "Individual work",
     teamOfLabel: ({ count }: { readonly count: number }): string => `Team of ${String(count)}`,
     languageLabel: "Language",
+    viewLabel: "View",
+    interactiveViewLabel: "Interactive",
+    simpleViewLabel: "Simple",
     visitedSectionsLabel: ({
       count,
       total,
@@ -43,7 +46,7 @@ export const en = {
   boot: {
     skipLabel: "Skip",
     skipHint: "Any key skips the boot sequence",
-    loadingAnnouncement: "Starting the portfolio",
+    loadingAnnouncement: `Loading ${SITE.authorName}’s portfolio`,
   },
   scene: {
     pageTitle: `${SITE.authorName}: interactive portfolio`,
@@ -54,7 +57,7 @@ export const en = {
       readonly hardwareName: string;
       readonly title: string;
     }): string => `${hardwareName}: ${title}`,
-    settingsHardwareName: "Front panel",
+    settingsHardwareName: "Control panel",
     settingsTitle: "Settings",
     postDisplayName: "Diagnostic display",
     welcomeTitle: "System ready",
@@ -63,6 +66,8 @@ export const en = {
     exploreLabel: "Explore",
     profileLinkLabel: "See my profile",
     closeWelcomeAriaLabel: "Close welcome",
+    simpleViewLinkLabel: "Simple view",
+    hintLabel: "Each glowing component opens a section.",
   },
   panel: {
     closeAriaLabel: "Close",
@@ -86,7 +91,6 @@ export const en = {
   },
   settings: {
     barAriaLabel: "Site controls",
-    simpleViewLabel: "Simple view",
     cvShortLabel: "CV",
     emailAriaLabel: "Send an email",
     linkedinAriaLabel: "LinkedIn",
@@ -104,7 +108,6 @@ export const en = {
   simpleView: {
     navAriaLabel: "Sections",
     desktopHint: "The interactive version of this portfolio is available on desktop screens.",
-    interactiveLinkLabel: "Open the interactive version",
     backToTopLabel: "Back to top",
     caseKindTitle: "Case study",
     caseBackLabel: "All projects",

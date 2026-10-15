@@ -21,7 +21,7 @@ function bar(page: Page): Locator {
 }
 
 function frontPanel(page: Page): Locator {
-  return page.getByRole("button", { name: "Panel frontal: Ajustes" });
+  return page.getByRole("button", { name: "Panel de control: Ajustes" });
 }
 
 function menu(page: Page): Locator {
@@ -64,7 +64,9 @@ test.describe("fixed bar", () => {
     const languages = bar(page).getByRole("group", { name: "Idioma" });
     await expect(languages).toContainText("ES");
     await expect(languages).toContainText("EN");
-    await expect(bar(page).getByRole("link", { name: "Vista simple" })).toHaveAttribute(
+    const views = bar(page).getByRole("group", { name: "Vista" });
+    await expect(views.locator("[aria-current=true]")).toHaveText("Interactiva");
+    await expect(views.getByRole("link", { name: "Simple", exact: true })).toHaveAttribute(
       "href",
       "/es/cv/",
     );
@@ -75,7 +77,7 @@ test.describe("fixed bar", () => {
         links.slice(1).map((link) => link.getAttribute("aria-label") ?? link.textContent.trim()),
       );
     expect(names).toEqual([
-      "Vista simple",
+      "Simple",
       "Descargar CV (PDF)",
       "Escribir un correo",
       "LinkedIn (se abre en una pestaña nueva)",
@@ -181,9 +183,9 @@ test.describe("fixed bar", () => {
     await expect(spanish).toHaveAttribute("lang", "es");
   });
 
-  test("the simple view link of the bar leads to the cv page", async ({ page }) => {
+  test("the simple view option of the bar leads to the cv page", async ({ page }) => {
     await page.goto("/es/");
-    await bar(page).getByRole("link", { name: "Vista simple" }).click();
+    await bar(page).getByRole("link", { name: "Simple", exact: true }).click();
 
     await expect(page).toHaveURL("/es/cv/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Juan Esteban Álvarez García");
@@ -253,7 +255,7 @@ test.describe("fixed bar in every scene viewport", () => {
 });
 
 test.describe("settings menu", () => {
-  test("SET-AC04: the front panel opens a modal with the focus on the sound switch, and four ways close it", async ({
+  test("SET-AC04: the control panel opens a modal with the focus on the sound switch, and four ways close it", async ({
     page,
   }) => {
     await page.goto("/es/");
@@ -313,14 +315,14 @@ test.describe("settings menu", () => {
   for (const { locale, zone, title, group, options } of [
     {
       locale: "es",
-      zone: "Panel frontal: Ajustes",
+      zone: "Panel de control: Ajustes",
       title: "Ajustes",
       group: "Imagen de la escena",
       options: ["Fotografía", "Boceto"],
     },
     {
       locale: "en",
-      zone: "Front panel: Settings",
+      zone: "Control panel: Settings",
       title: "Settings",
       group: "Scene image",
       options: ["Photo", "Sketch"],
@@ -402,6 +404,7 @@ test.describe("settings menu", () => {
     await expect(page.getByRole("dialog")).toBeHidden();
     const current = page
       .getByRole("navigation", { name: "Site controls" })
+      .getByRole("group", { name: "Language" })
       .locator("[aria-current=true]");
     await expect(current).toHaveText(/English/);
     await expect(current).toBeFocused();
@@ -447,7 +450,7 @@ test.describe("session reset", () => {
     page,
   }) => {
     await page.goto("/en/");
-    await page.getByRole("button", { name: "Front panel: Settings" }).click();
+    await page.getByRole("button", { name: "Control panel: Settings" }).click();
     const dialog = page.getByRole("dialog", { name: "Settings" });
     await dialog.getByRole("switch", { name: "Sound" }).click();
     await dialog.getByRole("radio", { name: "Sketch" }).check();

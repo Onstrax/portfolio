@@ -69,6 +69,9 @@ export const LABEL_CONTENT = "font-mono text-xs leading-4 text-on-dark-muted";
 export const PLATE = `${DARK_PLATE} pointer-events-none absolute top-4 left-4 z-(--z-bar) hidden max-h-28 max-w-[300px] flex-col overflow-hidden px-3 py-2 boot-done:flex`;
 export const PLATE_FOCUS_AREAS = "font-mono text-xs leading-4 text-on-dark";
 
+/** The hint at the foot of the stage, shown once the boot sequence is done (SCN-R53). */
+export const HINT = `${DARK_PLATE} pointer-events-none absolute bottom-2 left-1/2 z-(--z-labels) hidden w-max max-w-[calc(100%-1rem)] -translate-x-1/2 px-3 py-2 text-sm leading-5 boot-done:block`;
+
 /**
  * The welcome is a modal dialog that covers the viewport and is transparent: the veil and the
  * terminal are its children, so that both can be animated and a click on the veil can be told

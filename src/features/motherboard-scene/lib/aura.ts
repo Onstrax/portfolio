@@ -1,6 +1,6 @@
 import { isPrimaryComponentId, type SceneObjectId } from "@/shared/contracts/ids";
 
-/** The six primary pieces glow more than the CMOS battery and the front panel (VIS-R15). */
+/** The six primary pieces glow more than the CMOS battery and the control panel (VIS-R15). */
 export type AuraTier = "primary" | "secondary";
 
 /** `hover` also covers keyboard focus: both look the same (SCN-R19). */

@@ -81,16 +81,21 @@ test.describe("simple view on a phone", () => {
 });
 
 test.describe("simple view on a desktop", () => {
-  test("SMP-AC03: the cv page always shows the simple view, with a way to the scene", async ({
+  test("SMP-AC03: the cv page always shows the simple view, with the view switcher back to the scene", async ({
     page,
   }) => {
     await page.goto("/es/cv/");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Juan Esteban Álvarez García");
-    await expect(page.getByRole("link", { name: "Ver la versión interactiva" })).toHaveAttribute(
-      "href",
-      "/es/",
-    );
+    const views = page.getByRole("banner").getByRole("group", { name: "Vista" });
+    await expect(views).toBeVisible();
+    await expect(views.locator("[aria-current=true]")).toHaveText("Simple");
+    const interactive = views.getByRole("link", { name: "Interactiva" });
+    await expect(interactive).toHaveAttribute("href", "/es/");
+    // With the look of a button, at least 44×44 px, next to the language and the résumé.
+    const box = await interactive.boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
     await expect(
       page.getByText(
         "La versión interactiva de este portfolio está disponible en pantallas de escritorio.",
@@ -100,6 +105,22 @@ test.describe("simple view on a desktop", () => {
     await expect(page.locator("[data-layer=scene]")).toHaveCount(0);
   });
 
+  for (const path of ["/es/cv/", "/es/projects/thesis/"]) {
+    test(`SMP-AC23: back to top returns to the very top of ${path}, header included`, async ({
+      page,
+    }) => {
+      await page.goto(path);
+      const footer = page.getByRole("contentinfo");
+      await footer.scrollIntoViewIfNeeded();
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+      await footer.getByRole("link", { name: "Volver arriba" }).click();
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+      await expect(page.locator("#top")).toBeFocused();
+      await expect(page.getByRole("link", { name: "Descargar CV (PDF)" }).first()).toBeInViewport();
+    });
+  }
+
   test("SMP-AC08: printing hides the controls and uses black on white", async ({ page }) => {
     await page.goto("/es/cv/");
     await page.emulateMedia({ media: "print" });
@@ -107,7 +128,7 @@ test.describe("simple view on a desktop", () => {
     await expect(page.getByRole("navigation", { name: "Secciones" })).toBeHidden();
     await expect(page.getByRole("group", { name: "Idioma" })).toBeHidden();
     await expect(page.getByRole("link", { name: "Descargar CV (PDF)" }).first()).toBeHidden();
-    await expect(page.getByRole("link", { name: "Ver la versión interactiva" })).toBeHidden();
+    await expect(page.getByRole("group", { name: "Vista" })).toBeHidden();
     await expect(page.getByRole("heading", { level: 2, name: "Perfil" })).toBeVisible();
     expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
       "rgb(255, 255, 255)",

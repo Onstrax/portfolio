@@ -23,16 +23,18 @@ beforeEach(() => {
 });
 
 describe("FixedBar", () => {
-  it("SET-AC01: is a named navigation with the languages, the simple view and the contacts", () => {
+  it("SET-AC01: is a named navigation with the languages, the views and the contacts", () => {
     render(<FixedBar focusKey="bar" contacts={CONTACTS} />);
     const bar = screen.getByRole("navigation", { name: "Controles del sitio" });
 
     const languages = within(bar).getByRole("group", { name: "Idioma" });
     expect(languages).toHaveTextContent("ESEspañol/ENEnglish");
-    expect(within(bar).getByRole("link", { name: "Vista simple" })).toHaveAttribute(
-      "href",
-      "/es/cv/",
-    );
+    const views = within(bar).getByRole("group", { name: "Vista" });
+    expect(within(views).getByText("Interactiva")).toHaveAttribute("aria-current", "true");
+    expect(within(views).getByRole("link", { name: "Simple" })).toHaveAttribute("href", "/es/cv/");
+    expect(
+      languages.compareDocumentPosition(views) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     // After the other language, in this order.
     expect(
       within(bar)
@@ -40,7 +42,7 @@ describe("FixedBar", () => {
         .slice(1)
         .map((link) => link.getAttribute("aria-label") ?? link.textContent),
     ).toEqual([
-      "Vista simple",
+      "Simple",
       "Descargar CV (PDF)",
       "Escribir un correo",
       "LinkedIn (se abre en una pestaña nueva)",
@@ -105,10 +107,8 @@ describe("FixedBar", () => {
     render(<FixedBar focusKey="bar" contacts={CONTACTS} />);
 
     const bar = screen.getByRole("navigation", { name: "Site controls" });
-    expect(within(bar).getByRole("link", { name: "Simple view" })).toHaveAttribute(
-      "href",
-      "/en/cv/",
-    );
+    const views = within(bar).getByRole("group", { name: "View" });
+    expect(within(views).getByRole("link", { name: "Simple" })).toHaveAttribute("href", "/en/cv/");
     expect(within(bar).getByRole("link", { name: "Español" })).toHaveAttribute("href", "/es/");
   });
 });

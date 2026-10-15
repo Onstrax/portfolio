@@ -220,6 +220,38 @@ test.describe("first visit", () => {
     await expect(skip).toBeVisible();
     expect(await skip.evaluate((element) => element.closest("[lang=en]") === null)).toBe(true);
     await expect(log.getByRole("button")).toHaveCount(0);
+    // A line in Spanish says whose portfolio is loading, outside the log.
+    const context = bootScreen(page).getByRole("status");
+    await expect(context).toHaveText("Cargando el portfolio de Juan Esteban Álvarez García");
+    await expect(context).toBeVisible();
+    expect(await context.evaluate((element) => element.closest("[lang=en]") === null)).toBe(true);
+  });
+
+  test("BOOT-AC13: the context line and a decorative progress bar sit above the log", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    const context = bootScreen(page).getByRole("status");
+    const bar = bootScreen(page).locator('[data-part="progress"]');
+    const log = bootScreen(page).locator('[data-part="log"]');
+    await expect(context).toBeVisible();
+    await expect(bar).toBeVisible();
+    await expect(bar).toHaveAttribute("aria-hidden", "true");
+
+    const [contextBox, barBox, logBox] = await Promise.all(
+      [context, bar, log].map(
+        async (locator) => (await locator.boundingBox()) ?? { y: Number.NaN },
+      ),
+    );
+    expect(contextBox?.y).toBeLessThan(barBox?.y ?? Number.NaN);
+    expect(barBox?.y).toBeLessThan(logBox?.y ?? Number.NaN);
+
+    // It fills in the time the last line takes to appear.
+    const [fillDuration, lastDelay] = await bootScreen(page).evaluate((screen) => [
+      screen.querySelector<HTMLElement>('[data-part="progress-fill"]')?.style.animationDuration,
+      [...screen.querySelectorAll<HTMLElement>('[data-part="line"]')].at(-1)?.style.animationDelay,
+    ]);
+    expect(fillDuration).toBe(lastDelay);
   });
 
   test.describe("with reduced motion", () => {
@@ -270,7 +302,7 @@ test.describe("first visit", () => {
 test.describe("replay after a session reset", () => {
   async function resetSession(page: Page): Promise<void> {
     await page.goto("/es/");
-    await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+    await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
     await page.getByRole("button", { name: "Reiniciar sesión" }).click();
   }
 
@@ -288,7 +320,7 @@ test.describe("replay after a session reset", () => {
   test.describe("with reduced motion", () => {
     test.use({ reducedMotion: "reduce" });
 
-    test("BOOT-AC11: with reduced motion the replay shows every line at once and ends quickly", async ({
+    test("BOOT-AC11, BOOT-AC13: with reduced motion the replay shows every line and a full bar at once", async ({
       page,
     }) => {
       await resetSession(page);
@@ -301,6 +333,15 @@ test.describe("replay after a session reset", () => {
             (line) => getComputedStyle(line).opacity === "1" && line.getAnimations().length === 0,
           ),
         ),
+      ).toBe(true);
+      // BOOT-AC13: the progress bar is full from the first frame.
+      expect(
+        await bootScreen(page)
+          .locator('[data-part="progress-fill"]')
+          .evaluate(
+            (fill) =>
+              fill.getAnimations().length === 0 && getComputedStyle(fill).transform === "none",
+          ),
       ).toBe(true);
       await expect(bootScreen(page)).toBeHidden();
     });
@@ -363,7 +404,7 @@ test.describe("time limits of the boot sequence", () => {
     }) => {
       await trackBootTimes(page);
       await page.goto("/es/");
-      await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+      await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
       await page.getByRole("button", { name: "Reiniciar sesión" }).click();
 
       await expect(bootScreen(page)).toBeVisible();

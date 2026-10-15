@@ -7,9 +7,6 @@ export const BAR_VIEWPORT =
 /** The fixed bar: a dark plate of 44 px, 16 px from the top and right borders of the stage. */
 export const BAR = `${DARK_PLATE} pointer-events-auto absolute top-4 right-4 flex h-11 items-center gap-2 px-1 font-mono text-sm leading-5`;
 
-export const BAR_LINK =
-  "inline-flex min-h-11 items-center px-2 font-semibold text-on-dark underline decoration-1 underline-offset-[3px] hover:text-aura focus-visible:outline-aura";
-
 /** Decorative separator between the controls of the site and the direct contacts (SET-R02). */
 export const BAR_SEPARATOR = "mx-1 h-6 w-px shrink-0 bg-on-dark-muted/25";
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { type MouseEvent, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
-import { sectionPath } from "@/shared/config/routes";
+import { cvPath, sectionPath } from "@/shared/config/routes";
 import { useLocale } from "@/shared/i18n/use-locale";
 import { useUiDictionary } from "@/shared/i18n/use-ui-dictionary";
 import { settleAnimations } from "@/shared/lib/settle-animations";
@@ -29,6 +29,8 @@ interface SceneWelcomeProps {
   readonly onDismiss: () => void;
   /** It finished closing after `onDismiss`, and the page is no longer inert. */
   readonly onClosed: () => void;
+  /** The visitor leaves for the simple view: the welcome counts as seen (SCN-R50). */
+  readonly onLeave: () => void;
 }
 
 /**
@@ -36,7 +38,7 @@ interface SceneWelcomeProps {
  * modal dialog: the focus goes to its title, the rest of the page is inert while it is open, and
  * it closes in five ways, never by itself (SCN-R50, SCN-R51).
  */
-export function SceneWelcome({ isOpen, onDismiss, onClosed }: SceneWelcomeProps) {
+export function SceneWelcome({ isOpen, onDismiss, onClosed, onLeave }: SceneWelcomeProps) {
   const { scene } = useUiDictionary();
   const locale = useLocale();
   const titleId = useId();
@@ -134,6 +136,9 @@ export function SceneWelcome({ isOpen, onDismiss, onClosed }: SceneWelcomeProps)
               {/* Opening the profile closes the welcome too, as any section does (SCN-R50). */}
               <Link href={sectionPath(locale, "profile")} className={WELCOME_BUTTON}>
                 {scene.profileLinkLabel}
+              </Link>
+              <Link href={cvPath(locale)} className={WELCOME_BUTTON} onClick={onLeave}>
+                {scene.simpleViewLinkLabel}
               </Link>
             </div>
           </div>

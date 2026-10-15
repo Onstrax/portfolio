@@ -12,7 +12,7 @@ function html(page: Page): Locator {
 const BAR_ORDER = [
   "Saltar al contenido",
   "ENEnglish",
-  "Vista simple",
+  "Simple",
   "Descargar CV (PDF)",
   "Escribir un correo",
   "LinkedIn (se abre en una pestaña nueva)",
@@ -62,21 +62,26 @@ test.describe("keyboard", () => {
       "Panel I/O: Contacto",
       "Ventilador ARGB: Ecosistema personal",
       "Pila CMOS: Acerca de este sitio",
-      "Panel frontal: Ajustes",
+      "Panel de control: Ajustes",
     ]);
   });
 
   test.describe("with the welcome open", () => {
     test.use({ welcomeSeen: false });
 
-    test("QLT-AC03: while the welcome is open, Tab only walks its three controls", async ({
+    test("QLT-AC03: while the welcome is open, Tab only walks its four controls", async ({
       page,
     }) => {
       await page.goto("/es/");
       const dialog = page.getByRole("dialog", { name: "Sistema listo" });
       await expect(dialog.getByRole("heading", { level: 2 })).toBeFocused();
 
-      expect(await tabOrder(page, 3)).toEqual(["Cerrar bienvenida", "Explorar", "Ver mi perfil"]);
+      expect(await tabOrder(page, 4)).toEqual([
+        "Cerrar bienvenida",
+        "Explorar",
+        "Ver mi perfil",
+        "Vista simple",
+      ]);
     });
   });
 
@@ -122,7 +127,7 @@ test.describe("keyboard", () => {
       }
 
       // Turn the sound on from the settings menu.
-      const frontPanel = page.getByRole("button", { name: "Panel frontal: Ajustes" });
+      const frontPanel = page.getByRole("button", { name: "Panel de control: Ajustes" });
       await tabTo(page, frontPanel);
       await page.keyboard.press("Enter");
       const sound = page.getByRole("switch", { name: "Sonido" });
@@ -219,6 +224,7 @@ test.describe("language with a section open", () => {
     await expect(html(page)).toHaveAttribute("data-boot", "done");
     const current = page
       .getByRole("navigation", { name: "Site controls" })
+      .getByRole("group", { name: "Language" })
       .locator("[aria-current=true]");
     await expect(current).toBeFocused();
     await expect(page.getByRole("link", { name: "Processor (CPU): Profile" })).toBeVisible();
@@ -266,7 +272,7 @@ test.describe("quiet page", () => {
       await expect(page.getByRole("dialog", { name: "Stack tecnológico" })).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(page).toHaveURL("/es/");
-      await page.getByRole("button", { name: "Panel frontal: Ajustes" }).click();
+      await page.getByRole("button", { name: "Panel de control: Ajustes" }).click();
       await page.getByRole("radio", { name: "Boceto" }).check();
       await page.keyboard.press("Escape");
       await expect(page.getByRole("dialog")).toBeHidden();

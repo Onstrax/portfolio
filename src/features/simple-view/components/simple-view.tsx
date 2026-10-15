@@ -1,15 +1,15 @@
 import { SECTION_LIST } from "@/features/registry";
-import { homePath } from "@/shared/config/routes";
 import { CV_FILES, SITE } from "@/shared/config/site";
 import type { Locale } from "@/shared/contracts/locale";
 import { getUiDictionary } from "@/shared/i18n/get-ui-dictionary";
 import { cn } from "@/shared/lib/cn";
 import { ButtonLink } from "@/shared/ui/button-link";
 import { DownloadIcon } from "@/shared/ui/icons/download";
-import { InternalLink } from "@/shared/ui/internal-link";
 import { LanguageSwitcher } from "@/shared/ui/language-switcher";
 import { LINK_BASE, LINK_SURFACES } from "@/shared/ui/link.styles";
 import { SkipLink } from "@/shared/ui/skip-link";
+import { TOP_ID } from "@/shared/ui/top-anchor";
+import { ViewSwitcher } from "@/shared/ui/view-switcher";
 
 /** `id` of the main content, target of the skip link and of "back to top" (SMP-R04). */
 export const CONTENT_ID = "content";
@@ -40,9 +40,22 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
       )}
 
       <header className="space-y-4">
-        <h1 className="font-mono text-3xl leading-9 font-semibold">{SITE.authorName}</h1>
+        {/* The target of "Back to top": the page goes back to its very top (SMP-R29). */}
+        <h1
+          id={TOP_ID}
+          tabIndex={-1}
+          className="scroll-mt-8 font-mono text-3xl leading-9 font-semibold focus:outline-none"
+        >
+          {SITE.authorName}
+        </h1>
         <div className="flex flex-wrap items-center gap-4 print:hidden">
           <LanguageSwitcher label={common.languageLabel} focusKey="simple-view" surface="light" />
+          {/* The way back to the scene, only where the scene exists (SMP §4.2, D-93). */}
+          {variant === "standalone" && (
+            <span className="scene-capable:inline-flex hidden">
+              <ViewSwitcher locale={locale} current="simple" surface="light" />
+            </span>
+          )}
           <ButtonLink
             href={CV_FILES[locale]}
             downloadType="application/pdf"
@@ -54,13 +67,6 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
         <p className="text-ink-muted scene-capable:hidden text-sm leading-5 print:hidden">
           {simpleView.desktopHint}
         </p>
-        {variant === "standalone" && (
-          <p className="print:hidden">
-            <span className="scene-capable:inline hidden">
-              <InternalLink href={homePath(locale)}>{simpleView.interactiveLinkLabel}</InternalLink>
-            </span>
-          </p>
-        )}
       </header>
 
       <nav aria-label={simpleView.navAriaLabel} className="mt-6 print:hidden">
@@ -96,7 +102,7 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
       </main>
 
       <footer className="border-ink/20 mt-12 border-t pt-6 print:hidden">
-        <a href={`#${CONTENT_ID}`} className={TEXT_LINK}>
+        <a href={`#${TOP_ID}`} className={TEXT_LINK}>
           {simpleView.backToTopLabel}
         </a>
       </footer>

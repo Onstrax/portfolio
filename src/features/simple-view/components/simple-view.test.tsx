@@ -80,13 +80,15 @@ describe("SimpleView", () => {
     }
   });
 
-  it("adds the skip link and the way back to the scene only when it stands alone", () => {
+  it("SMP-AC03: adds the skip link and the view switcher, back to the scene, only when it stands alone", () => {
     const standalone = render(<SimpleView locale="es" variant="standalone" />);
     expect(screen.getByRole("link", { name: "Saltar al contenido" })).toHaveAttribute(
       "href",
       "#content",
     );
-    expect(screen.getByRole("link", { name: "Ver la versión interactiva" })).toHaveAttribute(
+    const views = within(screen.getByRole("banner")).getByRole("group", { name: "Vista" });
+    expect(within(views).getByText("Simple")).toHaveAttribute("aria-current", "true");
+    expect(within(views).getByRole("link", { name: "Interactiva" })).toHaveAttribute(
       "href",
       "/es/",
     );
@@ -94,9 +96,7 @@ describe("SimpleView", () => {
 
     render(<SimpleView locale="es" variant="base" />);
     expect(screen.queryByRole("link", { name: "Saltar al contenido" })).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("link", { name: "Ver la versión interactiva" }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Vista" })).not.toBeInTheDocument();
   });
 
   it("explains where the interactive version is, and ends with a way back to the top", () => {
@@ -106,9 +106,13 @@ describe("SimpleView", () => {
         "The interactive version of this portfolio is available on desktop screens.",
       ),
     ).toBeInTheDocument();
+    // To the very top, the name of the author, and not to the content after the header (SMP-R29).
     expect(
       within(screen.getByRole("contentinfo")).getByRole("link", { name: "Back to top" }),
-    ).toHaveAttribute("href", "#content");
+    ).toHaveAttribute("href", "#top");
+    const top = screen.getByRole("heading", { level: 1 });
+    expect(top).toHaveAttribute("id", "top");
+    expect(top).toHaveAttribute("tabindex", "-1");
   });
 });
 
@@ -118,7 +122,6 @@ describe("simple view and site texts", () => {
       navAriaLabel: "Secciones",
       desktopHint:
         "La versión interactiva de este portfolio está disponible en pantallas de escritorio.",
-      interactiveLinkLabel: "Ver la versión interactiva",
       backToTopLabel: "Volver arriba",
       caseKindTitle: "Caso de estudio",
       caseBackLabel: "Todos los proyectos",
@@ -138,7 +141,6 @@ describe("simple view and site texts", () => {
     expect(en.simpleView).toEqual({
       navAriaLabel: "Sections",
       desktopHint: "The interactive version of this portfolio is available on desktop screens.",
-      interactiveLinkLabel: "Open the interactive version",
       backToTopLabel: "Back to top",
       caseKindTitle: "Case study",
       caseBackLabel: "All projects",
