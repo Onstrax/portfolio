@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.2 |
-| Última actualización | 2026-10-14 |
+| Versión | 2.0 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -63,10 +63,10 @@ Feature: `src/features/boot-sequence/`. Tiene las dos entradas de STR-R33: `serv
 | ID | Requisito |
 | --- | --- |
 | BOOT-R12 | `BootScreen` es un componente de servidor que renderiza todas las líneas como HTML estático dentro de la capa de escena (SYS-R46). Así la pantalla se pinta sin esperar JavaScript (QLT-R32). Solo es visible con la variante `boot-play` o `boot-exit` (SYS-R50). |
-| BOOT-R13 | La pantalla cubre todo el viewport, en la capa `z-boot`, con fondo `boot-bg`. El registro empieza en la esquina superior izquierda, con 32 px de margen, y usa el rol tipográfico "Registro de arranque" de VIS §4.2. Las marcas de tiempo van en `boot-dim`, los mensajes en `boot-text` y la etiqueta `[  OK  ]` en `boot-ok`. Cada línea ocupa una sola línea de pantalla; lo que no quepa se corta sin puntos suspensivos. |
+| BOOT-R13 | La pantalla cubre todo el viewport, en la capa `z-boot`, con fondo `boot-bg`. En la esquina superior izquierda, con 32 px de margen, están, de arriba abajo: la línea de contexto (BOOT-R16), la barra de progreso (BOOT-R24) y, 24 px por debajo de esta, el registro, que usa el rol tipográfico "Registro de arranque" de VIS §4.2. Las marcas de tiempo van en `boot-dim`, los mensajes en `boot-text` y la etiqueta `[  OK  ]` en `boot-ok`. Cada línea ocupa una sola línea de pantalla; lo que no quepa se corta sin puntos suspensivos. |
 | BOOT-R14 | Las líneas aparecen de una en una, de arriba abajo, mediante una animación CSS de opacidad de `duration-instant` con un retardo propio por línea (animación M-01 de VIS). La línea `i`, contando desde cero, aparece a los `i × intervalo` milisegundos del primer pintado, donde `intervalo = 1400 / (N − 1)` redondeado hacia abajo y `N` es el número de líneas. La última línea aparece, por tanto, a los 1400 ms como máximo. |
-| BOOT-R15 | En la esquina inferior derecha, fuera del contenedor del registro y en el idioma de la página, se muestran la indicación `boot.skipHint` en `boot-dim` y un botón con el texto `boot.skipLabel`. El botón es el único elemento enfocable de la pantalla. Mientras dura el arranque, el enlace de salto de la escena no se muestra. |
-| BOOT-R16 | La pantalla contiene una región con `role="status"`, visible solo para lectores de pantalla, con el texto `boot.loadingAnnouncement`. |
+| BOOT-R15 | En la esquina inferior derecha, fuera del contenedor del registro y en el idioma de la página, se muestran la indicación `boot.skipHint` en `boot-text` y un botón con el texto `boot.skipLabel`, con texto y borde de 1 px en `boot-text` (D-96). El botón es el único elemento enfocable de la pantalla. Mientras dura el arranque, el enlace de salto de la escena no se muestra. |
+| BOOT-R16 | **Línea de contexto.** Sobre el registro, la pantalla muestra desde el primer pintado, sin animación y en el idioma de la página, el texto `boot.loadingAnnouncement`, con el rol "Contexto del arranque" de VIS §4.2 en `boot-text`, fuera del contenedor con `lang="en"`. Es una región con `role="status"`. Dice de quién es el sitio y que está cargando, para que quien no conoce una terminal no la tome por algo peligroso (D-96). El nombre del autor procede de `SITE.authorName` (SMP-R02). |
 
 ### 4.4 Fin, salto y transición
 
@@ -79,6 +79,7 @@ Feature: `src/features/boot-sequence/`. Tiene las dos entradas de STR-R33: `serv
 | BOOT-R21 | Si al terminar el arranque el foco estaba en el botón de saltar, pasa al `<h1>` de la escena. Tras una repetición pasa siempre al `<h1>`, porque el control que la pidió, en el menú de ajustes, ya no existe; si el foco quedara en ningún sitio, WebKit no volvería a avanzarlo con el tabulador. En otro caso no se mueve. Si al terminar el arranque se abre la bienvenida de la escena, que es modal, el foco pasa después a su título (SCN-R51). |
 | BOOT-R22 | El arranque nunca bloquea la página: si el código de la aplicación no llega a iniciarse, el temporizador de respaldo del script previo al pintado pasa a la vista simple (QLT-R43), en la que la pantalla de arranque no se muestra. |
 | BOOT-R23 | En una repetición con el sonido activado, al empezar se reproduce el efecto `boot` (ver SET). En la primera visita no suena nada, porque el sonido está desactivado por defecto. |
+| BOOT-R24 | **Barra de progreso.** 12 px por debajo de la línea de contexto hay una barra decorativa, con `aria-hidden="true"`, de 12 px de alto y ancho `min(480px, 100% - 64px)`: un marco de 1 px en `boot-dim` con 2 px de relleno interior y, dentro, un relleno en `boot-ok` que crece de izquierda a derecha con la animación M-13 de VIS y se completa cuando aparece la última línea del registro (BOOT-R14). En una repetición del arranque vuelve a empezar vacía. Con movimiento reducido se muestra llena desde el primer fotograma (D-96). |
 
 ### 4.5 Textos de interfaz
 
@@ -88,7 +89,7 @@ Espacio de nombres `boot` del diccionario de interfaz (I18N §4.3).
 | --- | --- | --- |
 | `skipLabel` | Saltar | Skip |
 | `skipHint` | Cualquier tecla salta el arranque | Any key skips the boot sequence |
-| `loadingAnnouncement` | Iniciando el portfolio | Starting the portfolio |
+| `loadingAnnouncement` | Cargando el portfolio de Juan Esteban Álvarez García | Loading Juan Esteban Álvarez García’s portfolio |
 
 Identificador de prueba (TST-R24): `data-testid="boot-screen"` en el contenedor de la pantalla. Sus partes llevan `data-part`: `log` en el contenedor del registro, `line` en cada línea y `skip` en el botón. Tras un salto, la pantalla lleva `data-skipped="true"`.
 
@@ -109,7 +110,8 @@ Los tiempos de BOOT-R14 y BOOT-R17 los calculan `lineDelay` y `bootDuration`, fu
 | BOOT-AC09 | Mientras el arranque es visible, tabular solo alcanza el botón "Saltar", y ningún elemento de la escena recibe un clic. | Prueba E2E |
 | BOOT-AC10 | Tras reiniciar la sesión desde los ajustes, el arranque vuelve a mostrarse y, al terminar, `sessionStorage` contiene `bootSeen: true`. | Prueba E2E |
 | BOOT-AC11 | Con movimiento reducido activo, reiniciar la sesión muestra el arranque con todas las líneas visibles desde el primer fotograma y este termina antes de 800 ms. | Prueba E2E; el límite de tiempo, solo en Chromium y con el reloj de la página |
-| BOOT-AC12 | En `/es/`, la indicación y el botón de saltar están en español y fuera del contenedor con `lang="en"`. | Prueba E2E |
+| BOOT-AC12 | En `/es/`, la indicación y el botón de saltar están en español y fuera del contenedor con `lang="en"`, y la línea de contexto dice "Cargando el portfolio de Juan Esteban Álvarez García", también fuera de él, y está en una región con `role="status"`. | Prueba E2E |
+| BOOT-AC13 | En `desktop`, primera visita a `/es/`: la línea de contexto y la barra de progreso son visibles encima del registro; la barra tiene `aria-hidden="true"` y la duración de su animación es la del retardo de la última línea del registro; con movimiento reducido, la barra está llena y sin animación. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -131,6 +133,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 2.0 | Por decisión del autor (D-96): un visitante que no conoce la tecnología se asustó al ver la terminal y pensó en un ataque. Sin quitar ni alargar la animación, la pantalla dice de qué se trata: BOOT-R16, la línea de contexto pasa de solo para lectores de pantalla a visible, encima del registro, con el texto "Cargando el portfolio de Juan Esteban Álvarez García"; nuevo BOOT-R24, una barra de progreso que se llena al ritmo de las líneas; BOOT-R15, la indicación y el botón de saltar, en `boot-text`, más visibles. BOOT-R13: orden de la pantalla. BOOT-AC12 ampliado y nuevo BOOT-AC13. |
 | 2026-10-14 | 1.2 | Por decisión del autor (D-92). BOOT-R21: cuando al terminar el arranque se abre la bienvenida, el foco termina en su título. |
 | 2026-10-13 | 1.1 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-13 | 1.1 | Durante M7, por delegación del autor (D-74). BOOT-R18: el tabulador no salta el arranque, porque BOOT-AC09 exige poder llegar con él al botón; y una pulsación anterior a la carga del código cuenta, anotada por el script previo al pintado. BOOT-R15: el enlace de salto de la escena se oculta durante el arranque. BOOT-R19 precisado. §4.5: atributos de prueba y funciones de `lib/`. BOOT-AC05: los 2600 ms cuentan desde el primer pintado, como BOOT-R17, y se miden con el reloj de la página. BOOT-R17: reloj del primer pintado. BOOT-R21: tras una repetición el foco va al título de la escena. BOOT-AC05, AC06 y AC11: sus límites de tiempo se miden solo en Chromium (TST-R22). |

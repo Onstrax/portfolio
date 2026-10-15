@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 4.0 |
-| Última actualización | 2026-10-14 |
+| Versión | 4.1 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -67,9 +67,9 @@ Definir el lenguaje visual común: colores, tipografía, medidas, aura, superfic
 | Token | Valor | Uso |
 | --- | --- | --- |
 | `boot-bg` | `#040604` | Fondo de la pantalla de arranque y de la terminal de la bienvenida |
-| `boot-text` | `#9BEFA9` | Texto de las líneas del registro y de la bienvenida; texto y anillo de foco de los controles de la bienvenida |
-| `boot-dim` | `#5FA36C` | Marcas de tiempo; borde de la terminal de la bienvenida y de sus botones, y su signo `›` |
-| `boot-ok` | `#4ADE80` | Indicador `OK`; segmentos encendidos del display de diagnóstico; título de la bienvenida |
+| `boot-text` | `#9BEFA9` | Texto de las líneas del registro, de la línea de contexto y de la indicación y el botón de saltar del arranque, y de la bienvenida; texto y anillo de foco de los controles de la bienvenida |
+| `boot-dim` | `#5FA36C` | Marcas de tiempo; marco de la barra de progreso del arranque; borde de la terminal de la bienvenida y de sus botones, y su signo `›` |
+| `boot-ok` | `#4ADE80` | Indicador `OK`; relleno de la barra de progreso del arranque; segmentos encendidos del display de diagnóstico; título de la bienvenida |
 
 #### 4.1.4 Contraste verificado
 
@@ -141,6 +141,7 @@ La hoja de impresión de la vista simple (SMP-R12) usa negro sobre blanco.
 | Etiqueta de escena, línea de nombre | mono | 14 / 20 px | 600 | Mayúsculas, espaciado 0,06 em |
 | Etiqueta de escena, línea de contenido | mono | 12 / 16 px | 400 | — |
 | Registro de arranque | mono | 14 / 21 px; 16 / 24 px con viewport de 1440 px de ancho o más | 400 | Cifras de ancho fijo |
+| Contexto del arranque | mono | 16 / 24 px; 18 / 28 px con viewport de 1440 px de ancho o más | 600 | — |
 | Vista simple, nombre | mono | 30 / 36 px | 600 | — |
 | Vista simple, título de sección | mono | 24 / 32 px | 600 | Mayúsculas, espaciado 0,06 em |
 
@@ -299,6 +300,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | M-10 | Pulsación de un botón | Escala 1 → 0,98 → 1 | `duration-instant`, `ease-out` | Sin animación |
 | M-11 | Aparición de la imagen de la escena al terminar de decodificarse | Opacidad 0 → 1 | `duration-base`, `ease-out` | Igual, en `duration-fast` |
 | M-12 | Aparición y retirada de la bienvenida de la escena (SCN §4.7) | Velo: opacidad 0 ↔ 0,6. Terminal: opacidad 0 ↔ 1 y escala 0,98 ↔ 1 | Aparición: `duration-base`, `ease-out`. Retirada: `duration-fast`, `ease-in` | Solo opacidad, 150 ms |
+| M-13 | Barra de progreso del arranque (BOOT-R24) | Escala horizontal del relleno 0 → 1, desde la izquierda | Lineal, con la duración del retardo de la última línea del registro: 1400 ms como máximo | Sin animación: llena |
 
 ### 4.8 Iconografía
 
@@ -366,6 +368,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 4.1 | Por decisión del autor (D-96). Nuevo rol tipográfico "Contexto del arranque" y nueva animación M-13, la barra de progreso del arranque. Usos de `boot-text`, `boot-dim` y `boot-ok` ampliados. |
 | 2026-10-14 | 4.0 | Por decisión del autor (D-92): la bienvenida deja de ser una placa oscura y pasa a ser una terminal con los colores del arranque. Nuevo §4.5.4 (VIS-R46) y nuevo control "Botón de terminal" en VIS-R29. VIS-R31 y VIS-AC04: en la terminal, el anillo de foco es `boot-text`. M-12: velo y terminal, con escala. Usos de `backdrop`, de los colores del arranque y de `z-panel` ampliados. |
 | 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38). La auditoría con axe recorre ya la bienvenida en las dos variantes (VIS-AC03) y la prueba de movimiento reducido mide su transición (VIS-AC05). VIS-AC12 queda para la revisión del autor de la placa, la bienvenida y la barra fija (A13). Sin cambio de requisitos. |
 | 2026-10-14 | 3.0 | Aprobada por el autor el 2026-10-14 (versión 2). |

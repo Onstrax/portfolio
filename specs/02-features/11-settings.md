@@ -3,21 +3,21 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 3.0 |
-| Última actualización | 2026-10-14 |
+| Versión | 4.0 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
 ## 1. Propósito
 
-Especificar los controles globales de la escena: la barra fija con el idioma, el acceso a la vista simple y los contactos directos, el menú de ajustes que abre el panel frontal (sonido, imagen de la escena, idioma, progreso y reinicio de sesión) y los efectos de sonido.
+Especificar los controles globales de la escena: la barra fija con el idioma, el selector de vista y los contactos directos, el menú de ajustes que abre el panel de control (sonido, imagen de la escena, idioma, progreso y reinicio de sesión) y los efectos de sonido.
 
 ## 2. Alcance
 
-**Incluye:** la barra fija y sus contactos directos, el selector de idioma, el menú de ajustes, el reinicio de sesión y el catálogo y la síntesis de los efectos de sonido.
+**Incluye:** la barra fija y sus contactos directos, el selector de idioma, el selector de vista, el menú de ajustes, el reinicio de sesión y el catálogo y la síntesis de los efectos de sonido.
 
-**No incluye:** la zona del panel frontal en la escena, que es de SCN (SCN-R11); las reglas del cambio de idioma, que son de I18N §4.5; ni cuándo reproduce cada feature su sonido, que lo dice su spec.
+**No incluye:** la zona del panel de control en la escena, que es de SCN (SCN-R11); las reglas del cambio de idioma, que son de I18N §4.5; ni cuándo reproduce cada feature su sonido, que lo dice su spec.
 
-Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente `FixedBar` y `SettingsMenu`. El selector de idioma y el motor de sonido viven en `shared/` porque los usan otros features (§4.2 y §4.5).
+Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente `FixedBar` y `SettingsMenu`. El selector de idioma, el de vista y el motor de sonido viven en `shared/` porque los usan otros features (§4.2, §4.10 y §4.5).
 
 ## 3. Definiciones
 
@@ -34,7 +34,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | ID | Requisito |
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
-| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); un enlace a la vista simple (`cvPath`, TSC §4.10) con el texto `settings.simpleViewLabel`; un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma, la vista simple y los contactos sigan al alcance (PNL-R25). |
+| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); el selector de vista (§4.10), con "Interactiva" como opción actual (D-93); un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma, el selector de vista y los contactos sigan al alcance (PNL-R25). |
 | SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a las zonas de la escena (QLT-R07). Mientras la bienvenida está abierta, la barra es inerte, como el resto de la escena (SCN-R51). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
@@ -91,7 +91,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | --- | --- |
 | SET-R24 | Al activar el botón de reinicio, y sin pedir confirmación, ocurre en este orden: (1) se cierra el menú de ajustes; (2) si hay una sección abierta, se navega al inicio del idioma actual; (3) se llama a `reset()` en el store de sesión, lo que borra las secciones visitadas y pone `bootSeen` y `welcomeSeen` a `false` (TSC §4.9); (4) la secuencia de arranque se repite (BOOT-R04). El paso (2) es una salvaguarda: el menú y el panel son modales y no pueden estar abiertos a la vez. |
 | SET-R25 | El reinicio no cambia el idioma, la preferencia de sonido ni la imagen de la escena. Tras él, el display de diagnóstico muestra `00` y, al terminar el arranque, vuelve a mostrarse la bienvenida de la escena (SCN-R48). |
-| SET-R26 | El botón Power del panel frontal, visible en la imagen, no tiene ninguna función (D-11). |
+| SET-R26 | Los mandos dibujados en el panel de control no tienen función propia: la pieza entera abre los ajustes (D-11, D-95). |
 
 ### 4.7 Textos de interfaz
 
@@ -100,7 +100,6 @@ Espacio de nombres `settings` del diccionario de interfaz. Identificador de prue
 | Clave | Español | Inglés |
 | --- | --- | --- |
 | `barAriaLabel` | Controles del sitio | Site controls |
-| `simpleViewLabel` | Vista simple | Simple view |
 | `cvShortLabel` | CV | CV |
 | `emailAriaLabel` | Escribir un correo | Send an email |
 | `linkedinAriaLabel` | LinkedIn | LinkedIn |
@@ -142,14 +141,21 @@ export interface QuickContact {
 }
 ```
 
+### 4.10 Selector de vista
+
+| ID | Requisito |
+| --- | --- |
+| SET-R32 | `ViewSwitcher` es un componente de `src/shared/ui/`, sin estado, que usan la barra fija y la vista simple (SMP §4.2). Recibe el idioma, la vista actual (`"interactive"` o `"simple"`) y la superficie. Es un grupo (`role="group"`) con el nombre accesible `common.viewLabel` y dos opciones, en este orden: `common.interactiveViewLabel`, hacia `homePath(locale)`, y `common.simpleViewLabel`, hacia `cvPath(locale)`. La opción de la vista actual es un `<span>` con `aria-current="true"`; la otra es un enlace. Cada opción mide al menos 44×44 px (D-93). |
+| SET-R33 | Sobre superficie oscura tiene el aspecto del selector de idioma (SET-R06): la opción actual en `aura`, la otra con el estilo "Enlace (superficie oscura)" sin subrayado, y un separador `/` decorativo entre ambas. Sobre superficie clara es un control segmentado con borde de 1 px en `ink` y radio `radius-control`, sin separador: la opción actual con el aspecto del "Botón primario" y la otra con el del "Botón secundario" sin su borde propio (VIS-R29), ambas con el rol tipográfico "Botón". |
+
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
-| SET-AC01 | En `desktop`, la barra fija es visible en la esquina superior derecha del escenario, es un `<nav>` con el nombre "Controles del sitio" en `/es/`, y contiene las opciones "ES" y "EN", el enlace "Vista simple", que lleva a `/es/cv/`, y los cuatro contactos directos, en ese orden. | Prueba E2E |
+| SET-AC01 | En `desktop`, la barra fija es visible en la esquina superior derecha del escenario, es un `<nav>` con el nombre "Controles del sitio" en `/es/`, y contiene las opciones "ES" y "EN", el selector "Vista" con "Interactiva" como opción actual y el enlace "Simple", que lleva a `/es/cv/`, y los cuatro contactos directos, en ese orden. | Prueba E2E |
 | SET-AC02 | En cada viewport de modo `scene` de QLT §4.6, la caja de la barra fija no se solapa con la caja de ninguna zona interactiva de la escena. | Prueba E2E |
 | SET-AC03 | El selector de idioma cumple I18N-AC11, I18N-AC12 e I18N-AC14 desde la barra fija y desde el menú de ajustes. | Prueba E2E |
-| SET-AC04 | Activar la zona "Panel frontal: Ajustes" abre un diálogo modal con el nombre "Ajustes" y el foco en el interruptor "Sonido". Esc, el botón de cerrar, un clic fuera y una segunda activación de la zona lo cierran, y el foco vuelve a la zona. | Prueba E2E |
+| SET-AC04 | Activar la zona "Panel de control: Ajustes" abre un diálogo modal con el nombre "Ajustes" y el foco en el interruptor "Sonido". Esc, el botón de cerrar, un clic fuera y una segunda activación de la zona lo cierran, y el foco vuelve a la zona. | Prueba E2E |
 | SET-AC05 | El menú queda dentro del escenario en `desktop-min` y en `desktop-hd`. | Prueba E2E |
 | SET-AC06 | El interruptor de sonido tiene `role="switch"` y `aria-checked="false"` en una primera visita. Al activarlo pasa a `"true"`, `localStorage` contiene `soundEnabled: true`, y tras recargar la página sigue en `"true"`. | Prueba E2E |
 | SET-AC07 | Con el sonido apagado, `playSound` no crea ningún `AudioContext`. Con el sonido encendido, cada `SoundName` crea un oscilador con la onda, las frecuencias y la duración de la tabla de §4.5, y la ganancia nunca supera 0,06. | Prueba unitaria con una Web Audio API simulada |
@@ -159,6 +165,7 @@ export interface QuickContact {
 | SET-AC11 | En `mobile` no se renderizan ni la barra fija ni el menú de ajustes. | Prueba E2E |
 | SET-AC13 | El menú de ajustes muestra el grupo "Imagen de la escena" con las opciones "Fotografía" y "Boceto" en `/es/`, y "Scene image", "Photo" y "Sketch" en `/en/`; en una primera visita está marcada la primera. Al elegir "Boceto", el menú sigue abierto, `localStorage` contiene `sceneVariant: "sketch"` y, tras recargar la página, sigue marcada. | Prueba E2E |
 | SET-AC14 | En `desktop`, la barra fija de `/es/` contiene, en este orden, los enlaces "Descargar CV (PDF)", que apunta a `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` con `download`; "Escribir un correo", con `mailto:juanalvarezgcl@gmail.com`; y "LinkedIn" y "GitHub", con las URLs de IO-R07, `target="_blank"` y `rel="noopener noreferrer"`. Cada uno mide al menos 44×44 px, y con un panel abierto siguen al alcance en la barra que se dibuja dentro de él. `buildQuickContacts` devuelve esos cuatro en orden y lanza un error si falta un canal. | Prueba E2E y prueba unitaria |
+| SET-AC15 | `ViewSwitcher`, con cada vista actual y en cada superficie, es un grupo "Vista" con "Interactiva" y "Simple" en ese orden: la actual es un `<span>` con `aria-current="true"` y la otra, un enlace a `/es/` o a `/es/cv/`; en inglés sus textos son "View", "Interactive" y "Simple". | Prueba de componente |
 | SET-AC12 | El autor escucha los cinco efectos con el sonido activado y confirma que son discretos y coherentes entre sí. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -166,7 +173,8 @@ export interface QuickContact {
 | Decisión | Justificación |
 | --- | --- |
 | **Idioma y vista simple en una barra siempre visible** (D-11). | Son las dos salidas que un visitante puede necesitar de inmediato: leer en su idioma y saltarse la experiencia. No pueden depender de descubrir una pieza de la imagen. |
-| **El resto de ajustes, tras el panel frontal.** | Sonido y reinicio son secundarios. Colocarlos en una pieza de hardware mantiene limpia la escena y encaja con el tema: el panel frontal es donde un PC tiene sus botones. |
+| **El resto de ajustes, tras el panel de control** (D-95). | Sonido y reinicio son secundarios. Colocarlos en una pieza de hardware mantiene limpia la escena y encaja con el tema. La pieza se llamó "panel frontal", pero la imagen muestra una caja de mandos; "panel de control" describe lo que se ve y, en informática, es donde están los ajustes. |
+| **Vista como selector, igual que el idioma** (SET-R32, D-93). | Con las dos opciones siempre a la vista y la actual marcada, el visitante sabe en qué vista está y que existe la otra. En la vista simple, con forma de botón, el regreso a la escena se encuentra sin buscarlo. |
 | **Menú como `<dialog>` modal pequeño** (SET-R09). | Mismo patrón que el panel de detalle: foco retenido, Esc y fondo inerte sin código propio. |
 | **Sonidos sintetizados, sin archivos** (D-50). | Cinco pitidos cortos se describen con una tabla y pesan cero bytes; no hay licencias que gestionar ni descargas. Además, un pitido sintético es exactamente lo que emite una placa madre al arrancar. |
 | **Sonido apagado por defecto y nunca al pasar el puntero** (D-12, SET-R23). | Un sitio que suena sin permiso se cierra. El sonido es un extra que el visitante elige. |
@@ -183,6 +191,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 4.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93, D-95). SET-R02: la barra lleva el selector de vista en lugar del enlace "Vista simple"; nuevo §4.10 (SET-R32 y SET-R33) y SET-AC15; se retira el texto `settings.simpleViewLabel`. SET-R26: los mandos del panel de control, no un botón Power, que la imagen no tiene. La pieza de ajustes se llama "Panel de control". SET-AC01 y SET-AC04 actualizados; §6, dos decisiones. |
 | 2026-10-14 | 3.0 | Por decisión del autor (D-92). SET-R03: la bienvenida ya no está en el orden de tabulación de la escena; mientras está abierta, la barra es inerte. |
 | 2026-10-14 | 2.0 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): los contactos directos de la barra fija, también dentro del panel abierto (SET-AC01, SET-AC14), y la bienvenida tras el reinicio (SET-AC09). Sin cambio de requisitos. |
 | 2026-10-14 | 2.0 | Aprobada por el autor el 2026-10-14 (versión 2). |

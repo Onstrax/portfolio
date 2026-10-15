@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 3.0 |
-| Última actualización | 2026-10-14 |
+| Versión | 3.1 |
+| Última actualización | 2026-10-15 |
 | Depende de | — |
 
 ## 1. Propósito
@@ -68,7 +68,7 @@ El orden de esta tabla es el **orden canónico** de las secciones primarias en l
 | Identificador | Pieza de hardware (ES / EN) | Ubicación | Función | `SectionSlug` | Spec |
 | --- | --- | --- | --- | --- | --- |
 | `cmos` | Pila CMOS / CMOS battery | Sobre la placa | Abre la sección "Acerca de este sitio / About this site" | `about` | CMOS |
-| `settings` | Panel frontal / Front panel | Sobre el workbench | Abre los ajustes (sonido, reset, idioma). No es una sección ni tiene URL. | — | SET |
+| `settings` | Panel de control / Control panel | Sobre el workbench | Abre los ajustes (sonido, reset, idioma). No es una sección ni tiene URL. | — | SET |
 | `post-display` | Display de diagnóstico / Diagnostic display | Sobre la placa | Muestra cuántas secciones primarias se han visitado. No es interactivo. | — | SCN |
 
 - `ComponentId` es la unión de los seis primarios más `cmos`: son los siete elementos que abren una sección.
@@ -79,7 +79,7 @@ El orden de esta tabla es el **orden canónico** de las secciones primarias en l
 
 | ID | Requisito de alcance |
 | --- | --- |
-| VSN-R01 | El sitio DEBE ofrecer la **escena interactiva** en viewports de al menos 1024×600 px con JavaScript activo: imagen de la placa, siete elementos que abren sección, panel frontal de ajustes y display de diagnóstico. |
+| VSN-R01 | El sitio DEBE ofrecer la **escena interactiva** en viewports de al menos 1024×600 px con JavaScript activo: imagen de la placa, siete elementos que abren sección, panel de control de ajustes y display de diagnóstico. |
 | VSN-R02 | El sitio DEBE ofrecer la **vista simple** con todo el contenido de las siete secciones en una sola página, y esta DEBE ser lo que ve un visitante en un viewport menor que 1024×600 px o sin JavaScript. |
 | VSN-R03 | Cada una de las siete secciones DEBE tener una URL propia que se pueda compartir y que abra directamente esa sección. |
 | VSN-R04 | Todo texto visible DEBE existir en español y en inglés, con el mismo contenido en ambos idiomas. |
@@ -186,7 +186,7 @@ Términos usados en todas las specs. En el código se usa el término en inglés
 | **Bienvenida** (welcome) | El diálogo con estética de terminal que saluda al visitante al terminar el arranque, una vez por sesión (ver SCN). |
 | **Caso de estudio** (case study) | La página de un proyecto destacado con su problema, el rol del autor, el proceso y el resultado (ver SSD y SMP). |
 | **Texto destacado** (emphasized text) | Una cadena de contenido con un fragmento que se muestra con más peso (ver TSC §4.4). |
-| **Panel frontal** (front panel) | La pieza de hardware sobre el workbench que abre los ajustes. |
+| **Panel de control** (control panel) | La caja de mandos sobre el workbench que abre los ajustes. Hasta el 2026-10-15 se llamó "panel frontal" (D-95). |
 | **Ajustes** (settings) | El menú con sonido, reinicio de sesión e idioma. |
 | **Display de diagnóstico** (POST display) | El indicador de dos dígitos en la placa que muestra las secciones visitadas. |
 | **Sección visitada** (visited section) | Una sección primaria cuyo panel se ha abierto al menos una vez en la sesión actual. |
@@ -213,6 +213,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 3.1 | Por decisión del autor (D-95): la pieza de ajustes pasa a llamarse panel de control, en el mapa de componentes, VSN-R01 y el glosario. |
 | 2026-10-14 | 3.0 | Por decisión del autor (D-92): la bienvenida es un diálogo con estética de terminal que se cierra con un clic en cualquier parte, con Esc o con su botón. VSN-R22, glosario y decisión reescritos. |
 | 2026-10-14 | 2.4 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38), VSN-AC11 y VSN-AC12 incluidos. VSN-AC09 sigue siendo la revisión del autor antes de cada publicación de contenido; para v2 la hizo con A11 y A12. Sin cambio de requisitos. |
 | 2026-10-14 | 2.4 | Aprobada por el autor el 2026-10-14 (versión 2). |

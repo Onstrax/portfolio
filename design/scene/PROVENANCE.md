@@ -12,7 +12,7 @@ Registro exigido por AST-R27 y AST-R28 (`specs/00-foundations/05-scene-asset.md`
 | Archivo | `design/scene/master.png`, 3840×2160 px, PNG sRGB de 8 bits sin canal alfa, 11,1 MB |
 | Imagen de origen | `docs/Generations/Tenth generation.jpg`, 1376×768 px |
 
-El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes, y la calibración ya estaba revisada (SCN-AC17). Queda aplazada con su visto bueno (PLAN-R10), para los días siguientes a la publicación, la prueba con una persona ajena de AST-AC06. La medición con herramienta de AST-AC01 la hizo el autor tras la publicación, con resultado conforme.
+El estado pasó a `accepted` el 2026-10-13: el autor revisó la imagen al 100 % de tamaño y la dio por buena sin ajustes, y la calibración ya estaba revisada (SCN-AC17). La prueba con una persona ajena de AST-AC06, aplazada con su visto bueno (PLAN-R10), la hizo el autor el 2026-10-15, con resultado conforme. La medición con herramienta de AST-AC01 la hizo el autor tras la publicación, con resultado conforme.
 
 Calibración: las nueve zonas se trazaron el 2026-10-13 sobre este máster (`src/features/motherboard-scene/hotspots.ts`, versión `dc169b385cc7`).
 
@@ -59,11 +59,11 @@ Cajas estimadas a ojo en el espacio de escena (1600×900 unidades). Sirven como 
 | Criterio | Resultado | Fecha |
 | --- | --- | --- |
 | AST-AC01 (cámara cenital) | Conforme. Medido por el autor con herramienta: los bordes de la placa son paralelos a los de la imagen dentro de 1° | 2026-10-13 |
-| AST-AC02 (sin texto) | Conforme. Revisada al 100 % por el autor, que la dio por buena sin ajustes. Hay marcas diminutas en dos puertos USB y en los botones del panel frontal, que no se leen como texto | 2026-10-13 |
+| AST-AC02 (sin texto) | Conforme. Revisada al 100 % por el autor, que la dio por buena sin ajustes. Hay marcas diminutas en dos puertos USB y en los botones del panel de control, que no se leen como texto | 2026-10-13 |
 | AST-AC03 (nada brilla, sin personas ni objetos ajenos) | Conforme | 2026-10-12 |
 | AST-AC04 (nueve objetos, sin duplicados) | Conforme. Hay dos disipadores junto al procesador que no son el SSD | 2026-10-12 |
 | AST-AC05 (aspecto de cada objeto) | Conforme | 2026-10-12 |
-| AST-AC06 (reconocible por alguien ajeno al hardware) | Aplazada con el visto bueno del autor (PLAN-R10) | 2026-10-13 |
+| AST-AC06 (reconocible por alguien ajeno al hardware) | Conforme. El autor mostró la escena con sus etiquetas a una persona que no conoce hardware: navegó todo el contenido sin ayuda y entendió la información sobre el autor. No relacionó la función de cada pieza con su sección, cosa que las etiquetas hacen innecesaria | 2026-10-15 |
 | AST-AC07 (atrezo y enfoque) | Conforme | 2026-10-12 |
 | AST-AC08 (brillo de las esquinas) | Conforme: superior derecha 4,5 %; superior izquierda 29,5 %; inferior izquierda 7,6 %; inferior derecha 7,4 % | 2026-10-12 |
 | AST-AC09 (formato del máster) | Conforme | 2026-10-12 |

@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.3 |
-| Última actualización | 2026-10-14 |
+| Versión | 1.4 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR, TSC |
 
 ## 1. Propósito
@@ -113,6 +113,9 @@ export const LOCALE_META = {
 | `individualWorkLabel` | Trabajo individual | Individual work |
 | `teamOfLabel({ count })` | Equipo de {count} | Team of {count} |
 | `languageLabel` | Idioma | Language |
+| `viewLabel` | Vista | View |
+| `interactiveViewLabel` | Interactiva | Interactive |
+| `simpleViewLabel` | Simple | Simple |
 | `visitedSectionsLabel({ count, total })` | {count} de {total} secciones visitadas | {count} of {total} sections visited |
 | `downloadCvLabel` | Descargar CV (PDF) | Download résumé (PDF) |
 | `copyLabel` | Copiar | Copy |
@@ -325,6 +328,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 1.4 | Por decisión del autor (D-93). `common` gana `viewLabel`, `interactiveViewLabel` y `simpleViewLabel`, que usan la barra fija y la vista simple (SET-R32). |
 | 2026-10-14 | 1.3 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-14 | 1.3 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.3 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-87). I18N-R04: el contenido de los casos de estudio vive en los textos de Proyectos. I18N-R38: excepción para la bienvenida de la escena, que se dirige al visitante. I18N-R44: tres términos fijos nuevos. |

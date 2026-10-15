@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.4 |
-| Última actualización | 2026-10-14 |
+| Versión | 2.0 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
 ## 1. Propósito
@@ -49,12 +49,11 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `CaseStu
 | Bloque | Elemento | Contenido |
 | --- | --- | --- |
 | Enlace de salto | `<a>` | `common.skipToContentLabel`, hacia `#content` (QLT-R02). Solo en la variante `standalone`; en la capa base lo aporta el layout para ambas capas |
-| Cabecera | `<header>` | El nombre del autor como `<h1>`; el selector de idioma (SET-R05) con el nombre `common.languageLabel`; y un enlace de descarga del CV del idioma de la página (`CV_FILES`, ver IO) con el texto `common.downloadCvLabel` y aspecto de botón primario |
+| Cabecera | `<header>` | El nombre del autor como `<h1>`, que es el destino de "Volver arriba" (SMP-R29); el selector de idioma (SET-R05) con el nombre `common.languageLabel`; en la variante `standalone`, y visible solo si el viewport es capaz de escena, el selector de vista (SET-R32) sobre superficie clara, con "Simple" como opción actual (D-93); y un enlace de descarga del CV del idioma de la página (`CV_FILES`, ver IO) con el texto `common.downloadCvLabel` y aspecto de botón primario |
 | Aviso | `<p>` | `simpleView.desktopHint`. Visible solo si el viewport **no** es capaz de escena |
-| Enlace a la escena | `<a>` | `simpleView.interactiveLinkLabel`, hacia `homePath(locale)`. Solo en la variante `standalone`, y visible solo si el viewport es capaz de escena |
 | Navegación | `<nav>` | Nombre accesible `simpleView.navAriaLabel`. Una lista con un enlace por sección, hacia `#` seguido de su slug, con `meta.title` como texto |
 | Contenido | `<main>` | Las siete secciones (SMP-R04) |
-| Pie | `<footer>` | Un enlace `simpleView.backToTopLabel` hacia `#content` |
+| Pie | `<footer>` | Un enlace `simpleView.backToTopLabel` hacia `#top` (SMP-R29) |
 
 ### 4.3 Comportamiento
 
@@ -65,6 +64,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `CaseStu
 | SMP-R10 | En modo `scene`, la capa base está oculta con `display: none` y `SectionScroller` no actúa. |
 | SMP-R11 | El desplazamiento es instantáneo con movimiento reducido y suave en otro caso (`scroll-behavior`). |
 | SMP-R12 | **Impresión.** Al imprimir cualquier página con idioma se imprime la vista simple, en negro sobre blanco, sin la capa de escena, la navegación, el selector de idioma, el aviso ni los botones (todo enlace o control con aspecto de botón); los enlaces externos muestran su URL a continuación del texto; y ninguna sección de proyecto o de experiencia se parte entre dos páginas si cabe en una. |
+| SMP-R29 | **Volver arriba.** El enlace `simpleView.backToTopLabel` de la vista simple y de las páginas de caso lleva a `#top`: el `<h1>` de la vista simple y la `<header>` de la página de caso llevan `id="top"`, `tabindex="-1"` y un margen de desplazamiento igual al margen superior de la página, de modo que la página vuelve hasta arriba del todo, con la cabecera a la vista, y el foco queda en ese destino. `#content` sigue siendo solo el destino del enlace de salto. |
 
 ### 4.4 Títulos y descripciones
 
@@ -132,7 +132,6 @@ Espacio de nombres `simpleView`:
 | --- | --- | --- |
 | `navAriaLabel` | Secciones | Sections |
 | `desktopHint` | La versión interactiva de este portfolio está disponible en pantallas de escritorio. | The interactive version of this portfolio is available on desktop screens. |
-| `interactiveLinkLabel` | Ver la versión interactiva | Open the interactive version |
 | `backToTopLabel` | Volver arriba | Back to top |
 | `caseKindTitle` | Caso de estudio | Case study |
 | `caseBackLabel` | Todos los proyectos | All projects |
@@ -181,7 +180,7 @@ Espacio de nombres `site`:
 | Mi rol | `<section>` | `<h2>` con `simpleView.caseRoleTitle` (icono `users`); `team`; un `<h3>` con `simpleView.caseContributionsTitle` y la lista de `contributions`; y, si existe `teamContributions`, un `<h3>` con `simpleView.caseTeamTitle` y ese párrafo |
 | El proceso | `<section>` | `<h2>` con `simpleView.caseProcessTitle` (icono `compass`); un `<h3>` con `simpleView.caseDecisionsTitle` y la lista de `decisions` (SMP-R28); y un `<h3>` con `simpleView.caseChangesTitle` y la lista de `changes` |
 | Resultado | `<section>` | `<h2>` con `simpleView.caseOutcomeTitle` (icono `award`); la lista de `outcome`; y un `<h3>` con `simpleView.caseLearnedTitle` y la lista de `learned` |
-| Pie | `<footer>` | De nuevo el enlace `simpleView.caseBackLabel`, y `simpleView.backToTopLabel` hacia `#content` |
+| Pie | `<footer>` | De nuevo el enlace `simpleView.caseBackLabel`, y `simpleView.backToTopLabel` hacia `#top` (SMP-R29) |
 
 ## 5. Criterios de aceptación
 
@@ -189,7 +188,7 @@ Espacio de nombres `site`:
 | --- | --- | --- |
 | SMP-AC01 | El HTML exportado de `/es/`, `/es/projects/` y `/es/cv/` contiene un `<main id="content">` con siete `<section>` cuyos `id` son los slugs en orden canónico, cada una con su `<h2>` y contenido no vacío (VSN-AC03). | Prueba de exportación |
 | SMP-AC02 | En `mobile`, `/es/` muestra como `<h1>` "Juan Esteban Álvarez García", el aviso de `simpleView.desktopHint`, la navegación con siete enlaces y el enlace "Descargar CV (PDF)", que apunta al PDF en español. No hay scroll horizontal. | Prueba E2E |
-| SMP-AC03 | En `desktop`, `/es/cv/` muestra la vista simple con el enlace "Ver la versión interactiva", que lleva a `/es/`, y sin el aviso; `<html>` no tiene `data-mode="scene"` y no existe la capa de escena. | Prueba E2E |
+| SMP-AC03 | En `desktop`, `/es/cv/` muestra la vista simple con el selector de vista en la cabecera, "Simple" como opción actual y "Interactiva" como enlace a `/es/`, y sin el aviso; `<html>` no tiene `data-mode="scene"` y no existe la capa de escena. | Prueba E2E |
 | SMP-AC04 | En `mobile`, activar el enlace "Proyectos" de la navegación desplaza la página hasta esa sección sin cambiar de página. | Prueba E2E |
 | SMP-AC05 | En `mobile`, abrir `/es/projects/` deja la sección Proyectos en la parte superior del viewport y el foco en su `<h2>`. Abrir `/es/projects/#projects-habicapital` deja visible ese proyecto. | Prueba E2E |
 | SMP-AC06 | Con JavaScript desactivado, en `/es/` todos los enlaces de la navegación, el de descarga del CV y el de cambio de idioma funcionan (QLT-R41). | Prueba E2E |
@@ -208,6 +207,7 @@ Espacio de nombres `site`:
 | SMP-AC20 | El HTML exportado de cada una de las seis páginas de caso tiene un `<main id="content">` con un único `<h1>` con el nombre del proyecto y cuatro `<h2>` con los `id` de SMP-R28 en ese orden; contiene `problem[0]`, `contributions[0]` y `decisions[0].choice` de su caso en el idioma de la página; tiene `lang` de su idioma; y no contiene el script previo al pintado, la capa de escena ni un bloque JSON-LD. | Prueba de exportación |
 | SMP-AC21 | `getPageMetadata({ view: "case", caseStudy: "thesis" }, "es")` devuelve el título "Tesis de autenticación poscuántica · Caso de estudio", la descripción del caso, la URL canónica `/es/projects/thesis/`, alternativas hacia `/es/projects/thesis/` y `/en/projects/thesis/` y `og:type` `website`; y los títulos y descripciones de las seis páginas de caso cumplen QLT-R37. | Prueba unitaria |
 | SMP-AC22 | En `desktop`, en el panel de Proyectos de `/es/projects/`, "Leer el caso completo" de la tesis lleva a `/es/projects/thesis/`; ahí, la opción de inglés del selector lleva a `/en/projects/thesis/`, y "All projects" a `/en/projects/` con el panel de Proyectos abierto. En `mobile`, "Todos los proyectos" lleva a la vista simple desplazada hasta Proyectos. | Prueba E2E |
+| SMP-AC23 | En `desktop`, en `/es/cv/` y en `/es/projects/thesis/`, tras bajar hasta el pie, activar "Volver arriba" deja la página en `scrollY` 0, con la cabecera visible y el foco en el destino de SMP-R29. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -230,6 +230,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 2.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93). §4.2: el enlace "Ver la versión interactiva" se sustituye por el selector de vista de la cabecera (SET-R32), más visible; se retira su texto. Nuevo SMP-R29: "Volver arriba" lleva hasta arriba del todo, a la cabecera, también en las páginas de caso, donde antes se quedaba en el principio del contenido. SMP-AC03 actualizado; nuevo SMP-AC23. |
 | 2026-10-14 | 1.4 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. Sin cambio de requisitos. |
 | 2026-10-14 | 1.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 1.4 | Versión 2, pendiente de aprobación del autor (D-82, D-88). Nuevo §4.9: la página de caso de estudio (`CaseStudyPage`, SMP-R25 a SMP-R28) en `/{locale}/projects/{case}/`. SMP-R14: vista `case`. SMP-R19: el sitemap pasa a 24 páginas. §2 y §3: la página de caso y la vista `case`. §4.8: quince textos de `simpleView` y `site.caseTitle`. SMP-AC09, SMP-AC11 y SMP-AC12 actualizados; nuevos SMP-AC20 a SMP-AC22. |

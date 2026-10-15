@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.7 |
-| Última actualización | 2026-10-14 |
+| Versión | 1.8 |
+| Última actualización | 2026-10-15 |
 | Depende de | Todas las demás specs |
 
 ## 1. Propósito
@@ -210,6 +210,7 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | A13 | Revisar la placa, la bienvenida y la barra fija en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px | Al cerrar M12 | VIS-AC12 |
 | A14 | Repetir la auditoría manual de QLT §4.8 sobre lo nuevo: la bienvenida y los contactos con teclado y con lector de pantalla, y una página de caso en el teléfono | Durante M13 | QLT-AC27 |
 | A15 | Revisar la nueva bienvenida (D-92) en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px, y recorrerla con teclado y con lector de pantalla | Tras publicar D-92 | VIS-AC12 y QLT-AC27 |
+| A16 | Revisar el cambio de D-93 a D-96: el selector de vista en la barra y en la vista simple, el botón "Vista simple" de la bienvenida, la pista, el "Panel de control", "Volver arriba" y la pantalla de arranque con su línea de contexto y su barra de progreso | Tras publicar D-93 a D-96 | VIS-AC12 y QLT-AC27 |
 
 ## 5. Criterios de aceptación
 
@@ -241,6 +242,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 1.8 | A7 y A15 hechas: la persona ajena al hardware navegó todo el sitio guiándose por las etiquetas (AST-AC06), y el autor revisó la bienvenida modal. Por su decisión, tras probar el sitio con varios visitantes, D-93 a D-96; se publican en un solo `push` (PLAN-R15) y añaden la tarea A16. Pendiente del autor: A16. |
 | 2026-10-14 | 1.7 | A13 y A14 hechas: el autor revisó la placa, la bienvenida y la barra fija, y auditó lo nuevo en escritorio y en teléfono. Por su decisión (D-92), la bienvenida pasa a ser una terminal modal centrada; el cambio llega después de cerrar v2, en un solo `push` (PLAN-R15), y añade la tarea A15. Pendientes del autor: A15 y A7. |
 | 2026-10-14 | 1.6 | Cierre de M12 y M13. Estado: pasa a "Implementada": todas las specs del índice están en ese estado y la prueba de trazabilidad pasa, lo que PLAN-AC04 deja a la revisión del autor. Pendientes del autor: A13 y A14, y A7 (AST-AC06) desde la versión 1. |
 | 2026-10-14 | 1.6 | Aprobada por el autor el 2026-10-14 (versión 2). |

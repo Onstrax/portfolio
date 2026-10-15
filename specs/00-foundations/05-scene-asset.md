@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 4.0 |
-| Última actualización | 2026-10-14 |
+| Versión | 4.1 |
+| Última actualización | 2026-10-15 |
 | Depende de | VSN, SYS, STR, VIS |
 
 ## 1. Propósito
@@ -60,7 +60,7 @@ Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1
 | AST-R07 | **Formato:** horizontal, relación 16:9. |
 | AST-R08 | **Superficie:** workbench de madera oscura, mate, que ocupa toda la imagen. |
 | AST-R09 | **Contención:** los nueve objetos interactivos DEBEN estar completos dentro de la zona segura. |
-| AST-R10 | **Disposición:** la placa madre en el centro; la fuente de poder a su izquierda; el ventilador y el panel frontal a su derecha. La disposición objetivo es la de la tabla siguiente; sus coordenadas son orientativas, no obligatorias. |
+| AST-R10 | **Disposición:** la placa madre en el centro; la fuente de poder a su izquierda; el ventilador y el panel de control a su derecha. La disposición objetivo es la de la tabla siguiente; sus coordenadas son orientativas, no obligatorias. |
 | AST-R11 | **Separación:** entre las siluetas de dos objetos interactivos cualesquiera hay al menos 12 unidades, y sus áreas pulsables, una vez ampliadas por SCN, no se solapan. |
 | AST-R12 | **Entorno oscuro:** el material que rodea de forma inmediata a cada objeto interactivo (PCB o madera) DEBE ser lo bastante oscuro para que el aura ámbar se distinga en todo su perímetro. Ningún objeto interactivo descansa sobre una superficie clara o metálica brillante. |
 | AST-R13 | **Iluminación:** una única fuente de luz cálida (en torno a 3000 K) desde arriba, con el foco de luz centrado en la placa madre y caída suave hacia los bordes. Sombras suaves. Sin zonas quemadas. |
@@ -78,7 +78,7 @@ Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1
 | --- | --- | --- |
 | Izquierda | `x` de 47 a 492 | Fuente de poder y su haz de cables |
 | Centro | `x` de 545 a 1072, `y` de 158 a 834 | Placa madre, en orientación vertical |
-| Derecha | `x` de 1201 a 1484 | Ventilador, arriba; panel frontal, debajo |
+| Derecha | `x` de 1201 a 1484 | Ventilador, arriba; panel de control, debajo |
 
 ### 4.4 Inventario de objetos
 
@@ -99,7 +99,7 @@ Con el viewport mínimo de la escena (1024×600 px, SYS-R12) el escenario mide 1
 | Panel I/O | `io` | 1 | Grupo de puertos traseros alineados en un borde de la placa (USB, Ethernet, audio), visto desde arriba. | 160 × 44 |
 | Ventilador ARGB | `fan` | 1 | Ventilador de chasis de 120 mm tendido sobre el workbench, con aspas translúcidas esmeriladas y anillo difusor; LEDs apagados. Un cable fino va hacia la placa. | 150 × 150 |
 | Pila CMOS | `cmos` | 1 | Pila de botón plateada en su zócalo, sobre la placa. | 36 × 36 |
-| Panel frontal | `settings` | 1 | Módulo negro pequeño sobre el workbench, con dos botones redondos y un LED diminuto apagado. Sin texto. | 120 × 60 |
+| Panel de control | `settings` | 1 | Módulo negro pequeño sobre el workbench, con dos botones redondos y un LED diminuto apagado. Sin texto. | 120 × 60 |
 | Display de diagnóstico | `post-display` | 1 | Display de dos dígitos de siete segmentos sobre la placa, **apagado** (segmentos oscuros). | 44 × 30 |
 
 Notas sobre el inventario:
@@ -131,7 +131,7 @@ Procedimiento:
 
 | ID | Requisito |
 | --- | --- |
-| AST-R29 | **Plan alternativo por composición.** Si el generador no logra una imagen única que cumpla la disposición, el máster PUEDE componerse a mano: se generan por separado el workbench con la placa madre y cada objeto exterior (fuente, ventilador, panel frontal) con la misma descripción de luz, y se montan en GIMP o Krita respetando la dirección de la luz y añadiendo sombras coherentes. El resultado DEBE cumplir los mismos criterios de aceptación. |
+| AST-R29 | **Plan alternativo por composición.** Si el generador no logra una imagen única que cumpla la disposición, el máster PUEDE componerse a mano: se generan por separado el workbench con la placa madre y cada objeto exterior (fuente, ventilador, panel de control) con la misma descripción de luz, y se montan en GIMP o Krita respetando la dirección de la luz y añadiendo sombras coherentes. El resultado DEBE cumplir los mismos criterios de aceptación. |
 | AST-R30 | **Plan alternativo para el display de diagnóstico.** Si tras los intentos de AST-R26 no se obtiene un display apagado aceptable, la imagen PUEDE omitirlo. En ese caso el criterio AST-AC05 se da por cumplido para ese objeto, `PROVENANCE.md` lo anota y SCN dibuja el display completo en código sobre una zona libre del PCB. |
 
 ### 4.6 Prompt
@@ -392,6 +392,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-15 | 4.1 | Por decisión del autor (D-95): el objeto `settings` se llama panel de control, que describe mejor la caja de mandos de la imagen. AST-AC06 (A7): el autor mostró la escena a una persona que no conoce hardware; navegó todo el contenido guiándose por las etiquetas y entendió la información sobre el autor, aunque no relacionó la función de cada pieza con su sección, que es lo que las etiquetas evitan tener que saber. Anotado en `PROVENANCE.md`. |
 | 2026-10-14 | 4.0 | Por decisión del autor (D-92): se retira AST-R56, la reserva del centro inferior, porque la bienvenida ya no se dibuja ahí. AST-AC10 comprueba las dos reservas que quedan. |
 | 2026-10-14 | 3.3 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38). AST-AC10: con la calibración real, `validateHotspots` no encuentra ningún polígono en las tres regiones reservadas (SCN-AC02) y la superposición las dibuja; es la misma calibración que el autor revisó (SCN-AC17), que ya cumplía las nuevas reservas, como anotó la versión 3.3. Sin cambio de requisitos. |
 | 2026-10-14 | 3.3 | Aprobada por el autor el 2026-10-14 (versión 2). |
