@@ -5,6 +5,7 @@ import {
   type SectionSlug,
 } from "@/shared/contracts/ids";
 import { isLocale, type Locale } from "@/shared/contracts/locale";
+import type { SiteView } from "@/shared/contracts/navigation";
 
 export type HomePath = `/${Locale}/`;
 export type SectionPath = `/${Locale}/${SectionSlug}/`;
@@ -36,6 +37,32 @@ export function cvPath(locale: Locale): CvPath {
 /** Page of the case study of a project, under the projects section (SYS §4.3). */
 export function caseStudyPath(locale: Locale, caseStudy: CaseStudyId): CaseStudyPath {
   return `/${locale}/projects/${caseStudy}/`;
+}
+
+/** Query with which a case study page knows that it was opened from the simple view (SMP-R30). */
+export const VIEW_QUERY = "view=simple";
+
+/**
+ * Link from a section to another one, or to an element of it, without leaving the view
+ * (TSC-R61): in the scene, the path of the section, which opens its panel; in the simple view,
+ * only the fragment, which jumps within the same page.
+ */
+export function crossSectionHref(
+  locale: Locale,
+  view: SiteView,
+  section: SectionSlug,
+  localId?: string,
+): string {
+  if (view === "simple") return `#${localId ?? section}`;
+  return localId === undefined
+    ? sectionPath(locale, section)
+    : `${sectionPath(locale, section)}#${localId}`;
+}
+
+/** Link to a case study that remembers the view it was opened from (TSC-R61, SMP-R30). */
+export function caseStudyHref(locale: Locale, caseStudy: CaseStudyId, view: SiteView): string {
+  const path = caseStudyPath(locale, caseStudy);
+  return view === "simple" ? `${path}?${VIEW_QUERY}` : path;
 }
 
 /** Reads a pathname, with or without trailing slash. `null` when it is none of the four views. */

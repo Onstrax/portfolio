@@ -57,7 +57,8 @@ export function LanguageSwitcher({ label, focusKey, surface = "dark" }: Language
     if (!isPlainClick(event)) return;
     event.preventDefault();
     pendingFocusKey = focusKey;
-    router.push(`${withLocale(pathname, target)}${window.location.hash}`);
+    // The query goes along too: a case study opened from the simple view keeps knowing it (SMP-R30).
+    router.push(`${withLocale(pathname, target)}${window.location.search}${window.location.hash}`);
   };
 
   return (

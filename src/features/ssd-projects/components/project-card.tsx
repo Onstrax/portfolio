@@ -1,9 +1,10 @@
 import Link from "next/link";
 
-import { caseStudyPath } from "@/shared/config/routes";
+import { caseStudyHref } from "@/shared/config/routes";
 import type { ExternalUrl } from "@/shared/contracts/content";
 import { isCaseStudyId } from "@/shared/contracts/ids";
 import type { Locale } from "@/shared/contracts/locale";
+import type { SiteView } from "@/shared/contracts/navigation";
 import { BulletList } from "@/shared/ui/bullet-list";
 import { Chip } from "@/shared/ui/chip";
 import { ExternalLink } from "@/shared/ui/external-link";
@@ -22,6 +23,8 @@ interface ProjectCardProps {
   readonly project: ProjectFact;
   readonly text: ProjectsText;
   readonly locale: Locale;
+  /** The view the card is shown in, which the link to the case study remembers (TSC-R61). */
+  readonly view: SiteView;
   /** `id` of the article: the scope of the section followed by the local identifier (TSC-R31). */
   readonly id: string;
 }
@@ -31,7 +34,7 @@ function isExternal(href: string): href is ExternalUrl {
 }
 
 /** One project, with the same fields whether it is featured or compact (SSD-R07, SSD-R08). */
-export function ProjectCard({ project, text, locale, id }: ProjectCardProps) {
+export function ProjectCard({ project, text, locale, view, id }: ProjectCardProps) {
   const { tagline, highlights, award, note } = text.projects[project.id];
   const name = projectName(project, text);
 
@@ -73,7 +76,7 @@ export function ProjectCard({ project, text, locale, id }: ProjectCardProps) {
       {isCaseStudyId(project.id) && (
         <p>
           <Link
-            href={caseStudyPath(locale, project.id)}
+            href={caseStudyHref(locale, project.id, view)}
             className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary)}
           >
             {text.caseLinkLabel}

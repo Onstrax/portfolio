@@ -14,7 +14,7 @@ function blocks(): readonly (readonly [string | null, number])[] {
 
 describe("StackSection", () => {
   it("RAM-AC04: renders ten blocks in order, each with its list, in Spanish", () => {
-    render(<StackSection locale="es" idScope="" />);
+    render(<StackSection locale="es" idScope="" view="simple" />);
     expect(blocks()).toEqual([
       ["Lenguajes", 5],
       ["Frontend y móvil", 6],
@@ -32,7 +32,7 @@ describe("StackSection", () => {
   });
 
   it("RAM-AC04: renders the same structure in English", () => {
-    render(<StackSection locale="en" idScope="" />);
+    render(<StackSection locale="en" idScope="" view="simple" />);
     expect(blocks().map(([title]) => title)).toEqual([
       "Languages",
       "Frontend and mobile",
@@ -49,7 +49,7 @@ describe("StackSection", () => {
   });
 
   it("RAM-AC05: shows no level indicator of any kind", () => {
-    const { container } = render(<StackSection locale="es" idScope="" />);
+    const { container } = render(<StackSection locale="es" idScope="" view="simple" />);
     expect(container.querySelector("progress, meter, [aria-valuenow]")).toBeNull();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(screen.queryByRole("meter")).not.toBeInTheDocument();
@@ -72,7 +72,7 @@ describe("StackSection", () => {
     ],
   ] as const) {
     it(`RAM-AC10: shows how the author works with AI, the tools by group and a link to the about section (${locale})`, () => {
-      render(<StackSection locale={locale} idScope="" />);
+      render(<StackSection locale={locale} idScope="panel-" view="interactive" />);
       const block = screen.getByRole("heading", { level: 3, name: title }).parentElement;
       if (block === null) throw new Error("No AI block");
       expect(block).toHaveTextContent(

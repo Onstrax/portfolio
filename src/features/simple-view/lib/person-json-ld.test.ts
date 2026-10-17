@@ -25,6 +25,15 @@ describe("buildPersonJsonLd", () => {
     });
   });
 
+  it("IO-AC11: never mentions the references of the contact section", () => {
+    for (const locale of ["es", "en"] as const) {
+      const json = JSON.stringify(buildPersonJsonLd(locale));
+      for (const name of ["Jaramillo", "Quiroga", "Duitama", "Hernandez", "@uniandes.edu.co"]) {
+        expect(json, name).not.toContain(name);
+      }
+    }
+  });
+
   it("uses the home and the description of the language of the page", () => {
     const person = buildPersonJsonLd("en");
     expect(person["url"]).toBe("http://localhost:4173/en/");

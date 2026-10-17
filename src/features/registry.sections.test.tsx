@@ -10,14 +10,17 @@ const REGION_ELEMENTS = ["MAIN", "SECTION", "HEADER", "FOOTER", "NAV"];
 /** Attributes that hold or reference an `id` (TSC-R31). */
 const ID_ATTRIBUTES = /\b(id|aria-labelledby|aria-describedby|for)="panel-/g;
 
-/** Renders the seven sections twice in one document: once per scope, as a section page does. */
+/**
+ * Renders the seven sections twice in one document: once per scope, as a section page does. Both
+ * in the same view, because the view may change where the internal links lead (TSC-R33).
+ */
 function renderBothScopes(locale: (typeof LOCALES)[number]) {
   return render(
     <>
       {["", PANEL_SCOPE].map((idScope) =>
         SECTION_LIST.map(({ slug, Section }) => (
           <div key={`${idScope}${slug}`} data-scope={idScope} data-slug={slug}>
-            <Section locale={locale} idScope={idScope} />
+            <Section locale={locale} idScope={idScope} view="interactive" />
           </div>
         )),
       )}
@@ -67,5 +70,26 @@ describe.each(LOCALES)("sections rendered in one document (%s)", (locale) => {
       expect(base?.innerHTML.length, slug).toBeGreaterThan(100);
       expect(panel?.innerHTML.replace(ID_ATTRIBUTES, '$1="'), slug).toBe(base?.innerHTML);
     }
+  });
+
+  it("TSC-AC22: in the simple view no internal link leads to the path of a section", () => {
+    const { container } = render(
+      <>
+        {SECTION_LIST.map(({ slug, Section }) => (
+          <Section key={slug} locale={locale} idScope="" view="simple" />
+        ))}
+      </>,
+    );
+    const hrefs = [...container.querySelectorAll("a[href]")].map(
+      (link) => link.getAttribute("href") ?? "",
+    );
+    const sectionPaths = SECTION_LIST.map(({ slug }) => `/${locale}/${slug}/`);
+    for (const href of hrefs) {
+      expect(sectionPaths.includes(href.split(/[?#]/)[0] ?? ""), href).toBe(false);
+    }
+    // The case studies are pages of their own: they remember the view instead.
+    expect(hrefs.filter((href) => href.includes("/projects/thesis/"))).toEqual([
+      `/${locale}/projects/thesis/?view=simple`,
+    ]);
   });
 });

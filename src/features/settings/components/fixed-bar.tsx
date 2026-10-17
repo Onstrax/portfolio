@@ -1,5 +1,8 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
+import { parsePath } from "@/shared/config/routes";
 import type { QuickContact } from "@/shared/contracts/navigation";
 import { useLocale } from "@/shared/i18n/use-locale";
 import { useUiDictionary } from "@/shared/i18n/use-ui-dictionary";
@@ -31,9 +34,12 @@ export function FixedBar({ focusKey, contacts, anchor = "stage" }: FixedBarProps
   const dictionary = useUiDictionary();
   const { common, settings } = dictionary;
   const locale = useLocale();
+  // With a panel open, the copy drawn inside it is the one in use: this one hides (SET-R02).
+  const pathname = usePathname();
+  const isCoveredByPanel = anchor === "stage" && parsePath(pathname)?.view === "section";
 
   return (
-    <div className={BAR_VIEWPORT}>
+    <div className={isCoveredByPanel ? `${BAR_VIEWPORT} invisible` : BAR_VIEWPORT}>
       <div className={anchor === "stage" ? STAGE_BOX : "relative size-full"}>
         <nav aria-label={settings.barAriaLabel} className={BAR}>
           <LanguageSwitcher label={common.languageLabel} focusKey={focusKey} surface="dark" />

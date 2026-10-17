@@ -30,3 +30,9 @@ export interface QuickContact {
   readonly id: QuickContactId;
   readonly href: Href;
 }
+
+/**
+ * The view in which a section is shown: the scene, where it opens in the detail panel, or the
+ * simple view. Its links never leave it (TSC-R61).
+ */
+export type SiteView = "interactive" | "simple";

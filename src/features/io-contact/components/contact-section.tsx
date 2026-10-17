@@ -15,8 +15,10 @@ import { GithubIcon } from "@/shared/ui/icons/github";
 import { LinkedinIcon } from "@/shared/ui/icons/linkedin";
 import { MailIcon } from "@/shared/ui/icons/mail";
 import { PlugIcon } from "@/shared/ui/icons/plug";
+import { UsersIcon } from "@/shared/ui/icons/users";
 import { WhatsappIcon } from "@/shared/ui/icons/whatsapp";
 import { LINK_BASE, LINK_SURFACES } from "@/shared/ui/link.styles";
+import { ITEM_HEADING } from "@/shared/ui/typography.styles";
 
 import { contactEn } from "../content/en";
 import { contactEs } from "../content/es";
@@ -36,7 +38,7 @@ function isExternal(href: string): href is `https://${string}` {
   return href.startsWith("https://");
 }
 
-/** Contact: direct channels and the résumé in both languages (IO-R09). */
+/** Contact: direct channels, references and the résumé in both languages (IO-R09). */
 export function ContactSection({ locale }: SectionProps) {
   const text = TEXT[locale];
   const { common } = getUiDictionary(locale);
@@ -80,6 +82,20 @@ export function ContactSection({ locale }: SectionProps) {
             </div>
           ))}
         </dl>
+      </ContentBlock>
+
+      {/* People who agreed to be asked about the author: name, role and address (IO-R17). */}
+      <ContentBlock title={text.referencesTitle} icon={<UsersIcon />}>
+        <p>{text.referencesIntro}</p>
+        {contactFacts.references.map((reference) => (
+          <div key={reference.id} className="space-y-1">
+            <h4 className={ITEM_HEADING}>{reference.name}</h4>
+            <p>{text.referenceRoles[reference.id]}</p>
+            <a href={`mailto:${reference.email}`} className={cn(LINK_BASE, LINK_SURFACES.light)}>
+              {reference.email}
+            </a>
+          </div>
+        ))}
       </ContentBlock>
 
       <ContentBlock title={text.cvTitle} icon={<FileTextIcon />}>

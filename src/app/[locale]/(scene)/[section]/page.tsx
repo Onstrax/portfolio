@@ -34,5 +34,5 @@ export default async function SectionPage({ params }: SectionPageProps) {
     notFound();
   }
   const { Section } = getSection(section);
-  return <Section locale={locale} idScope="panel-" />;
+  return <Section locale={locale} idScope="panel-" view="interactive" />;
 }

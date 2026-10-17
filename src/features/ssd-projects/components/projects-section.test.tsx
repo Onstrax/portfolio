@@ -17,7 +17,7 @@ function article(id: string): HTMLElement {
 
 describe("ProjectsSection", () => {
   it("SSD-AC04: renders four featured and seven compact projects, each with its anchor", () => {
-    render(<ProjectsSection locale="es" idScope="" />);
+    render(<ProjectsSection locale="es" idScope="" view="simple" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Destacados",
       "Más proyectos",
@@ -30,7 +30,7 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC04: prefixes the anchors with the scope it receives", () => {
-    render(<ProjectsSection locale="en" idScope="panel-" />);
+    render(<ProjectsSection locale="en" idScope="panel-" view="interactive" />);
     expect(screen.getAllByRole("article").map((item) => item.id)).toEqual(
       PROJECT_IDS.map((id) => `panel-projects-${id}`),
     );
@@ -41,14 +41,14 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC05: states the team of each project in the language of the page", () => {
-    const spanish = render(<ProjectsSection locale="es" idScope="" />);
+    const spanish = render(<ProjectsSection locale="es" idScope="" view="simple" />);
     expect(within(article("projects-andespace")).getByText("Equipo de 6")).toBeInTheDocument();
     expect(
       within(article("projects-habicapital")).getByText("Trabajo individual"),
     ).toBeInTheDocument();
     spanish.unmount();
 
-    render(<ProjectsSection locale="en" idScope="" />);
+    render(<ProjectsSection locale="en" idScope="" view="simple" />);
     expect(within(article("projects-andespace")).getByText("Team of 6")).toBeInTheDocument();
     expect(
       within(article("projects-habicapital")).getByText("Individual work"),
@@ -56,7 +56,7 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC05: labels the four private repositories and links none of them", () => {
-    render(<ProjectsSection locale="es" idScope="" />);
+    render(<ProjectsSection locale="es" idScope="" view="simple" />);
     const privateProjects = screen
       .getAllByRole("article")
       .filter((item) => within(item).queryByText("Repositorio privado") !== null);
@@ -75,7 +75,7 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC06: renders twelve external links that open safely in a new tab", () => {
-    render(<ProjectsSection locale="en" idScope="" />);
+    render(<ProjectsSection locale="en" idScope="" view="simple" />);
     const links = screen
       .getAllByRole("link")
       .filter((link) => link.getAttribute("href")?.startsWith("https://") === true);
@@ -87,7 +87,7 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC06: tells apart the two links called Backend by the name of their project", () => {
-    render(<ProjectsSection locale="en" idScope="" />);
+    render(<ProjectsSection locale="en" idScope="" view="simple" />);
     const names = screen.getAllByRole("link", { name: /^Backend/ }).map((link) => link.textContent);
     expect(names).toHaveLength(2);
     expect(names[0]).toContain("AndeSpace");
@@ -96,7 +96,7 @@ describe("ProjectsSection", () => {
   });
 
   it("shows the name, the tagline and the award of a project", () => {
-    render(<ProjectsSection locale="es" idScope="" />);
+    render(<ProjectsSection locale="es" idScope="" view="simple" />);
     const habicapital = within(article("projects-habicapital"));
     expect(habicapital.getByRole("heading", { level: 4 })).toHaveTextContent("HabiCapital");
     expect(habicapital.getByText("Simulación de banca digital segura")).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("ProjectsSection", () => {
   });
 
   it("SSD-AC13: emphasizes exactly the three results of the spec", () => {
-    const spanish = render(<ProjectsSection locale="es" idScope="" />);
+    const spanish = render(<ProjectsSection locale="es" idScope="" view="simple" />);
     const emphasized = (container: HTMLElement) =>
       [...container.querySelectorAll("strong")].map((element) => [
         element.closest("article")?.id,
@@ -123,7 +123,7 @@ describe("ProjectsSection", () => {
       ["projects-habicapital", "~94\u00a0% de cobertura reportada"],
     ]);
     spanish.unmount();
-    const english = render(<ProjectsSection locale="en" idScope="" />);
+    const english = render(<ProjectsSection locale="en" idScope="" view="simple" />);
     expect(emphasized(english.container)).toEqual([
       ["projects-thesis", "quantum-resistant"],
       ["projects-dental-site", "2-3 new clients per month"],
@@ -136,7 +136,7 @@ describe("ProjectsSection", () => {
       ["es", "Leer el caso completo"],
       ["en", "Read the full case study"],
     ] as const) {
-      const view = render(<ProjectsSection locale={locale} idScope="" />);
+      const view = render(<ProjectsSection locale={locale} idScope="" view="interactive" />);
       const links = screen.getAllByRole("link", { name });
       expect(links.map((link) => [link.closest("article")?.id, link.getAttribute("href")])).toEqual(
         [
@@ -145,6 +145,13 @@ describe("ProjectsSection", () => {
           ["projects-dental-site", `/${locale}/projects/dental-site/`],
         ],
       );
+      // From the simple view, the case remembers it (TSC-R61).
+      const simple = render(<ProjectsSection locale={locale} idScope="" view="simple" />);
+      expect(within(simple.container).getAllByRole("link", { name })[0]).toHaveAttribute(
+        "href",
+        `/${locale}/projects/thesis/?view=simple`,
+      );
+      simple.unmount();
       for (const link of links) {
         expect(link).not.toHaveAttribute("target");
       }

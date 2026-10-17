@@ -7,7 +7,7 @@ const NBSP = " ";
 
 describe("EcosystemSection", () => {
   it("FAN-AC04: renders the four blocks, the six items and the three links in Spanish", () => {
-    render(<EcosystemSection locale="es" idScope="" />);
+    render(<EcosystemSection locale="es" idScope="" view="simple" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Mi entorno",
       "Desarrollado por mí",
@@ -35,7 +35,7 @@ describe("EcosystemSection", () => {
   });
 
   it("FAN-AC04: marks the system configuration as a private repository", () => {
-    const spanish = render(<EcosystemSection locale="es" idScope="" />);
+    const spanish = render(<EcosystemSection locale="es" idScope="" view="simple" />);
     const system = screen.getByRole("heading", { name: "Linux a diario" }).parentElement;
     expect(system).not.toBeNull();
     if (system !== null) {
@@ -44,7 +44,7 @@ describe("EcosystemSection", () => {
     expect(screen.getAllByText("Repositorio privado")).toHaveLength(1);
     spanish.unmount();
 
-    render(<EcosystemSection locale="en" idScope="" />);
+    render(<EcosystemSection locale="en" idScope="" view="simple" />);
     expect(screen.getAllByText("Private repository")).toHaveLength(1);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "My setup",
@@ -55,12 +55,12 @@ describe("EcosystemSection", () => {
   });
 
   it("FAN-AC05: shows the period of the leadership training", () => {
-    const { container } = render(<EcosystemSection locale="es" idScope="" />);
+    const { container } = render(<EcosystemSection locale="es" idScope="" view="simple" />);
     expect(container.textContent).toContain(`2014${NBSP}– 2019`);
   });
 
   it("keeps configured items out of the block of what the author built", () => {
-    render(<EcosystemSection locale="es" idScope="" />);
+    render(<EcosystemSection locale="es" idScope="" view="simple" />);
     const built = screen.getByRole("heading", { name: "Desarrollado por mí" }).parentElement;
     expect(built).not.toBeNull();
     if (built === null) return;

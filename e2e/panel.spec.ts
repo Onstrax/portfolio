@@ -431,6 +431,44 @@ test.describe("look of the panel", () => {
     expect(bottom).toBeLessThanOrEqual((frame?.y ?? 0) + (frame?.height ?? 0));
   });
 
+  test("VIS-AC10: every section has the same frame, so the next link never moves", async ({
+    page,
+  }) => {
+    await page.goto("/es/profile/");
+    const dialog = page.locator("dialog[data-phase]");
+    const next = dialog.getByRole("link", { name: /^Sección siguiente/ });
+    const boxes: string[] = [];
+    // Through the seven sections with the same link, Contact included.
+    for (let step = 0; step < 7; step += 1) {
+      await expect(dialog).toHaveAttribute("data-phase", "open");
+      const box = await next.boundingBox();
+      boxes.push(`${String(Math.round(box?.x ?? 0))},${String(Math.round(box?.y ?? 0))}`);
+      await next.click();
+    }
+    expect(new Set(boxes.map((box) => box.split(",")[1])).size, boxes.join(" ")).toBe(1);
+  });
+
+  test("PNL-AC15: the left and right arrows move to the previous and next section", async ({
+    page,
+  }) => {
+    await page.goto("/es/");
+    await page.getByRole("link", { name: "Procesador (CPU): Perfil" }).click();
+    await expect(panel(page, "Perfil")).toBeVisible();
+    const length = await page.evaluate(() => window.history.length);
+
+    await page.keyboard.press("ArrowRight");
+    await expect(page).toHaveURL("/es/experience/");
+    await expect(panel(page, "Experiencia").getByRole("heading", { level: 2 })).toBeFocused();
+    await page.keyboard.press("ArrowLeft");
+    await expect(page).toHaveURL("/es/profile/");
+    await page.keyboard.press("ArrowLeft");
+    await expect(page).toHaveURL("/es/about/");
+    expect(await page.evaluate(() => window.history.length)).toBe(length);
+
+    await page.keyboard.press("Alt+ArrowRight");
+    await expect(page).toHaveURL("/es/about/");
+  });
+
   test("VIS-AC04: every focusable element of a panel shows a focus ring, in ink or in the aura color", async ({
     page,
   }) => {

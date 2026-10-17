@@ -13,8 +13,8 @@ describe("contact boot lines", () => {
 
   it("counts and names the channels it receives", () => {
     const [email] = contactFacts.channels;
-    expect(buildContactBootLines({ email: contactFacts.email, channels: [email] })).toEqual([
-      { message: "io: 1 ports up (email)", status: "ok" },
-    ]);
+    expect(
+      buildContactBootLines({ email: contactFacts.email, channels: [email], references: [] }),
+    ).toEqual([{ message: "io: 1 ports up (email)", status: "ok" }]);
   });
 });

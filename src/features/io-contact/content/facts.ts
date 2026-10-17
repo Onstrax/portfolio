@@ -14,4 +14,11 @@ export const contactFacts = {
     },
     { id: "github", href: "https://github.com/Onstrax", display: "Onstrax" },
   ],
+  // Published with the consent of each person: name, role and address only (F-34).
+  references: [
+    { id: "jaramillo", name: "Santiago Jaramillo", email: "s.jaramillo4@uniandes.edu.co" },
+    { id: "quiroga", name: "Milton Quiroga", email: "mquiroga@uniandes.edu.co" },
+    { id: "duitama", name: "Jorge Duitama", email: "ja.duitama@uniandes.edu.co" },
+    { id: "hernandez", name: "Marcela Hernandez", email: "marc-her@uniandes.edu.co" },
+  ],
 } as const satisfies ContactFacts;

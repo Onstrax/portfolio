@@ -15,7 +15,7 @@ const TEXT: Readonly<Record<SectionProps["locale"], ProjectsText>> = {
 };
 
 /** Projects: four featured in a column and the rest in a compact grid (SSD-R05, SSD-R08). */
-export function ProjectsSection({ locale, idScope }: SectionProps) {
+export function ProjectsSection({ locale, idScope, view }: SectionProps) {
   const text = TEXT[locale];
   const projects: readonly ProjectFact[] = projectsFacts.projects;
   const card = (project: ProjectFact) => (
@@ -24,6 +24,7 @@ export function ProjectsSection({ locale, idScope }: SectionProps) {
       project={project}
       text={text}
       locale={locale}
+      view={view}
       id={`${idScope}projects-${project.id}`}
     />
   );

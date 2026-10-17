@@ -13,7 +13,7 @@ export const VEIL =
 
 /** Metal frame (VIS-R22) with the size of VIS-R24. */
 export const FRAME =
-  "relative flex max-h-[min(86vh,900px)] w-[min(760px,calc(100vw-96px))] flex-col rounded-frame border border-frame-edge bg-linear-to-b from-frame-light to-frame-dark p-3.5 shadow-panel group-data-[phase=closing]:panel-out group-data-[phase=opening]:panel-in";
+  "relative flex h-[min(86vh,900px)] w-[min(760px,calc(100vw-96px))] flex-col rounded-frame border border-frame-edge bg-linear-to-b from-frame-light to-frame-dark p-3.5 shadow-panel group-data-[phase=closing]:panel-out group-data-[phase=opening]:panel-in";
 
 /** Reading screen (VIS-R23). Header and footer stay; only the content scrolls. */
 export const SCREEN =

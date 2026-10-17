@@ -1,8 +1,6 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { SECTIONS } from "@/features/registry";
-import { sectionPath } from "@/shared/config/routes";
 import { CV_FILES } from "@/shared/config/site";
 import type { CaseStudyDecision } from "@/shared/contracts/case-study";
 import type { ExternalUrl } from "@/shared/contracts/content";
@@ -28,6 +26,7 @@ import { SkipLink } from "@/shared/ui/skip-link";
 import { TOP_ID } from "@/shared/ui/top-anchor";
 import { BLOCK_HEADING, PAGE_NAME, PAGE_SECTION_TITLE } from "@/shared/ui/typography.styles";
 
+import { CaseBackLink } from "./case-back-link";
 import { CONTENT_ID } from "./simple-view";
 
 interface CaseStudyPageProps {
@@ -63,16 +62,6 @@ function CaseSection({ id, title, icon, children }: CaseSectionProps) {
   );
 }
 
-/** The link back to the projects, in the header and in the footer of the page. */
-function BackLink({ href, children }: { readonly href: string; readonly children: ReactNode }) {
-  return (
-    <Link href={href} className={cn(TEXT_LINK, "inline-flex items-center gap-1")}>
-      <ChevronLeftIcon />
-      {children}
-    </Link>
-  );
-}
-
 /**
  * The page of the case study of a project: problem, role, process and outcome (VSN-R21). Its
  * content lives in the texts of the projects section and the data of the project in its facts,
@@ -87,7 +76,6 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
   const projectText = text.projects[caseStudy];
   const content = text.cases[caseStudy];
   const name = "properName" in project ? project.properName : (projectText.name ?? "");
-  const backHref = sectionPath(locale, "projects");
   const decision = ({ options, choice, reason }: CaseStudyDecision) => (
     <dl className="space-y-1">
       {[
@@ -113,7 +101,14 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
         tabIndex={-1}
         className="flex scroll-mt-8 flex-wrap items-center gap-4 focus:outline-none print:hidden"
       >
-        <BackLink href={backHref}>{simpleView.caseBackLabel}</BackLink>
+        <CaseBackLink
+          locale={locale}
+          caseStudy={caseStudy}
+          className={cn(TEXT_LINK, "inline-flex items-center gap-1")}
+        >
+          <ChevronLeftIcon />
+          {simpleView.caseBackLabel}
+        </CaseBackLink>
         <LanguageSwitcher label={common.languageLabel} focusKey="case-study" surface="light" />
         <ButtonLink href={CV_FILES[locale]} downloadType="application/pdf" icon={<DownloadIcon />}>
           {common.downloadCvLabel}
@@ -187,7 +182,14 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
       </main>
 
       <footer className="border-ink/20 mt-12 flex flex-wrap gap-x-6 gap-y-2 border-t pt-6 print:hidden">
-        <BackLink href={backHref}>{simpleView.caseBackLabel}</BackLink>
+        <CaseBackLink
+          locale={locale}
+          caseStudy={caseStudy}
+          className={cn(TEXT_LINK, "inline-flex items-center gap-1")}
+        >
+          <ChevronLeftIcon />
+          {simpleView.caseBackLabel}
+        </CaseBackLink>
         <a href={`#${TOP_ID}`} className={TEXT_LINK}>
           {simpleView.backToTopLabel}
         </a>

@@ -1,5 +1,5 @@
 import { PORTRAIT_ASSET } from "@/shared/assets/manifest.generated";
-import { sectionPath } from "@/shared/config/routes";
+import { crossSectionHref } from "@/shared/config/routes";
 import { CV_FILES } from "@/shared/config/site";
 import type { SectionProps } from "@/shared/contracts/section";
 import { formatDecimal } from "@/shared/i18n/format";
@@ -28,7 +28,7 @@ const PORTRAIT_SIZE = 96;
 const PORTRAIT_SIZES = "96px";
 
 /** Profile: who the author is, summary, education, languages and recognition (CPU-R04). */
-export function ProfileSection({ locale }: SectionProps) {
+export function ProfileSection({ locale, view }: SectionProps) {
   const text = TEXT[locale];
   const facts = profileFacts;
   const { common } = getUiDictionary(locale);
@@ -117,7 +117,7 @@ export function ProfileSection({ locale }: SectionProps) {
         <p>{text.hallOfFame}</p>
         <p>
           {text.projectAwards}{" "}
-          <InternalLink href={sectionPath(locale, "projects")}>
+          <InternalLink href={crossSectionHref(locale, view, "projects")}>
             {text.projectAwardsLinkLabel}
           </InternalLink>
         </p>

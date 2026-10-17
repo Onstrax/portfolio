@@ -41,3 +41,22 @@ describe("contact texts", () => {
     });
   });
 });
+
+describe("references", () => {
+  it("IO-AC11: hold the four people who agreed, with a role in each language", () => {
+    expect(contactFacts.references).toEqual([
+      { id: "jaramillo", name: "Santiago Jaramillo", email: "s.jaramillo4@uniandes.edu.co" },
+      { id: "quiroga", name: "Milton Quiroga", email: "mquiroga@uniandes.edu.co" },
+      { id: "duitama", name: "Jorge Duitama", email: "ja.duitama@uniandes.edu.co" },
+      { id: "hernandez", name: "Marcela Hernandez", email: "marc-her@uniandes.edu.co" },
+    ]);
+    for (const text of [contactEs, contactEn]) {
+      expect(Object.keys(text.referenceRoles)).toEqual([
+        "jaramillo",
+        "quiroga",
+        "duitama",
+        "hernandez",
+      ]);
+    }
+  });
+});

@@ -228,6 +228,34 @@ export function DetailPanel({ sections, children, toolbar }: DetailPanelProps) {
     router.replace(`${url.pathname}${url.hash}`);
   };
 
+  // The arrows move to the previous and next section, as the links of the footer do (PNL-R19).
+  // The destination comes from the address, which changes at once, and not from the section on
+  // screen, which changes after its animation: a quick second press must count from the new one.
+  const isModal = modality === "modal";
+  useEffect(() => {
+    const element = dialog.current;
+    if (element === null || !isModal) return;
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const target = event.target;
+      const isEditable =
+        target instanceof HTMLElement &&
+        (target.isContentEditable || target.matches("input, textarea, select"));
+      if (isEditable) return;
+      const location = parsePath(window.location.pathname);
+      if (location?.view !== "section") return;
+      const around = findNeighbours(sections, location.section);
+      if (around === null) return;
+      event.preventDefault();
+      router.replace(event.key === "ArrowLeft" ? around.previous.href : around.next.href);
+    };
+    element.addEventListener("keydown", onKeyDown);
+    return () => {
+      element.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isModal, sections, router]);
+
   return (
     <dialog
       ref={dialog}

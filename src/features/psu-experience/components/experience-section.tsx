@@ -1,4 +1,4 @@
-import { sectionPath } from "@/shared/config/routes";
+import { crossSectionHref } from "@/shared/config/routes";
 import type { SectionProps } from "@/shared/contracts/section";
 import type { ExternalUrl } from "@/shared/contracts/content";
 import { BulletList } from "@/shared/ui/bullet-list";
@@ -23,7 +23,7 @@ import type { JobFact } from "../types";
 const TEXT = { es: experienceEs, en: experienceEn };
 
 /** Fragment of the dental site inside the projects section (SSD-R06). */
-const DENTAL_SITE_FRAGMENT = "#projects-dental-site";
+const DENTAL_SITE_ID = "projects-dental-site";
 /** The freelance highlight that mentions the dental site carries the link to it (PSU-R06). */
 const DENTAL_SITE_HIGHLIGHT = 1;
 /** The freelance highlight about the hotel automation carries the link to its code (PSU-R07). */
@@ -34,10 +34,10 @@ function isExternal(href: string): href is ExternalUrl {
 }
 
 /** Experience: jobs, interpersonal skills and leadership (PSU-R04). */
-export function ExperienceSection({ locale }: SectionProps) {
+export function ExperienceSection({ locale, view }: SectionProps) {
   const text = TEXT[locale];
   const facts = experienceFacts;
-  const dentalSiteHref = `${sectionPath(locale, "projects")}${DENTAL_SITE_FRAGMENT}`;
+  const dentalSiteHref = crossSectionHref(locale, view, "projects", DENTAL_SITE_ID);
 
   const linkOf = (job: JobFact, index: number) => {
     if (job.id !== "freelance") return null;

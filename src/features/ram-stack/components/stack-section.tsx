@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { sectionPath } from "@/shared/config/routes";
+import { crossSectionHref } from "@/shared/config/routes";
 import type { SectionProps } from "@/shared/contracts/section";
 import { ChipList } from "@/shared/ui/chip-list";
 import { ContentBlock } from "@/shared/ui/content-block";
@@ -39,7 +39,7 @@ const GROUP_ICONS: Readonly<Record<StackGroupId, ReactNode>> = {
  * Tech stack: technologies by area, engineering methods and AI-assisted development, without level
  * indicators (RAM-R04).
  */
-export function StackSection({ locale }: SectionProps) {
+export function StackSection({ locale, view }: SectionProps) {
   const text = TEXT[locale];
 
   return (
@@ -68,7 +68,9 @@ export function StackSection({ locale }: SectionProps) {
               </div>
             ))}
             <p>
-              <InternalLink href={sectionPath(locale, "about")}>{text.aboutLinkLabel}</InternalLink>
+              <InternalLink href={crossSectionHref(locale, view, "about")}>
+                {text.aboutLinkLabel}
+              </InternalLink>
             </p>
           </ContentBlock>
         </div>

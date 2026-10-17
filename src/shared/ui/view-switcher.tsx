@@ -3,6 +3,7 @@ import { Fragment } from "react";
 
 import { cvPath, homePath } from "@/shared/config/routes";
 import type { Locale } from "@/shared/contracts/locale";
+import type { SiteView } from "@/shared/contracts/navigation";
 import { getUiDictionary } from "@/shared/i18n/get-ui-dictionary";
 import { cn } from "@/shared/lib/cn";
 
@@ -21,8 +22,6 @@ import {
   SEGMENT_LINK,
   SEGMENT_OPTION,
 } from "./view-switcher.styles";
-
-export type SiteView = "interactive" | "simple";
 
 interface ViewSwitcherProps {
   readonly locale: Locale;

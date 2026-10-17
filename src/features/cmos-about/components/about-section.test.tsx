@@ -5,7 +5,7 @@ import { AboutSection } from "./about-section";
 
 describe("AboutSection", () => {
   it("CMOS-AC04: renders the four blocks, the seven stack chips and the repository link", () => {
-    render(<AboutSection locale="es" idScope="" />);
+    render(<AboutSection locale="es" idScope="" view="simple" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Cómo se construyó",
       "Stack",
@@ -22,7 +22,7 @@ describe("AboutSection", () => {
   });
 
   it("CMOS-AC04: renders the same structure in English", () => {
-    render(<AboutSection locale="en" idScope="" />);
+    render(<AboutSection locale="en" idScope="" view="simple" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "How it was built",
       "Stack",
@@ -35,7 +35,7 @@ describe("AboutSection", () => {
   });
 
   it("declares the use of AI in the development and in the images", () => {
-    render(<AboutSection locale="es" idScope="" />);
+    render(<AboutSection locale="es" idScope="" view="simple" />);
     expect(
       screen.getByText(
         "Desarrollado con asistencia de IA, con las especificaciones como fuente de verdad.",

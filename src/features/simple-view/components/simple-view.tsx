@@ -93,7 +93,7 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
             >
               {text[locale].meta.title}
             </h2>
-            <Section locale={locale} idScope="" />
+            <Section locale={locale} idScope="" view="simple" />
           </section>
         ))}
       </main>

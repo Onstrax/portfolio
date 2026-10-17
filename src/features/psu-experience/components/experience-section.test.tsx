@@ -7,7 +7,7 @@ const NBSP = " ";
 
 describe("ExperienceSection", () => {
   it("PSU-AC03: renders the three blocks and one article per job, with its period", () => {
-    const { container } = render(<ExperienceSection locale="es" idScope="" />);
+    const { container } = render(<ExperienceSection locale="es" idScope="" view="simple" />);
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Experiencia laboral",
       "Competencias interpersonales",
@@ -24,13 +24,13 @@ describe("ExperienceSection", () => {
   });
 
   it("PSU-AC03: says that every job was individual work, in each language", () => {
-    const spanish = render(<ExperienceSection locale="es" idScope="" />);
+    const spanish = render(<ExperienceSection locale="es" idScope="" view="simple" />);
     for (const job of screen.getAllByRole("article")) {
       expect(within(job).getByText("Trabajo individual")).toBeInTheDocument();
     }
     spanish.unmount();
 
-    render(<ExperienceSection locale="en" idScope="" />);
+    render(<ExperienceSection locale="en" idScope="" view="simple" />);
     for (const job of screen.getAllByRole("article")) {
       expect(within(job).getByText("Individual work")).toBeInTheDocument();
     }
@@ -42,7 +42,7 @@ describe("ExperienceSection", () => {
   });
 
   it("PSU-AC03: shows the stack of the freelance job", () => {
-    render(<ExperienceSection locale="es" idScope="" />);
+    render(<ExperienceSection locale="es" idScope="" view="simple" />);
     const [freelance] = screen.getAllByRole("article");
     expect(freelance).toBeDefined();
     if (freelance === undefined) return;
@@ -59,7 +59,7 @@ describe("ExperienceSection", () => {
       ["es", /^Ver el repositorio/],
       ["en", /^See the repository/],
     ] as const) {
-      const view = render(<ExperienceSection locale={locale} idScope="" />);
+      const view = render(<ExperienceSection locale={locale} idScope="" view="simple" />);
       const link = screen.getByRole("link", { name });
       expect(link).toHaveAttribute("href", "https://github.com/PortafolioSor0/All-Inclusive");
       expect(link).toHaveAttribute("target", "_blank");
@@ -71,7 +71,7 @@ describe("ExperienceSection", () => {
   });
 
   it("PSU-AC09: emphasizes exactly the four figures of the jobs", () => {
-    const spanish = render(<ExperienceSection locale="es" idScope="" />);
+    const spanish = render(<ExperienceSection locale="es" idScope="" view="simple" />);
     expect([...spanish.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
       "un proceso semanal a aproximadamente un día",
       "~2-3 nuevos clientes al mes",
@@ -79,7 +79,7 @@ describe("ExperienceSection", () => {
       "~20 estudiantes",
     ]);
     spanish.unmount();
-    const english = render(<ExperienceSection locale="en" idScope="" />);
+    const english = render(<ExperienceSection locale="en" idScope="" view="simple" />);
     expect([...english.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
       "a weekly process to approximately one day",
       "~2-3 new clients per month",
@@ -88,16 +88,22 @@ describe("ExperienceSection", () => {
     ]);
   });
 
-  it("PSU-AC04: links the dental site to its project", () => {
-    render(<ExperienceSection locale="es" idScope="" />);
+  it("PSU-AC04: links the dental site to its project, without leaving the view", () => {
+    const panel = render(<ExperienceSection locale="es" idScope="panel-" view="interactive" />);
     expect(screen.getByRole("link", { name: "Ver el proyecto" })).toHaveAttribute(
       "href",
       "/es/projects/#projects-dental-site",
     );
+    panel.unmount();
+    render(<ExperienceSection locale="es" idScope="" view="simple" />);
+    expect(screen.getByRole("link", { name: "Ver el proyecto" })).toHaveAttribute(
+      "href",
+      "#projects-dental-site",
+    );
   });
 
   it("lists the eight interpersonal skills, in the order of the résumé", () => {
-    render(<ExperienceSection locale="en" idScope="" />);
+    render(<ExperienceSection locale="en" idScope="" view="simple" />);
     const skills = screen.getByRole("heading", { name: "Interpersonal skills" }).parentElement;
     expect([...(skills?.querySelectorAll("li") ?? [])].map((skill) => skill.textContent)).toEqual([
       "Analytical problem-solving",

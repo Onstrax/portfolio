@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { SiteView } from "./navigation";
 
 import type { ComponentId, SectionSlugOf } from "./ids";
 import type { Locale } from "./locale";
@@ -27,6 +28,8 @@ export interface SectionProps {
   readonly locale: Locale;
   /** Prefix that the component prepends to every `id` attribute it renders. */
   readonly idScope: string;
+  /** View in which the section is shown: it decides where its internal links lead (TSC-R61). */
+  readonly view: SiteView;
 }
 
 export interface SectionDefinition<C extends ComponentId, F, T extends SectionTextBase> {
