@@ -202,14 +202,15 @@ test.describe("auditable states of the scene", () => {
       await expect(page.getByTestId("boot-screen")).toBeVisible();
       await expect(page.getByRole("button", { name: "Saltar" })).toBeVisible();
       // The state to audit is the whole log: a line that is still fading in has, for 100 ms, less
-      // contrast than its color gives. The progress bar keeps its last frame, so it stays listed.
+      // contrast than its color gives. Only the lines count: the progress bar is decorative and
+      // hidden from assistive technology, and in WebKit under load its animation can lag behind.
       await expect
         .poll(() =>
           page
             .getByTestId("boot-screen")
             .evaluate((screen) =>
-              screen
-                .getAnimations({ subtree: true })
+              [...screen.querySelectorAll('[data-part="line"]')]
+                .flatMap((line) => line.getAnimations())
                 .every((animation) => animation.playState === "finished"),
             ),
         )
@@ -218,7 +219,9 @@ test.describe("auditable states of the scene", () => {
       await expectNoViolations(page);
       await expect(page.locator("html")).toHaveAttribute("data-boot", "play");
       release();
-      await expect(page.locator("html")).toHaveAttribute("data-boot", "done");
+      // The scripts arrive late and the boot then ends with its fade, which WebKit under load can
+      // stretch: more time than the default to see it done.
+      await expect(page.locator("html")).toHaveAttribute("data-boot", "done", { timeout: 15_000 });
     });
   });
 });
