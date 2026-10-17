@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.2 |
-| Última actualización | 2026-10-13 |
+| Versión | 2.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST, SCN |
 
 ## 1. Propósito
@@ -62,7 +62,7 @@ Feature: `src/features/detail-panel/`. `index.ts` exporta el componente de clien
 | PNL-R16 | Los controles anterior y siguiente son enlaces (`<a>`) a la ruta de la sección de destino. Su texto visible es el título de esa sección, precedido o seguido del icono `chevron-left` o `chevron-right`. Sus nombres accesibles son `panel.previousAriaLabel({ title })` y `panel.nextAriaLabel({ title })`. |
 | PNL-R17 | El indicador de posición muestra `panel.positionLabel({ position, total })`, donde `position` es el lugar de la sección actual en `sections`, contando desde 1, y `total` es 7. Su texto para lectores de pantalla es `panel.positionAriaLabel({ position, total })`. |
 | PNL-R18 | Al cambiar de sección, el marco y el velo permanecen; solo cambian el título, el chip y el contenido, con la animación M-07. El scroll de la zona de contenido vuelve al principio y el foco pasa al nuevo título. |
-| PNL-R19 | No hay atajos de teclado para anterior y siguiente (QLT-R10): se usan los enlaces del pie. |
+| PNL-R19 | Con el panel abierto, las flechas izquierda y derecha del teclado llevan a la sección anterior y a la siguiente, igual que los enlaces del pie: reemplazan la entrada del historial y el foco pasa al nuevo título (D-105). No actúan si hay una tecla modificadora pulsada, ni si el foco está en un campo editable. Son teclas de navegación, no de carácter, así que no son un atajo de una sola tecla (QLT-R10). |
 
 ### 4.4 Fragmentos
 
@@ -113,6 +113,7 @@ El panel no tiene un estado propio de "abierto" (PNL-R07): `panelReducer`, funci
 | PNL-AC12 | En el HTML exportado de `/es/projects/` no hay ningún elemento `<dialog>` (SYS-AC17). | Prueba de exportación |
 | PNL-AC13 | Con una sección cuyo contenido es más alto que la zona de contenido, esta tiene `tabindex="0"` y se desplaza con las teclas de flecha; la cabecera y el pie siguen visibles (VIS-AC10). | Prueba E2E |
 | PNL-AC14 | Con la emulación de movimiento reducido, abrir, cerrar y cambiar de sección no aplican transformaciones y ninguna transición supera 150 ms (VIS-AC05). | Prueba E2E |
+| PNL-AC15 | Con el panel de Perfil abierto, la flecha derecha lleva a Experiencia y la izquierda devuelve a Perfil, con el foco en el título y sin añadir entradas al historial; desde Perfil, la izquierda lleva a "Acerca de este sitio". Con Alt pulsada, las flechas no cambian de sección. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -134,6 +135,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.0 | Por decisión del autor (D-105): las flechas izquierda y derecha pasan de sección con el panel abierto; PNL-R19, que lo prohibía, se reescribe. Nuevo PNL-AC15. |
 | 2026-10-13 | 1.2 | Estado: pasa a "Implementada" al cerrar M8, con todos sus criterios automáticos citados por una prueba (TST-R38). El autor revisó el panel y leyó en él las siete secciones (A4) el 2026-10-13. Sin cambio de requisitos. |
 | 2026-10-13 | 1.2 | Durante M7, por delegación del autor (D-73). Nuevo PNL-R25: la propiedad `toolbar`, con la que la barra fija sigue operable con el panel abierto; sin ella no había forma de cambiar de idioma con una sección abierta (VSN-AC06, I18N-AC11). |
 | 2026-10-13 | 1.1 | Durante M6, por delegación del autor. PNL-R02: el `<dialog>` cubre el viewport y el velo es un hijo suyo. PNL-R11: al cerrar con "Atrás", el diálogo deja de ser modal durante la animación para que el foco vuelva a la escena. PNL-R12: cierre forzado por el navegador. PNL-R20: el fragmento se aplica también al cambiar de sección. §4.6: atributos de prueba y funciones de `lib/`. |

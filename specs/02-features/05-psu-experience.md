@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
+| Versión | 2.1 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
@@ -130,7 +130,7 @@ export interface ExperienceText extends SectionTextBase {
 | --- | --- |
 | PSU-R04 | El componente raíz, `ExperienceSection`, renderiza tres bloques con encabezado `<h3>`, en este orden: experiencia laboral (icono `briefcase`), competencias interpersonales (icono `users`) y liderazgo (icono `flag`). Cumple TSC §4.5.1 y no contiene componentes de cliente. |
 | PSU-R05 | Cada trabajo se muestra, en el orden de `facts.jobs`, como un `<article>` con: `role` como `<h4>`; `organization`, si existe; el periodo con `PeriodText`; `formatTeamSize(teamSize, locale)` como chip neutro; los elementos de `stack` como chips neutros; `common.privateRepositoryLabel` como chip con el icono `lock` si `repository` es `"private"`; y `highlights` como lista, cada elemento con `RichText` (TSC-R59). Los fragmentos destacados son los que aparecen en negrita en la tabla de §4.3. |
-| PSU-R06 | A continuación de `jobs.freelance.highlights[1]`, en la misma línea, hay un enlace a `sectionPath(locale, "projects")` con el fragmento `#projects-dental-site` y el texto `dentalSiteLinkLabel`. |
+| PSU-R06 | A continuación de `jobs.freelance.highlights[1]`, en la misma línea, hay un enlace a `crossSectionHref(locale, view, "projects", "projects-dental-site")` con el texto `dentalSiteLinkLabel`: en la escena abre el panel de Proyectos en ese proyecto, y en la vista simple salta a él sin salir de la página (TSC-R61). |
 | PSU-R07 | El repositorio de la automatización hotelera es público (F-25). A continuación de `jobs.freelance.highlights[0]`, en la misma línea, hay un enlace externo (SYS-R40) a `repositoryLink.href` con el texto `automationLinkLabel`. Como `repository` es `"public"`, el trabajo freelance ya no muestra el chip de repositorio privado (PSU-R05). |
 | PSU-R08 | Las competencias se muestran como una lista de ocho chips neutros, en el orden del CV. El liderazgo, como una frase seguida de su periodo con `PeriodText`. |
 
@@ -153,7 +153,7 @@ Iconos propios de esta sección: `briefcase` y `flag`.
 | PSU-AC01 | Los hechos son los de §4.2: tres trabajos en el orden freelance, monitoría y tutoría, con sus periodos, todos con `teamSize` 1, y el periodo de liderazgo de 2022 a 2024. | Prueba unitaria |
 | PSU-AC02 | Cada idioma tiene 2, 2 y 3 `highlights` para los tres trabajos, en ese orden, y ocho `skills`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
 | PSU-AC03 | El componente renderiza tres `<h3>` con los títulos de §4.3 en ese orden y tres `<article>`; los periodos son "Jul. 2024 – actualidad", "Ene. – dic. 2026" y "Ene. 2022 – dic. 2026" en español; cada trabajo muestra "Trabajo individual" o "Individual work"; y el trabajo freelance muestra los chips "Python" y "Selenium". | Prueba de componente |
-| PSU-AC04 | El enlace "Ver el proyecto" apunta a la ruta de Proyectos con el fragmento `#projects-dental-site`. | Prueba de componente |
+| PSU-AC04 | El enlace "Ver el proyecto" apunta a `/es/projects/#projects-dental-site` con `view="interactive"` y a `#projects-dental-site` con `view="simple"`. | Prueba de componente |
 | PSU-AC05 | `bootLines` es exactamente la tabla de §4.5 y su mensaje mide 72 caracteres o menos. | Prueba unitaria |
 | PSU-AC06 | En `desktop`, abrir la zona de la fuente de poder en `/es/` muestra el panel "Experiencia" con "Monitor académico"; en `/en/`, "Experience" con "Teaching Assistant". Activar "Ver el proyecto" abre el panel de Proyectos con el proyecto de la web odontológica visible. | Prueba E2E |
 | PSU-AC07 | El autor revisa ambos idiomas (I18N-AC18). | Revisión manual del autor, registrada en el historial de esta spec |
@@ -178,6 +178,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.1 | Por decisión del autor (D-103): el enlace a la web odontológica no cambia de vista (TSC-R61). PSU-R06 y PSU-AC04. |
 | 2026-10-16 | 2.0 | Versión 3, por decisión del autor tras su revisión con reclutadores (D-97): se alinea con los CVs actualizados. Nuevo orden de los trabajos: freelance, monitoría y tutoría. Freelance hasta la actualidad; monitoría y tutoría hasta diciembre de 2026 (F-30). Textos del CV en freelance y tutoría (grupos de hasta cuatro); la monitoría suma ~60 estudiantes en dos semestres y una viñeta nueva sobre la retroalimentación a proyectos que buscan llegar al mercado (F-32). Ocho competencias, con "Orientación al detalle" y "Trabajo bajo presión". PSU-R08, la línea de arranque y PSU-AC01 a AC03 y AC09 actualizados. |
 | 2026-10-14 | 1.1 | PSU-AC07: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |

@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
+| Versión | 2.1 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
@@ -139,7 +139,7 @@ Solo los grupos `backend` y `data` tienen `note`.
 | RAM-R06 | Los bloques se disponen en dos columnas cuando el contenedor mide 640 px o más de ancho, y en una cuando mide menos. El orden de lectura y de foco es siempre el de RAM-R04. |
 | RAM-R07 | No se muestran barras, porcentajes, estrellas ni ningún otro indicador de nivel. |
 | RAM-R08 | Cada encabezado va precedido del icono de su grupo: `code` (lenguajes), `layout` (frontend), `server` (backend), `cloud` (GCP y AWS), `git-branch` (DevOps), `database` (datos), `shield` (seguridad), `compass` (metodologías) y `bot` (IA), este último propio de esta sección (VIS-R41). |
-| RAM-R10 | **Desarrollo asistido por IA** (D-100). El bloque ocupa el ancho completo, también con dos columnas. Contiene `aiDescription`; después, una lista de chips neutros por cada grupo de `facts.aiTools`, en el orden de `AI_TOOL_GROUP_IDS`, precedida de su nombre `aiGroups[id]` como `<h4>`; y al final un enlace interno a `sectionPath(locale, "about")` con el texto `aboutLinkLabel`, que lleva a la sección donde se cuenta cómo se construyó este sitio. Las herramientas son las de la tabla siguiente, en su orden (F-33). |
+| RAM-R10 | **Desarrollo asistido por IA** (D-100). El bloque ocupa el ancho completo, también con dos columnas. Contiene `aiDescription`; después, una lista de chips neutros por cada grupo de `facts.aiTools`, en el orden de `AI_TOOL_GROUP_IDS`, precedida de su nombre `aiGroups[id]` como `<h4>`; y al final un enlace interno a `crossSectionHref(locale, view, "about")` (TSC-R61) con el texto `aboutLinkLabel`, que lleva a la sección donde se cuenta cómo se construyó este sitio. Las herramientas son las de la tabla siguiente, en su orden (F-33). |
 
 | Grupo | Herramientas |
 | --- | --- |
@@ -192,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.1 | Por decisión del autor (D-103): el enlace a "Acerca de este sitio" no cambia de vista (TSC-R61). |
 | 2026-10-16 | 2.0 | Versión 3, por decisión del autor tras su revisión con reclutadores (D-100). Nuevo bloque "Desarrollo asistido por IA" (RAM-R10): una descripción de cómo usa los modelos de lenguaje, sus entornos de agentes, herramientas y modelos (F-33), y un enlace a "Acerca de este sitio". RAM-R01: `AI_TOOL_GROUP_IDS`, `aiTools` y sus textos. RAM-R04 y RAM-R08: diez bloques e icono `bot`. RAM-AC04 actualizado; nuevos RAM-AC09 y RAM-AC10. |
 | 2026-10-14 | 1.1 | RAM-AC08: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |

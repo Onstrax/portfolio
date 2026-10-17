@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 5.0 |
+| Versión | 5.1 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
@@ -34,7 +34,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | ID | Requisito |
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
-| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); el selector de vista (§4.10), con "Interactiva" como opción actual (D-93); un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo, para que el idioma, el selector de vista y los contactos sigan al alcance (PNL-R25). Esa copia se coloca en la esquina superior derecha del viewport, a 16 px de sus bordes, y no en la del escenario: en un viewport más alto que 16:9 el escenario queda más abajo y la barra taparía la cabecera del panel (D-102). |
+| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); el selector de vista (§4.10), con "Interactiva" como opción actual (D-93); un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo, para que el idioma, el selector de vista y los contactos sigan al alcance (PNL-R25). Esa copia se coloca en la esquina superior derecha del viewport, a 16 px de sus bordes, y no en la del escenario: en un viewport más alto que 16:9 el escenario queda más abajo y la barra taparía la cabecera del panel (D-102). Mientras tanto, la barra de la escena no se muestra, para que no se vean dos. |
 | SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a las zonas de la escena (QLT-R07). Mientras la bienvenida está abierta, la barra es inerte, como el resto de la escena (SCN-R51). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
@@ -44,7 +44,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | --- | --- |
 | SET-R05 | `LanguageSwitcher` es un componente de cliente de `src/shared/ui/`, que usan la barra fija, el menú de ajustes y la vista simple. Recibe por propiedad su nombre accesible. Cumple I18N-R24 a I18N-R27. |
 | SET-R06 | Es un grupo (`role="group"`) con una opción por cada idioma de `LOCALES`, en ese orden. Cada opción muestra el `shortCode` de su idioma (I18N §4.1). La del idioma activo es un `<span>` con `aria-current="true"` y texto en `aura` sobre superficie oscura o en negrita sobre superficie clara; las demás son enlaces. Entre opciones hay un separador `/` decorativo. |
-| SET-R07 | Al activar un enlace de idioma: se llama a `setLocale` con ese idioma, se navega a la ruta equivalente conservando el fragmento, y tras la navegación el foco queda en la opción del idioma ahora activo (I18N-R27). |
+| SET-R07 | Al activar un enlace de idioma: se llama a `setLocale` con ese idioma, se navega a la ruta equivalente conservando la consulta y el fragmento (SMP-R30), y tras la navegación el foco queda en la opción del idioma ahora activo (I18N-R27). |
 
 ### 4.3 Menú de ajustes
 
@@ -192,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 5.1 | Por decisión del autor (D-103). SET-R07: el cambio de idioma conserva también la consulta de la dirección, para que una página de caso abierta desde la vista simple siga sabiéndolo. |
 | 2026-10-16 | 5.0 | Durante la versión 3, por delegación del autor (D-102). SET-R02: la copia de la barra dentro del panel abierto va en la esquina superior derecha del viewport. Con la barra ampliada por los contactos, en los viewports más altos que 16:9 (1024×768, 1280×900) tapaba la cabecera del panel. Nuevo SET-AC16. |
 | 2026-10-15 | 4.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93, D-95). SET-R02: la barra lleva el selector de vista en lugar del enlace "Vista simple"; nuevo §4.10 (SET-R32 y SET-R33) y SET-AC15; se retira el texto `settings.simpleViewLabel`. SET-R26: los mandos del panel de control, no un botón Power, que la imagen no tiene. La pieza de ajustes se llama "Panel de control". SET-AC01 y SET-AC04 actualizados; §6, dos decisiones. |
 | 2026-10-14 | 3.0 | Por decisión del autor (D-92). SET-R03: la bienvenida ya no está en el orden de tabulación de la escena; mientras está abierta, la barra es inerte. |

@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 5.0 |
+| Versión | 6.0 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR |
 
@@ -227,7 +227,7 @@ Superficie del panel de detalle. Reproduce la referencia `DetailIdea1Component`:
 | --- | --- |
 | VIS-R22 | **Marco:** degradado lineal vertical de `frame-light` (arriba) a `frame-dark` (abajo), borde de 1 px en `frame-edge`, radio `radius-frame`, sombra `shadow-panel` y relleno interior de 14 px. |
 | VIS-R23 | **Pantalla:** fondo `screen`, radio `radius-plate`, borde de 1 px en `ink` con opacidad 20 % y relleno interior de 28 px (32 px con viewport de 1280 px de ancho o más). |
-| VIS-R24 | **Tamaño:** ancho `min(760px, 100vw - 96px)`; alto máximo `min(86vh, 900px)`. Si el contenido no cabe, hace scroll la zona de contenido de la pantalla; la cabecera y el pie permanecen fijos. |
+| VIS-R24 | **Tamaño:** ancho `min(760px, 100vw - 96px)`; alto `min(86vh, 900px)`, el mismo para todas las secciones, de modo que los enlaces del pie no cambian de sitio al pasar de una a otra (D-105). Si el contenido no cabe, hace scroll la zona de contenido de la pantalla; la cabecera y el pie permanecen fijos. |
 | VIS-R25 | **Cabecera:** título con el rol "Título de panel" a la izquierda; a la derecha, un chip con el nombre de la pieza de hardware y el botón de cerrar. Debajo, una línea de 2 px en `ink` de ancho completo. |
 | VIS-R26 | **Pie:** situado sobre el marco, debajo de la pantalla; texto en `ink`. Contiene los controles de navegación entre secciones. |
 | VIS-R27 | **Contenido:** los encabezados de bloque usan el rol "Encabezado de bloque" precedidos de un icono de 20 px; entre bloques hay 24 px de separación; las listas usan viñeta cuadrada en `ink`. |
@@ -342,7 +342,7 @@ Los enlaces que abren un origen externo llevan, a continuación del texto, el ic
 | VIS-AC07 | El texto de cuerpo de los paneles y de la vista simple tiene un tamaño calculado de 16 px o más; ningún texto visible mide menos de 12 px. | Prueba E2E que lee el estilo calculado |
 | VIS-AC08 | Todos los botones de la barra fija, del menú de ajustes y del panel miden al menos 44×44 px. | Prueba E2E que mide las cajas |
 | VIS-AC09 | Las únicas familias tipográficas cargadas son Inter y JetBrains Mono. | Prueba E2E que consulta `document.fonts` |
-| VIS-AC10 | A 1280×720 px y a 1920×1080 px, el panel cumple VIS-R24: no supera los máximos, queda dentro del viewport y, con un contenido más alto que la pantalla, la cabecera y el pie siguen visibles mientras el contenido hace scroll. | Prueba E2E |
+| VIS-AC10 | A 1280×720 px y a 1920×1080 px, el panel cumple VIS-R24: no supera los máximos, queda dentro del viewport, mide lo mismo con cualquier sección, también Contacto, con los enlaces del pie en la misma posición, y, con un contenido más alto que la pantalla, la cabecera y el pie siguen visibles mientras el contenido hace scroll. | Prueba E2E |
 | VIS-AC11 | Las opacidades del aura en reposo, hover y activo coinciden con la tabla de §4.4 para una zona primaria y una secundaria. | Prueba de componente que lee los atributos del SVG |
 | VIS-AC13 | Sin movimiento reducido, la respiración del aura termina antes de 5 segundos desde que la escena es visible y el halo de las zonas en reposo queda en su valor máximo. | Prueba E2E |
 | VIS-AC12 | El autor revisa el panel, las etiquetas y la barra fija sobre la imagen final de la escena y confirma que el aura se distingue en todo el perímetro de cada zona y que el panel corresponde a la referencia `DetailIdea1Component`. | Revisión manual del autor, registrada en el historial de esta spec |
@@ -370,6 +370,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 6.0 | Por decisión del autor (D-105): el panel tiene el mismo alto con todas las secciones. Con Contacto, más corto, el pie quedaba en otro sitio y había que mover el puntero para seguir pasando de sección. VIS-R24 y VIS-AC10. |
 | 2026-10-16 | 5.0 | Por decisión del autor tras su revisión con reclutadores (D-101): una jerarquía más marcada para leer en diagonal. "Título de panel" pasa a 24/32 px, "Encabezado de bloque" a 20/28 px (antes medía menos que el cuerpo), "Vista simple, nombre" a 36/40 px y "Vista simple, título de sección" a 30/36 px; nuevo rol "Título de elemento" (18/28 px). Nuevo VIS-R47. VIS-R27: iconos de bloque de 20 px. |
 | 2026-10-15 | 4.1 | Por decisión del autor (D-96). Nuevo rol tipográfico "Contexto del arranque" y nueva animación M-13, la barra de progreso del arranque. Usos de `boot-text`, `boot-dim` y `boot-ok` ampliados. |
 | 2026-10-14 | 4.0 | Por decisión del autor (D-92): la bienvenida deja de ser una placa oscura y pasa a ser una terminal con los colores del arranque. Nuevo §4.5.4 (VIS-R46) y nuevo control "Botón de terminal" en VIS-R29. VIS-R31 y VIS-AC04: en la terminal, el anillo de foco es `boot-text`. M-12: velo y terminal, con escala. Usos de `backdrop`, de los colores del arranque y de `z-panel` ampliados. |

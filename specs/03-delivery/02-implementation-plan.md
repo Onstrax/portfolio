@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.10 |
+| Versión | 1.11 |
 | Última actualización | 2026-10-16 |
 | Depende de | Todas las demás specs |
 
@@ -216,11 +216,11 @@ Se rellena al cerrar cada hito (PLAN-R05).
 
 | ID | Requisito |
 | --- | --- |
-| PLAN-R17 | La versión 3 alinea el sitio con los CVs que el autor actualizó tras revisarlos con reclutadores, y aplica el resto de su revisión: cursos, intereses, desarrollo asistido por IA, monitoría y jerarquía tipográfica (D-97 a D-101). Es un único hito, M14, que se publica en un solo `push` (PLAN-R15) y deja implementadas las specs que enmienda. |
+| PLAN-R17 | La versión 3 alinea el sitio con los CVs que el autor actualizó tras revisarlos con reclutadores, y aplica el resto de su revisión: cursos, intereses, desarrollo asistido por IA, monitoría y jerarquía tipográfica (D-97 a D-101); y, tras la primera revisión del autor, los enlaces que no cambian de vista, las referencias, el panel de alto fijo y las flechas del panel (D-103 a D-105). Es un único hito, M14, que se publica en un solo `push` (PLAN-R15) y deja implementadas las specs que enmienda. |
 
 | ID | Tarea | Cuándo | Criterio que cierra |
 | --- | --- | --- | --- |
-| A17 | Revisar la versión 3 en ambos idiomas: Perfil, Experiencia y Stack frente a los CVs, el bloque de IA y la nueva jerarquía en el panel, en la vista simple y en una página de caso | Tras publicar M14 | CPU-AC10, PSU-AC07, RAM-AC08 y VIS-AC12 |
+| A17 | Revisar la versión 3 en ambos idiomas: Perfil, Experiencia y Stack frente a los CVs, el bloque de IA, la nueva jerarquía, la navegación desde la vista simple sin pasar por la escena, las referencias de Contacto, el panel de alto fijo y las flechas para pasar de sección | Tras publicar M14 | CPU-AC10, PSU-AC07, RAM-AC08, VIS-AC12 e IO-AC10 |
 
 ## 5. Criterios de aceptación
 
@@ -252,6 +252,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 1.11 | M14 se amplía con D-103 y D-104, pedidos por el autor al revisar la primera entrega de la versión 3; A17 los incluye. |
 | 2026-10-16 | 1.10 | A16 cerrada. Nuevo §4.7: la versión 3, con el hito M14 y la tarea A17 (PLAN-R17). |
 | 2026-10-15 | 1.9 | A16 hecha: el autor revisó el cambio de D-93 a D-96 y lo dio por bueno. La versión 2 queda cerrada, sin tareas pendientes. |
 | 2026-10-15 | 1.8 | A7 y A15 hechas: la persona ajena al hardware navegó todo el sitio guiándose por las etiquetas (AST-AC06), y el autor revisó la bienvenida modal. Por su decisión, tras probar el sitio con varios visitantes, D-93 a D-96; se publican en un solo `push` (PLAN-R15) y añaden la tarea A16. Pendiente del autor: A16. |

@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.4 |
-| Última actualización | 2026-10-14 |
+| Versión | 3.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -323,6 +323,8 @@ export interface SectionProps {
   readonly locale: Locale;
   /** Prefijo que el componente antepone a todo atributo `id` que renderice. */
   readonly idScope: string;
+  /** Vista en la que se muestra la sección: decide a dónde llevan sus enlaces internos (TSC-R61). */
+  readonly view: SiteView;
 }
 
 export interface SectionDefinition<C extends ComponentId, F, T extends SectionTextBase> {
@@ -352,7 +354,7 @@ El mismo componente se muestra dentro del panel de detalle y dentro de la vista 
 | TSC-R30 | `Section` NO DEBE renderizar elementos de región (`<main>`, `<section>`, `<header>`, `<footer>`, `<nav>`) como raíz ni asumir un ancho: su contenido se adapta al contenedor. |
 | TSC-R31 | Todo atributo `id` que renderice `Section` es la concatenación de `idScope` y un **identificador local**. Lo mismo aplica a los atributos que referencian un `id` (`aria-labelledby`, `aria-describedby`, `htmlFor`). |
 | TSC-R32 | Todo identificador local empieza por el slug de su sección seguido de un guion y está en `kebab-case` (por ejemplo `projects-habicapital`), de modo que sea único en un documento que contiene todas las secciones. |
-| TSC-R33 | `Section` NO DEBE cambiar su contenido ni su estructura según el valor de `idScope`. La capa base de la vista simple pasa `idScope=""`, de modo que sus identificadores locales son los fragmentos de URL de SYS-R11; el panel de detalle pasa `idScope="panel-"`. |
+| TSC-R33 | `Section` NO DEBE cambiar su contenido ni su estructura según el valor de `idScope`, ni según `view`, salvo el destino de sus enlaces internos (TSC-R61). La capa base de la vista simple pasa `idScope=""`, de modo que sus identificadores locales son los fragmentos de URL de SYS-R11; el panel de detalle pasa `idScope="panel-"`. |
 
 ### 4.6 Modelo de contenido: hechos y textos
 
@@ -532,6 +534,7 @@ export interface UiStore {
 | TSC-R54 | `src/shared/config/routes.ts` DEBE exportar los tipos y las funciones siguientes, con el comportamiento de la tabla de ejemplos. Son funciones puras. De las funciones se muestra solo la firma. |
 | TSC-R55 | Toda ruta interna del sitio se construye con estas funciones. NO DEBEN aparecer en `src/` literales de ruta que contengan un locale (por ejemplo `"/es/"` o una plantilla que concatene el locale) fuera de `routes.ts` y de los archivos de prueba, que escriben literalmente las rutas que esperan. |
 | TSC-R56 | `parsePath` acepta la ruta con o sin barra final. Devuelve `null` para cualquier ruta que no corresponda a una de las cuatro vistas. Una ruta de caso solo es válida bajo `projects` y con un `CaseStudyId`. |
+| TSC-R61 | **Los enlaces no cambian de vista** (D-103). `SiteView` (`"interactive" \| "simple"`), en `src/shared/contracts/navigation.ts`, es la vista en la que se muestra una sección: el panel de detalle pasa `"interactive"` y la vista simple, `"simple"`. Todo enlace de una sección a otra se construye con `crossSectionHref`: en la escena lleva a la ruta de la sección, que abre su panel; en la vista simple es solo el fragmento, que salta dentro de la misma página. Los enlaces a un caso de estudio se construyen con `caseStudyHref`, que en la vista simple añade `?view=simple` para que el caso devuelva al visitante a la vista simple (SMP-R30). |
 
 ```ts
 // src/shared/config/routes.ts
@@ -554,6 +557,17 @@ export function homePath(locale: Locale): HomePath;
 export function sectionPath(locale: Locale, section: SectionSlug): SectionPath;
 export function cvPath(locale: Locale): CvPath;
 export function caseStudyPath(locale: Locale, caseStudy: CaseStudyId): CaseStudyPath;
+/** Enlace de una sección a otra, o a un elemento de otra, sin salir de la vista (TSC-R61). */
+export function crossSectionHref(
+  locale: Locale,
+  view: SiteView,
+  section: SectionSlug,
+  localId?: string,
+): string;
+/** Enlace a un caso de estudio que recuerda desde qué vista se abrió (TSC-R61). */
+export function caseStudyHref(locale: Locale, caseStudy: CaseStudyId, view: SiteView): string;
+/** Parámetro de consulta con el que una página de caso sabe que se abrió desde la vista simple. */
+export const VIEW_QUERY = "view=simple";
 export function parsePath(pathname: string): ParsedPath | null;
 export function toPath(parsed: ParsedPath): AppPath;
 /** Misma vista y sección en otro idioma. Una ruta no reconocida lleva al inicio de ese idioma. */
@@ -566,6 +580,11 @@ export function withLocale(pathname: string, target: Locale): AppPath;
 | `sectionPath("en", "projects")` | `"/en/projects/"` |
 | `cvPath("es")` | `"/es/cv/"` |
 | `caseStudyPath("en", "thesis")` | `"/en/projects/thesis/"` |
+| `crossSectionHref("es", "interactive", "projects", "projects-dental-site")` | `"/es/projects/#projects-dental-site"` |
+| `crossSectionHref("es", "simple", "projects", "projects-dental-site")` | `"#projects-dental-site"` |
+| `crossSectionHref("en", "simple", "about")` | `"#about"` |
+| `caseStudyHref("es", "thesis", "interactive")` | `"/es/projects/thesis/"` |
+| `caseStudyHref("es", "thesis", "simple")` | `"/es/projects/thesis/?view=simple"` |
 | `parsePath("/es/")` y `parsePath("/es")` | `{ view: "home", locale: "es" }` |
 | `parsePath("/en/projects/")` | `{ view: "section", locale: "en", section: "projects" }` |
 | `parsePath("/es/cv/")` | `{ view: "cv", locale: "es" }` |
@@ -654,11 +673,12 @@ export type RenderMode = "scene" | "simple";
 | TSC-AC14 | Las funciones de rutas devuelven los resultados de la tabla de §4.10, incluidas las de caso de estudio, y `parsePath("/es/projects/habicapital/")` y `parsePath("/es/stack/thesis/")` devuelven `null`. | Prueba unitaria |
 | TSC-AC15 | No hay literales de ruta con locale en `src/` fuera de `routes.ts` y de los archivos de prueba, ni accesos a `localStorage` o `sessionStorage` fuera de los archivos que permite TSC-R53. | Prueba de arquitectura |
 | TSC-AC16 | Al renderizar en un mismo documento las siete secciones con `idScope=""` y de nuevo con `idScope="panel-"`, para cada idioma: no hay ningún atributo `id` repetido, todo `id` de la primera tanda empieza por el slug de su sección, y ningún componente renderiza `<h1>`, `<h2>` ni un elemento de región como raíz. | Prueba de componente |
-| TSC-AC17 | El HTML que produce cada sección con `idScope=""` es idéntico al que produce con `idScope="panel-"` una vez eliminado ese prefijo de los atributos `id` y de los que los referencian. | Prueba de componente |
+| TSC-AC17 | El HTML que produce cada sección con `idScope=""` es idéntico al que produce con `idScope="panel-"`, con la misma `view`, una vez eliminado ese prefijo de los atributos. | Prueba de componente |
 | TSC-AC18 | Ningún archivo `content/*.ts` contiene `new Date` ni `Date.`, y cada feature de sección declara sus hechos y textos con `satisfies` (TSC-R40). | Prueba de arquitectura |
 | TSC-AC19 | `CASE_STUDY_IDS` es `["thesis", "andespace", "dental-site"]`, `isCaseStudyId` acepta esos tres valores y rechaza `"habicapital"`, `null` y números, y un archivo de pruebas de tipos demuestra que `CaseStudyId` es asignable a `ProjectId` de SSD. | Prueba unitaria |
 | TSC-AC20 | `parseSession` devuelve `welcomeSeen: false` y conserva `bootSeen` y `visited` para un valor guardado sin ese campo, como `{"bootSeen":true,"visited":["cpu"]}`; `markWelcomeSeen` escribe la sesión una sola vez; y `reset` deja `welcomeSeen` en `false`. | Prueba unitaria |
 | TSC-AC21 | `RichText` renderiza una cadena sin ningún `<strong>` y un `EmphasizedText` con exactamente un `<strong>` que contiene `emphasis`, con el resto de `text` antes y después, sin espacios añadidos. | Prueba de componente |
+| TSC-AC22 | `crossSectionHref` y `caseStudyHref` devuelven los resultados de la tabla de §4.10; y ninguna sección renderizada con `view="simple"` contiene un enlace interno cuyo `href` empiece por la ruta de una sección. | Prueba unitaria y prueba de componente |
 
 ## 6. Decisiones y justificación
 
@@ -686,6 +706,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 3.0 | Versión 3, por decisión del autor (D-103), que encontró que los enlaces de la vista simple llevaban a la escena. `SectionProps` gana `view: SiteView`; TSC-R33 lo admite solo para el destino de los enlaces. Nuevo TSC-R61 y funciones `crossSectionHref` y `caseStudyHref` en §4.10. TSC-AC17 actualizado; nuevo TSC-AC22. |
 | 2026-10-14 | 2.4 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): `welcomeSeen` y `markWelcomeSeen` (TSC-AC11, TSC-AC12, TSC-AC20). Sin cambio de requisitos. |
 | 2026-10-14 | 2.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
 | 2026-10-14 | 2.4 | Versión 2, pendiente de aprobación del autor (D-82, D-83, D-85). §4.3: `CASE_STUDY_IDS` y su guarda. §4.4: `EmphasizedText` y `RichLine`, con TSC-R58 y TSC-R59 (`RichText`); TSC-R39 remite a ellos. Nuevo §4.4.1 con el contrato de caso de estudio (TSC-R60). §4.8: C3 se aplica también al texto destacado y nuevas reglas C13 y C14. §4.9: campo `welcomeSeen` y acción `markWelcomeSeen`; `reset` también lo pone a `false`. §4.10: vista `case` y `caseStudyPath`. Nuevos TSC-AC19 a TSC-AC21. |

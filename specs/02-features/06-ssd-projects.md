@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
-| Última actualización | 2026-10-14 |
+| Versión | 2.1 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -262,7 +262,7 @@ Los proyectos que no aparecen en la segunda tabla no tienen enlaces.
 | --- | --- |
 | SSD-R05 | El componente raíz, `ProjectsSection`, renderiza dos bloques con encabezado `<h3>`: `featuredTitle` (icono `star`), con los proyectos destacados, y `moreTitle` (icono `folder`), con los compactos, cada grupo en el orden de `facts.projects`. Cumple TSC §4.5.1 y no contiene componentes de cliente. |
 | SSD-R06 | Cada proyecto es un `<article>` cuyo `id` es `idScope` seguido de `projects-` y de su `id` (TSC-R32). Ese identificador local es su fragmento de URL (SYS-R11). |
-| SSD-R07 | Un proyecto muestra, en este orden: su nombre como `<h4>`; `tagline`; `award`, si existe, como chip de reconocimiento con el icono `award`; `formatTeamSize(teamSize, locale)` como chip neutro con el icono `users`; `common.privateRepositoryLabel` como chip con el icono `lock` si `repository` es `"private"`; los elementos de `stack` como chips neutros; `highlights` como lista, cada elemento con `RichText` (TSC-R59); `note`, si existe; sus enlaces, con el texto de `linkLabels` y aspecto de enlace externo (VIS §4.6, SYS-R40); y, si su `id` está en `CASE_STUDY_IDS`, un enlace interno a `caseStudyPath(locale, id)` con el texto `caseLinkLabel`, el icono `chevron-right` y aspecto de botón secundario. Los fragmentos destacados son los que aparecen en negrita en las tablas de §4.3. |
+| SSD-R07 | Un proyecto muestra, en este orden: su nombre como `<h4>`; `tagline`; `award`, si existe, como chip de reconocimiento con el icono `award`; `formatTeamSize(teamSize, locale)` como chip neutro con el icono `users`; `common.privateRepositoryLabel` como chip con el icono `lock` si `repository` es `"private"`; los elementos de `stack` como chips neutros; `highlights` como lista, cada elemento con `RichText` (TSC-R59); `note`, si existe; sus enlaces, con el texto de `linkLabels` y aspecto de enlace externo (VIS §4.6, SYS-R40); y, si su `id` está en `CASE_STUDY_IDS`, un enlace interno a `caseStudyHref(locale, id, view)` con el texto `caseLinkLabel`, que recuerda desde qué vista se abre el caso (TSC-R61), el icono `chevron-right` y aspecto de botón secundario. Los fragmentos destacados son los que aparecen en negrita en las tablas de §4.3. |
 | SSD-R08 | Los proyectos destacados se muestran en una columna, separados por una línea de 1 px. Los compactos se muestran en una cuadrícula de dos columnas cuando el contenedor mide 640 px o más de ancho, y en una columna cuando mide menos. La diferencia entre unos y otros es solo de disposición: ambos muestran todos los campos de SSD-R07. |
 | SSD-R09 | Los enlaces de un proyecto llevan un nombre accesible que incluye el nombre del proyecto, de modo que dos enlaces "Backend" de proyectos distintos se distingan: el texto visible es el de `linkLabels` y el nombre del proyecto se añade como texto solo para lectores de pantalla. |
 
@@ -393,6 +393,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.1 | Por decisión del autor (D-103): el enlace al caso completo recuerda la vista desde la que se abre (SSD-R07, TSC-R61). |
 | 2026-10-14 | 2.0 | Por decisión del autor al revisar M11 (D-91): la web odontológica pasa al tercer lugar y HabiCapital al cuarto, para que los tres destacados con caso de estudio vayan seguidos. Cambian `PROJECT_IDS`, el orden de las dos tablas de §4.2 y de §4.3.3 y §4.3.4, SSD-AC03 y SSD-AC13. SSD-AC10 y SSD-AC14: el autor leyó en el sitio el contenido nuevo de M10 y los tres casos en ambos idiomas, y los aprobó (A11 y A12), el 2026-10-14. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura de los tres casos en su página queda para A12 (SSD-AC14). Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Durante M10: los textos en inglés usan el apóstrofo tipográfico (’), como exige I18N-R41. Sin cambio de contenido. |

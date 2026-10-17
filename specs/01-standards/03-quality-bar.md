@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 5.0 |
-| Última actualización | 2026-10-15 |
+| Versión | 5.1 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N |
 
 ## 1. Propósito
@@ -54,7 +54,7 @@ Quien evalúe técnicamente el portfolio abrirá las herramientas de desarrollo.
 | QLT-R07 | En la escena, el orden de tabulación es: enlace de salto; controles de la barra fija (selector de idioma, selector de vista y los cuatro contactos directos de SET-R30); y, después, los ocho elementos interactivos en este orden: `cpu`, `psu`, `ssd`, `ram`, `io`, `fan`, `cmos`, `settings` (el orden canónico de VSN §4, seguido del panel de control). El orden no depende de la posición de cada pieza en la imagen. Mientras la bienvenida está abierta, es modal: el foco empieza en su título y el tabulador recorre solo sus cuatro controles (SCN-R51). |
 | QLT-R08 | Al abrir un panel o un menú, el foco pasa a su interior. Al cerrarlo, el foco vuelve al elemento que lo abrió. Esc cierra el elemento abierto más reciente. |
 | QLT-R09 | El anillo de foco es siempre visible (VIS-R31) y el elemento con foco nunca queda tapado por la barra fija ni por otra capa. |
-| QLT-R10 | No hay atajos de una sola tecla, salvo durante la secuencia de arranque, en la que cualquier tecla la salta. |
+| QLT-R10 | No hay atajos de una sola tecla de carácter, salvo durante la secuencia de arranque, en la que cualquier tecla la salta. Las flechas, que son teclas de navegación, mueven el foco entre las piezas de la escena (SCN-R45) y pasan de sección en el panel (PNL-R19). |
 
 #### 4.1.3 Puntero
 
@@ -286,6 +286,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 5.1 | Por decisión del autor (D-105). QLT-R10 precisa que la regla es sobre teclas de carácter, como la pauta WCAG 2.1.4 en la que se basa, y menciona las flechas de la escena y del panel. |
 | 2026-10-15 | 5.0 | Por decisión del autor (D-93). QLT-R07: la barra fija lleva el selector de vista en lugar del enlace a la vista simple, y la bienvenida tiene cuatro controles. |
 | 2026-10-14 | 4.0 | Por decisión del autor (D-92). QLT-R07: la bienvenida sale del orden de tabulación de la escena; mientras está abierta es modal y el tabulador solo recorre sus controles. |
 | 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38): los estados auditables nuevos de QLT-R26 (bienvenida y casos de estudio), el orden de tabulación de QLT-R07 (QLT-AC03) y el presupuesto de JavaScript con una página de caso. QLT-AC12 pasa en CI. QLT-AC27 queda para la auditoría manual del autor sobre lo nuevo (A14). Sin cambio de requisitos. |

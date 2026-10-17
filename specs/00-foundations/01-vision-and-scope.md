@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 3.1 |
-| Última actualización | 2026-10-15 |
+| Versión | 4.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | — |
 
 ## 1. Propósito
@@ -101,7 +101,7 @@ El orden de esta tabla es el **orden canónico** de las secciones primarias en l
 | --- | --- |
 | VSN-R15 | Se publican: nombre completo, ciudad (Bogotá, Colombia), correo, número de WhatsApp, LinkedIn, GitHub, fotografía, formación, experiencia, proyectos y CV en PDF. |
 | VSN-R16 | Todo dato publicado DEBE poder rastrearse a un CV actualizado, a un hecho `F-nn` del [README](../README.md) o a una spec. NO DEBE publicarse ningún dato tomado de las imágenes de `docs/VisualIdeas/`. |
-| VSN-R17 | NO DEBEN publicarse nombres de terceros: asesor de tesis, profesores, compañeros de equipo ni clientes. Los trabajos en equipo indican el tamaño del equipo. Quedan exceptuados los identificadores que forman parte de las URLs públicas que se enlazan (el nombre comercial en la dirección del sitio odontológico y los nombres de usuario u organización en las direcciones de repositorios), porque ya son públicos y no se pueden omitir sin romper el enlace. |
+| VSN-R17 | NO DEBEN publicarse nombres de terceros: asesor de tesis, profesores, compañeros de equipo ni clientes. Los trabajos en equipo indican el tamaño del equipo. Quedan exceptuados los identificadores que forman parte de las URLs públicas que se enlazan (el nombre comercial en la dirección del sitio odontológico y los nombres de usuario u organización en las direcciones de repositorios), porque ya son públicos y no se pueden omitir sin romper el enlace; y las referencias de Contacto (IO-R17), personas que dieron su consentimiento para publicar su nombre, su rol y su correo, y nada más (F-34, D-104). |
 | VSN-R18 | El contenido DEBE distinguir lo que el autor desarrolló de lo que configuró o integró, y lo individual de lo hecho en equipo. |
 | VSN-R19 | Los repositorios privados se mencionan con la etiqueta "Repositorio privado / Private repository" y sin enlace. |
 
@@ -156,7 +156,7 @@ Estos criterios validan el producto completo. Los criterios de cada funcionalida
 | VSN-AC06 | Cambiar de idioma con una sección abierta conserva la sección: de `/es/projects/` se pasa a `/en/projects/`. | Prueba E2E |
 | VSN-AC07 | Ambos idiomas tienen exactamente las mismas claves de contenido y el mismo número de elementos en cada lista. | Prueba unitaria de integridad de contenido |
 | VSN-AC08 | Recorrido completo solo con teclado: saltar el arranque, enfocar cada elemento interactivo, abrir y cerrar cada panel, cambiar idioma, activar sonido y reiniciar. | Prueba E2E |
-| VSN-AC09 | El sitio desplegado no contiene nombres de terceros (VSN-R17) ni datos de las imágenes de referencia (VSN-R16). | Revisión manual del autor antes de cada publicación de contenido |
+| VSN-AC09 | El sitio desplegado no contiene nombres de terceros (VSN-R17), salvo las referencias de Contacto, ni datos de las imágenes de referencia (VSN-R16). | Revisión manual del autor antes de cada publicación de contenido |
 | VSN-AC10 | El resultado de la compilación es una carpeta de archivos estáticos que se sirve correctamente con cualquier servidor de archivos, sin proceso de Node en ejecución. | Prueba E2E contra la carpeta exportada servida de forma estática |
 | VSN-AC11 | En `desktop`, desde la escena en reposo, el CV, el correo, LinkedIn y GitHub se alcanzan con una sola activación cada uno, sin abrir ningún panel. | Prueba E2E |
 | VSN-AC12 | Con JavaScript desactivado, la página de caso de cada uno de los tres proyectos de VSN-R21 se abre en su URL, en ambos idiomas, y contiene los cuatro bloques: problema, rol, proceso y resultado. | Prueba E2E con JavaScript desactivado |
@@ -213,6 +213,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 4.0 | Por decisión del autor (D-104): VSN-R17 admite una excepción, las referencias de Contacto, con el consentimiento de cada persona (F-34). VSN-AC09 actualizado. |
 | 2026-10-15 | 3.1 | Por decisión del autor (D-95): la pieza de ajustes pasa a llamarse panel de control, en el mapa de componentes, VSN-R01 y el glosario. |
 | 2026-10-14 | 3.0 | Por decisión del autor (D-92): la bienvenida es un diálogo con estética de terminal que se cierra con un clic en cualquier parte, con Esc o con su botón. VSN-R22, glosario y decisión reescritos. |
 | 2026-10-14 | 2.4 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38), VSN-AC11 y VSN-AC12 incluidos. VSN-AC09 sigue siendo la revisión del autor antes de cada publicación de contenido; para v2 la hizo con A11 y A12. Sin cambio de requisitos. |

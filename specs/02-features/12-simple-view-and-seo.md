@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.1 |
+| Versión | 2.2 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
@@ -65,6 +65,7 @@ Feature: `src/features/simple-view/`. `server.ts` exporta `SimpleView`, `CaseStu
 | SMP-R11 | El desplazamiento es instantáneo con movimiento reducido y suave en otro caso (`scroll-behavior`). |
 | SMP-R12 | **Impresión.** Al imprimir cualquier página con idioma se imprime la vista simple, en negro sobre blanco, sin la capa de escena, la navegación, el selector de idioma, el aviso ni los botones (todo enlace o control con aspecto de botón); los enlaces externos muestran su URL a continuación del texto; y ninguna sección de proyecto o de experiencia se parte entre dos páginas si cabe en una. |
 | SMP-R29 | **Volver arriba.** El enlace `simpleView.backToTopLabel` de la vista simple y de las páginas de caso lleva a `#top`: el `<h1>` de la vista simple y la `<header>` de la página de caso llevan `id="top"`, `tabindex="-1"` y un margen de desplazamiento igual al margen superior de la página, de modo que la página vuelve hasta arriba del todo, con la cabecera a la vista, y el foco queda en ese destino. `#content` sigue siendo solo el destino del enlace de salto. |
+| SMP-R30 | **Volver a los proyectos sin cambiar de vista** (D-103). Los dos enlaces `simpleView.caseBackLabel` de una página de caso llevan, en el HTML, a `sectionPath(locale, "projects")`. Si la dirección de la página trae `?view=simple`, porque el caso se abrió desde la vista simple (TSC-R61), un componente de cliente cambia su destino por `cvPath(locale)` seguido de `#projects-` y el identificador del caso, de modo que el visitante vuelve a la vista simple, a la tarjeta de ese proyecto. Al cambiar de idioma en la página de caso, el selector conserva ese parámetro (SET-R07). |
 
 ### 4.4 Títulos y descripciones
 
@@ -174,7 +175,7 @@ Espacio de nombres `site`:
 | Bloque | Elemento | Contenido |
 | --- | --- | --- |
 | Enlace de salto | `<a>` | `common.skipToContentLabel`, hacia `#content` (QLT-R02) |
-| Cabecera | `<header>` | Un enlace interno hacia `sectionPath(locale, "projects")` con el texto `simpleView.caseBackLabel` y el icono `chevron-left`; el selector de idioma (SET-R05) con el nombre `common.languageLabel`; y el enlace de descarga del CV de la cabecera de la vista simple (§4.2) |
+| Cabecera | `<header>` | Un enlace interno de vuelta a los proyectos (SMP-R30) con el texto `simpleView.caseBackLabel` y el icono `chevron-left`; el selector de idioma (SET-R05) con el nombre `common.languageLabel`; y el enlace de descarga del CV de la cabecera de la vista simple (§4.2) |
 | Presentación | Dentro de `<main id="content">` | `simpleView.caseKindTitle` con el rol "Encabezado de bloque"; el nombre del proyecto (`properName` o `name`) como `<h1>`, con el rol "Vista simple, nombre"; `tagline`; los chips de SSD-R07 (reconocimiento, tamaño de equipo, repositorio privado y tecnologías); y los enlaces del proyecto con su `linkLabels`, como enlaces externos |
 | El problema | `<section>` | `<h2>` con `simpleView.caseProblemTitle` (icono `flag`) y los párrafos de `problem` |
 | Mi rol | `<section>` | `<h2>` con `simpleView.caseRoleTitle` (icono `users`); `team`; un `<h3>` con `simpleView.caseContributionsTitle` y la lista de `contributions`; y, si existe `teamContributions`, un `<h3>` con `simpleView.caseTeamTitle` y ese párrafo |
@@ -208,6 +209,7 @@ Espacio de nombres `site`:
 | SMP-AC21 | `getPageMetadata({ view: "case", caseStudy: "thesis" }, "es")` devuelve el título "Tesis de autenticación poscuántica · Caso de estudio", la descripción del caso, la URL canónica `/es/projects/thesis/`, alternativas hacia `/es/projects/thesis/` y `/en/projects/thesis/` y `og:type` `website`; y los títulos y descripciones de las seis páginas de caso cumplen QLT-R37. | Prueba unitaria |
 | SMP-AC22 | En `desktop`, en el panel de Proyectos de `/es/projects/`, "Leer el caso completo" de la tesis lleva a `/es/projects/thesis/`; ahí, la opción de inglés del selector lleva a `/en/projects/thesis/`, y "All projects" a `/en/projects/` con el panel de Proyectos abierto. En `mobile`, "Todos los proyectos" lleva a la vista simple desplazada hasta Proyectos. | Prueba E2E |
 | SMP-AC23 | En `desktop`, en `/es/cv/` y en `/es/projects/thesis/`, tras bajar hasta el pie, activar "Volver arriba" deja la página en `scrollY` 0, con la cabecera visible y el foco en el destino de SMP-R29. | Prueba E2E |
+| SMP-AC24 | En `desktop`, desde `/es/cv/`: "Ver el proyecto" de Experiencia, "Ver los proyectos" de Perfil y "Cómo construí este portfolio" de Stack saltan dentro de `/es/cv/`; "Leer el caso completo" de la tesis lleva a `/es/projects/thesis/?view=simple`; ahí, cambiar a inglés conserva el parámetro, y "All projects" lleva a `/en/cv/#projects-thesis`. Abierto sin el parámetro, "Todos los proyectos" lleva a `/es/projects/`. En ningún momento de ese recorrido desde la vista simple aparece la escena. | Prueba E2E |
 
 ## 6. Decisiones y justificación
 
@@ -230,6 +232,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.2 | Por decisión del autor (D-103): desde la vista simple ningún enlace lleva a la escena. Nuevo SMP-R30: la página de caso abierta desde la vista simple devuelve a ella. Nuevo SMP-AC24. |
 | 2026-10-16 | 2.1 | Versión 3, por decisión del autor (D-97): `site.description` dice "Ingeniero de Sistemas y Computación" en lugar de "estudiante". Los roles tipográficos de la vista simple y de las páginas de caso crecen según VIS 5.0 (D-101), sin cambiar su disposición. |
 | 2026-10-15 | 2.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93). §4.2: el enlace "Ver la versión interactiva" se sustituye por el selector de vista de la cabecera (SET-R32), más visible; se retira su texto. Nuevo SMP-R29: "Volver arriba" lleva hasta arriba del todo, a la cabecera, también en las páginas de caso, donde antes se quedaba en el principio del contenido. SMP-AC03 actualizado; nuevo SMP-AC23. |
 | 2026-10-14 | 1.4 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. Sin cambio de requisitos. |

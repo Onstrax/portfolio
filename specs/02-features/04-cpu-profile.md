@@ -3,7 +3,7 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
+| Versión | 2.1 |
 | Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST |
 
@@ -170,7 +170,7 @@ Son los trece cursos del CV (F-31), agrupados por tema en el orden de `focusArea
 | Resumen | `summaryTitle`, icono `file-text` | Los cinco elementos de `summary`, como lista |
 | Formación | `educationTitle`, icono `graduation-cap` | Una entrada por elemento de `education`: institución como `<h4>`, `program`, periodo y `detail`. La entrada de Uniandes añade el promedio y los cursos (CPU-R06). La de Múnich añade `exchangeCredits` como chip. Al final, `additionalTraining` |
 | Idiomas | `languagesTitle`, icono `languages` | Una lista con `name` y `level` de cada idioma, en el orden de `facts.languages` |
-| Reconocimientos | `recognitionTitle`, icono `award` | `hallOfFame`; y `projectAwards` seguido de un enlace a `sectionPath(locale, "projects")` con el texto `projectAwardsLinkLabel` |
+| Reconocimientos | `recognitionTitle`, icono `award` | `hallOfFame`; y `projectAwards` seguido de un enlace a `crossSectionHref(locale, view, "projects")` con el texto `projectAwardsLinkLabel` (TSC-R61) |
 
 Iconos propios de esta sección, añadidos a `src/shared/ui/icons/` (VIS-R41): `file-text`, `graduation-cap`, `languages` y `award`.
 
@@ -245,6 +245,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.1 | Por decisión del autor (D-103): el enlace a los proyectos no cambia de vista (TSC-R61). |
 | 2026-10-16 | 2.0 | Versión 3, por decisión del autor tras su revisión con reclutadores (D-97, D-98, D-99): se alinea con los CVs actualizados. Resumen en cinco frases, con "Ingeniero" en lugar de "estudiante" y los intereses presentados como etapa de exploración; disponibilidad sin fecha y con trabajo remoto; Uniandes de enero de 2022 a diciembre de 2026, sin año de graduación (se retiran `graduationYear` y `graduationLabel`); los trece cursos del CV en un párrafo, sin desplegable (CPU-R06); alemán "B1, conversación cotidiana". CPU-AC01, AC02, AC04, AC05 y AC07 actualizados. |
 | 2026-10-14 | 1.1 | CPU-AC10, incluidas las traducciones de los cursos nuevos: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |
