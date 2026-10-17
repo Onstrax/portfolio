@@ -13,7 +13,7 @@ describe("buildPersonJsonLd", () => {
         /^http:\/\/localhost:4173\/portrait\/portrait-384\.[0-9a-f]{12}\.jpg$/,
       ) as unknown,
       description:
-        "Portfolio de Juan Esteban Álvarez García, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
+        "Portfolio de Juan Esteban Álvarez García, Ingeniero de Sistemas y Computación de la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
       email: "juanalvarezgcl@gmail.com",
       sameAs: [
         "https://www.linkedin.com/in/juan-esteban-alvarez-garcia-21bb70364/",

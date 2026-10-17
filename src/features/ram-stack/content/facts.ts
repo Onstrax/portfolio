@@ -56,4 +56,9 @@ export const stackFacts = {
       items: ["AES", "RSA", "TLS", "JWT", "Argon2id", "HMAC", "ZKP/LWE", "Kyber", "ECDSA"],
     },
   ],
+  aiTools: {
+    harnesses: ["Claude Code", "Codex", "OpenCode"],
+    tools: ["Skills", "MCP", "Plugins", "NotebookLM"],
+    models: ["Fable", "Opus", "GPT", "Gemini", "DeepSeek", "Qwen", "GLM", "Nano Banana"],
+  },
 } as const satisfies StackFacts;

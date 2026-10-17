@@ -11,6 +11,7 @@ import { buildLanguageRedirectScript } from "@/shared/lib/language-redirect-scri
 import { ButtonLink } from "@/shared/ui/button-link";
 import { FONT_VARIABLES } from "@/shared/ui/fonts";
 import { SkipLink } from "@/shared/ui/skip-link";
+import { PAGE_NAME } from "@/shared/ui/typography.styles";
 
 const CONTENT_ID = "content";
 const fallback = getUiDictionary(FALLBACK_LOCALE);
@@ -37,9 +38,7 @@ export default function LanguageGatePage() {
           tabIndex={-1}
           className="mx-auto flex min-h-dvh w-full max-w-[760px] flex-col justify-center gap-6 px-4 py-8 focus:outline-none sm:px-6"
         >
-          <h1 className="font-mono text-3xl leading-9 font-semibold">
-            {fallback.languageGate.title}
-          </h1>
+          <h1 className={PAGE_NAME}>{fallback.languageGate.title}</h1>
           <ul className="flex flex-wrap gap-3">
             {ORDERED_LOCALES.map((locale, index) => (
               <li key={locale} lang={LOCALE_META[locale].htmlLang}>

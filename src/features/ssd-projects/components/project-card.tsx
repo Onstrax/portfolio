@@ -13,6 +13,7 @@ import { AwardIcon } from "@/shared/ui/icons/award";
 import { ChevronRightIcon } from "@/shared/ui/icons/chevron-right";
 import { BUTTON_BASE, BUTTON_VARIANTS } from "@/shared/ui/link.styles";
 import { RichText } from "@/shared/ui/rich-text";
+import { ITEM_HEADING } from "@/shared/ui/typography.styles";
 
 import { projectName } from "../lib/project-name";
 import type { ProjectFact, ProjectsText } from "../types";
@@ -36,7 +37,7 @@ export function ProjectCard({ project, text, locale, id }: ProjectCardProps) {
 
   return (
     <article id={id} className="scroll-mt-4 space-y-2">
-      <h4 className="font-semibold">{name}</h4>
+      <h4 className={ITEM_HEADING}>{name}</h4>
       <p className="text-ink-muted text-sm leading-5">{tagline}</p>
       <div className="flex flex-wrap gap-2">
         {award !== undefined && (

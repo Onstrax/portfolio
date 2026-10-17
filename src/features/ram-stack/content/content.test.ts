@@ -102,3 +102,21 @@ describe("stack texts", () => {
     expect([stackEn.meta.title, stackEn.meta.hardwareName]).toEqual(["Tech stack", "RAM"]);
   });
 });
+
+describe("AI-assisted development", () => {
+  it("RAM-AC09: holds the three lists of tools and the texts of the block in both languages", () => {
+    expect(stackFacts.aiTools).toEqual({
+      harnesses: ["Claude Code", "Codex", "OpenCode"],
+      tools: ["Skills", "MCP", "Plugins", "NotebookLM"],
+      models: ["Fable", "Opus", "GPT", "Gemini", "DeepSeek", "Qwen", "GLM", "Nano Banana"],
+    });
+    for (const text of [stackEs, stackEn]) {
+      expect(text.aiTitle).not.toBe("");
+      expect(text.aiDescription).not.toBe("");
+      expect(Object.keys(text.aiGroups)).toEqual(["harnesses", "tools", "models"]);
+      expect(text.aboutLinkLabel).not.toBe("");
+    }
+    expect(stackEs.aiTitle).toBe("Desarrollo asistido por IA");
+    expect(stackEn.aboutLinkLabel).toBe("How I built this portfolio");
+  });
+});

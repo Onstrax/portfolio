@@ -16,6 +16,8 @@ describe("stack boot lines", () => {
         { id: "languages", items: ["Python", "Java"] },
         { id: "data", items: ["PostgreSQL"] },
       ],
+      // The AI tools are not memory modules: they do not count.
+      aiTools: { harnesses: ["Codex"], tools: [], models: [] },
     });
     expect(lines[0]?.message).toBe("Memory: 2 banks, 3 modules online");
   });

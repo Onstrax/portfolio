@@ -30,7 +30,7 @@ export const en = {
       `${title} · ${SITE.authorName}`,
     cvTitle: `Résumé · ${SITE.authorName}`,
     caseTitle: ({ title }: { readonly title: string }): string => `${title} · Case study`,
-    description: `Portfolio of ${SITE.authorName}, Systems Engineering student at Universidad de los Andes: software, cloud/DevOps and applied security.`,
+    description: `Portfolio of ${SITE.authorName}, Systems and Computing Engineer from Universidad de los Andes: software, cloud/DevOps and applied security.`,
     cvDescription: `Profile, experience, projects, stack and contact details of ${SITE.authorName} on a single page, ready to read or print.`,
     ogImageAlt: "Motherboard on a workbench, seen from above",
   },

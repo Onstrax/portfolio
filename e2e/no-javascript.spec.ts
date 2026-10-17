@@ -8,7 +8,7 @@ test.use({ javaScriptEnabled: false, allowedIssues: ["failed-request"] });
 /** A fragment of the content of each section, to prove that the whole text is in the HTML. */
 const CONTENT: Readonly<Record<string, readonly string[]>> = {
   es: [
-    "Disponible desde enero de 2027",
+    "Remoto a nivel mundial",
     "Monitor académico",
     "Simulación de banca digital segura",
     "Seguridad y criptografía",
@@ -17,7 +17,7 @@ const CONTENT: Readonly<Record<string, readonly string[]>> = {
     "Cómo se construyó",
   ],
   en: [
-    "Available from January 2027",
+    "Remote worldwide",
     "Teaching Assistant",
     "Secure digital banking simulation",
     "Security and cryptography",

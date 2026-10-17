@@ -26,7 +26,7 @@ export const es: UiDictionary = {
     sectionTitle: ({ title }) => `${title} · ${SITE.authorName}`,
     cvTitle: `Currículum · ${SITE.authorName}`,
     caseTitle: ({ title }) => `${title} · Caso de estudio`,
-    description: `Portfolio de ${SITE.authorName}, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.`,
+    description: `Portfolio de ${SITE.authorName}, Ingeniero de Sistemas y Computación de la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.`,
     cvDescription: `Perfil, experiencia, proyectos, stack y contacto de ${SITE.authorName} en una sola página, lista para leer o imprimir.`,
     ogImageAlt: "Placa madre sobre un banco de trabajo, vista desde arriba",
   },

@@ -26,6 +26,7 @@ import { LINK_BASE, LINK_SURFACES } from "@/shared/ui/link.styles";
 import { RichText } from "@/shared/ui/rich-text";
 import { SkipLink } from "@/shared/ui/skip-link";
 import { TOP_ID } from "@/shared/ui/top-anchor";
+import { BLOCK_HEADING, PAGE_NAME, PAGE_SECTION_TITLE } from "@/shared/ui/typography.styles";
 
 import { CONTENT_ID } from "./simple-view";
 
@@ -35,9 +36,8 @@ interface CaseStudyPageProps {
 }
 
 const TEXT_LINK = cn(LINK_BASE, LINK_SURFACES.light);
-const SECTION_TITLE =
-  "mb-6 flex items-center gap-3 font-mono text-2xl leading-8 font-semibold tracking-[0.06em] uppercase";
-const BLOCK_TITLE = "font-mono text-sm leading-5 font-semibold tracking-[0.06em] uppercase";
+const SECTION_TITLE = `mb-6 flex items-center gap-3 ${PAGE_SECTION_TITLE} [&>svg]:size-6`;
+const BLOCK_TITLE = BLOCK_HEADING;
 
 function isExternal(href: string): href is ExternalUrl {
   return href.startsWith("https://");
@@ -122,7 +122,7 @@ export function CaseStudyPage({ locale, caseStudy }: CaseStudyPageProps) {
 
       <main id={CONTENT_ID} tabIndex={-1} className="mt-8 focus:outline-none">
         <p className={cn(BLOCK_TITLE, "text-ink-muted")}>{simpleView.caseKindTitle}</p>
-        <h1 className="mt-2 font-mono text-3xl leading-9 font-semibold">{name}</h1>
+        <h1 className={`mt-2 ${PAGE_NAME}`}>{name}</h1>
         <p className="text-ink-muted mt-2">{projectText.tagline}</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {projectText.award !== undefined && (

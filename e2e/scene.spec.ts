@@ -716,7 +716,7 @@ test.describe("when JavaScript files cannot be downloaded", () => {
 
       await expect(html(page)).toHaveAttribute("data-mode", "simple");
       await expect(page.getByRole("heading", { level: 2 })).toHaveCount(7);
-      await expect(page.getByText("Disponible desde enero de 2027")).toBeVisible();
+      await expect(page.getByText("Remoto a nivel mundial")).toBeVisible();
     });
   });
 });

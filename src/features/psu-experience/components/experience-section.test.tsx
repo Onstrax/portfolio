@@ -16,9 +16,9 @@ describe("ExperienceSection", () => {
     const jobs = screen.getAllByRole("article");
     expect(jobs).toHaveLength(3);
     expect(jobs.map((job) => job.querySelector("p")?.textContent)).toEqual([
-      `Universidad de los Andes · Ene. 2026${NBSP}– actualidad`,
-      `Jul. 2024${NBSP}– ene. 2025`,
-      `Ene. 2022${NBSP}– actualidad`,
+      `Jul. 2024${NBSP}– actualidad`,
+      `Universidad de los Andes · Ene.${NBSP}– dic. 2026`,
+      `Ene. 2022${NBSP}– dic. 2026`,
     ]);
     expect(container.textContent).toContain(`2022${NBSP}– 2024`);
   });
@@ -43,7 +43,7 @@ describe("ExperienceSection", () => {
 
   it("PSU-AC03: shows the stack of the freelance job", () => {
     render(<ExperienceSection locale="es" idScope="" />);
-    const [, freelance] = screen.getAllByRole("article");
+    const [freelance] = screen.getAllByRole("article");
     expect(freelance).toBeDefined();
     if (freelance === undefined) return;
     expect(within(freelance).getByRole("heading", { level: 4 })).toHaveTextContent(
@@ -70,18 +70,20 @@ describe("ExperienceSection", () => {
     }
   });
 
-  it("PSU-AC09: emphasizes exactly the three figures of the jobs", () => {
+  it("PSU-AC09: emphasizes exactly the four figures of the jobs", () => {
     const spanish = render(<ExperienceSection locale="es" idScope="" />);
     expect([...spanish.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
-      "~30 estudiantes",
       "un proceso semanal a aproximadamente un día",
+      "~2-3 nuevos clientes al mes",
+      "~60 estudiantes",
       "~20 estudiantes",
     ]);
     spanish.unmount();
     const english = render(<ExperienceSection locale="en" idScope="" />);
     expect([...english.container.querySelectorAll("strong")].map((s) => s.textContent)).toEqual([
-      "~30 students",
-      "approximately one week of repetitive work to one day",
+      "a weekly process to approximately one day",
+      "~2-3 new clients per month",
+      "~60 students",
       "~20 students",
     ]);
   });
@@ -94,9 +96,18 @@ describe("ExperienceSection", () => {
     );
   });
 
-  it("lists the six interpersonal skills", () => {
+  it("lists the eight interpersonal skills, in the order of the résumé", () => {
     render(<ExperienceSection locale="en" idScope="" />);
     const skills = screen.getByRole("heading", { name: "Interpersonal skills" }).parentElement;
-    expect(skills?.querySelectorAll("li")).toHaveLength(6);
+    expect([...(skills?.querySelectorAll("li") ?? [])].map((skill) => skill.textContent)).toEqual([
+      "Analytical problem-solving",
+      "Clear and multicultural communication",
+      "Collaboration and leadership",
+      "Autonomy and initiative",
+      "Attention to detail",
+      "Working under pressure",
+      "Adaptability and user focus",
+      "Mentoring and teaching",
+    ]);
   });
 });

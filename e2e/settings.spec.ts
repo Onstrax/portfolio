@@ -227,6 +227,21 @@ test.describe("fixed bar in every scene viewport", () => {
     });
   }
 
+  for (const name of SCENE_VIEWPORTS) {
+    test(`SET-AC16: on ${name} the bar inside an open panel leaves the header of the panel clear`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(VIEWPORTS[name]);
+      await page.goto("/es/experience/");
+      const panel = page.getByRole("dialog", { name: "Experiencia" });
+      await expect(panel).toHaveAttribute("data-phase", "open");
+
+      const bar = await boxOf(panel.getByRole("navigation", { name: "Controles del sitio" }));
+      const header = await boxOf(panel.getByRole("heading", { level: 2 }).locator(".."));
+      expect(boxesOverlap(bar, header)).toBe(false);
+    });
+  }
+
   for (const name of ["desktop-min", "desktop-hd"] as const) {
     test(`SET-AC05: on ${name} the settings menu stays inside the stage`, async ({ page }) => {
       await page.setViewportSize(VIEWPORTS[name]);

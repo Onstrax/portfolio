@@ -3,6 +3,7 @@ import type { Locale } from "@/shared/contracts/locale";
 import { Chip } from "@/shared/ui/chip";
 import { ExternalLink } from "@/shared/ui/external-link";
 import { FactChips } from "@/shared/ui/fact-chips";
+import { ITEM_HEADING } from "@/shared/ui/typography.styles";
 
 import type { EcosystemItemFact, EcosystemItemText } from "../types";
 
@@ -22,7 +23,7 @@ export function EcosystemItem({ item, text, locale }: EcosystemItemProps) {
 
   return (
     <div className="space-y-2">
-      <h4 className="font-semibold">{text.name}</h4>
+      <h4 className={ITEM_HEADING}>{text.name}</h4>
       <p>{text.description}</p>
       <div className="flex flex-wrap gap-2">
         {item.tools.map((tool) => (

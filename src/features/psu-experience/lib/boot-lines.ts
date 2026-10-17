@@ -4,8 +4,8 @@ import type { ExperienceFacts, JobId } from "../types";
 
 /** One English keyword per job, for the boot log (PSU-R09). */
 export const BOOT_KEYWORDS: Readonly<Record<JobId, string>> = {
-  "teaching-assistant": "teaching",
   freelance: "freelance",
+  "teaching-assistant": "teaching",
   tutor: "tutoring",
 };
 

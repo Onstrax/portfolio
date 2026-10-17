@@ -164,7 +164,7 @@ describe("simple view and site texts", () => {
       homeTitle: "Juan Esteban Álvarez García · Portfolio interactivo",
       cvTitle: "Currículum · Juan Esteban Álvarez García",
       description:
-        "Portfolio de Juan Esteban Álvarez García, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
+        "Portfolio de Juan Esteban Álvarez García, Ingeniero de Sistemas y Computación de la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
       cvDescription:
         "Perfil, experiencia, proyectos, stack y contacto de Juan Esteban Álvarez García en una sola página, lista para leer o imprimir.",
       ogImageAlt: "Placa madre sobre un banco de trabajo, vista desde arriba",
@@ -173,7 +173,7 @@ describe("simple view and site texts", () => {
       homeTitle: "Juan Esteban Álvarez García · Interactive portfolio",
       cvTitle: "Résumé · Juan Esteban Álvarez García",
       description:
-        "Portfolio of Juan Esteban Álvarez García, Systems Engineering student at Universidad de los Andes: software, cloud/DevOps and applied security.",
+        "Portfolio of Juan Esteban Álvarez García, Systems and Computing Engineer from Universidad de los Andes: software, cloud/DevOps and applied security.",
       cvDescription:
         "Profile, experience, projects, stack and contact details of Juan Esteban Álvarez García on a single page, ready to read or print.",
       ogImageAlt: "Motherboard on a workbench, seen from above",

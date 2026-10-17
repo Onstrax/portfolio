@@ -11,7 +11,7 @@ export const profileFacts = {
     {
       id: "uniandes",
       institution: "Universidad de los Andes",
-      period: { start: { year: 2022, month: 1 }, end: "present" },
+      period: { start: { year: 2022, month: 1 }, end: { year: 2026, month: 12 } },
     },
     {
       id: "hm",
@@ -20,7 +20,6 @@ export const profileFacts = {
     },
   ],
   gpa: { value: 4.2, scale: 5 },
-  graduationYear: 2027,
   exchangeCredits: "17 ECTS",
   languages: ["es", "en", "de"],
 } as const satisfies ProfileFacts;

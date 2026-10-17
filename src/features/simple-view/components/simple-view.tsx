@@ -9,6 +9,7 @@ import { LanguageSwitcher } from "@/shared/ui/language-switcher";
 import { LINK_BASE, LINK_SURFACES } from "@/shared/ui/link.styles";
 import { SkipLink } from "@/shared/ui/skip-link";
 import { TOP_ID } from "@/shared/ui/top-anchor";
+import { PAGE_NAME, PAGE_SECTION_TITLE } from "@/shared/ui/typography.styles";
 import { ViewSwitcher } from "@/shared/ui/view-switcher";
 
 /** `id` of the main content, target of the skip link and of "back to top" (SMP-R04). */
@@ -41,11 +42,7 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
 
       <header className="space-y-4">
         {/* The target of "Back to top": the page goes back to its very top (SMP-R29). */}
-        <h1
-          id={TOP_ID}
-          tabIndex={-1}
-          className="scroll-mt-8 font-mono text-3xl leading-9 font-semibold focus:outline-none"
-        >
+        <h1 id={TOP_ID} tabIndex={-1} className={`scroll-mt-8 ${PAGE_NAME} focus:outline-none`}>
           {SITE.authorName}
         </h1>
         <div className="flex flex-wrap items-center gap-4 print:hidden">
@@ -92,7 +89,7 @@ export function SimpleView({ locale, variant }: SimpleViewProps) {
             <h2
               id={`${slug}-title`}
               tabIndex={-1}
-              className="mb-6 font-mono text-2xl leading-8 font-semibold tracking-[0.06em] uppercase focus:outline-none"
+              className={`mb-6 ${PAGE_SECTION_TITLE} focus:outline-none`}
             >
               {text[locale].meta.title}
             </h2>

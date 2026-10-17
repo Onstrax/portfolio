@@ -9,6 +9,7 @@ import { LOCALE_META } from "@/shared/i18n/locales";
 import { ButtonLink } from "@/shared/ui/button-link";
 import { FONT_VARIABLES } from "@/shared/ui/fonts";
 import { SkipLink } from "@/shared/ui/skip-link";
+import { PAGE_NAME } from "@/shared/ui/typography.styles";
 
 const CONTENT_ID = "content";
 const fallback = getUiDictionary(FALLBACK_LOCALE);
@@ -17,7 +18,7 @@ const ORDERED_LOCALES: readonly Locale[] = [
   FALLBACK_LOCALE,
   ...LOCALES.filter((locale) => locale !== FALLBACK_LOCALE),
 ];
-const TITLE_CLASSES = "font-mono text-3xl leading-9 font-semibold";
+const TITLE_CLASSES = PAGE_NAME;
 
 export const metadata: Metadata = {
   title: fallback.notFound.title,

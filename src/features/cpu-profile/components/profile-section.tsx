@@ -17,6 +17,7 @@ import { GraduationCapIcon } from "@/shared/ui/icons/graduation-cap";
 import { LanguagesIcon } from "@/shared/ui/icons/languages";
 import { InternalLink } from "@/shared/ui/internal-link";
 import { PeriodText } from "@/shared/ui/period-text";
+import { ITEM_HEADING, ITEM_META, PANEL_TITLE } from "@/shared/ui/typography.styles";
 
 import { profileEn } from "../content/en";
 import { profileEs } from "../content/es";
@@ -32,8 +33,7 @@ export function ProfileSection({ locale }: SectionProps) {
   const facts = profileFacts;
   const { common } = getUiDictionary(locale);
   const gpa = `${text.gpaLabel}: ${formatDecimal(facts.gpa.value, locale, 1)}/${formatDecimal(facts.gpa.scale, locale, 1)}`;
-  const graduation = `${text.graduationLabel}: ${String(facts.graduationYear)}`;
-  const coursesSummary = `${text.coursesLabel} (${String(text.courses.length)})`;
+  const courses = `${text.coursesLabel}: ${text.courses.join("; ")}.`;
   const fallback = PORTRAIT_ASSET.sources.jpeg[0].src;
 
   return (
@@ -61,9 +61,7 @@ export function ProfileSection({ locale }: SectionProps) {
           />
         </picture>
         <div className="min-w-0 flex-1 space-y-2">
-          <p className="font-mono text-xl leading-7 font-semibold tracking-[0.06em] uppercase">
-            {facts.name}
-          </p>
+          <p className={PANEL_TITLE}>{facts.name}</p>
           <p>{text.degree}</p>
           <ChipList items={text.focusAreas} />
           <p className="text-ink-muted text-sm leading-5">{facts.location}</p>
@@ -85,22 +83,17 @@ export function ProfileSection({ locale }: SectionProps) {
       <ContentBlock title={text.educationTitle} icon={<GraduationCapIcon />}>
         {facts.education.map((entry) => (
           <div key={entry.id} className="space-y-1">
-            <h4 className="font-semibold">{entry.institution}</h4>
+            <h4 className={ITEM_HEADING}>{entry.institution}</h4>
             <p>{text.education[entry.id].program}</p>
-            <p className="text-ink-muted text-sm leading-5">
+            <p className={ITEM_META}>
               <PeriodText period={entry.period} locale={locale} />
             </p>
             <p>{text.education[entry.id].detail}</p>
             {entry.id === "uniandes" && (
               <>
                 <p>{gpa}</p>
-                <p>{graduation}</p>
-                <details>
-                  <summary className="cursor-pointer font-semibold">{coursesSummary}</summary>
-                  <div className="mt-2">
-                    <BulletList items={text.courses} />
-                  </div>
-                </details>
+                {/* A paragraph, not a list behind a disclosure: it is read at a glance (CPU-R06). */}
+                <p>{courses}</p>
               </>
             )}
             {entry.id === "hm" && <Chip>{facts.exchangeCredits}</Chip>}

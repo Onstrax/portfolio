@@ -6,34 +6,38 @@ export const experienceEn = {
   meta: {
     title: "Experience",
     hardwareName: "Power supply (PSU)",
-    description: `Experience of ${SITE.authorName} as a teaching assistant, freelance developer and programming tutor, plus his interpersonal skills.`,
+    description: `Experience of ${SITE.authorName} as a freelance developer, teaching assistant and programming tutor, plus his interpersonal skills.`,
   },
   jobsTitle: "Work experience",
   jobs: {
+    freelance: {
+      role: "Freelance Developer",
+      highlights: [
+        {
+          text: "Automated data extraction and the entry of hundreds to thousands of hotel reservations per run with Python/Selenium, reducing a weekly process to approximately one day.",
+          emphasis: "a weekly process to approximately one day",
+        },
+        {
+          text: "Designed and launched a dental website (Next.js, Tailwind CSS, Netlify) with a WhatsApp CTA and contact form; it has helped attract ~2-3 new clients per month.",
+          emphasis: "~2-3 new clients per month",
+        },
+      ],
+    },
     "teaching-assistant": {
       role: "Teaching Assistant",
       highlights: [
         {
-          text: "Support ~30 students in IT Product Design and Innovation through assessment, in-class Q&A, supplementary workshops and creation of learning materials.",
-          emphasis: "~30 students",
+          text: "Supported ~60 students in Product Design and Innovation in IT over two semesters by assessing submissions, answering questions, running support workshops and creating teaching materials.",
+          emphasis: "~60 students",
         },
-      ],
-    },
-    freelance: {
-      role: "Freelance Software Developer",
-      highlights: [
-        {
-          text: "Automated data extraction and entry for hundreds to thousands of hotel bookings per run, cutting approximately one week of repetitive work to one day.",
-          emphasis: "approximately one week of repetitive work to one day",
-        },
-        "Designed and deployed a dental practice website, which I still maintain.",
+        "I give feedback to teams whose projects aim to reach the market, across their iterations of JTBD, ICP, customer discovery and Product-Market-Model-Channel fit; hypothesis creation and validation; an MVP built in three iterations; growth loops; market sizing and monetization.",
       ],
     },
     tutor: {
       role: "Private Programming Tutor",
       highlights: [
         {
-          text: "Tutored ~20 students in programming, OOP, data structures and algorithms; designed practice exercises and led one-on-one sessions and groups of up to five.",
+          text: "I have tutored ~20 students in programming, OOP, data structures and algorithms; designed exercises and led personalized one-on-one and group sessions of up to four people.",
           emphasis: "~20 students",
         },
         "Courses: Introduction to Programming; Data Structures and Algorithms; Object-Oriented Design and Programming; Team Software Development.",
@@ -46,11 +50,13 @@ export const experienceEn = {
   skillsTitle: "Interpersonal skills",
   skills: [
     "Analytical problem-solving",
-    "Clear cross-cultural communication",
-    "Teamwork and leadership",
-    "Teaching and mentoring",
-    "Ownership and initiative",
-    "Adaptability and user empathy",
+    "Clear and multicultural communication",
+    "Collaboration and leadership",
+    "Autonomy and initiative",
+    "Attention to detail",
+    "Working under pressure",
+    "Adaptability and user focus",
+    "Mentoring and teaching",
   ],
   leadershipTitle: "Leadership",
   leadership:

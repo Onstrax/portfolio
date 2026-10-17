@@ -1,3 +1,5 @@
+import { PANEL_TITLE } from "@/shared/ui/typography.styles";
+
 /**
  * The dialog covers the viewport and is transparent: the veil and the frame are its children, so
  * that both can be animated and a click on the veil can be told from a click on the frame.
@@ -20,8 +22,7 @@ export const SCREEN =
 /** Header (VIS-R25): title, chip and close button over a line of 2 px. */
 export const HEADER = "flex shrink-0 items-center gap-3 border-b-2 border-ink pb-3";
 
-export const TITLE =
-  "min-w-0 flex-1 font-mono text-xl leading-7 font-semibold tracking-[0.06em] break-words uppercase focus:outline-none";
+export const TITLE = `min-w-0 flex-1 ${PANEL_TITLE} break-words focus:outline-none`;
 
 export const ICON_BUTTON =
   "inline-flex size-11 shrink-0 items-center justify-center rounded-control text-ink transition-transform duration-(--duration-instant) ease-out hover:bg-control active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100";

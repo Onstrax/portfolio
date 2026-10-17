@@ -17,7 +17,7 @@ describe("ProfileSection", () => {
     expect(portrait).toHaveAttribute("width", "96");
     expect(portrait).toHaveAttribute("height", "96");
     expect(screen.getByText("Promedio: 4,2/5,0")).toBeInTheDocument();
-    expect(screen.getByText("Graduación prevista: 2027")).toBeInTheDocument();
+    expect(screen.queryByText(/Graduación/)).not.toBeInTheDocument();
   });
 
   it("CPU-AC03: renders the four blocks, the portrait and the grade in English", () => {
@@ -29,29 +29,33 @@ describe("ProfileSection", () => {
 
   it("CPU-AC04: renders the periods inside time elements, in each language", () => {
     const spanish = render(<ProfileSection locale="es" idScope="" />);
-    expect(spanish.container.textContent).toContain(`Ene. 2022${NBSP}– actualidad`);
+    expect(spanish.container.textContent).toContain(`Ene. 2022${NBSP}– dic. 2026`);
     expect(spanish.container.textContent).toContain(`Feb.${NBSP}– jul. 2025`);
     expect(
       [...spanish.container.querySelectorAll("time")].map((time) => time.getAttribute("datetime")),
-    ).toEqual(["2022-01", "2025-02", "2025-07"]);
+    ).toEqual(["2022-01", "2026-12", "2025-02", "2025-07"]);
     spanish.unmount();
 
     const english = render(<ProfileSection locale="en" idScope="" />);
-    expect(english.container.textContent).toContain(`Jan. 2022${NBSP}– present`);
+    expect(english.container.textContent).toContain(`Jan. 2022${NBSP}– Dec. 2026`);
     expect(english.container.textContent).toContain(`Feb.${NBSP}– Jul. 2025`);
   });
 
-  it("CPU-AC05: keeps the courses inside a closed disclosure that says how many there are", () => {
+  it("CPU-AC05: shows the thirteen courses in a paragraph, with no disclosure and no graduation", () => {
     const spanish = render(<ProfileSection locale="es" idScope="" />);
-    const details = spanish.container.querySelector("details");
-    expect(details).not.toHaveAttribute("open");
-    expect(details?.querySelector("summary")).toHaveTextContent("Cursos relevantes (15)");
-    expect(details?.querySelectorAll("li")).toHaveLength(15);
+    expect(spanish.container.querySelector("details")).toBeNull();
+    const courses = screen.getByText(/^Cursos relevantes: /);
+    expect(courses.tagName).toBe("P");
+    expect(courses.textContent).toMatch(
+      /^Cursos relevantes: Programación Orientada a Objetos; .+; Análisis con Deep Learning\.$/,
+    );
+    expect(courses.textContent.split("; ")).toHaveLength(13);
+    expect(spanish.container.textContent).not.toContain("2027");
     spanish.unmount();
 
-    const english = render(<ProfileSection locale="en" idScope="" />);
-    expect(english.container.querySelector("summary")).toHaveTextContent(
-      "Relevant coursework (15)",
+    render(<ProfileSection locale="en" idScope="" />);
+    expect(screen.getByText(/^Relevant coursework: /).textContent).toMatch(
+      /^Relevant coursework: Object-Oriented Programming; .+; Deep Learning Analysis\.$/,
     );
   });
 
@@ -64,8 +68,6 @@ describe("ProfileSection", () => {
       "href",
       "/es/projects/",
     );
-    expect(
-      screen.getByText("Disponible desde enero de 2027", { exact: false }),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Remoto a nivel mundial", { exact: false })).toBeInTheDocument();
   });
 });

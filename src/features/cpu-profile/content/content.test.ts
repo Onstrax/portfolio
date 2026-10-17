@@ -14,7 +14,7 @@ describe("profile facts", () => {
       {
         id: "uniandes",
         institution: "Universidad de los Andes",
-        period: { start: { year: 2022, month: 1 }, end: "present" },
+        period: { start: { year: 2022, month: 1 }, end: { year: 2026, month: 12 } },
       },
       {
         id: "hm",
@@ -23,7 +23,7 @@ describe("profile facts", () => {
       },
     ]);
     expect(profileFacts.gpa).toEqual({ value: 4.2, scale: 5 });
-    expect(profileFacts.graduationYear).toBe(2027);
+    expect("graduationYear" in profileFacts).toBe(false);
     expect(profileFacts.exchangeCredits).toBe("17 ECTS");
     expect(profileFacts.languages).toEqual(["es", "en", "de"]);
   });
@@ -32,8 +32,8 @@ describe("profile facts", () => {
 describe("profile texts", () => {
   it("CPU-AC02: each language has the same number of elements and a text per identifier", () => {
     for (const text of [profileEs, profileEn]) {
-      expect(text.summary).toHaveLength(4);
-      expect(text.courses).toHaveLength(15);
+      expect(text.summary).toHaveLength(5);
+      expect(text.courses).toHaveLength(13);
       expect(text.focusAreas).toHaveLength(4);
       expect(Object.keys(text.education)).toEqual([...EDUCATION_IDS]);
       expect(Object.keys(text.languages)).toEqual([...LANGUAGE_IDS]);
@@ -53,10 +53,10 @@ describe("profile texts", () => {
 
   it("states the availability and the certified level of English in both languages", () => {
     expect(profileEs.availability).toBe(
-      "Disponible desde enero de 2027 · Tiempo completo · Presencial o híbrido en Bogotá",
+      "Tiempo completo · Presencial o híbrido en Bogotá · Remoto a nivel mundial",
     );
     expect(profileEn.availability).toBe(
-      "Available from January 2027 · Full-time · On-site or hybrid in Bogotá",
+      "Full-time · On-site or hybrid in Bogotá · Remote worldwide",
     );
     expect(profileEs.languages.en.level).toBe("C1, IELTS General Training 7,5 (2025)");
     expect(profileEn.languages.en.level).toBe("C1, IELTS General Training 7.5 (2025)");

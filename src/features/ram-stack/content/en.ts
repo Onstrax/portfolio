@@ -6,7 +6,7 @@ export const stackEn = {
   meta: {
     title: "Tech stack",
     hardwareName: "RAM",
-    description: `Tech stack of ${SITE.authorName}: languages, frontend, backend, cloud on GCP and AWS, DevOps, data, security and engineering methods.`,
+    description: `Tech stack of ${SITE.authorName}: languages, frontend, backend, cloud on GCP and AWS, DevOps, data, security and AI-assisted development.`,
   },
   groups: {
     languages: { title: "Languages" },
@@ -33,4 +33,9 @@ export const stackEn = {
     "ER modeling",
     "Networking: TCP/IP, UDP and DNS",
   ],
+  aiTitle: "AI-assisted development",
+  aiDescription:
+    "Language models support me from the conception of a product to the end of its development cycle. I lean on them to research, specify, build and test, but the decisions are mine.",
+  aiGroups: { harnesses: "Agent harnesses", tools: "Tools", models: "Models" },
+  aboutLinkLabel: "How I built this portfolio",
 } satisfies StackText;

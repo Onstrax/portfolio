@@ -43,7 +43,7 @@ describe("getPageMetadata", () => {
     expect(getPageMetadata({ view: "home" }, "es")).toMatchObject({
       title: "Juan Esteban Álvarez García · Portfolio interactivo",
       description:
-        "Portfolio de Juan Esteban Álvarez García, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
+        "Portfolio de Juan Esteban Álvarez García, Ingeniero de Sistemas y Computación de la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada.",
     });
     expect(getPageMetadata({ view: "home" }, "en").title).toBe(
       "Juan Esteban Álvarez García · Interactive portfolio",

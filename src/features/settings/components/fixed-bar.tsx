@@ -15,6 +15,11 @@ interface FixedBarProps {
   readonly focusKey: string;
   /** The direct contacts, resolved by the server layout (SET-R31). */
   readonly contacts: readonly QuickContact[];
+  /**
+   * Where the bar sits: on the corner of the stage, or on the corner of the viewport, as the copy
+   * drawn inside an open panel does, so that it never covers the header of the panel (SET-R02).
+   */
+  readonly anchor?: "stage" | "viewport";
 }
 
 /**
@@ -22,14 +27,14 @@ interface FixedBarProps {
  * contacts (SET-R01, SET-R02). It sits on the top right corner of the stage, which the image keeps free
  * (AST-R47), and is not shown until the boot sequence is done (SET-R04).
  */
-export function FixedBar({ focusKey, contacts }: FixedBarProps) {
+export function FixedBar({ focusKey, contacts, anchor = "stage" }: FixedBarProps) {
   const dictionary = useUiDictionary();
   const { common, settings } = dictionary;
   const locale = useLocale();
 
   return (
     <div className={BAR_VIEWPORT}>
-      <div className={STAGE_BOX}>
+      <div className={anchor === "stage" ? STAGE_BOX : "relative size-full"}>
         <nav aria-label={settings.barAriaLabel} className={BAR}>
           <LanguageSwitcher label={common.languageLabel} focusKey={focusKey} surface="dark" />
           <ViewSwitcher locale={locale} current="interactive" surface="dark" />

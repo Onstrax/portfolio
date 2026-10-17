@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { BLOCK_HEADING } from "./typography.styles";
+
 interface ContentBlockProps {
   readonly title: string;
   /** Decorative icon shown before the heading. */
@@ -14,11 +16,12 @@ interface ContentBlockProps {
 export function ContentBlock({ title, icon, children }: ContentBlockProps) {
   return (
     <div>
-      <h3 className="flex items-center gap-2 font-mono text-sm leading-5 font-semibold tracking-[0.06em] uppercase">
+      {/* The icon grows with the heading (VIS-R27). */}
+      <h3 className={`flex items-center gap-2 ${BLOCK_HEADING} [&>svg]:size-5`}>
         {icon}
         {title}
       </h3>
-      <div className="mt-3 space-y-3">{children}</div>
+      <div className="mt-4 space-y-4">{children}</div>
     </div>
   );
 }

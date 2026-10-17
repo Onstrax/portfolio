@@ -6,7 +6,7 @@ export const stackEs = {
   meta: {
     title: "Stack tecnológico",
     hardwareName: "Memoria RAM",
-    description: `Stack tecnológico de ${SITE.authorName}: lenguajes, frontend, backend, cloud en GCP y AWS, DevOps, datos, seguridad y metodologías.`,
+    description: `Stack tecnológico de ${SITE.authorName}: lenguajes, frontend, backend, cloud en GCP y AWS, DevOps, datos, seguridad y desarrollo asistido por IA.`,
   },
   groups: {
     languages: { title: "Lenguajes" },
@@ -33,4 +33,9 @@ export const stackEs = {
     "Modelado ER",
     "Redes: TCP/IP, UDP y DNS",
   ],
+  aiTitle: "Desarrollo asistido por IA",
+  aiDescription:
+    "Los modelos de lenguaje me acompañan desde la concepción de un producto hasta el final de su ciclo de desarrollo. Me apalanco en ellos para investigar, especificar, implementar y probar, pero las decisiones las tomo yo.",
+  aiGroups: { harnesses: "Entornos de agentes", tools: "Herramientas", models: "Modelos" },
+  aboutLinkLabel: "Cómo construí este portfolio",
 } satisfies StackText;

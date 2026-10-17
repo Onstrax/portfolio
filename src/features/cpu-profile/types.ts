@@ -20,7 +20,6 @@ export interface ProfileFacts {
   readonly countryCode: string;
   readonly education: readonly EducationFact[];
   readonly gpa: { readonly value: number; readonly scale: number };
-  readonly graduationYear: number;
   readonly exchangeCredits: string;
   readonly languages: readonly LanguageId[];
 }
@@ -36,7 +35,6 @@ export interface ProfileText extends SectionTextBase {
     Record<EducationId, { readonly program: string; readonly detail: string }>
   >;
   readonly gpaLabel: string;
-  readonly graduationLabel: string;
   readonly coursesLabel: string;
   readonly courses: readonly string[];
   readonly additionalTraining: string;

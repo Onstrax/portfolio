@@ -17,7 +17,7 @@ test.describe("profile", () => {
     await page.goto("/es/");
     const dialog = await openFromScene(page, "Procesador (CPU): Perfil", "Perfil");
 
-    await expect(dialog.getByText("Disponible desde enero de 2027")).toBeVisible();
+    await expect(dialog.getByText("Remoto a nivel mundial")).toBeVisible();
     // In the content: the bar drawn inside the panel has a résumé link of its own.
     await expect(
       dialog.getByTestId("panel-content").getByRole("link", { name: "Descargar CV (PDF)" }),
@@ -30,7 +30,7 @@ test.describe("profile", () => {
     await page.goto("/en/");
     const dialog = await openFromScene(page, "Processor (CPU): Profile", "Profile");
 
-    await expect(dialog.getByText("Available from January 2027")).toBeVisible();
+    await expect(dialog.getByText("Remote worldwide")).toBeVisible();
     await expect(
       dialog.getByTestId("panel-content").getByRole("link", { name: "Download résumé (PDF)" }),
     ).toBeVisible();

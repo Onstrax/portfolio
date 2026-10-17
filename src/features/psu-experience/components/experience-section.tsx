@@ -13,6 +13,7 @@ import { UsersIcon } from "@/shared/ui/icons/users";
 import { InternalLink } from "@/shared/ui/internal-link";
 import { PeriodText } from "@/shared/ui/period-text";
 import { RichText } from "@/shared/ui/rich-text";
+import { ITEM_HEADING, ITEM_META } from "@/shared/ui/typography.styles";
 
 import { experienceEn } from "../content/en";
 import { experienceEs } from "../content/es";
@@ -69,8 +70,8 @@ export function ExperienceSection({ locale }: SectionProps) {
       <ContentBlock title={text.jobsTitle} icon={<BriefcaseIcon />}>
         {facts.jobs.map((job: JobFact) => (
           <article key={job.id} className="space-y-2">
-            <h4 className="font-semibold">{text.jobs[job.id].role}</h4>
-            <p className="text-ink-muted text-sm leading-5">
+            <h4 className={ITEM_HEADING}>{text.jobs[job.id].role}</h4>
+            <p className={ITEM_META}>
               {job.organization !== undefined && <>{job.organization} · </>}
               <PeriodText period={job.period} locale={locale} />
             </p>

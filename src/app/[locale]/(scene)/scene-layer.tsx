@@ -113,7 +113,7 @@ export function SceneLayer({ sections, identity, contacts, children }: SceneLaye
       <Suspense fallback={null}>
         <DetailPanel
           sections={sections}
-          toolbar={<FixedBar focusKey="panel-bar" contacts={contacts} />}
+          toolbar={<FixedBar focusKey="panel-bar" contacts={contacts} anchor="viewport" />}
         >
           {children}
         </DetailPanel>
