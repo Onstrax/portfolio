@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 4.1 |
-| Última actualización | 2026-10-15 |
+| Versión | 5.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR |
 
 ## 1. Propósito
@@ -128,22 +128,24 @@ La hoja de impresión de la vista simple (SMP-R12) usa negro sobre blanco.
 | VIS-R08 | Un bloque de texto de corrido no supera 72 caracteres por línea. El texto se alinea a la izquierda; no se justifica. |
 | VIS-R09 | El texto en mayúsculas se obtiene con CSS (`text-transform`), nunca escribiéndolo en mayúsculas en el contenido. |
 | VIS-R45 | El texto destacado (TSC-R58) usa el rol "Énfasis dentro de cuerpo": hereda la familia, el tamaño y el color del texto que lo rodea y solo cambia el peso a 600. NO DEBE llevar color, fondo, subrayado ni cursiva propios (D-85). |
+| VIS-R47 | **Jerarquía** (D-101). El contenido de las secciones, en el panel, en la vista simple y en las páginas de caso, se lee en escalones de tamaño claramente distintos: título de sección ("Título de panel" o "Vista simple, título de sección"), encabezado de bloque (`<h3>`, "Encabezado de bloque"), título de cada elemento (`<h4>`: un cargo, una institución, un proyecto, un elemento del ecosistema o un grupo de herramientas, con el rol "Título de elemento"), su línea de datos (organización, periodo) con el rol "Cuerpo secundario" en `ink-muted`, y el texto con el rol "Cuerpo". Ningún encabezado es más pequeño que el texto que encabeza. |
 
 | Rol | Familia | Tamaño / interlínea | Peso | Otros |
 | --- | --- | --- | --- | --- |
 | Cuerpo | sans | 16 / 24 px | 400 | — |
 | Cuerpo secundario | sans | 14 / 20 px | 400 | — |
 | Énfasis dentro de cuerpo | sans | hereda | 600 | — |
-| Título de panel | mono | 20 / 28 px | 600 | Mayúsculas, espaciado 0,06 em |
-| Encabezado de bloque | mono | 14 / 20 px | 600 | Mayúsculas, espaciado 0,06 em |
+| Título de panel | mono | 24 / 32 px | 600 | Mayúsculas, espaciado 0,06 em |
+| Encabezado de bloque | mono | 20 / 28 px | 600 | Mayúsculas, espaciado 0,06 em |
+| Título de elemento | sans | 18 / 28 px | 600 | — |
 | Botón | mono | 14 / 20 px | 600 | Mayúsculas, espaciado 0,06 em |
 | Chip | mono | 12 / 16 px | 500 | — |
 | Etiqueta de escena, línea de nombre | mono | 14 / 20 px | 600 | Mayúsculas, espaciado 0,06 em |
 | Etiqueta de escena, línea de contenido | mono | 12 / 16 px | 400 | — |
 | Registro de arranque | mono | 14 / 21 px; 16 / 24 px con viewport de 1440 px de ancho o más | 400 | Cifras de ancho fijo |
 | Contexto del arranque | mono | 16 / 24 px; 18 / 28 px con viewport de 1440 px de ancho o más | 600 | — |
-| Vista simple, nombre | mono | 30 / 36 px | 600 | — |
-| Vista simple, título de sección | mono | 24 / 32 px | 600 | Mayúsculas, espaciado 0,06 em |
+| Vista simple, nombre | mono | 36 / 40 px | 600 | — |
+| Vista simple, título de sección | mono | 30 / 36 px | 600 | Mayúsculas, espaciado 0,06 em |
 
 ### 4.3 Espaciado, radios, sombras y capas
 
@@ -228,7 +230,7 @@ Superficie del panel de detalle. Reproduce la referencia `DetailIdea1Component`:
 | VIS-R24 | **Tamaño:** ancho `min(760px, 100vw - 96px)`; alto máximo `min(86vh, 900px)`. Si el contenido no cabe, hace scroll la zona de contenido de la pantalla; la cabecera y el pie permanecen fijos. |
 | VIS-R25 | **Cabecera:** título con el rol "Título de panel" a la izquierda; a la derecha, un chip con el nombre de la pieza de hardware y el botón de cerrar. Debajo, una línea de 2 px en `ink` de ancho completo. |
 | VIS-R26 | **Pie:** situado sobre el marco, debajo de la pantalla; texto en `ink`. Contiene los controles de navegación entre secciones. |
-| VIS-R27 | **Contenido:** los encabezados de bloque usan el rol "Encabezado de bloque" precedidos de un icono de 16 px; entre bloques hay 24 px de separación; las listas usan viñeta cuadrada en `ink`. |
+| VIS-R27 | **Contenido:** los encabezados de bloque usan el rol "Encabezado de bloque" precedidos de un icono de 20 px; entre bloques hay 24 px de separación; las listas usan viñeta cuadrada en `ink`. |
 
 #### 4.5.3 Página clara
 
@@ -368,6 +370,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 5.0 | Por decisión del autor tras su revisión con reclutadores (D-101): una jerarquía más marcada para leer en diagonal. "Título de panel" pasa a 24/32 px, "Encabezado de bloque" a 20/28 px (antes medía menos que el cuerpo), "Vista simple, nombre" a 36/40 px y "Vista simple, título de sección" a 30/36 px; nuevo rol "Título de elemento" (18/28 px). Nuevo VIS-R47. VIS-R27: iconos de bloque de 20 px. |
 | 2026-10-15 | 4.1 | Por decisión del autor (D-96). Nuevo rol tipográfico "Contexto del arranque" y nueva animación M-13, la barra de progreso del arranque. Usos de `boot-text`, `boot-dim` y `boot-ok` ampliados. |
 | 2026-10-14 | 4.0 | Por decisión del autor (D-92): la bienvenida deja de ser una placa oscura y pasa a ser una terminal con los colores del arranque. Nuevo §4.5.4 (VIS-R46) y nuevo control "Botón de terminal" en VIS-R29. VIS-R31 y VIS-AC04: en la terminal, el anillo de foco es `boot-text`. M-12: velo y terminal, con escala. Usos de `backdrop`, de los colores del arranque y de `z-panel` ampliados. |
 | 2026-10-14 | 3.0 | Estado: pasa a "Implementada" al cerrar M13, con todos sus criterios automáticos citados por una prueba (TST-R38). La auditoría con axe recorre ya la bienvenida en las dos variantes (VIS-AC03) y la prueba de movimiento reducido mide su transición (VIS-AC05). VIS-AC12 queda para la revisión del autor de la placa, la bienvenida y la barra fija (A13). Sin cambio de requisitos. |

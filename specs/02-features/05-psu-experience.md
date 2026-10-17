@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.1 |
-| Última actualización | 2026-10-14 |
+| Versión | 2.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -80,9 +80,9 @@ export interface ExperienceText extends SectionTextBase {
 
 | `id` | `period` | `organization` | `teamSize` | `stack` | `repository` |
 | --- | --- | --- | --- | --- | --- |
-| `teaching-assistant` | De enero de 2026 a `"present"` (F-02) | `"Universidad de los Andes"` | 1 | Vacío | — |
-| `freelance` | De julio de 2024 a enero de 2025 (F-09) | — | 1 | `Python`, `Selenium` | `"public"` (F-25) |
-| `tutor` | De enero de 2022 a `"present"` | — | 1 | Vacío | — |
+| `freelance` | De julio de 2024 a `"present"` (F-30) | — | 1 | `Python`, `Selenium` | `"public"` (F-25) |
+| `teaching-assistant` | De enero de 2026 a diciembre de 2026 (F-30) | `"Universidad de los Andes"` | 1 | Vacío | — |
+| `tutor` | De enero de 2022 a diciembre de 2026 (F-30) | — | 1 | Vacío | — |
 
 `leadershipPeriod`: de 2022 a 2024, sin mes.
 
@@ -98,26 +98,29 @@ export interface ExperienceText extends SectionTextBase {
 | --- | --- | --- |
 | `meta.title` | Experiencia | Experience |
 | `meta.hardwareName` | Fuente de poder (PSU) | Power supply (PSU) |
-| `meta.description` | Experiencia de Juan Esteban Álvarez García como monitor académico, desarrollador freelance y tutor de programación, y sus competencias interpersonales. | Experience of Juan Esteban Álvarez García as a teaching assistant, freelance developer and programming tutor, plus his interpersonal skills. |
+| `meta.description` | Experiencia de Juan Esteban Álvarez García como desarrollador freelance, monitor académico y tutor de programación, y sus competencias interpersonales. | Experience of Juan Esteban Álvarez García as a freelance developer, teaching assistant and programming tutor, plus his interpersonal skills. |
 | `jobsTitle` | Experiencia laboral | Work experience |
+| `jobs.freelance.role` | Desarrollador freelance | Freelance Developer |
+| `jobs.freelance.highlights[0]` | Automaticé con Python/Selenium la extracción de datos y el registro de cientos a miles de reservas hoteleras por ejecución, reduciendo **un proceso semanal a aproximadamente un día**. | Automated data extraction and the entry of hundreds to thousands of hotel reservations per run with Python/Selenium, reducing **a weekly process to approximately one day**. |
+| `jobs.freelance.highlights[1]` | Diseñé y publiqué una web odontológica (Next.js, Tailwind CSS, Netlify) con CTA a WhatsApp y formulario de contacto; ha contribuido a atraer **~2-3 nuevos clientes al mes**. | Designed and launched a dental website (Next.js, Tailwind CSS, Netlify) with a WhatsApp CTA and contact form; it has helped attract **~2-3 new clients per month**. |
 | `jobs.teaching-assistant.role` | Monitor académico | Teaching Assistant |
-| `jobs.teaching-assistant.highlights[0]` | Acompaño a **~30 estudiantes** de Diseño de Productos e Innovación en TI mediante evaluación de entregas, resolución de dudas, talleres de apoyo y creación de material didáctico. | Support **~30 students** in IT Product Design and Innovation through assessment, in-class Q&A, supplementary workshops and creation of learning materials. |
-| `jobs.freelance.role` | Desarrollador freelance | Freelance Software Developer |
-| `jobs.freelance.highlights[0]` | Automaticé la extracción de datos y el registro de cientos a miles de reservas hoteleras por ejecución, reduciendo **un proceso semanal a aproximadamente un día**. | Automated data extraction and entry for hundreds to thousands of hotel bookings per run, cutting **approximately one week of repetitive work to one day**. |
-| `jobs.freelance.highlights[1]` | Diseñé y publiqué la web de un consultorio odontológico, que sigo manteniendo. | Designed and deployed a dental practice website, which I still maintain. |
+| `jobs.teaching-assistant.highlights[0]` | He acompañado a **~60 estudiantes** de Diseño de Productos e Innovación en TI, en dos semestres, mediante evaluación de entregas, resolución de dudas, talleres de apoyo y creación de material didáctico. | Supported **~60 students** in Product Design and Innovation in IT over two semesters by assessing submissions, answering questions, running support workshops and creating teaching materials. |
+| `jobs.teaching-assistant.highlights[1]` | Doy retroalimentación a equipos cuyos proyectos buscan llegar al mercado, en sus iteraciones de JTBD, ICP, customer discovery y encaje Producto-Mercado-Modelo-Canal; creación y validación de hipótesis; un MVP en tres iteraciones; growth loops; estimación de mercado y monetización. | I give feedback to teams whose projects aim to reach the market, across their iterations of JTBD, ICP, customer discovery and Product-Market-Model-Channel fit; hypothesis creation and validation; an MVP built in three iterations; growth loops; market sizing and monetization. |
 | `jobs.tutor.role` | Tutor particular de programación | Private Programming Tutor |
-| `jobs.tutor.highlights[0]` | He acompañado a **~20 estudiantes** en programación, POO, estructuras de datos y algoritmos; diseñé ejercicios y dirigí sesiones individuales y grupos de hasta cinco personas. | Tutored **~20 students** in programming, OOP, data structures and algorithms; designed practice exercises and led one-on-one sessions and groups of up to five. |
+| `jobs.tutor.highlights[0]` | He acompañado a **~20 estudiantes** en programación, POO, estructuras de datos y algoritmos; diseñé ejercicios y dirigí sesiones personalizadas individuales y grupales de hasta cuatro personas. | I have tutored **~20 students** in programming, OOP, data structures and algorithms; designed exercises and led personalized one-on-one and group sessions of up to four people. |
 | `jobs.tutor.highlights[1]` | Materias: Introducción a la Programación; Estructuras de Datos y Algoritmos; Diseño y Programación Orientada a Objetos; Desarrollo de Software en Equipo. | Courses: Introduction to Programming; Data Structures and Algorithms; Object-Oriented Design and Programming; Team Software Development. |
 | `jobs.tutor.highlights[2]` | Mis estudiantes mejoran su desempeño en proyectos y exámenes; la mayoría vuelve a contactarme en materias posteriores y me recomienda. | My students improve their performance in projects and exams; most come back for later courses and recommend me. |
 | `dentalSiteLinkLabel` | Ver el proyecto | See the project |
 | `automationLinkLabel` | Ver el repositorio | See the repository |
 | `skillsTitle` | Competencias interpersonales | Interpersonal skills |
 | `skills[0]` | Resolución analítica de problemas | Analytical problem-solving |
-| `skills[1]` | Comunicación clara y multicultural | Clear cross-cultural communication |
-| `skills[2]` | Colaboración y liderazgo | Teamwork and leadership |
-| `skills[3]` | Mentoría y docencia | Teaching and mentoring |
-| `skills[4]` | Autonomía e iniciativa | Ownership and initiative |
-| `skills[5]` | Adaptabilidad y orientación al usuario | Adaptability and user empathy |
+| `skills[1]` | Comunicación clara y multicultural | Clear and multicultural communication |
+| `skills[2]` | Colaboración y liderazgo | Collaboration and leadership |
+| `skills[3]` | Autonomía e iniciativa | Autonomy and initiative |
+| `skills[4]` | Orientación al detalle | Attention to detail |
+| `skills[5]` | Trabajo bajo presión | Working under pressure |
+| `skills[6]` | Adaptabilidad y orientación al usuario | Adaptability and user focus |
+| `skills[7]` | Mentoría y docencia | Mentoring and teaching |
 | `leadershipTitle` | Liderazgo | Leadership |
 | `leadership` | Ex co-representante del equipo de calistenia de la Universidad de los Andes: organización de torneos y actividades. | Former co-representative of the Universidad de los Andes calisthenics team: organized tournaments and activities. |
 
@@ -129,7 +132,7 @@ export interface ExperienceText extends SectionTextBase {
 | PSU-R05 | Cada trabajo se muestra, en el orden de `facts.jobs`, como un `<article>` con: `role` como `<h4>`; `organization`, si existe; el periodo con `PeriodText`; `formatTeamSize(teamSize, locale)` como chip neutro; los elementos de `stack` como chips neutros; `common.privateRepositoryLabel` como chip con el icono `lock` si `repository` es `"private"`; y `highlights` como lista, cada elemento con `RichText` (TSC-R59). Los fragmentos destacados son los que aparecen en negrita en la tabla de §4.3. |
 | PSU-R06 | A continuación de `jobs.freelance.highlights[1]`, en la misma línea, hay un enlace a `sectionPath(locale, "projects")` con el fragmento `#projects-dental-site` y el texto `dentalSiteLinkLabel`. |
 | PSU-R07 | El repositorio de la automatización hotelera es público (F-25). A continuación de `jobs.freelance.highlights[0]`, en la misma línea, hay un enlace externo (SYS-R40) a `repositoryLink.href` con el texto `automationLinkLabel`. Como `repository` es `"public"`, el trabajo freelance ya no muestra el chip de repositorio privado (PSU-R05). |
-| PSU-R08 | Las competencias se muestran como una lista de seis chips neutros. El liderazgo, como una frase seguida de su periodo con `PeriodText`. |
+| PSU-R08 | Las competencias se muestran como una lista de ocho chips neutros, en el orden del CV. El liderazgo, como una frase seguida de su periodo con `PeriodText`. |
 
 Iconos propios de esta sección: `briefcase` y `flag`.
 
@@ -141,21 +144,21 @@ Iconos propios de esta sección: `briefcase` y `flag`.
 
 | `message` | `status` |
 | --- | --- |
-| `psu0: 3 rails online (teaching, freelance, tutoring)` | `ok` |
+| `psu0: 3 rails online (freelance, teaching, tutoring)` | `ok` |
 
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
 | --- | --- | --- |
-| PSU-AC01 | Los hechos son los de §4.2: tres trabajos en ese orden, con sus periodos, todos con `teamSize` 1, y el periodo de liderazgo de 2022 a 2024. | Prueba unitaria |
-| PSU-AC02 | Cada idioma tiene 1, 2 y 3 `highlights` para los tres trabajos, en ese orden, y seis `skills`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
-| PSU-AC03 | El componente renderiza tres `<h3>` con los títulos de §4.3 en ese orden y tres `<article>`; los periodos son "Ene. 2026 – actualidad", "Jul. 2024 – ene. 2025" y "Ene. 2022 – actualidad" en español; cada trabajo muestra "Trabajo individual" o "Individual work"; y el trabajo freelance muestra los chips "Python" y "Selenium". | Prueba de componente |
+| PSU-AC01 | Los hechos son los de §4.2: tres trabajos en el orden freelance, monitoría y tutoría, con sus periodos, todos con `teamSize` 1, y el periodo de liderazgo de 2022 a 2024. | Prueba unitaria |
+| PSU-AC02 | Cada idioma tiene 2, 2 y 3 `highlights` para los tres trabajos, en ese orden, y ocho `skills`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
+| PSU-AC03 | El componente renderiza tres `<h3>` con los títulos de §4.3 en ese orden y tres `<article>`; los periodos son "Jul. 2024 – actualidad", "Ene. – dic. 2026" y "Ene. 2022 – dic. 2026" en español; cada trabajo muestra "Trabajo individual" o "Individual work"; y el trabajo freelance muestra los chips "Python" y "Selenium". | Prueba de componente |
 | PSU-AC04 | El enlace "Ver el proyecto" apunta a la ruta de Proyectos con el fragmento `#projects-dental-site`. | Prueba de componente |
 | PSU-AC05 | `bootLines` es exactamente la tabla de §4.5 y su mensaje mide 72 caracteres o menos. | Prueba unitaria |
 | PSU-AC06 | En `desktop`, abrir la zona de la fuente de poder en `/es/` muestra el panel "Experiencia" con "Monitor académico"; en `/en/`, "Experience" con "Teaching Assistant". Activar "Ver el proyecto" abre el panel de Proyectos con el proyecto de la web odontológica visible. | Prueba E2E |
 | PSU-AC07 | El autor revisa ambos idiomas (I18N-AC18). | Revisión manual del autor, registrada en el historial de esta spec |
 | PSU-AC08 | El trabajo freelance muestra el enlace "Ver el repositorio" ("See the repository") hacia `https://github.com/PortafolioSor0/All-Inclusive`, con `target="_blank"` y `rel="noopener noreferrer"`, y la sección no muestra ningún chip de repositorio privado. | Prueba de componente |
-| PSU-AC09 | La sección renderiza exactamente tres `<strong>`, con "~30 estudiantes", "un proceso semanal a aproximadamente un día" y "~20 estudiantes" en español, y sus equivalentes en inglés. | Prueba de componente |
+| PSU-AC09 | La sección renderiza exactamente cuatro `<strong>`, con "un proceso semanal a aproximadamente un día", "~2-3 nuevos clientes al mes", "~60 estudiantes" y "~20 estudiantes" en español, y sus equivalentes en inglés. | Prueba de componente |
 
 ## 6. Decisiones y justificación
 
@@ -175,6 +178,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.0 | Versión 3, por decisión del autor tras su revisión con reclutadores (D-97): se alinea con los CVs actualizados. Nuevo orden de los trabajos: freelance, monitoría y tutoría. Freelance hasta la actualidad; monitoría y tutoría hasta diciembre de 2026 (F-30). Textos del CV en freelance y tutoría (grupos de hasta cuatro); la monitoría suma ~60 estudiantes en dos semestres y una viñeta nueva sobre la retroalimentación a proyectos que buscan llegar al mercado (F-32). Ocho competencias, con "Orientación al detalle" y "Trabajo bajo presión". PSU-R08, la línea de arranque y PSU-AC01 a AC03 y AC09 actualizados. |
 | 2026-10-14 | 1.1 | PSU-AC07: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |

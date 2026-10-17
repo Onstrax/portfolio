@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.9 |
-| Última actualización | 2026-10-15 |
+| Versión | 1.10 |
+| Última actualización | 2026-10-16 |
 | Depende de | Todas las demás specs |
 
 ## 1. Propósito
@@ -212,6 +212,16 @@ Se rellena al cerrar cada hito (PLAN-R05).
 | A15 | Revisar la nueva bienvenida (D-92) en las dos variantes de la escena, a 1024×600 px y a 1920×1080 px, y recorrerla con teclado y con lector de pantalla | Tras publicar D-92 | VIS-AC12 y QLT-AC27 |
 | A16 | Revisar el cambio de D-93 a D-96: el selector de vista en la barra y en la vista simple, el botón "Vista simple" de la bienvenida, la pista, el "Panel de control", "Volver arriba" y la pantalla de arranque con su línea de contexto y su barra de progreso | Tras publicar D-93 a D-96 | VIS-AC12 y QLT-AC27 |
 
+### 4.7 Versión 3
+
+| ID | Requisito |
+| --- | --- |
+| PLAN-R17 | La versión 3 alinea el sitio con los CVs que el autor actualizó tras revisarlos con reclutadores, y aplica el resto de su revisión: cursos, intereses, desarrollo asistido por IA, monitoría y jerarquía tipográfica (D-97 a D-101). Es un único hito, M14, que se publica en un solo `push` (PLAN-R15) y deja implementadas las specs que enmienda. |
+
+| ID | Tarea | Cuándo | Criterio que cierra |
+| --- | --- | --- | --- |
+| A17 | Revisar la versión 3 en ambos idiomas: Perfil, Experiencia y Stack frente a los CVs, el bloque de IA y la nueva jerarquía en el panel, en la vista simple y en una página de caso | Tras publicar M14 | CPU-AC10, PSU-AC07, RAM-AC08 y VIS-AC12 |
+
 ## 5. Criterios de aceptación
 
 | ID | Criterio | Verificación |
@@ -242,6 +252,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 1.10 | A16 cerrada. Nuevo §4.7: la versión 3, con el hito M14 y la tarea A17 (PLAN-R17). |
 | 2026-10-15 | 1.9 | A16 hecha: el autor revisó el cambio de D-93 a D-96 y lo dio por bueno. La versión 2 queda cerrada, sin tareas pendientes. |
 | 2026-10-15 | 1.8 | A7 y A15 hechas: la persona ajena al hardware navegó todo el sitio guiándose por las etiquetas (AST-AC06), y el autor revisó la bienvenida modal. Por su decisión, tras probar el sitio con varios visitantes, D-93 a D-96; se publican en un solo `push` (PLAN-R15) y añaden la tarea A16. Pendiente del autor: A16. |
 | 2026-10-14 | 1.7 | A13 y A14 hechas: el autor revisó la placa, la bienvenida y la barra fija, y auditó lo nuevo en escritorio y en teléfono. Por su decisión (D-92), la bienvenida pasa a ser una terminal modal centrada; el cambio llega después de cerrar v2, en un solo `push` (PLAN-R15), y añade la tarea A15. Pendientes del autor: A15 y A7. |

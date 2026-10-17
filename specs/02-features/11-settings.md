@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 4.0 |
-| Última actualización | 2026-10-15 |
+| Versión | 5.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, SCN, BOOT |
 
 ## 1. Propósito
@@ -34,7 +34,7 @@ Feature: `src/features/settings/`. `index.ts` exporta los componentes de cliente
 | ID | Requisito |
 | --- | --- |
 | SET-R01 | `FixedBar` se muestra en la esquina superior derecha del escenario, a 16 px de sus bordes superior y derecho, en la capa `z-bar`, sobre la región reservada de AST-R47. Es una placa oscura (VIS §4.5.1) de 44 px de alto. |
-| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); el selector de vista (§4.10), con "Interactiva" como opción actual (D-93); un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo y en el mismo lugar, para que el idioma, el selector de vista y los contactos sigan al alcance (PNL-R25). |
+| SET-R02 | Es un elemento `<nav>` con el nombre accesible `settings.barAriaLabel`. Contiene, de izquierda a derecha: el selector de idioma (§4.2); el selector de vista (§4.10), con "Interactiva" como opción actual (D-93); un separador vertical decorativo de 1 px en `on-dark-muted` con opacidad 25 %; y los **contactos directos** de SET-R30 (D-84). Mientras hay un panel abierto, la barra se dibuja también dentro de él, sobre el velo, para que el idioma, el selector de vista y los contactos sigan al alcance (PNL-R25). Esa copia se coloca en la esquina superior derecha del viewport, a 16 px de sus bordes, y no en la del escenario: en un viewport más alto que 16:9 el escenario queda más abajo y la barra taparía la cabecera del panel (D-102). |
 | SET-R03 | Sus controles, contactos incluidos, preceden en el orden de tabulación a las zonas de la escena (QLT-R07). Mientras la bienvenida está abierta, la barra es inerte, como el resto de la escena (SCN-R51). |
 | SET-R04 | No se muestra mientras `data-boot` no es `done`: la pantalla de arranque la cubre. |
 
@@ -166,6 +166,7 @@ export interface QuickContact {
 | SET-AC13 | El menú de ajustes muestra el grupo "Imagen de la escena" con las opciones "Fotografía" y "Boceto" en `/es/`, y "Scene image", "Photo" y "Sketch" en `/en/`; en una primera visita está marcada la primera. Al elegir "Boceto", el menú sigue abierto, `localStorage` contiene `sceneVariant: "sketch"` y, tras recargar la página, sigue marcada. | Prueba E2E |
 | SET-AC14 | En `desktop`, la barra fija de `/es/` contiene, en este orden, los enlaces "Descargar CV (PDF)", que apunta a `/cv/juan-esteban-alvarez-garcia-cv-es.pdf` con `download`; "Escribir un correo", con `mailto:juanalvarezgcl@gmail.com`; y "LinkedIn" y "GitHub", con las URLs de IO-R07, `target="_blank"` y `rel="noopener noreferrer"`. Cada uno mide al menos 44×44 px, y con un panel abierto siguen al alcance en la barra que se dibuja dentro de él. `buildQuickContacts` devuelve esos cuatro en orden y lanza un error si falta un canal. | Prueba E2E y prueba unitaria |
 | SET-AC15 | `ViewSwitcher`, con cada vista actual y en cada superficie, es un grupo "Vista" con "Interactiva" y "Simple" en ese orden: la actual es un `<span>` con `aria-current="true"` y la otra, un enlace a `/es/` o a `/es/cv/`; en inglés sus textos son "View", "Interactive" y "Simple". | Prueba de componente |
+| SET-AC16 | En cada viewport de modo `scene` de QLT §4.6, con el panel de Experiencia abierto, la caja de la barra dibujada dentro del panel no se solapa con la cabecera del panel. | Prueba E2E |
 | SET-AC12 | El autor escucha los cinco efectos con el sonido activado y confirma que son discretos y coherentes entre sí. | Revisión manual del autor, registrada en el historial de esta spec |
 
 ## 6. Decisiones y justificación
@@ -191,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 5.0 | Durante la versión 3, por delegación del autor (D-102). SET-R02: la copia de la barra dentro del panel abierto va en la esquina superior derecha del viewport. Con la barra ampliada por los contactos, en los viewports más altos que 16:9 (1024×768, 1280×900) tapaba la cabecera del panel. Nuevo SET-AC16. |
 | 2026-10-15 | 4.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93, D-95). SET-R02: la barra lleva el selector de vista en lugar del enlace "Vista simple"; nuevo §4.10 (SET-R32 y SET-R33) y SET-AC15; se retira el texto `settings.simpleViewLabel`. SET-R26: los mandos del panel de control, no un botón Power, que la imagen no tiene. La pieza de ajustes se llama "Panel de control". SET-AC01 y SET-AC04 actualizados; §6, dos decisiones. |
 | 2026-10-14 | 3.0 | Por decisión del autor (D-92). SET-R03: la bienvenida ya no está en el orden de tabulación de la escena; mientras está abierta, la barra es inerte. |
 | 2026-10-14 | 2.0 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38): los contactos directos de la barra fija, también dentro del panel abierto (SET-AC01, SET-AC14), y la bienvenida tras el reinicio (SET-AC09). Sin cambio de requisitos. |

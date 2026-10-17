@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.4 |
-| Última actualización | 2026-10-15 |
+| Versión | 1.5 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, TSC |
 
 ## 1. Propósito
@@ -244,7 +244,7 @@ SMP implementa estos requisitos; aquí se fija qué deben cumplir.
 | Intercambio académico | Academic exchange |
 | Tesis | Thesis |
 | Monitor académico | Teaching Assistant |
-| Desarrollador freelance | Freelance Software Developer |
+| Desarrollador freelance | Freelance Developer |
 | Tutor particular de programación | Private Programming Tutor |
 | Mejor proyecto de su sección | Best Project in its section |
 | Hall de la Fama | Hall of Fame |
@@ -328,6 +328,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 1.5 | Versión 3, por decisión del autor (D-97): el término fijo de "Desarrollador freelance" en inglés pasa a ser "Freelance Developer", como en el CV. |
 | 2026-10-15 | 1.4 | Por decisión del autor (D-93). `common` gana `viewLabel`, `interactiveViewLabel` y `simpleViewLabel`, que usan la barra fija y la vista simple (SET-R32). |
 | 2026-10-14 | 1.3 | Estado: pasa a "Implementada" al cerrar M12, con todos sus criterios automáticos citados por una prueba (TST-R38). Sin cambio de requisitos. |
 | 2026-10-14 | 1.3 | Aprobada por el autor el 2026-10-14 (versión 2). |

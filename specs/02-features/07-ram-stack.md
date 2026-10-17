@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.1 |
-| Última actualización | 2026-10-14 |
+| Versión | 2.0 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, TSC, I18N, QLT, TST |
 
 ## 1. Propósito
@@ -50,8 +50,13 @@ export interface StackGroupFact {
   readonly items: readonly string[];
 }
 
+export const AI_TOOL_GROUP_IDS = ["harnesses", "tools", "models"] as const;
+export type AiToolGroupId = (typeof AI_TOOL_GROUP_IDS)[number];
+
 export interface StackFacts {
   readonly groups: readonly StackGroupFact[];
+  /** Herramientas de IA por grupo (F-33): nombres propios, no se traducen. */
+  readonly aiTools: Readonly<Record<AiToolGroupId, readonly string[]>>;
 }
 
 export interface StackText extends SectionTextBase {
@@ -59,6 +64,10 @@ export interface StackText extends SectionTextBase {
   readonly methodsTitle: string;
   /** Metodologías y fundamentos: sí se traducen. */
   readonly methods: readonly string[];
+  readonly aiTitle: string;
+  readonly aiDescription: string;
+  readonly aiGroups: Readonly<Record<AiToolGroupId, string>>;
+  readonly aboutLinkLabel: string;
 }
 ```
 
@@ -91,7 +100,7 @@ En total, 57 elementos. `pandas` y `scikit-learn` proceden de los proyectos púb
 | --- | --- | --- |
 | `meta.title` | Stack tecnológico | Tech stack |
 | `meta.hardwareName` | Memoria RAM | RAM |
-| `meta.description` | Stack tecnológico de Juan Esteban Álvarez García: lenguajes, frontend, backend, cloud en GCP y AWS, DevOps, datos, seguridad y metodologías. | Tech stack of Juan Esteban Álvarez García: languages, frontend, backend, cloud on GCP and AWS, DevOps, data, security and engineering methods. |
+| `meta.description` | Stack tecnológico de Juan Esteban Álvarez García: lenguajes, frontend, backend, cloud en GCP y AWS, DevOps, datos, seguridad y desarrollo asistido por IA. | Tech stack of Juan Esteban Álvarez García: languages, frontend, backend, cloud on GCP and AWS, DevOps, data, security and AI-assisted development. |
 | `groups.languages.title` | Lenguajes | Languages |
 | `groups.frontend.title` | Frontend y móvil | Frontend and mobile |
 | `groups.backend.title` | Backend y APIs | Backend and APIs |
@@ -112,6 +121,12 @@ En total, 57 elementos. `pandas` y `scikit-learn` proceden de los proyectos púb
 | `methods[6]` | Design Thinking | Design Thinking |
 | `methods[7]` | Modelado ER | ER modeling |
 | `methods[8]` | Redes: TCP/IP, UDP y DNS | Networking: TCP/IP, UDP and DNS |
+| `aiTitle` | Desarrollo asistido por IA | AI-assisted development |
+| `aiDescription` | Los modelos de lenguaje me acompañan desde la concepción de un producto hasta el final de su ciclo de desarrollo. Me apalanco en ellos para investigar, especificar, implementar y probar, pero las decisiones las tomo yo. | Language models support me from the conception of a product to the end of its development cycle. I lean on them to research, specify, build and test, but the decisions are mine. |
+| `aiGroups.harnesses` | Entornos de agentes | Agent harnesses |
+| `aiGroups.tools` | Herramientas | Tools |
+| `aiGroups.models` | Modelos | Models |
+| `aboutLinkLabel` | Cómo construí este portfolio | How I built this portfolio |
 
 Solo los grupos `backend` y `data` tienen `note`.
 
@@ -119,13 +134,20 @@ Solo los grupos `backend` y `data` tienen `note`.
 
 | ID | Requisito |
 | --- | --- |
-| RAM-R04 | El componente raíz, `StackSection`, renderiza nueve bloques con encabezado `<h3>`: uno por cada grupo de `facts.groups`, en su orden y con su `title`, y al final el de metodologías, con `methodsTitle`. Cumple TSC §4.5.1 y no contiene componentes de cliente. |
+| RAM-R04 | El componente raíz, `StackSection`, renderiza diez bloques con encabezado `<h3>`: uno por cada grupo de `facts.groups`, en su orden y con su `title`; el de metodologías, con `methodsTitle`; y al final el de desarrollo asistido por IA, con `aiTitle` (RAM-R10). Cumple TSC §4.5.1 y no contiene componentes de cliente. |
 | RAM-R05 | Cada grupo muestra sus `items` como una lista (`<ul>`) de chips neutros en el orden de los hechos y, debajo, su `note` si existe. El bloque de metodologías muestra `methods` del mismo modo. |
 | RAM-R06 | Los bloques se disponen en dos columnas cuando el contenedor mide 640 px o más de ancho, y en una cuando mide menos. El orden de lectura y de foco es siempre el de RAM-R04. |
 | RAM-R07 | No se muestran barras, porcentajes, estrellas ni ningún otro indicador de nivel. |
-| RAM-R08 | Cada encabezado va precedido del icono de su grupo: `code` (lenguajes), `layout` (frontend), `server` (backend), `cloud` (GCP y AWS), `git-branch` (DevOps), `database` (datos), `shield` (seguridad) y `compass` (metodologías). |
+| RAM-R08 | Cada encabezado va precedido del icono de su grupo: `code` (lenguajes), `layout` (frontend), `server` (backend), `cloud` (GCP y AWS), `git-branch` (DevOps), `database` (datos), `shield` (seguridad), `compass` (metodologías) y `bot` (IA), este último propio de esta sección (VIS-R41). |
+| RAM-R10 | **Desarrollo asistido por IA** (D-100). El bloque ocupa el ancho completo, también con dos columnas. Contiene `aiDescription`; después, una lista de chips neutros por cada grupo de `facts.aiTools`, en el orden de `AI_TOOL_GROUP_IDS`, precedida de su nombre `aiGroups[id]` como `<h4>`; y al final un enlace interno a `sectionPath(locale, "about")` con el texto `aboutLinkLabel`, que lleva a la sección donde se cuenta cómo se construyó este sitio. Las herramientas son las de la tabla siguiente, en su orden (F-33). |
 
-Iconos propios de esta sección: `code`, `layout`, `server`, `cloud`, `git-branch`, `database`, `shield` y `compass`.
+| Grupo | Herramientas |
+| --- | --- |
+| `harnesses` | Claude Code, Codex, OpenCode |
+| `tools` | Skills, MCP, Plugins, NotebookLM |
+| `models` | Fable, Opus, GPT, Gemini, DeepSeek, Qwen, GLM, Nano Banana |
+
+Iconos propios de esta sección: `code`, `layout`, `server`, `cloud`, `git-branch`, `database`, `shield`, `compass` y `bot`.
 
 ### 4.5 Línea de arranque
 
@@ -144,11 +166,13 @@ Iconos propios de esta sección: `code`, `layout`, `server`, `cloud`, `git-branc
 | RAM-AC01 | Los hechos contienen los ocho grupos de §4.2 en ese orden, con 5, 6, 4, 7, 10, 10, 6 y 9 elementos, y sus elementos son exactamente los de la tabla. | Prueba unitaria |
 | RAM-AC02 | Ningún elemento se repite dentro de un grupo ni entre grupos. | Prueba unitaria |
 | RAM-AC03 | Cada idioma tiene un `title` por grupo, `note` solo en `backend` y `data`, y nueve `methods`; `meta.title` y `meta.hardwareName` son los de VSN §4. | Prueba unitaria |
-| RAM-AC04 | El componente renderiza nueve `<h3>` en el orden de RAM-R04, cada uno seguido de una lista con tantos elementos como indica RAM-AC01, y nueve en la de metodologías. | Prueba de componente |
+| RAM-AC04 | El componente renderiza diez `<h3>` en el orden de RAM-R04, los de los grupos seguidos de una lista con tantos elementos como indica RAM-AC01, y nueve en la de metodologías. | Prueba de componente |
 | RAM-AC05 | El componente no renderiza ningún elemento `<progress>` ni `<meter>`, ni ningún atributo `aria-valuenow`. | Prueba de componente |
 | RAM-AC06 | `bootLines` es exactamente la tabla de §4.5. | Prueba unitaria |
 | RAM-AC07 | En `desktop`, abrir la zona de la memoria RAM en `/es/` muestra el panel "Stack tecnológico" con "Lenguajes", "Python" y "Seguridad y criptografía"; en `/en/`, "Tech stack" con "Languages" y "Security and cryptography". | Prueba E2E |
 | RAM-AC08 | El autor revisa ambos idiomas y confirma que la lista corresponde a lo que usa hoy (I18N-AC18). | Revisión manual del autor, registrada en el historial de esta spec |
+| RAM-AC09 | `facts.aiTools` contiene exactamente las tres listas de RAM-R10, con 3, 4 y 8 herramientas, y cada idioma tiene `aiTitle`, `aiDescription`, un nombre por grupo y `aboutLinkLabel`. | Prueba unitaria |
+| RAM-AC10 | El bloque de IA, en ambos idiomas, renderiza la descripción, tres `<h4>` con los nombres de los grupos, cada uno seguido de su lista de chips, y el enlace "Cómo construí este portfolio" ("How I built this portfolio") hacia `/es/about/` (`/en/about/`). | Prueba de componente |
 
 ## 6. Decisiones y justificación
 
@@ -168,6 +192,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.0 | Versión 3, por decisión del autor tras su revisión con reclutadores (D-100). Nuevo bloque "Desarrollo asistido por IA" (RAM-R10): una descripción de cómo usa los modelos de lenguaje, sus entornos de agentes, herramientas y modelos (F-33), y un enlace a "Acerca de este sitio". RAM-R01: `AI_TOOL_GROUP_IDS`, `aiTools` y sus textos. RAM-R04 y RAM-R08: diez bloques e icono `bot`. RAM-AC04 actualizado; nuevos RAM-AC09 y RAM-AC10. |
 | 2026-10-14 | 1.1 | RAM-AC08: el autor leyó en el sitio el contenido nuevo de M10 en ambos idiomas y lo aprobó (A11), el 2026-10-14. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Estado: pasa a "Implementada" al cerrar M10 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. La lectura del contenido nuevo en el sitio queda para A11. Sin cambio de requisitos. |
 | 2026-10-14 | 1.1 | Aprobada por el autor el 2026-10-14 (versión 2). |

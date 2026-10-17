@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 2.0 |
-| Última actualización | 2026-10-15 |
+| Versión | 2.1 |
+| Última actualización | 2026-10-16 |
 | Depende de | VSN, SYS, STR, VIS, AST, TSC, I18N, QLT, TST, CPU, IO |
 
 ## 1. Propósito
@@ -156,7 +156,7 @@ Espacio de nombres `site`:
 | `sectionTitle({ title })` | {title} · Juan Esteban Álvarez García | {title} · Juan Esteban Álvarez García |
 | `cvTitle` | Currículum · Juan Esteban Álvarez García | Résumé · Juan Esteban Álvarez García |
 | `caseTitle({ title })` | {title} · Caso de estudio | {title} · Case study |
-| `description` | Portfolio de Juan Esteban Álvarez García, estudiante de Ingeniería de Sistemas en la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada. | Portfolio of Juan Esteban Álvarez García, Systems Engineering student at Universidad de los Andes: software, cloud/DevOps and applied security. |
+| `description` | Portfolio de Juan Esteban Álvarez García, Ingeniero de Sistemas y Computación de la Universidad de los Andes: software, cloud/DevOps y seguridad aplicada. | Portfolio of Juan Esteban Álvarez García, Systems and Computing Engineer from Universidad de los Andes: software, cloud/DevOps and applied security. |
 | `cvDescription` | Perfil, experiencia, proyectos, stack y contacto de Juan Esteban Álvarez García en una sola página, lista para leer o imprimir. | Profile, experience, projects, stack and contact details of Juan Esteban Álvarez García on a single page, ready to read or print. |
 | `ogImageAlt` | Placa madre sobre un banco de trabajo, vista desde arriba | Motherboard on a workbench, seen from above |
 
@@ -230,6 +230,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-16 | 2.1 | Versión 3, por decisión del autor (D-97): `site.description` dice "Ingeniero de Sistemas y Computación" en lugar de "estudiante". Los roles tipográficos de la vista simple y de las páginas de caso crecen según VIS 5.0 (D-101), sin cambiar su disposición. |
 | 2026-10-15 | 2.0 | Por decisión del autor, tras probar el sitio con varios visitantes (D-93). §4.2: el enlace "Ver la versión interactiva" se sustituye por el selector de vista de la cabecera (SET-R32), más visible; se retira su texto. Nuevo SMP-R29: "Volver arriba" lleva hasta arriba del todo, a la cabecera, también en las páginas de caso, donde antes se quedaba en el principio del contenido. SMP-AC03 actualizado; nuevo SMP-AC23. |
 | 2026-10-14 | 1.4 | Estado: pasa a "Implementada" al cerrar M11 (PLAN §4.6), con todos sus criterios automáticos citados por una prueba. Sin cambio de requisitos. |
 | 2026-10-14 | 1.4 | Aprobada por el autor el 2026-10-14 (versión 2). |
