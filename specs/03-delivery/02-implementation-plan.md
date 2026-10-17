@@ -3,8 +3,8 @@
 | Campo | Valor |
 | --- | --- |
 | Estado | Implementada |
-| Versión | 1.11 |
-| Última actualización | 2026-10-16 |
+| Versión | 1.12 |
+| Última actualización | 2026-10-17 |
 | Depende de | Todas las demás specs |
 
 ## 1. Propósito
@@ -252,6 +252,7 @@ Ninguna.
 
 | Fecha | Versión | Cambio |
 | --- | --- | --- |
+| 2026-10-17 | 1.12 | A17 hecha: el autor revisó y aprobó la versión 3 (M14, publicada en `f007e5f`). La versión 3 queda cerrada, sin tareas pendientes. |
 | 2026-10-16 | 1.11 | M14 se amplía con D-103 y D-104, pedidos por el autor al revisar la primera entrega de la versión 3; A17 los incluye. |
 | 2026-10-16 | 1.10 | A16 cerrada. Nuevo §4.7: la versión 3, con el hito M14 y la tarea A17 (PLAN-R17). |
 | 2026-10-15 | 1.9 | A16 hecha: el autor revisó el cambio de D-93 a D-96 y lo dio por bueno. La versión 2 queda cerrada, sin tareas pendientes. |

@@ -336,3 +336,4 @@ Datos que el autor confirmó en conversación y que no están (o están distinto
 | 2026-10-15 | El autor da por hecha A16 y cierra la versión 2. PLAN 1.9. |
 | 2026-10-16 | Versión 3, por decisión del autor tras revisar sus CVs con reclutadores: hechos F-30 a F-33 y decisiones D-97 a D-101. Enmendadas: CPU 2.0, PSU 2.0, RAM 2.0, VIS 5.0, SMP 2.1, I18N 1.5, SET 5.0 y PLAN 1.10. Por delegación, D-102: la barra dentro del panel ya no tapa su cabecera; siguen en "Implementada" y se publican junto con el código (M14). |
 | 2026-10-16 | Tras la primera revisión de la versión 3, por decisión del autor: D-103 (los enlaces no cambian de vista), D-104 (referencias en Contacto, F-34) y D-105 (panel de alto fijo y flechas para pasar de sección). Enmendadas: TSC 3.0, IO 2.0, VSN 4.0, SMP 2.2, SET 5.1, CPU 2.1, PSU 2.1, RAM 2.1, SSD 2.1, PNL 2.0, VIS 6.0, QLT 5.1 y PLAN 1.11. |
+| 2026-10-17 | El autor da por hecha A17 y cierra la versión 3. PLAN 1.12. |
