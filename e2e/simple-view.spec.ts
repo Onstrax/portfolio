@@ -121,37 +121,45 @@ test.describe("simple view on a desktop", () => {
     });
   }
 
-  test("SMP-AC24: from the simple view, every link stays in the simple view", async ({ page }) => {
-    await page.goto("/es/cv/");
-    const sceneShown = () =>
-      page.evaluate(() => document.documentElement.dataset["mode"] === "scene");
+  test.describe("with instant scrolling", () => {
+    // In-page jumps scroll smoothly; a click during that scroll can land on a moving target in
+    // WebKit. What this test checks is where each link leads, so the jumps are made instant.
+    test.use({ reducedMotion: "reduce" });
 
-    for (const [section, name, hash] of [
-      ["experience", "Ver el proyecto", "#projects-dental-site"],
-      ["profile", "Ver los proyectos", "#projects"],
-      ["stack", "Cómo construí este portfolio", "#about"],
-    ] as const) {
-      await page.locator(`#${section}`).getByRole("link", { name }).click();
-      await expect(page).toHaveURL(`/es/cv/${hash}`);
+    test("SMP-AC24: from the simple view, every link stays in the simple view", async ({
+      page,
+    }) => {
+      await page.goto("/es/cv/");
+      const sceneShown = () =>
+        page.evaluate(() => document.documentElement.dataset["mode"] === "scene");
+
+      for (const [section, name, hash] of [
+        ["experience", "Ver el proyecto", "#projects-dental-site"],
+        ["profile", "Ver los proyectos", "#projects"],
+        ["stack", "Cómo construí este portfolio", "#about"],
+      ] as const) {
+        await page.locator(`#${section}`).getByRole("link", { name }).click();
+        await expect(page).toHaveURL(`/es/cv/${hash}`);
+        expect(await sceneShown()).toBe(false);
+      }
+
+      await page
+        .locator("#projects-thesis")
+        .getByRole("link", { name: "Leer el caso completo" })
+        .click();
+      await expect(page).toHaveURL("/es/projects/thesis/?view=simple");
+      await page.getByRole("banner").getByRole("link", { name: "English" }).click();
+      await expect(page).toHaveURL("/en/projects/thesis/?view=simple");
+      await page.getByRole("banner").getByRole("link", { name: "All projects" }).click();
+      await expect(page).toHaveURL("/en/cv/#projects-thesis");
       expect(await sceneShown()).toBe(false);
-    }
 
-    await page
-      .locator("#projects-thesis")
-      .getByRole("link", { name: "Leer el caso completo" })
-      .click();
-    await expect(page).toHaveURL("/es/projects/thesis/?view=simple");
-    await page.getByRole("banner").getByRole("link", { name: "English" }).click();
-    await expect(page).toHaveURL("/en/projects/thesis/?view=simple");
-    await page.getByRole("banner").getByRole("link", { name: "All projects" }).click();
-    await expect(page).toHaveURL("/en/cv/#projects-thesis");
-    expect(await sceneShown()).toBe(false);
-
-    // Opened without the mark, as from a shared link, the case leads to the projects of the scene.
-    await page.goto("/es/projects/thesis/");
-    await expect(
-      page.getByRole("banner").getByRole("link", { name: "Todos los proyectos" }),
-    ).toHaveAttribute("href", "/es/projects/");
+      // Opened without the mark, as from a shared link, the case leads to the projects of the scene.
+      await page.goto("/es/projects/thesis/");
+      await expect(
+        page.getByRole("banner").getByRole("link", { name: "Todos los proyectos" }),
+      ).toHaveAttribute("href", "/es/projects/");
+    });
   });
 
   test("SMP-AC08: printing hides the controls and uses black on white", async ({ page }) => {
