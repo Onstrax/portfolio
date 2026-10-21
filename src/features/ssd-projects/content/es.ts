@@ -126,7 +126,7 @@ export const projectsEs = {
         "Se estima que, entre 2028 y 2035, la computación cuántica podrá romper la criptografía que hoy protege la autenticación. A la vez, para demostrar quién es, el usuario suele entregar más información de la que debería, y pierde el control de sus datos.",
         "Si no se resuelve, el riesgo es doble: la suplantación de identidad y la filtración de información personal sensible.",
       ],
-      team: "Tesis en pareja. Los dos aportamos a todo el trabajo, pero cada uno lidera una parte.",
+      team: "Tesis en equipo de 2. Los dos aportamos a todo el trabajo, pero cada uno lidera una parte.",
       contributions: [
         "Lidero el componente matemático de Learning with Errors (LWE), incluida la elección de su variante y de sus parámetros.",
         "Codiseño el protocolo de autenticación y su prototipo.",

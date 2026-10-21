@@ -126,7 +126,7 @@ export const projectsEn = {
         "Quantum computing is expected to break the cryptography that protects authentication today somewhere between 2028 and 2035. At the same time, users usually hand over more information than they should just to prove who they are, and lose control of their data.",
         "Left unsolved, the risk is twofold: identity theft and leaks of sensitive personal information.",
       ],
-      team: "Thesis written in a pair. Both of us contribute to every part, but each one leads a different area.",
+      team: "Thesis written in a team of 2. Both of us contribute to every part, but each one leads a different area.",
       contributions: [
         "Lead the Learning with Errors (LWE) mathematical component, including the choice of its variant and parameters.",
         "Co-design the authentication protocol and its prototype.",
